@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -16,7 +16,7 @@
 
   color-scheme: light dark;
   color: #000000;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,7 +24,44 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-input{
+input {
   color: #000000;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
+}
+
+/* calendar */
+.fc td,
+.fc th {
+  border-style: none !important;
+}
+
+thead {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.fc-scrollgrid {
+  border: none !important;
+}
+
+.fc-daygrid-day {
+  .fc-daygrid-day-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  border-radius: 8px;
+}
+.fc-day-disabled {
+  background-color: transparent !important;
+  /* color: #000000 !important; */
+}
+
+.fc-button-primary {
+  background-color: transparent !important;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  border-left-color: transparent !important;
+  color: black !important;
 }
