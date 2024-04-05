@@ -19,14 +19,19 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@react-google-maps/api": "^2.19.3",
+    "axios": "^1.6.8",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3"
+    "react-places-autocomplete": "^7.3.0",
+    "react-router-dom": "^6.22.3",
+    "use-places-autocomplete": "^4.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-places-autocomplete": "^7.2.14",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
