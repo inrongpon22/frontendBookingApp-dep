@@ -1,4 +1,4 @@
-import Map from "./Map";
+import AutocompleteMap from "./AutocompleteMap";
 
 export default function FindLocation() {
     return (
@@ -11,7 +11,7 @@ export default function FindLocation() {
                     We use address to tell people what and where your business
                     is.
                 </p>
-                <Map />
+                <AutocompleteMap />
 
                 <button
                     className="bg-black text-white mt-6 rounded-lg font-semibold"

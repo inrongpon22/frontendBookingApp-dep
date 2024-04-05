@@ -2,17 +2,24 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
 import { insertUser } from "../../api/user";
+import { useNavigate } from "react-router-dom";
 
 export default function BLogin() {
     const [phoneNumber, setPhoneNumber] = useState("");
+    const navigate = useNavigate();
 
     const handleContinue = async () => {
         if (phoneNumber !== "") {
-            await insertUser({ phoneNumber: phoneNumber });
+            const res = await insertUser({ phoneNumber: phoneNumber });
+            if (res.status == 200 || res.status == 201) {
+                navigate('/OTP');
+            } else {
+                console.error("Error");
+            }
         }
     };
     return (
-        <div className="pr-4 pl-4 pt-4">
+        <div className="pr-4 pl-4 pt-4 flex justify-center">
             <div className="flex flex-col">
                 <IconButton sx={{ width: "20px", height: "20px" }}>
                     <ClearOutlinedIcon
