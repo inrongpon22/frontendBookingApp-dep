@@ -1,38 +1,42 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
 // mockup datas
-import { exploreDatas } from "../explore/exploreDatas";
-import {
-  peopleQuantities,
-  serviceOptions,
-  getTimeIntervals,
-} from "./shopDatas";
+import { getTimeIntervals } from "./shopDatas";
 // icon
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+// import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-// calendar & plugin
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 // styled
-import { Chip, IconButton } from "@mui/material";
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import axios from "axios";
+import { app_api } from "../../helper/url";
+import { quantityTypes, serviceTypes, shopDetailTypes } from "./detailTypes";
 // components
-import CustomCarousel from "./CustomCarousel";
+import { Slideshow } from "./components/Slideshow";
+import Calendar from "./components/Calendar";
+import ServiceOptions from "./components/ServiceOptions";
+import Quantity from "./components/Quantity";
+import TimeSlots from "./components/TimeSlots";
 
-interface quantityTypes {
-  id: number;
-  title: string;
-  desc?: string;
-  additionalNotes?: string;
-  quantities: number;
-  max: number;
-  min: number;
-}
+const theme = createTheme({
+  palette: {
+    info: {
+      main: "#E6F1FD",
+    },
+  },
+});
 
 interface openTimeTypes {
   label: string;
@@ -40,73 +44,50 @@ interface openTimeTypes {
   isSelected: boolean;
 }
 
-interface serviceTypes {
-  label: string;
-  desc: string;
-  availability: number;
-  isAvailiable: boolean;
-  isSelected: boolean;
-}
-
 const ShopDetailsPageWrapper = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  // get shop details by id not have api yet
-  let getShopDetailsById: any = exploreDatas?.find(
-    (item: any) => item.id === Number(id)
-  );
+  const { id } = useParams(); // id from params
+  // get shop details by id connected api
+  const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
 
-  const [renderedDayCells, setRenderedDayCells] = useState<any>([]);
   // mock up quantities
-  const [quantities, setQuantities] =
-    useState<quantityTypes[]>(peopleQuantities);
-  // handle select date on calendar
-  const [selectedDate, setSelectedDate] = useState<any>({
-    date: moment(),
+  const [quantities, setQuantities] = useState<quantityTypes>({
+    title: "Guest",
+    desc: "Number of guest",
+    quantities: 1,
+    max: 10,
+    min: 1,
   });
-  // mock up time & handle select time
-  const [avaiTimes, setAvaiTimes] = useState<openTimeTypes[]>(
-    getTimeIntervals(
-      getShopDetailsById.openTime,
-      getShopDetailsById.closeTime,
-      60
-    ).map((item: any, index: number) => {
-      return { ...item, id: index + 1 };
-    })
-  );
+
   // handle services state
-  const [services, setServices] = useState<serviceTypes[]>(serviceOptions);
+  const [services, setServices] = useState<serviceTypes[]>([]);
+  // mock up time & handle select time
+  const [avaiTimes, setAvaiTimes] = useState<openTimeTypes[]>([]);
+
+  // handle dialog
+  const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
 
   // handle quantity chage
-  const quantityChanges = (id: number, type: string) => {
+  const quantityChanges = (type: string) => {
     switch (type) {
       case "increase":
-        setQuantities(
-          quantities.map((item: any) => {
-            if (item.id === id && item.max > item.quantities) {
-              // no more max val
-              return { ...item, quantities: item.quantities + 1 };
-            } else {
-              return item;
-            }
-          })
-        );
+        setQuantities({
+          ...quantities,
+          quantities:
+            quantities.max > quantities.quantities
+              ? quantities.quantities + 1
+              : quantities.quantities,
+        });
         break;
 
       case "decrease":
-        setQuantities(
-          quantities.map((item: any) => {
-            if (item.id === id) {
-              return {
-                ...item,
-                quantities:
-                  item.quantities > item.min ? item.quantities - 1 : 0, // no less than min
-              };
-            } else {
-              return item;
-            }
-          })
-        );
+        setQuantities({
+          ...quantities,
+          quantities:
+            quantities.quantities > quantities.min
+              ? quantities.quantities - 1
+              : 0,
+        });
         break;
 
       default:
@@ -114,238 +95,154 @@ const ShopDetailsPageWrapper = () => {
     }
   };
 
-  const dayCellsMap = new Map();
+  // get business by id from params
+  useMemo(() => {
+    axios.get(`${app_api}/business/${id}`).then((res) => {
+      if (res.status === 200) {
+        setShopDetail(res.data);
+      }
+    });
+  }, []);
 
-  const handleDayCellMount = (info: any) => {
-    dayCellsMap.set(info.el, info);
-    setRenderedDayCells(Array.from(dayCellsMap.values()));
-  };
+  // get services by business id
+  useMemo(() => {
+    axios.get(`${app_api}/serviceByBusinessId/${id}`).then((res) => {
+      if (res.status === 200) {
+        setServices(
+          res.data.map((item: any, index: number) => {
+            if (index === 0) {
+              return { ...item, isSelected: true };
+            } else {
+              return { ...item, isSelected: false };
+            }
+          })
+        );
+      }
+    });
+  }, []);
 
-  const handleDayCellUnmount = (info: any) => {
-    dayCellsMap.delete(info.el);
-    setRenderedDayCells(Array.from(dayCellsMap.values()));
-  };
-
+  // set availiable time by interval
+  useMemo(() => {
+    setAvaiTimes(
+      getTimeIntervals(
+        services.find((item: any) => item.isSelected === true)?.openTime,
+        services.find((item: any) => item.isSelected === true)?.closeTime,
+        services.find((item: any) => item.isSelected === true)?.duration
+      ).map((item: any, index: number) => {
+        return { ...item, id: index + 1 };
+      })
+    );
+  }, [services]);
 
   return (
-    <div className="relative lg:grid lg:grid-cols-2">
-      {/* Starts: back button */}
-      <button
-        type="button"
-        className="absolute top-5 left-5 bg-white py-1 px-3 rounded-lg z-50"
-        onClick={() => navigate("/")}
-      >
-        <KeyboardBackspaceIcon />
-        Back
-      </button>
-      {/* Starts: back button */}
+    <ThemeProvider theme={theme}>
+      <div className="relative lg:grid lg:grid-cols-2">
+        {/* Starts: back button */}
+        <button
+          type="button"
+          className="absolute top-5 left-5 bg-white py-1 px-3 rounded-lg z-50"
+          onClick={() => navigate("/")}
+        >
+          <KeyboardBackspaceIcon />
+          Back
+        </button>
+        {/* Starts: back button */}
 
-      <div id="detail-images">
-        <img className="w-full" src="https://placehold.jp/375x343.png" />
-      </div>
+        <Slideshow data={shopDetail?.imagesURL || []} />
 
-      <div id="shop-details" className="relative my-auto p-5">
-        <h1 className="text-[25px] font-semibold">
-          {getShopDetailsById?.title}
-        </h1>
-        <span className="text-[14px] font-normal">
-          {getShopDetailsById?.detail || "No detail for this shop"}
-        </span>
-        <div className="mt-2">
-          <Chip
-            className="mt-1"
-            icon={<AccessTimeIcon fontSize="small" />}
-            label={`${getShopDetailsById?.openTime} - ${getShopDetailsById?.closeTime}`}
-          />
-          <Chip
-            className="mt-1"
-            icon={<LocationOnIcon fontSize="small" />}
-            label={getShopDetailsById?.location}
-          />
-          <Chip
-            className="mt-1"
-            icon={<LocalPhoneIcon fontSize="small" />}
-            label={getShopDetailsById?.contact}
-          />
-          <Chip
-            className="mt-1 ms-1"
-            // icon={<LocalPhoneIcon fontSize="small" />}
-            label="Hair Cut"
-          />
+        <div id="shop-details" className="relative my-auto p-5">
+          <h1 className="text-[25px] font-semibold">{shopDetail?.title}</h1>
+          <span className="text-[14px] font-normal">
+            {shopDetail?.description || "No detail for this shop"}
+          </span>
+          <div className="mt-2">
+            <Chip
+              className="mt-1 custom-chip-label"
+              icon={<LocationOnIcon fontSize="small" />}
+              label={shopDetail?.address}
+              color="info"
+            />
+            <Chip
+              className="mt-1 custom-chip-label"
+              icon={<LocalPhoneIcon fontSize="small" />}
+              label={shopDetail?.phoneNumber}
+              color="info"
+            />
+            <Chip
+              className="mt-1 ms-1 custom-chip-label"
+              // icon={<LocalPhoneIcon fontSize="small" />}
+              label="Hair Cut"
+              color="info"
+            />
+          </div>
         </div>
-      </div>
 
-      <div id="calendar" className="relative mt-5 p-5 col-span-2">
-        <FullCalendar
-          initialView="customGrid"
-          views={{
-            customGrid: {
-              type: "dayGrid",
-              duration: {
-                days: 7,
-              },
+        <Quantity quantities={quantities} quantityChanges={quantityChanges} />
+
+        <Calendar />
+
+        <ServiceOptions
+          services={services}
+          setServices={setServices}
+          quantities={quantities}
+        />
+
+        <TimeSlots
+          avaiTimes={avaiTimes}
+          setAvaiTimes={setAvaiTimes}
+          setIsShowDialog={setIsShowDialog}
+        />
+
+        {/* Starts:: dialog */}
+        <Dialog
+          open={isShowDialog}
+          onClose={() => setIsShowDialog(false)}
+          PaperProps={{
+            component: "form",
+            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData as any).entries());
+              const email = formJson.email;
+              console.log(email);
+              // handleClose();
             },
           }}
-          validRange={function () {
-            return {
-              start: moment().utc().format('YYYY-MM-DD HH:mm:ss'),
-            };
-          }}
-          headerToolbar={{
-            start: "prev",
-            center: "title",
-            end: "next",
-          }}
-          dayHeaders={false}
-          plugins={[interactionPlugin, dayGridPlugin]}
-          height={0}
-          dayCellDidMount={handleDayCellMount}
-          dayCellWillUnmount={handleDayCellUnmount}
-        />
-        <div className="mt-14">
-          <CustomCarousel>
-            {renderedDayCells.map((item: any, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className={`flex flex-col justify-center items-center my-1 me-5 w-[100px] h-[100px] border rounded-lg
-                  ${
-                    moment(selectedDate?.date).isSame(moment(item?.date), "day")
-                      ? "border-black bg-[#8B8B8B33]"
-                      : ""
-                  }`}
-                  onClick={() => setSelectedDate(item)}
-                >
-                  <p>{moment(item.date).format("dd")}</p>
-                  <p>{moment(item.date).format("D")}</p>
-                </div>
-              );
-            })}
-          </CustomCarousel>
-        </div>
+        >
+          <DialogTitle>Confirm your details</DialogTitle>
+          <DialogContent>
+            {/* <DialogContentText>
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
+          </DialogContentText> */}
+            <Chip
+              icon={
+                <span>
+                  <DateRangeIcon fontSize="small" />
+                  {/* {selectedDate.date?.format("MMMM DD, YYYY HH:mm")} */}
+                </span>
+              }
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsShowDialog(false)}>Cancel</Button>
+            <Button type="submit">Subscribe</Button>
+          </DialogActions>
+        </Dialog>
+        {/* Ends:: dialog */}
       </div>
-
-      <div id="quantity" className="p-5">
-        <h2 className="text-[20px] font-semibold">How many people?</h2>
-        <div className="px-5 my-2 border border-black rounded-lg">
-          {quantities?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`flex justify-between py-3 ${
-                  quantities.length !== index + 1 ? "border-b-2" : ""
-                }`}
-              >
-                <div className="flex flex-col">
-                  <p className="text-[17px]">{item.title}</p>
-                  <p className="font-thin text-[14px]">{item.desc}</p>
-                  {item.additionalNotes && (
-                    <a href="#" className="underline font-thin">
-                      {item.additionalNotes}
-                    </a>
-                  )}
-                </div>
-                <div className="flex items-center">
-                  <IconButton
-                    disabled={item.quantities === item.min}
-                    aria-label="delete"
-                    className={`h-[24px] w-[24px] ${
-                      item.quantities === item.min
-                        ? "not-allow-custom-btn"
-                        : "allow-custom-btn"
-                    }`}
-                    size="small"
-                    onClick={() => quantityChanges(item.id, "decrease")}
-                  >
-                    <RemoveIcon fontSize="small" />
-                  </IconButton>
-                  <span className="px-5">{item.quantities}</span>
-                  <IconButton
-                    disabled={item.quantities === item.max}
-                    aria-label="delete"
-                    className={`h-[24px] w-[24px] ${
-                      item.quantities === item.max
-                        ? "not-allow-custom-btn"
-                        : "allow-custom-btn"
-                    }`}
-                    size="small"
-                    onClick={() => quantityChanges(item.id, "increase")}
-                  >
-                    <AddIcon fontSize="small" />
-                  </IconButton>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div id="service-option" className="p-5">
-        <h2 className="text-[20px] font-semibold">Service Option</h2>
-        <div className="grid grid-cols-2 gap-4 mt-2">
-          {services?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`border rounded-lg p-5 cursor-pointer ${
-                  item.isSelected ? "border-1 border-black bg-[#F1F1F1]" : ""
-                }`}
-                onClick={() =>
-                  setServices(
-                    services.map((ii: any) => {
-                      if (ii.id === item.id) {
-                        return { ...ii, isSelected: true };
-                      } else {
-                        return { ...ii, isSelected: false };
-                      }
-                    })
-                  )
-                }
-              >
-                <p className="text-[12px]">{item.availability} Available</p>
-                <div className="mt-4">
-                  <p className="font-semibold">{item.label}</p>
-                  <p className="text-[14px] font-thin">{item.desc}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div id="times" className="mt-5 p-5 col-span-2">
-        <h2 className="text-[17px] font-semibold">
-          {moment(selectedDate.date).format("ll")}
-        </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-          {avaiTimes?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`border rounded-lg text-center p-3 ${
-                  item.isAvailiable
-                    ? "border-[#000000] cursor-pointer"
-                    : "text-[#8C8C8C]"
-                } ${item.isSelected ? "bg-[#000000] text-white" : ""}`}
-                onClick={() =>
-                  setAvaiTimes(
-                    avaiTimes.map((ii: any) => {
-                      if (ii.isAvailiable && ii.id === item.id) {
-                        return { ...ii, isSelected: true };
-                      } else {
-                        return { ...ii, isSelected: false };
-                      }
-                    })
-                  )
-                }
-              >
-                {item.label}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

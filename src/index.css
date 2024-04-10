@@ -29,102 +29,47 @@ input {
   background-color: #ffffff;
 }
 
-/* calendar */
-/* border none */
-.fc td,
-.fc th {
-  border-style: none !important;
+/* Slideshow */
+.slideshow {
+  margin: 0 auto;
+  overflow: hidden;
+  max-width: 500px;
+  display: relative;
 }
 
-thead {
-  border-top-width: 1px;
-  border-bottom-width: 1px;
-}
-
-.fc-scrollgrid {
-  border: none !important;
-}
-
-/* custom prev & next button */
-.fc-button-primary {
-  background-color: transparent !important;
-  border-top-color: transparent !important;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
-  border-left-color: transparent !important;
-  color: black !important;
-}
-
-.fc .fc-daygrid-day-events {
-  display: none;
-}
-
-.fc-daygrid-day-top {
-  background: red;
-}
-
-/* text's cell alignment */
-.fc-daygrid-day {
-  background-color: transparent !important;
-  .fc-daygrid-day-frame {
-    display: flex;
-    align-items: center;
-    .fc-daygrid-day-top {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-    }
-  }
-}
-
-/* today cell */
-/* .fc-day-today {
-  background-color: transparent !important;
-  .fc-daygrid-day-frame {
-    .fc-daygrid-day-top {
-      border: 1px solid black !important;
-      border-radius: 8px;
-    }
-  }
-} */
-
-/* carousel slider */
-
-.items {
-  position: relative;
-  /* width: 500px; */
-  overflow-x: scroll;
-  overflow-y: hidden;
+.slideshowSlider {
   white-space: nowrap;
-  transition: all 0.2s;
-  transform: scale(0.98);
-  will-change: transform;
-  user-select: none;
+  transition: ease 1000ms;
+}
+
+.slide {
+  display: inline-block;
+  /* height: 400px; */
+  width: 100%;
+}
+
+/* Buttons */
+.slideshowDots {
+  text-align: center;
+}
+
+.slideshowDot {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
   cursor: pointer;
-  padding: 0;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  display: grid;
-  grid-auto-flow: column;
+  margin: 15px 7px 0px;
+  background-color: #0000004d;
+  z-index: 1000;
 }
 
-.items {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
-}
-.items::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+.slideshowDot.active {
+  background-color: #000000;
 }
 
-.allow-custom-btn{
-  border: 1px solid black !important;
-  svg{
-    fill: #000000;
-  }
-}
-
-.not-allow-custom-btn{
-  border: 1px solid !important;
+.custom-chip-label {
+  color: #003b95 !important;
+  font-weight: 400;
+  font-size: 14px;
 }

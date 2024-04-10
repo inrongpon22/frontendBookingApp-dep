@@ -1,11 +1,26 @@
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // components
 import ExploreHeaderWrapper from "./ExploreHeaderWrapper";
-// mock up datas
-import { exploreDatas } from "./exploreDatas";
+// helper
+import { app_api } from "../../helper/url";
+import axios from "axios";
+// icons
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 const ExplorePageWrapper = () => {
   const navigate = useNavigate();
+
+  const [bussiness, setBussiness] = useState([]);
+
+  useMemo(() => {
+    axios.get(`${app_api}/business`).then((res) => {
+      if (res.status === 200) {
+        setBussiness(res.data);
+      }
+    });
+  }, []);
+
   return (
     <div className="p-4">
       <ExploreHeaderWrapper />
@@ -15,20 +30,21 @@ const ExplorePageWrapper = () => {
         placeholder="Hair cut, Restaurant, Tennis Court & more"
       />
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
-        {exploreDatas.map((item: any, index: number) => {
+        {bussiness.map((item: any, index: number) => {
           return (
             <div
               key={index}
               className="cursor-pointer"
               onClick={() => navigate(`/details/${item.id}`)}
             >
-              <img src={item.image} className="rounded" />
+              <img src="https://placehold.jp/164x164.png" className="rounded" />
               <label htmlFor="" className="text-[14px] font-semibold">
                 {item.title}
               </label>
-              <p className="text-[14px]">{`${item.openTime} - 
-                ${item.closeTime}`}</p>
-              <p className="text-[14px]">{item.contact}</p>
+              <p className="text-[14px]">
+                <LocalPhoneIcon fontSize="small" />
+                {item.phoneNumber}
+              </p>
             </div>
           );
         })}
