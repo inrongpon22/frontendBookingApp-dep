@@ -15,10 +15,9 @@ export const getTimeIntervals = (
       label: `${start.format("HH:mm")} - ${start
         .add(minutes, "minutes")
         .format("HH:mm")}`,
-      isAvailiable: true,
       isSelected: false,
+      capacity: Math.floor(Math.random() * 11),
     });
-    // start.add(minutes, "minutes");
   }
 
   return timeIntervals;

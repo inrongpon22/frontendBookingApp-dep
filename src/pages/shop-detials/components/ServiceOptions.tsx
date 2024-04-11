@@ -2,14 +2,17 @@
 import { Chip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { useContext } from "react";
+import { ShopContext } from "../ShopDetailsPageWrapper";
 
-interface ServiceOptionTypes{
-    services: any;
-    setServices: any;
-    quantities: any;
-}
+// interface ServiceOptionTypes{
+//     services: any;
+//     setServices: any;
+//     quantities: any;
+// }
 
-const ServiceOptions = ({services,setServices,quantities}:ServiceOptionTypes) => {
+const ServiceOptions = () => {
+  const { services, setServices, quantities } = useContext(ShopContext);
   return (
     <div id="service-option" className="p-5">
       <h2 className="text-[20px] font-semibold">Service Option</h2>

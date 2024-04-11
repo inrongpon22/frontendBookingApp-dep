@@ -2,13 +2,40 @@
 import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { useContext } from "react";
+import { ShopContext } from "../ShopDetailsPageWrapper";
 
-interface PropTypes {
-  quantities: any;
-  quantityChanges: any;
-}
+const Quantity = () => {
+  const { quantities, setQuantities, services } = useContext(ShopContext);
 
-const Quantity = ({ quantities, quantityChanges }: PropTypes) => {
+  // handle quantity chage
+  const quantityChanges = (type: string) => {
+    switch (type) {
+      case "increase":
+        setQuantities({
+          ...quantities,
+          quantities:
+            quantities.max > quantities.quantities
+              ? quantities.quantities + 1
+              : quantities.quantities,
+        });
+        break;
+
+      case "decrease":
+        setQuantities({
+          ...quantities,
+          quantities:
+            quantities.quantities > quantities.min
+              ? quantities.quantities - 1
+              : 0,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <div id="quantity" className="flex justify-between items-center px-5">
       <h2 className="text-[17px] font-semibold">Number of guest(s)</h2>
@@ -25,7 +52,11 @@ const Quantity = ({ quantities, quantityChanges }: PropTypes) => {
           {quantities.quantities}
         </span>
         <IconButton
-          disabled={quantities.quantities === quantities.max}
+          disabled={
+            quantities.quantities === quantities.max ||
+            services.find((item: any) => item.isSelected === true)?.capacity ===
+              quantities.quantities
+          }
           aria-label="delete"
           size="small"
           onClick={() => quantityChanges("increase")}

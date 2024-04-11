@@ -29,6 +29,11 @@ input {
   background-color: #ffffff;
 }
 
+textarea {
+  color: #000000;
+  background-color: #ffffff;
+}
+
 /* Slideshow */
 .slideshow {
   margin: 0 auto;

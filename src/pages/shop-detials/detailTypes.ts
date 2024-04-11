@@ -45,3 +45,9 @@ export interface quantityTypes {
   max: number;
   min: number;
 }
+
+export interface openTimeTypes {
+  label: string;
+  isAvailiable: boolean;
+  isSelected: boolean;
+}
