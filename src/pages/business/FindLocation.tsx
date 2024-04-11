@@ -13,7 +13,7 @@ export default function FindLocation() {
                 </p>
                 <AutocompleteMap />
 
-                <button
+                {/* <button
                     className="bg-black text-white mt-6 rounded-lg font-semibold"
                     style={{
                         width: "343px",
@@ -21,7 +21,7 @@ export default function FindLocation() {
                         cursor: "pointer",
                     }}>
                     Continue
-                </button>
+                </button> */}
             </div>
         </div>
     );

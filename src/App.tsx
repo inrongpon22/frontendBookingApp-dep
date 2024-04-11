@@ -9,6 +9,7 @@ import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper"
 import BLogin from "./pages/business/BLogin";
 import OTP from "./pages/business/OTP";
 import FindLocation from "./pages/business/FindLocation";
+import CreateBusiness from "./pages/business/CreateBusiness";
 
 function App() {
     return (
@@ -23,6 +24,10 @@ function App() {
                     <Route path="/userLogin" element={<BLogin />} />
                     <Route path="/OTP" element={<OTP />} />
                     <Route path="/findLocation" element={<FindLocation />} />
+                    <Route
+                        path="/createBusiness/:page"
+                        element={<CreateBusiness />}
+                    />
                 </Routes>
             </BrowserRouter>
         </>

@@ -5,6 +5,9 @@ import PlacesAutocomplete, {
 } from "react-places-autocomplete";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Component } from "react";
+import { Divider, IconButton } from "@mui/material";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
+import { alpha } from "@mui/system";
 
 interface LocationSearchInputState {
     address: string;
@@ -26,6 +29,7 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
             .then((latLng) => {
                 console.log("Success", latLng);
                 this.setState({ address });
+                console.log(address);
             })
             .catch((error) => console.error("Error", error));
     };
@@ -64,7 +68,7 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
                                 />
                             </div>
                         </form>
-                        <div>
+                        <div className="mt-6">
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map((suggestion: Suggestion) => {
@@ -73,13 +77,13 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                            backgroundColor: "#fafafa",
-                                            cursor: "pointer",
-                                        }
+                                              backgroundColor: "#fafafa",
+                                              cursor: "pointer",
+                                          }
                                         : {
-                                            backgroundColor: "#ffffff",
-                                            cursor: "pointer",
-                                        };
+                                              backgroundColor: "#ffffff",
+                                              cursor: "pointer",
+                                          };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(
@@ -91,8 +95,35 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
                                             )}
                                             key={suggestion.placeId}>
                                             <span key={suggestion.placeId}>
+                                                <IconButton
+                                                    sx={{
+                                                        background: `${alpha(
+                                                            "#54B435",
+                                                            0.1
+                                                        )}`,
+                                                        mr: "8px",
+                                                    }}
+                                                    size="small">
+                                                    <FmdGoodOutlinedIcon
+                                                        sx={{
+                                                            color: "#54B435",
+                                                            width: "20px",
+                                                            height: "20px",
+                                                        }}
+                                                    />
+                                                </IconButton>
                                                 {suggestion.description}
                                             </span>
+                                            <Divider
+                                                sx={{
+                                                    marginBottom: "16px",
+                                                    marginTop: "16px",
+                                                    border: `0.5px solid ${alpha(
+                                                        "#8B8B8B",
+                                                        0.5
+                                                    )}`,
+                                                }}
+                                            />
                                         </div>
                                     );
                                 })}

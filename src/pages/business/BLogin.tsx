@@ -12,7 +12,7 @@ export default function BLogin() {
         if (phoneNumber !== "") {
             const res = await insertUser({ phoneNumber: phoneNumber });
             if (res.status == 200 || res.status == 201) {
-                navigate('/OTP');
+                navigate("/OTP");
             } else {
                 console.error("Error");
             }
