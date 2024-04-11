@@ -1,0 +1,1 @@
+export const app_api = import.meta.env.VITE_APP_API
