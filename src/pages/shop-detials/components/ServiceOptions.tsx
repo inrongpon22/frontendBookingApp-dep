@@ -1,15 +1,6 @@
 // styled
-import { Chip } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
-
-// interface ServiceOptionTypes{
-//     services: any;
-//     setServices: any;
-//     quantities: any;
-// }
 
 const ServiceOptions = () => {
   const { services, setServices, quantities } = useContext(ShopContext);
@@ -25,13 +16,14 @@ const ServiceOptions = () => {
                 item.isSelected
                   ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
                   : ""
-              } ${
-                quantities.quantities > item.capacity
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "cursor-pointer"
               }`}
+              // ${
+              //   quantities.quantities > item.totalCapacity
+              //     ? "bg-gray-400 cursor-not-allowed"
+              //     : "cursor-pointer"
+              // }
               onClick={() => {
-                if (quantities.quantities <= item.capacity) {
+                if (quantities.quantities <= item.totalCapacity) {
                   setServices(
                     services.map((ii: any) => {
                       if (ii.id === item.id) {
@@ -45,19 +37,15 @@ const ServiceOptions = () => {
               }}
             >
               <div className="">
-                <p className="font-semibold">{item.title} </p>
-                <p className="font-thin">{item.description} </p>
+                <p className="flex justify-between">
+                  <span className="font-bold text-[14px]">{item.title}</span>
+                  <span>
+                    <span className="font-bold text-[14px]">{item.price}</span>
+                    <span className="font-normal"> / person</span>
+                  </span>
+                </p>
                 <div className="">
-                  <Chip
-                    className="mt-1"
-                    icon={<AttachMoneyIcon fontSize="small" />}
-                    label={`Start at ${item.price} ${item.currency}`}
-                  />
-                  <Chip
-                    className="mt-1 ms-1"
-                    icon={<PersonIcon fontSize="small" />}
-                    label={`${item.capacity} Available`}
-                  />
+                  <p className="font-normal text-[14px]">{item.description} </p>
                 </div>
               </div>
             </div>

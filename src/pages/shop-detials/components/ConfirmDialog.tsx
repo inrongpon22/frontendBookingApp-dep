@@ -1,11 +1,15 @@
 import React, { useContext, useState } from "react";
-// import moment from "moment";
+import axios from "axios";
+import { app_api } from "../../../helper/url";
+// validation
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
+  CircularProgress,
   Dialog,
   DialogContent,
   Divider,
   Slide,
-  // Snackbar,
   Toolbar,
 } from "@mui/material";
 // icons
@@ -13,7 +17,6 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-// import CheckIcon from "@mui/icons-material/Check";
 import { TransitionProps } from "@mui/material/transitions";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../ShopDetailsPageWrapper";
@@ -27,6 +30,32 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// form validation schema for phone number
+const phoneOtpSchema = Yup.object().shape({
+  phoneNumbers: Yup.string()
+    .min(
+      9,
+      "Your phone numbers is too short. It must be at least 9 numbers long."
+    )
+    .required("Phone number is required"),
+});
+// form validation schema for sign up
+const confirmationSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(
+      1,
+      "Your username is too short. It must be at least 1 characters long."
+    )
+    .required("Username is required"),
+  phoneNumbers: Yup.string()
+    .min(
+      9,
+      "Your phone numbers is too short. It must be at least 9 numbers long."
+    )
+    .required("Phone number is required"),
+  additionalNotes: Yup.string(),
+});
+
 const ConfirmDialog = () => {
   const navigate = useNavigate();
   const {
@@ -37,16 +66,58 @@ const ConfirmDialog = () => {
     isShowDialog,
     setIsShowDialog,
   } = useContext(ShopContext);
+
   const [state, setState] = useState<string>("phone-input");
 
-  const [username, setUsername] = useState<string>("meet123");
-  const [phoneNumbers, setPhoneNumbers] = useState<string>("+66 12 345 6789");
-  const [note, setNote] = useState<string>("Hair cut with spa and treatment");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // handle error
-  const [errors] = useState<any>({}); //setErrors
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      phoneNumbers: "",
+      additionalNotes: "",
+    },
+    validationSchema:
+      state === "phone-input" ? phoneOtpSchema : confirmationSchema,
+    onSubmit: async (values) => {
+      switch (state) {
+        case "phone-input":
+          setIsLoading(true);
+          await axios
+            .post(`${app_api}/user`, {
+              phoneNumber: values.phoneNumbers,
+            })
+            .then(async (res) => {
+              if (res.status === 200) {
+                localStorage.setItem("token", JSON.stringify(res.data.token));
+                formik.setFieldValue("username", res.data.userName);
+                setIsLoading(false);
+                setState("sign-up");
+              } else {
+                setIsLoading(false);
+                setState("sign-up");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              setIsLoading(false);
+            });
+          break;
 
-  const lists = [
+        case "sign-up":
+          setState("booking-success");
+          break;
+
+        default:
+          break;
+      }
+    },
+  });
+
+  const lists: {
+    label: string;
+    text: string;
+  }[] = [
     {
       label: "What",
       text: services.find((item: any) => item.isSelected)?.title,
@@ -69,7 +140,7 @@ const ConfirmDialog = () => {
     },
     {
       label: "Who",
-      text: `${username} (${quantities?.quantities} person)`,
+      text: `${formik.values.username} (${quantities?.quantities} person)`,
     },
     {
       label: "Price",
@@ -79,7 +150,9 @@ const ConfirmDialog = () => {
     },
     {
       label: "Note",
-      text: `${note}`,
+      text: formik.values.additionalNotes
+        ? `${formik.values.additionalNotes}`
+        : "-",
     },
   ];
 
@@ -99,38 +172,38 @@ const ConfirmDialog = () => {
             <input
               type="text"
               className={`w-full px-3 py-2 mt-5 rounded-lg ${
-                errors?.phoneNumbers
+                formik.touched.phoneNumbers && formik.errors.phoneNumbers
                   ? "border-2 border-rose-500"
                   : "border border-black"
               }`}
               placeholder="+66 12 345 6789"
-              value={phoneNumbers}
+              value={formik.values.phoneNumbers}
               onChange={(e) => {
                 const value = e.target.value;
                 if (/^\d+$/.test(value) || value === "") {
-                  setPhoneNumbers(value);
+                  formik.setFieldValue("phoneNumbers", value);
                 }
               }}
             />
-            {errors?.phoneNumber && (
+            {formik.touched.phoneNumbers && formik.errors.phoneNumbers && (
               <span className="text-[14px] text-rose-500">
-                {errors?.phoneNumber}
+                {formik.errors?.phoneNumbers}
               </span>
             )}
             <button
               type="button"
-              className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
-              onClick={() => {
-                // if (phoneNumbers.length < 9) {
-                //   setErrors({
-                //     phoneNumber: "Please insert phone numbers correctly",
-                //   });
-                // } else {
-                setState("otp-verify");
-                // }
-              }}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center bg-[#020873] text-white p-2 mt-5 rounded-lg"
+              onClick={() => formik.handleSubmit()}
             >
-              Continue
+              <span className={isLoading ? "text-gray-400" : ""}>Continue</span>
+              <span
+                className={`${
+                  isLoading ? "flex items-center justify-center" : "hidden"
+                } ms-3`}
+              >
+                <CircularProgress size={18} />
+              </span>
             </button>
           </>
         );
@@ -142,7 +215,7 @@ const ConfirmDialog = () => {
             <input
               type="text"
               className={`w-full px-3 py-2 mt-5 rounded-lg ${
-                errors?.phoneNumbers
+                formik.errors?.phoneNumbers
                   ? "border-2 border-rose-500"
                   : "border border-black"
               }`}
@@ -189,11 +262,19 @@ const ConfirmDialog = () => {
               </label>
               <input
                 type="text"
-                value={username}
-                className="py-2 px-3 border rounded-lg"
-                placeholder="username"
-                onChange={(e: any) => setUsername(e.target.value)}
+                {...formik.getFieldProps("username")}
+                className={`py-2 px-3 border rounded-lg ${
+                  formik.errors?.username
+                    ? "border-2 border-rose-500"
+                    : "border border-black"
+                }`}
+                placeholder="meetsoftware123"
               />
+              {formik.touched.username && formik.errors.username && (
+                <span className="text-[14px] text-rose-500">
+                  {formik.errors?.username}
+                </span>
+              )}
               <span className="text-[12px] font-thin mt-2">
                 Username is for user identification, personalization, privacy,
                 and account security.
@@ -205,11 +286,19 @@ const ConfirmDialog = () => {
               </label>
               <input
                 type="text"
-                value={phoneNumbers}
-                className="py-2 px-3 border rounded-lg"
+                {...formik.getFieldProps("phoneNumbers")}
+                className={`py-2 px-3 border rounded-lg ${
+                  formik.errors?.phoneNumbers
+                    ? "border-2 border-rose-500"
+                    : "border border-black"
+                }`}
                 placeholder="+66 12 345 6789"
-                onChange={(e: any) => setPhoneNumbers(e.target.value)}
               />
+              {formik.touched.phoneNumbers && formik.errors.phoneNumbers && (
+                <span className="text-[14px] text-rose-500">
+                  {formik.errors?.phoneNumbers}
+                </span>
+              )}
             </div>
             <div className="flex flex-col py-2">
               <label htmlFor="" className="required">
@@ -217,10 +306,9 @@ const ConfirmDialog = () => {
               </label>
               <textarea
                 rows={3}
-                value={note}
+                {...formik.getFieldProps("additionalNotes")}
                 className="py-2 px-3 border rounded-lg"
                 placeholder="ex. Hair cut with spa and treatment"
-                onChange={(e: any) => setNote(e.target.value)}
               />
             </div>
             <div className="flex flex-col py-2">
@@ -233,7 +321,7 @@ const ConfirmDialog = () => {
             <button
               type="button"
               className="bg-[#020873] w-full text-white p-2 rounded-lg"
-              onClick={() => setState("booking-success")}
+              onClick={() => formik.handleSubmit()}
             >
               Confirm Booking
             </button>
@@ -322,27 +410,25 @@ const ConfirmDialog = () => {
   };
 
   return (
-    <>
-      <Dialog
-        maxWidth="xl"
-        fullWidth={true}
-        fullScreen
-        open={isShowDialog}
-        TransitionComponent={Transition}
-      >
-        {state !== "booking-success" && (
-          <Toolbar className="grid grid-cols-4">
-            <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-              {state === "phone-input" ? <CloseIcon /> : <ArrowBackIosIcon />}
-            </span>
-            <span className="w-full font-semibold col-span-3 text-center ">
-              Confirm Booking
-            </span>
-          </Toolbar>
-        )}
-        <DialogContent>{SwitchState()}</DialogContent>
-      </Dialog>
-    </>
+    <Dialog
+      maxWidth="xl"
+      fullWidth={true}
+      fullScreen
+      open={isShowDialog}
+      TransitionComponent={Transition}
+    >
+      {state !== "booking-success" && (
+        <Toolbar className="grid grid-cols-4">
+          <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
+            {state === "phone-input" ? <CloseIcon /> : <ArrowBackIosIcon />}
+          </span>
+          <span className="w-full font-semibold col-span-3 text-center ">
+            Confirm Booking
+          </span>
+        </Toolbar>
+      )}
+      <DialogContent>{SwitchState()}</DialogContent>
+    </Dialog>
   );
 };
 

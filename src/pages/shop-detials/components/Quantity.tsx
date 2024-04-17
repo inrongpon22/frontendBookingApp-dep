@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
 const Quantity = () => {
-  const { quantities, setQuantities, services } = useContext(ShopContext);
+  const { quantities, setQuantities } = useContext(ShopContext);
 
   // handle quantity chage
   const quantityChanges = (type: string) => {
@@ -52,11 +52,11 @@ const Quantity = () => {
           {quantities.quantities}
         </span>
         <IconButton
-          disabled={
-            quantities.quantities === quantities.max ||
-            services.find((item: any) => item.isSelected === true)?.capacity ===
-              quantities.quantities
-          }
+          // disabled={
+          //   quantities.quantities === quantities.max ||
+          //   services.find((item: any) => item.isSelected === true)?.totalCapacity ===
+          //     quantities.quantities
+          // }
           aria-label="delete"
           size="small"
           onClick={() => quantityChanges("increase")}

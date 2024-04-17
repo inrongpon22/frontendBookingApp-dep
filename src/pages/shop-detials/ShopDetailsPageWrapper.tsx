@@ -61,8 +61,7 @@ const ShopDetailsPageWrapper = () => {
 
   // handle services state
   const [services, setServices] = useState<serviceTypes[]>([]);
-  // mock up time & handle select time
-  // const [avaiTimes, setAvaiTimes] = useState<openTimeTypes[]>([]);
+  const [serviceById, setServiceById] = useState();
 
   // handle dialog
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
@@ -105,6 +104,26 @@ const ShopDetailsPageWrapper = () => {
     });
   }, []);
 
+  // get services by id
+  useMemo(() => {
+    if (services.find((item: any) => item.isSelected)) {
+      setServiceById(undefined);
+      axios
+        .get(
+          `${app_api}/service/${
+            services.find((item: any) => item.isSelected)?.id
+          }/${selectedDate.date.format("YYYY-MM-DD")}`
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setServiceById(res.data);
+          }
+        });
+    }
+  }, [services]);
+
+  // console.log(serviceById)
+
   return (
     <ThemeProvider theme={theme}>
       <ShopContext.Provider
@@ -119,6 +138,8 @@ const ShopDetailsPageWrapper = () => {
           setSelectedDate,
           services,
           setServices,
+          serviceById,
+          setServiceById,
           quantities,
           setQuantities,
           isShowDialog,
