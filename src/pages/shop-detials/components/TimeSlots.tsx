@@ -1,11 +1,9 @@
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 import moment from "moment";
-// import axios from "axios";
-// import { app_api } from "../../../helper/url";
 
 const TimeSlots = () => {
-  const { selectedDate, services, setServices, serviceById, quantities } =
+  const { selectedDate, setServiceById, serviceById, quantities } =
     useContext(ShopContext);
 
   return (
@@ -19,9 +17,9 @@ const TimeSlots = () => {
             return (
               <div
                 key={index}
-                className={`flex flex-col border rounded-lg text-center p-3 ${
+                className={`flex flex-col border-2 rounded-lg text-center p-3 ${
                   item?.capacity >= quantities.quantities
-                    ? "border-[#000000] cursor-pointer"
+                    ? " cursor-pointer"
                     : "text-[#8C8C8C] bg-[#8B8B8B33]"
                 } ${
                   item.isSelected
@@ -30,24 +28,16 @@ const TimeSlots = () => {
                 }`}
                 onClick={() => {
                   if (item?.capacity >= quantities.quantities) {
-                    setServices(
-                      services.map((prev: any) => {
-                        if (prev.isSelected) {
-                          return {
-                            ...prev,
-                            bookingSlots: prev.bookingSlots.map((ii: any) => {
-                              if (ii.startTime === item.startTime) {
-                                return { ...ii, isSelected: true };
-                              } else {
-                                return { ...ii, isSelected: false };
-                              }
-                            }),
-                          };
+                    setServiceById({
+                      ...serviceById,
+                      bookingSlots: serviceById?.bookingSlots.map((ii: any) => {
+                        if (ii.startTime === item.startTime) {
+                          return { ...ii, isSelected: true };
                         } else {
-                          return prev;
+                          return { ...ii, isSelected: false };
                         }
-                      })
-                    );
+                      }),
+                    });
                   }
                 }}
               >

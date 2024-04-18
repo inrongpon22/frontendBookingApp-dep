@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { useParams } from "react-router-dom";
-export const ShopContext = createContext<any>(null);
+export const ShopContext = createContext<any>(null); //create context to store all the data
 import moment from "moment";
 // icon
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -14,10 +14,10 @@ import {
   createTheme,
 } from "@mui/material";
 // fetcher
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import axios from "axios";
 import { app_api } from "../../helper/url";
-import { quantityTypes, serviceTypes, shopDetailTypes } from "./detailTypes";
+import { quantityTypes, serviceTypes, shopDetailTypes } from "./detailTypes"; //types
 // components
 import { Slideshow } from "./components/Slideshow";
 import Calendar from "./components/Calendar";
@@ -27,6 +27,7 @@ import TimeSlots from "./components/TimeSlots";
 import ConfirmDialog from "./components/ConfirmDialog";
 
 const theme = createTheme({
+  // create theme for custom color mui
   palette: {
     info: {
       main: "#E6F1FD",
@@ -39,7 +40,7 @@ const ShopDetailsPageWrapper = () => {
   // get shop details by id connected api
   const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
 
-  // mock up quantities
+  // handle quantities
   const [quantities, setQuantities] = useState<quantityTypes>({
     title: "Guest",
     desc: "Number of guest",
@@ -48,6 +49,7 @@ const ShopDetailsPageWrapper = () => {
     min: 1,
   });
 
+  // handle calendar date
   const [calendar, setCalendar] = useState({
     start: moment(),
     end: moment().add(10, "day"),
@@ -62,7 +64,7 @@ const ShopDetailsPageWrapper = () => {
 
   // handle services state
   const [services, setServices] = useState<serviceTypes[]>([]);
-  const [serviceById, setServiceById] = useState();
+  const [serviceById, setServiceById] = useState<any>();
 
   // handle dialog
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
@@ -111,7 +113,15 @@ const ShopDetailsPageWrapper = () => {
       `${app_api}/service/${
         services.find((item: any) => item.isSelected)?.id
       }/${selectedDate.date.format("YYYY-MM-DD")}`,
-    (url: string) => axios.get(url).then((res) => setServiceById(res.data)),
+    (url: string) =>
+      axios.get(url).then((res) =>
+        setServiceById({
+          ...res.data,
+          bookingSlots: res.data.bookingSlots.map((item: any) => {
+            return { ...item, isSelected: false };
+          }),
+        })
+      ),
     {
       revalidateOnFocus: false,
       onLoadingSlow: () => setServiceById(undefined),
@@ -119,6 +129,7 @@ const ShopDetailsPageWrapper = () => {
     }
   );
 
+  // catch errors api
   if (bussDataError | servicesDataError | serviceByIdError)
     return <div>Api Error</div>;
 
@@ -191,8 +202,21 @@ const ShopDetailsPageWrapper = () => {
           <div className="flex flex-col justify-center items-center my-5">
             <button
               type="button"
-              className="bg-[#020873] text-white text-[14px] font-semibold w-11/12 rounded-md py-3"
-              onClick={() => setIsShowDialog(true)}
+              disabled={
+                !serviceById?.bookingSlots.find((item: any) => item.isSelected)
+              }
+              className={`${
+                !serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                  ? "bg-gray-300"
+                  : "bg-[#020873]"
+              }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
+              onClick={() => {
+                if (
+                  serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                ) {
+                  setIsShowDialog(true);
+                }
+              }}
             >
               Confirm & Booking
             </button>
