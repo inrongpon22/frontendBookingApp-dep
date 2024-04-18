@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
 const ServiceOptions = () => {
-  const { services, setServices, quantities } = useContext(ShopContext);
+  const { services, setServices } = useContext(ShopContext);
   return (
     <div id="service-option" className="p-5">
       <h2 className="text-[20px] font-semibold">Service Option</h2>
@@ -17,13 +17,8 @@ const ServiceOptions = () => {
                   ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
                   : ""
               }`}
-              // ${
-              //   quantities.quantities > item.totalCapacity
-              //     ? "bg-gray-400 cursor-not-allowed"
-              //     : "cursor-pointer"
-              // }
               onClick={() => {
-                if (quantities.quantities <= item.totalCapacity) {
+                // if (quantities.quantities <= item.totalCapacity) {
                   setServices(
                     services.map((ii: any) => {
                       if (ii.id === item.id) {
@@ -33,7 +28,7 @@ const ServiceOptions = () => {
                       }
                     })
                   );
-                }
+                // }
               }}
             >
               <div className="">

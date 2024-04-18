@@ -3,7 +3,6 @@ import moment from "moment";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-// import CustomCarousel from "./Carousel";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
 const Calendar = () => {
@@ -77,24 +76,6 @@ const Calendar = () => {
           <ArrowForwardIosIcon />
         </button>
       </div>
-      {/* <CustomCarousel>
-        {dateArr.map((item: any, index: number) => {
-          return (
-            <div
-              key={index}
-              className={`flex flex-col justify-center items-center my-1 me-5 w-[100px] h-[100px] border rounded-lg
-                  ${
-                    moment(selectedDate?.date).isSame(moment(item?.date), "day")
-                      ? "border-black bg-[#8B8B8B33]"
-                      : ""
-                  }`}
-            >
-              <p>{moment(item.date).format("dd")}</p>
-              <p>{moment(item.date).format("D")}</p>
-            </div>
-          );
-        })}
-      </CustomCarousel> */}
       <div className="mt-5 grid grid-cols-5 gap-2">
         {dateArr.map((item: any, index: number) => {
           return (

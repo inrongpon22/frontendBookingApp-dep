@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { app_api } from "../../../helper/url";
+// context
+import { ShopContext } from "../ShopDetailsPageWrapper";
 // validation
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -17,9 +19,9 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import CheckIcon from "@mui/icons-material/Check";
 import { TransitionProps } from "@mui/material/transitions";
-import { useNavigate } from "react-router-dom";
-import { ShopContext } from "../ShopDetailsPageWrapper";
+import useSWR from "swr";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -57,22 +59,27 @@ const confirmationSchema = Yup.object().shape({
 });
 
 const ConfirmDialog = () => {
-  const navigate = useNavigate();
   const {
     shopDetail,
     services,
     selectedDate,
+    serviceById,
     quantities,
     isShowDialog,
     setIsShowDialog,
   } = useContext(ShopContext);
 
-  const [state, setState] = useState<string>("phone-input");
+  const [state, setState] = useState<string>("my-reservation"); //phone-input
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const token = localStorage.getItem("token")
+    ? JSON.parse(localStorage.getItem("token")!)
+    : null;
+
   const formik = useFormik({
     initialValues: {
+      userId: 0,
       username: "",
       phoneNumbers: "",
       additionalNotes: "",
@@ -90,6 +97,7 @@ const ConfirmDialog = () => {
             .then(async (res) => {
               if (res.status === 200) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
+                formik.setFieldValue("userId", res.data.userId);
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
                 setState("sign-up");
@@ -105,7 +113,7 @@ const ConfirmDialog = () => {
           break;
 
         case "sign-up":
-          setState("booking-success");
+          setState("booking-summary");
           break;
 
         default:
@@ -113,6 +121,52 @@ const ConfirmDialog = () => {
       }
     },
   });
+
+  const { data: myReservDatas } = useSWR(
+    state === "my-reservation" &&
+      isShowDialog &&
+      `${app_api}/getReservationByUserId/14`, //${formik.values}
+    (url: string) =>
+      axios
+        .get(url, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => res.data)
+  );
+
+  console.log(myReservDatas);
+
+  const createReservation = async () => {
+    const body = {
+      userId: formik.values.userId, // static id
+      serviceId: Number(services.find((item: any) => item.isSelected)?.id),
+      phoneNumber: formik.values.phoneNumbers,
+      remark: formik.values.additionalNotes,
+      startTime: serviceById?.bookingSlots.find((item: any) => item.isSelected)
+        ?.startTime,
+      endTime: serviceById?.bookingSlots.find((item: any) => item.isSelected)
+        ?.endTime,
+      status: "pending",
+      by: "customer",
+      userName: formik.values.username,
+      bookingDate: selectedDate.date.format("YYYY-MM-DD"),
+      guestNumber: quantities.quantities,
+    };
+    axios
+      .post(`${app_api}/reservation`, body, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(() => {
+        setState("my-reservation");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const lists: {
     label: string;
@@ -125,13 +179,10 @@ const ConfirmDialog = () => {
     {
       label: "When",
       text: `${selectedDate.date.format("dddd, MMMM D, YYYY")} ${
-        services
-          ?.find((item: any) => item.isSelected)
-          ?.bookingSlots.find((ii: any) => ii.isSelected)?.startTime
+        serviceById?.bookingSlots.find((item: any) => item.isSelected)
+          ?.startTime
       } - ${
-        services
-          ?.find((item: any) => item.isSelected)
-          ?.bookingSlots.find((ii: any) => ii.isSelected)?.endTime
+        serviceById?.bookingSlots.find((item: any) => item.isSelected)?.endTime
       }`,
     },
     {
@@ -323,12 +374,12 @@ const ConfirmDialog = () => {
               className="bg-[#020873] w-full text-white p-2 rounded-lg"
               onClick={() => formik.handleSubmit()}
             >
-              Confirm Booking
+              Confirm Information
             </button>
           </>
         );
 
-      case "booking-success":
+      case "booking-summary":
         return (
           <>
             <p className="text-[25px] font-semibold mt-14">
@@ -364,7 +415,7 @@ const ConfirmDialog = () => {
                 <button
                   type="button"
                   className="underline"
-                  onClick={() => navigate("/")}
+                  onClick={() => setIsShowDialog(false)}
                 >
                   Cancel
                 </button>
@@ -374,9 +425,48 @@ const ConfirmDialog = () => {
             <button
               type="button"
               className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
-              onClick={() => navigate("/")}
+              onClick={createReservation}
             >
-              Continue
+              Confirm & Booking
+            </button>
+          </>
+        );
+
+      case "booking-completed":
+        return (
+          <div className="h-full flex flex-col items-center justify-center">
+            <div className="flex flex-col justify-center items-center w-5/6 mt-auto">
+              <div className="flex justify-center items-center border-2 border-[#020873] rounded-full w-[72px] h-[72px]">
+                <CheckIcon fontSize="large" htmlColor="#020873" />
+              </div>
+              <p className="font-semibold text-[17px] my-3">
+                Booking complete!
+              </p>
+              <p className="font-normal text-[14px] text-center">
+                We sent an email with a calendar invitation with the details to
+                everyone.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="bg-[#020873] w-full text-white p-2 rounded-lg mt-auto"
+              onClick={() => setState("my-reservation")}
+            >
+              Go to my reservation
+            </button>
+          </div>
+        );
+
+      case "my-reservation":
+        return (
+          <>
+            <h1>My reservation</h1>
+            <button
+              type="button"
+              className="bg-[#020873] w-full text-white p-2 rounded-lg"
+              onClick={() => formik.handleSubmit()}
+            >
+              Go to my reservation
             </button>
           </>
         );
@@ -397,11 +487,11 @@ const ConfirmDialog = () => {
         break;
 
       case "sign-up":
-        setState("otp-verify");
+        setIsShowDialog(false);
         break;
 
-      case "booking-success":
-        setState("otp-verify");
+      case "my-reservation":
+        setIsShowDialog(false);
         break;
 
       default:
@@ -417,10 +507,14 @@ const ConfirmDialog = () => {
       open={isShowDialog}
       TransitionComponent={Transition}
     >
-      {state !== "booking-success" && (
+      {state !== "booking-summary" && state !== "booking-completed" && (
         <Toolbar className="grid grid-cols-4">
           <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-            {state === "phone-input" ? <CloseIcon /> : <ArrowBackIosIcon />}
+            {state === "phone-input" || state === "my-reservation" ? (
+              <CloseIcon />
+            ) : (
+              <ArrowBackIosIcon />
+            )}
           </span>
           <span className="w-full font-semibold col-span-3 text-center ">
             Confirm Booking
