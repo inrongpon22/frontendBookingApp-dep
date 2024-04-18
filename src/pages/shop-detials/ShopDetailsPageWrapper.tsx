@@ -1,21 +1,23 @@
-import { createContext, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { createContext, useState } from "react";
+import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null);
 import moment from "moment";
 // icon
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 // styled
-import { Chip, ThemeProvider, createTheme } from "@mui/material";
+import {
+  Backdrop,
+  Chip,
+  CircularProgress,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+// fetcher
+import useSWR, { mutate } from "swr";
 import axios from "axios";
 import { app_api } from "../../helper/url";
-import {
-  // openTimeTypes,
-  quantityTypes,
-  serviceTypes,
-  shopDetailTypes,
-} from "./detailTypes";
+import { quantityTypes, serviceTypes, shopDetailTypes } from "./detailTypes";
 // components
 import { Slideshow } from "./components/Slideshow";
 import Calendar from "./components/Calendar";
@@ -33,7 +35,6 @@ const theme = createTheme({
 });
 
 const ShopDetailsPageWrapper = () => {
-  const navigate = useNavigate();
   const { id } = useParams(); // id from params
   // get shop details by id connected api
   const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
@@ -67,18 +68,17 @@ const ShopDetailsPageWrapper = () => {
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
 
   // get business by id from params
-  useMemo(() => {
-    axios.get(`${app_api}/business/${id}`).then((res) => {
-      if (res.status === 200) {
-        setShopDetail(res.data);
-      }
-    });
-  }, []);
+  const { error: bussDataError } = useSWR(
+    `${app_api}/business/${id}`,
+    (url: string) => axios.get(url).then((res) => setShopDetail(res.data)),
+    { revalidateOnFocus: false }
+  );
 
   // get services by business id
-  useMemo(() => {
-    axios.get(`${app_api}/serviceByBusinessId/${id}`).then((res) => {
-      if (res.status === 200) {
+  const { error: servicesDataError } = useSWR(
+    `${app_api}/serviceByBusinessId/${id}`,
+    (url: string) =>
+      axios.get(url).then((res) =>
         setServices(
           res.data.map((item: any, index: number) => {
             if (index === 0) {
@@ -99,30 +99,28 @@ const ShopDetailsPageWrapper = () => {
               };
             }
           })
-        );
-      }
-    });
-  }, []);
+        )
+      ),
+    { revalidateOnFocus: false }
+  );
 
   // get services by id
-  useMemo(() => {
-    if (services.find((item: any) => item.isSelected)) {
-      setServiceById(undefined);
-      axios
-        .get(
-          `${app_api}/service/${
-            services.find((item: any) => item.isSelected)?.id
-          }/${selectedDate.date.format("YYYY-MM-DD")}`
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            setServiceById(res.data);
-          }
-        });
+  const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
+    () =>
+      services.find((item: any) => item.isSelected) &&
+      `${app_api}/service/${
+        services.find((item: any) => item.isSelected)?.id
+      }/${selectedDate.date.format("YYYY-MM-DD")}`,
+    (url: string) => axios.get(url).then((res) => setServiceById(res.data)),
+    {
+      revalidateOnFocus: false,
+      onLoadingSlow: () => setServiceById(undefined),
+      loadingTimeout: 0,
     }
-  }, [services]);
+  );
 
-  // console.log(serviceById)
+  if (bussDataError | servicesDataError | serviceByIdError)
+    return <div>Api Error</div>;
 
   return (
     <ThemeProvider theme={theme}>
@@ -146,18 +144,13 @@ const ShopDetailsPageWrapper = () => {
           setIsShowDialog,
         }}
       >
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={servByIdLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="relative lg:grid lg:grid-cols-2">
-          {/* Starts: back button */}
-          <button
-            type="button"
-            className="absolute top-5 left-5 bg-white py-1 px-3 rounded-lg z-50"
-            onClick={() => navigate("/")}
-          >
-            <KeyboardBackspaceIcon />
-            Back
-          </button>
-          {/* Starts: back button */}
-
           <Slideshow data={shopDetail?.imagesURL || []} />
 
           <div id="shop-details" className="relative my-auto p-5">
@@ -194,6 +187,17 @@ const ShopDetailsPageWrapper = () => {
           <ServiceOptions />
 
           <TimeSlots />
+
+          <div className="flex flex-col justify-center items-center my-5">
+            <button
+              type="button"
+              className="bg-[#020873] text-white text-[14px] font-semibold w-11/12 rounded-md py-3"
+              onClick={() => setIsShowDialog(true)}
+            >
+              Confirm & Booking
+            </button>
+            <span className="text-[12px]">Please review details carefully</span>
+          </div>
 
           {/* Starts:: dialog */}
           <ConfirmDialog />

@@ -5,7 +5,7 @@ import moment from "moment";
 // import { app_api } from "../../../helper/url";
 
 const TimeSlots = () => {
-  const { selectedDate, services, setServices, serviceById, setIsShowDialog } =
+  const { selectedDate, services, setServices, serviceById, quantities } =
     useContext(ShopContext);
 
   return (
@@ -20,7 +20,7 @@ const TimeSlots = () => {
               <div
                 key={index}
                 className={`flex flex-col border rounded-lg text-center p-3 ${
-                  item?.capacity > 0
+                  item?.capacity >= quantities.quantities
                     ? "border-[#000000] cursor-pointer"
                     : "text-[#8C8C8C] bg-[#8B8B8B33]"
                 } ${
@@ -29,7 +29,7 @@ const TimeSlots = () => {
                     : ""
                 }`}
                 onClick={() => {
-                  if (item?.capacity > 0) {
+                  if (item?.capacity >= quantities.quantities) {
                     setServices(
                       services.map((prev: any) => {
                         if (prev.isSelected) {
@@ -48,7 +48,6 @@ const TimeSlots = () => {
                         }
                       })
                     );
-                    setIsShowDialog(true);
                   }
                 }}
               >
