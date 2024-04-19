@@ -9,11 +9,12 @@ const Calendar = () => {
   const {
     calendar,
     setCalendar,
+    services,
     dateArr,
     setDateArr,
     selectedDate,
     setSelectedDate,
-  } = useContext(ShopContext);
+  } = useContext(ShopContext)
 
   const handleDateChange = (meth: string) => {
     switch (meth) {
@@ -48,6 +49,7 @@ const Calendar = () => {
 
   return (
     <div id="calendar" className="relative mt-5 p-5 col-span-2">
+      {/* starts:: button */}
       <div className="flex justify-between">
         <button
           type="button"
@@ -76,8 +78,13 @@ const Calendar = () => {
           <ArrowForwardIosIcon />
         </button>
       </div>
+      {/* ends:: button */}
+
       <div className="mt-5 grid grid-cols-5 gap-2">
         {dateArr.map((item: any, index: number) => {
+          const isOpen: boolean = services
+            ?.find((item: any) => item.isSelected)
+            ?.daysOpen.includes(item.format("dddd"));
           return (
             <div
               key={index}
@@ -86,8 +93,14 @@ const Calendar = () => {
                     moment(selectedDate?.date).isSame(item, "day")
                       ? "border-2 border-[#003B95] bg-[#006CE31A] text-[#003B95]"
                       : ""
-                  }`}
-              onClick={() => setSelectedDate({ date: item })}
+                  } ${
+                isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
+              }`}
+              onClick={() => {
+                if (isOpen) {
+                  setSelectedDate({ date: item });
+                }
+              }}
             >
               <p className="text-[14px] font-thin">{item.format("dd")}</p>
               <p className="text-[25px] font-semibold">{item.format("D")}</p>

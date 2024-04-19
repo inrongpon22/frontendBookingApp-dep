@@ -136,8 +136,6 @@ const ConfirmDialog = () => {
         .then((res) => res.data)
   );
 
-  console.log(myReservDatas);
-
   const createReservation = async () => {
     const body = {
       userId: formik.values.userId, // static id

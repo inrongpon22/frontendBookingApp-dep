@@ -106,7 +106,7 @@ const ShopDetailsPageWrapper = () => {
     { revalidateOnFocus: false }
   );
 
-  // get services by id
+  // get time slots by service id
   const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
     () =>
       services.find((item: any) => item.isSelected) &&
