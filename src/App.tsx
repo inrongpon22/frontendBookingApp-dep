@@ -4,10 +4,7 @@
 // import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // components
-import ExplorePageWrapper from "./pages/explore/ExplorePageWrapper";
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
-import BLogin from "./pages/business/BLogin";
-import OTP from "./pages/business/OTP";
 import FindLocation from "./pages/business/FindLocation";
 import CreateBusiness from "./pages/business/CreateBusiness";
 
@@ -16,13 +13,10 @@ function App() {
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<ExplorePageWrapper />} />
                     <Route
                         path="/details/:id"
                         element={<ShopDetailsPageWrapper />}
                     />
-                    <Route path="/userLogin" element={<BLogin />} />
-                    <Route path="/OTP" element={<OTP />} />
                     <Route path="/findLocation" element={<FindLocation />} />
                     <Route
                         path="/createBusiness/:page"
