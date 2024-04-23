@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null); //create context to store all the data
 import moment from "moment";
@@ -37,6 +37,7 @@ const theme = createTheme({
 
 const ShopDetailsPageWrapper = () => {
   const { id } = useParams(); // id from params
+  
   // get shop details by id connected api
   const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
 
@@ -48,6 +49,8 @@ const ShopDetailsPageWrapper = () => {
     max: 10,
     min: 1,
   });
+
+
 
   // handle calendar date
   const [calendar, setCalendar] = useState({
@@ -68,6 +71,7 @@ const ShopDetailsPageWrapper = () => {
 
   // handle dialog
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<string>("phone-input"); //phone-input
 
   // get business by id from params
   const { error: bussDataError } = useSWR(
@@ -106,7 +110,7 @@ const ShopDetailsPageWrapper = () => {
     { revalidateOnFocus: false }
   );
 
-  // get services by id
+  // get time slots by service id
   const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
     () =>
       services.find((item: any) => item.isSelected) &&
@@ -129,6 +133,30 @@ const ShopDetailsPageWrapper = () => {
     }
   );
 
+  useMemo(() => {
+    if (
+      // if today not includes days open, auto select next available date
+      services.length > 0 &&
+      !services
+        .find((item: any) => item.isSelected)
+        ?.daysOpen.includes(selectedDate.date.format("dddd"))
+    ) {
+      const nextavailable = dateArr.filter((item: any) =>
+        services
+          .find((item: any) => item.isSelected)
+          ?.daysOpen.includes(item.format("dddd"))
+      )[0];
+      setSelectedDate({ date: nextavailable });
+    } else {
+      setSelectedDate({ date: moment() });
+    }
+  }, [services]);
+
+  // browser tab title
+  useEffect(() => {
+    document.title = shopDetail?.title || "Shop Detail";
+  }, [shopDetail])
+  
   // catch errors api
   if (bussDataError | servicesDataError | serviceByIdError)
     return <div>Api Error</div>;
@@ -153,8 +181,11 @@ const ShopDetailsPageWrapper = () => {
           setQuantities,
           isShowDialog,
           setIsShowDialog,
+          modalState,
+          setModalState,
         }}
       >
+      
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={servByIdLoading}

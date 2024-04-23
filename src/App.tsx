@@ -5,6 +5,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
+import BookingSummaryWrapper from "./pages/booking-summary/BookingSummaryWrapper";
+import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/details/:id" element={<ShopDetailsPageWrapper />} />
+          <Route path="/booking-success" element={<BookingSummaryWrapper />} />
+          <Route path="/my-bookings" element={<MyBookingWrapper />} />
+          <Route path="/booking/:id" element={<BookingSummaryWrapper />} />
         </Routes>
       </BrowserRouter>
     </>
