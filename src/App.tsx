@@ -5,8 +5,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
-import FindLocation from "./pages/business/FindLocation";
 import CreateBusiness from "./pages/business/CreateBusiness";
+import Business from "./pages/business/Business";
 
 function App() {
     return (
@@ -17,11 +17,12 @@ function App() {
                         path="/details/:id"
                         element={<ShopDetailsPageWrapper />}
                     />
-                    <Route path="/findLocation" element={<FindLocation />} />
+                    {/* <Route path="/findLocation" element={<FindLocation />} /> */}
                     <Route
                         path="/createBusiness/:page"
                         element={<CreateBusiness />}
                     />
+                    <Route path="/business" element={<Business />} />
                 </Routes>
             </BrowserRouter>
         </>

@@ -4,16 +4,13 @@ import PlacesAutocomplete, {
     Suggestion,
 } from "react-places-autocomplete";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { Component } from "react";
 import { Divider, IconButton } from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { alpha } from "@mui/system";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-
-interface LocationSearchInputState {
-    address: string;
-}
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type LocationData = {
     lat: number;
@@ -21,42 +18,41 @@ type LocationData = {
     address: string;
 };
 
-class LocationSearchInput extends Component<object, LocationSearchInputState> {
-    constructor(props: object) {
-        super(props);
-        this.state = { address: "" };
-    }
+export default function SearchMap() {
+    const [address, setAddress] = useState("");
+    const navigate = useNavigate();
 
-    handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
+    const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
         const locationData: LocationData = { lat, lng, address };
         const jsonData = JSON.stringify(locationData);
         localStorage.setItem("locationData", jsonData);
+        navigate("/createBusiness/2");
     };
 
-    handleChange = (address: string) => {
-        this.setState({ address });
+    const handleChange = (address: string) => {
+        setAddress(address);
     };
 
-    handleSelect = (address: string) => {
+    const handleSelect = (address: string) => {
         geocodeByAddress(address)
             .then((results) => getLatLng(results[0]))
             .then((latLng) => {
-                this.handleChangeAddress({
+                handleChangeAddress({
                     lat: latLng.lat,
                     lng: latLng.lng,
                     address: address,
                 });
-                this.setState({ address });
+                setAddress(address);
             })
             .catch((error) => console.error("Error", error));
     };
 
-    render() {
-        return (
+    return (
+        <div>
             <PlacesAutocomplete
-                value={this.state.address}
-                onChange={this.handleChange}
-                onSelect={this.handleSelect}>
+                value={address}
+                onChange={handleChange}
+                onSelect={handleSelect}>
                 {({
                     getInputProps,
                     suggestions,
@@ -76,16 +72,16 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
                                         placeholder: "Search Places ...",
                                         className: "location-search-input",
                                     })}
-                                    value={this.state.address}
+                                    value={address}
                                     type="search"
                                     id="default-search"
                                     style={{ color: "#8B8B8B" }}
                                     className="w-full p-4 border-black ps-10 text-sm border rounded-lg focus:outline-none"
                                     placeholder="Name, street, building ..."
                                 />
-                                {this.state.address != "" && (
+                                {address != "" && (
                                     <div
-                                        onClick={() => this.handleChange("")}
+                                        onClick={() => handleChange("")}
                                         className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                         <CloseOutlinedIcon
                                             sx={{ color: "#8B8B8B" }}
@@ -170,8 +166,6 @@ class LocationSearchInput extends Component<object, LocationSearchInputState> {
                     </>
                 )}
             </PlacesAutocomplete>
-        );
-    }
+        </div>
+    );
 }
-
-export default LocationSearchInput;
