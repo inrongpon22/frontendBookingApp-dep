@@ -11,6 +11,7 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ILocation } from "./interfaces/business";
 
 type LocationData = {
     lat: number;
@@ -18,14 +19,17 @@ type LocationData = {
     address: string;
 };
 
-export default function SearchMap() {
+interface IParameter {
+    handleChangeLocation: (inputData: ILocation) => void;
+}
+
+export default function SearchMap(props: IParameter) {
     const [address, setAddress] = useState("");
     const navigate = useNavigate();
 
     const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
         const locationData: LocationData = { lat, lng, address };
-        const jsonData = JSON.stringify(locationData);
-        localStorage.setItem("locationData", jsonData);
+        props.handleChangeLocation(locationData);
         navigate("/createBusiness/2");
     };
 
@@ -111,13 +115,13 @@ export default function SearchMap() {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                              backgroundColor: "#fafafa",
-                                              cursor: "pointer",
-                                          }
+                                            backgroundColor: "#fafafa",
+                                            cursor: "pointer",
+                                        }
                                         : {
-                                              backgroundColor: "#ffffff",
-                                              cursor: "pointer",
-                                          };
+                                            backgroundColor: "#ffffff",
+                                            cursor: "pointer",
+                                        };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(
