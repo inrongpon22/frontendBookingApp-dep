@@ -1,4 +1,4 @@
-// styled
+// context
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
@@ -18,17 +18,15 @@ const ServiceOptions = () => {
                   : ""
               }`}
               onClick={() => {
-                // if (quantities.quantities <= item.totalCapacity) {
-                  setServices(
-                    services.map((ii: any) => {
-                      if (ii.id === item.id) {
-                        return { ...ii, isSelected: true };
-                      } else {
-                        return { ...ii, isSelected: false };
-                      }
-                    })
-                  );
-                // }
+                setServices(
+                  services.map((ii: any) => {
+                    if (ii.id === item.id) {
+                      return { ...ii, isSelected: true };
+                    } else {
+                      return { ...ii, isSelected: false };
+                    }
+                  })
+                );
               }}
             >
               <div className="">

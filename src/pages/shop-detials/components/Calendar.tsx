@@ -14,7 +14,7 @@ const Calendar = () => {
     setDateArr,
     selectedDate,
     setSelectedDate,
-  } = useContext(ShopContext)
+  } = useContext(ShopContext);
 
   const handleDateChange = (meth: string) => {
     switch (meth) {
