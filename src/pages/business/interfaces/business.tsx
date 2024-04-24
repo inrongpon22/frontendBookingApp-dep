@@ -12,11 +12,12 @@ export interface IBusinessInfo {
 
 export interface IaddBusiness {
     title: string;
-    imagesURL: string[],
-    description: string,
-    phoneNumber: string,
-    address: string,
-    latitude: number,
-    longitude: number,
-    userId: number,
+    imagesURL: string[];
+    description: string;
+    phoneNumber: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    daysOpen: string[];
+    userId: number;
 }

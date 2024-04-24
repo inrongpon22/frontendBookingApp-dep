@@ -3,7 +3,9 @@ import { Divider } from "@mui/material";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import BusinessInfo from "./BusinessInfo";
-import Schedule from "./Schedule";
+import CreateServiceOne from "./ServiceInfo";
+import ServiceList from "./ServiceList";
+import CreateServiceTwo from "./ServiceTime";
 
 export default function CreateBusiness() {
     const { page } = useParams();
@@ -24,9 +26,13 @@ export default function CreateBusiness() {
                     </div>
 
                     <div className="font-bold" style={{ fontSize: "14px" }}>
-                        {page == "3" || page == "4"
-                            ? "Set up schedule"
-                            : "Create business"}
+                        {page == "1"
+                            ? "Create business"
+                            : page == "2"
+                            ? "Service List"
+                            : page == "3"
+                            ? "Service Info"
+                            : "Service Time"}
                     </div>
 
                     <div></div>
@@ -37,9 +43,11 @@ export default function CreateBusiness() {
                 {page === "1" ? (
                     <BusinessInfo />
                 ) : page === "2" ? (
-                    <BusinessInfo />
+                    <ServiceList />
+                ) : page === "3" ? (
+                    <CreateServiceOne />
                 ) : (
-                    <Schedule />
+                    <CreateServiceTwo />
                 )}
             </div>
         </div>

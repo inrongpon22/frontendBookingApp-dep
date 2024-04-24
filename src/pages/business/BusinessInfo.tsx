@@ -135,11 +135,12 @@ export default function BusinessInfo() {
                 address: locationData.address,
                 latitude: locationData.lat,
                 longitude: locationData.lng,
+                daysOpen: daysOpen,
                 userId: 13,
             };
 
             await insertBusiness(insertData);
-            navigate("/createBusiness/3");
+            navigate("/createBusiness/2");
         },
     });
 
@@ -184,7 +185,7 @@ export default function BusinessInfo() {
                         type="text"
                         name="title"
                         style={{ color: "#8B8B8B" }}
-                        placeholder="……"
+                        placeholder="fill the name of your store"
                         className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
                             formik.errors?.title
                                 ? "border-2 border-rose-500"
@@ -302,7 +303,7 @@ export default function BusinessInfo() {
                         onBlur={formik.handleBlur}
                         type="text"
                         style={{ color: "#8B8B8B" }}
-                        placeholder="……"
+                        placeholder="enter the service phone number"
                         className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
                             formik.errors?.phoneNumber
                                 ? "border-2 border-rose-500"
@@ -330,7 +331,7 @@ export default function BusinessInfo() {
                             value={formik.values.description}
                             onChange={formik.handleChange}
                             style={{ color: "#8B8B8B" }}
-                            placeholder="……"
+                            placeholder="briefly introduce your store "
                             className="w-full focus:outline-none resize-none"
                             rows={3}
                             maxLength={150}
