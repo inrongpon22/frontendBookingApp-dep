@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { app_api } from "../../../helper/url";
 // context
@@ -42,6 +43,8 @@ const ConfirmDialog = () => {
     modalState,
     setModalState,
   } = useContext(ShopContext);
+
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -181,11 +184,9 @@ const ConfirmDialog = () => {
           <>
             <div className="">
               <p className="text-[25px] font-semibold">
-                Verify your phone number with a code
+                {t("verifyPhoneNumber")}
               </p>
-              <span className="text-[14px]">
-                We will send a code - it help us keep yours account secure.
-              </span>
+              <span className="text-[14px]">{t("verifyPhoneNumberDesc")}</span>
             </div>
             <input
               type="text"
@@ -215,7 +216,9 @@ const ConfirmDialog = () => {
               className="w-full flex items-center justify-center bg-[#020873] text-white p-2 mt-5 rounded-lg"
               onClick={() => formik.handleSubmit()}
             >
-              <span className={isLoading ? "text-gray-400" : ""}>Continue</span>
+              <span className={isLoading ? "text-gray-400" : ""}>
+                {t("button:continueButton")}
+              </span>
               <span
                 className={`${
                   isLoading ? "flex items-center justify-center" : "hidden"
@@ -231,7 +234,7 @@ const ConfirmDialog = () => {
         return (
           <>
             <p>
-              Enter the 6-digit security code we send to you at ******
+              {t("otpVerification")}
               {formik.values.phoneNumbers.slice(-4)}
             </p>
             <input
@@ -252,9 +255,7 @@ const ConfirmDialog = () => {
               }}
             />
             {formik.touched.otp && formik.errors.otp && (
-              <p className="text-[14px] text-rose-500">
-                {formik.errors?.otp}
-              </p>
+              <p className="text-[14px] text-rose-500">{formik.errors?.otp}</p>
             )}
             <button
               type="button"
@@ -273,7 +274,7 @@ const ConfirmDialog = () => {
                   });
               }}
             >
-              I didn’t receive a code
+              {t("dontReceiveCode")}
             </button>
 
             <button
@@ -281,7 +282,7 @@ const ConfirmDialog = () => {
               className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
               onClick={() => formik.handleSubmit()}
             >
-              Continue
+              {t("button:continueButton")}
             </button>
           </>
         );
@@ -290,23 +291,23 @@ const ConfirmDialog = () => {
         return (
           <>
             <div className="">
-              <p className="text-[14px] font-semibold">Booking Detail</p>
+              <p className="text-[14px] font-semibold">{t("bookingDetails")}</p>
               <div className="border rounded-md mt-1">
                 <p className="flex justify-between p-3">
-                  <span>Services:</span>
+                  <span>{t("services")}:</span>
                   <span className="text-[14px] font-bold">
                     {shopDetail.title}{" "}
                     {services?.find((item: any) => item.isSelected)?.title}
                   </span>
                 </p>
                 <p className="flex justify-between p-3">
-                  <span>Date:</span>
+                  <span>{t("date")}:</span>
                   <span className="text-[14px] font-bold">
                     {selectedDate?.date.format("MMMM DD, YYYY")}
                   </span>
                 </p>
                 <p className="flex justify-between p-3">
-                  <span>Time:</span>
+                  <span>{t('time')}:</span>
                   <span className="text-[14px] font-bold">
                     {
                       serviceById?.bookingSlots.find(
@@ -322,13 +323,13 @@ const ConfirmDialog = () => {
                   </span>
                 </p>
                 <p className="flex justify-between p-3">
-                  <span>Guest:</span>
+                  <span>{t("guests")}:</span>
                   <span className="text-[14px] font-bold">
                     {quantities.quantities}
                   </span>
                 </p>
                 <p className="flex justify-between p-3">
-                  <span>Price:</span>
+                  <span>{t("price")}:</span>
                   <span className="text-[14px] font-bold">
                     {services?.find((item: any) => item.isSelected)?.price}{" "}
                     {serviceById?.currency}
@@ -337,7 +338,7 @@ const ConfirmDialog = () => {
               </div>
             </div>
             <div className="mt-3">
-              <p className="text-[14px] font-semibold">Booking Name</p>
+              <p className="text-[14px] font-semibold">{t("bookingName")}</p>
               <input
                 type="text"
                 {...formik.getFieldProps("username")}
@@ -355,7 +356,7 @@ const ConfirmDialog = () => {
               )}
             </div>
             <div className="mt-3">
-              <p className="text-[14px] font-semibold">Booking Number</p>
+              <p className="text-[14px] font-semibold">{t("bookingNumbers")}</p>
               <input
                 type="text"
                 {...formik.getFieldProps("phoneNumbers")}
@@ -373,7 +374,7 @@ const ConfirmDialog = () => {
               )}
             </div>
             <div className="mt-3">
-              <p className="text-[14px] font-semibold">Note (Optional)</p>
+              <p className="text-[14px] font-semibold">{t("notes")}</p>
               <textarea
                 rows={3}
                 {...formik.getFieldProps("additionalNotes")}
@@ -383,9 +384,7 @@ const ConfirmDialog = () => {
             </div>
             <div className="flex flex-col py-2">
               <label htmlFor="" className="text-[12px] text-[#5C5C5C]">
-                By clicking 'Confirm booking,' you agree to our Terms of Service
-                and Privacy Policy, granting us permission to use your personal
-                information in accordance with our policies.
+                {t("termsAndprivacy")}
               </label>
             </div>
             <button
@@ -393,7 +392,7 @@ const ConfirmDialog = () => {
               className="bg-[#020873] w-full text-white p-2 rounded-lg"
               onClick={createReservation}
             >
-              Confirm & Booking
+              {t("button:confirmBookingButton")}
             </button>
           </>
         );
@@ -437,7 +436,7 @@ const ConfirmDialog = () => {
           {modalState === "phone-input" ? <CloseIcon /> : <ArrowBackIosIcon />}
         </span>
         <span className="w-full font-semibold col-span-3 text-center">
-          Confirm Booking
+          {t("title:confirmBookingDialogHeader")}
         </span>
       </Toolbar>
 

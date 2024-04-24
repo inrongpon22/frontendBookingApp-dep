@@ -1,9 +1,25 @@
 import { useContext, useEffect } from "react";
+// import { useTranslation } from "react-i18next";
 import moment from "moment";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { ShopContext } from "../ShopDetailsPageWrapper";
+
+// const thaiMonths: string[] = [
+//   "มกราคม",
+//   "กุมภาพันธ์",
+//   "มีนาคม",
+//   "เมษายน",
+//   "พฤษภาคม",
+//   "มิถุนายน",
+//   "กรกฎาคม",
+//   "สิงหาคม",
+//   "กันยายน",
+//   "ตุลาคม",
+//   "พฤศจิกายน",
+//   "ธันวาคม",
+// ];
 
 const Calendar = () => {
   const {
@@ -15,6 +31,11 @@ const Calendar = () => {
     selectedDate,
     setSelectedDate,
   } = useContext(ShopContext);
+
+  // const {
+  //   t,
+  //   i18n: { language },
+  // } = useTranslation();
 
   const handleDateChange = (meth: string) => {
     switch (meth) {

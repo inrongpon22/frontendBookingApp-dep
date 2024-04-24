@@ -1,15 +1,19 @@
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const TimeSlots = () => {
   const { selectedDate, setServiceById, serviceById, quantities } =
     useContext(ShopContext);
 
+  const { t } = useTranslation();
+
   return (
     <div id="times" className="mt-5 p-5 col-span-2">
       <h2 className="text-[17px] font-semibold">
         {moment(selectedDate.date).format("ll")}
+        <p>{t("time")}</p>
       </h2>
       <div
         className={`grid ${
@@ -59,14 +63,14 @@ const TimeSlots = () => {
                     }`}
                   ></div>
                   {item?.capacity !== 0
-                    ? `${item?.capacity} available`
-                    : "Full"}
+                    ? `${item?.capacity} ${t("available")}`
+                    : t("full")}
                 </span>
               </div>
             );
           })
         ) : (
-          <span>Loading...</span>
+          <span>{t('loading')}...</span>
         )}
       </div>
     </div>

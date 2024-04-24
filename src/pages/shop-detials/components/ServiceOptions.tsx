@@ -1,12 +1,18 @@
+// i18n
+import { useTranslation } from "react-i18next";
 // context
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
 const ServiceOptions = () => {
   const { services, setServices } = useContext(ShopContext);
+
+  // i18n
+  const { t } = useTranslation();
+
   return (
     <div id="service-option" className="p-5">
-      <h2 className="text-[20px] font-semibold">Service Option</h2>
+      <h2 className="text-[20px] font-semibold">{t("serviceOptions")}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
         {services?.map((item: any, index: number) => {
           return (

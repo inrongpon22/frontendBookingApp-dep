@@ -1,0 +1,74 @@
+{
+  "translation": {
+    "loading": "Loading",
+    "numberOfGuests": "Number of guest (s)",
+    "serviceOptions": "Service Options",
+    "time": "Time",
+    "available": "Available",
+    "full": "Full",
+    "reviewDetails": "Please review details carefully",
+    "verifyPhoneNumber": "Verify Phone Number",
+    "verifyPhoneNumberDesc": "We will send a code - it help us keep yours account secure.",
+    "otpVerification": "Enter the 6-digit security code we send to you at ******",
+    "dontReceiveCode": "I didn’t receive a code",
+    "bookingDetails": "Booking Details",
+    "services": "Service",
+    "date": "Date",
+    "guests": "Guests",
+    "price": "Price",
+    "what": "What",
+    "where": "Where",
+    "when": "When",
+    "who": "Who",
+    "bookingName": "Booking Name",
+    "bookingNumbers": "Booking Numbers",
+    "notes": "Notes (Optional)",
+    "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies."
+  },
+  "title": {
+    "bookingIsconfirmed": "The Booking is confirmed",
+    "confirmBookingDialogHeader": "Confirm Booking",
+    "myBookings": "My Bookings",
+    "bookingSuccess": "Booking Success"
+  },
+  "desc": {
+    "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there."
+  },
+  "button": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "goToMyBookingButton": "Go to My Booking",
+    "confirmBookingButton": "Confirm & Booking",
+    "continueButton": "Continue",
+    "cancelBookingButton": "Cancel",
+    "bookingFailedBackButton": "Back to main",
+    "bookingFailedTryAgainButton": "Try again",
+    "bookingFailedCloseButton": "Close"
+  },
+  "noti": {
+    "booking": {
+      "create": {
+        "success": "Booking created successfully",
+        "fail": "Booking created fail"
+      },
+      "cancel": {
+        "success": "Booking cancelled successfully",
+        "fail": "Booking cancelled fail",
+        "confirmation": "Are you sure to cancel booking",
+        "confirmationDesc": "Booking slot will be available to others."
+      }
+    }
+  },
+  "error": {
+    "required": "required",
+    "invalidPhoneNumber": "invalid phone number",
+    "invalidOTP": "invalid OTP",
+    "bookingFailed": "Booking failed",
+    "bookingFailedMessage": "booking"
+  },
+  "fragment": {
+    "needTo": "Need to",
+    "cancel": "Cancelled",
+    "aBooking": "a Booking"
+  }
+}
