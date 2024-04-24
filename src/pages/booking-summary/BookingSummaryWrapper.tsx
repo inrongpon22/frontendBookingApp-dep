@@ -7,6 +7,7 @@ import axios from "axios";
 import { app_api } from "../../helper/url";
 import useSWR from "swr";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ const BookingSummaryWrapper = () => {
   const token = localStorage.getItem("token")
     ? JSON.parse(localStorage.getItem("token")!)
     : null;
+
+  const { t } = useTranslation();
 
   const [lists, setLists] = useState<
     {
@@ -37,19 +40,19 @@ const BookingSummaryWrapper = () => {
         .catch((err) => console.log(err))
   );
 
-
-
-
   const cancelBooking = async () => {
     Swal.fire({
-      title: `<span style="font-size: 17px; font-weight: bold;">Are you sure to cancel booking?</span>`,
+      title: `<span style="font-size: 17px; font-weight: bold;">${t(
+        "noti:booking:cancel:confirmation"
+      )}?</span>`,
       html: `
     <span style="font-size: 14px;">
-      Booking slot will be available to others.
+    ${t("noti:booking:cancel:confirmationDesc")}
+    
     </span>`,
       showCancelButton: true,
-      cancelButtonText: "Cancel",
-      confirmButtonText: "Confirm",
+      cancelButtonText: t("button:cancel"),
+      confirmButtonText: t("button:confirm"),
       reverseButtons: true,
       customClass: {
         confirmButton: "border rounded-lg py-3 px-10 text-white bg-[#020873]",
@@ -59,94 +62,88 @@ const BookingSummaryWrapper = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .post(
-            `${app_api}/cancelReservation/${id}/${bookingById.serviceId}`,
-            {
-              headers: {
-                Authorization: `${token}`,
-              },
-            }
-          )
+          .post(`${app_api}/cancelReservation/${id}/${bookingById.serviceId}`, {
+            headers: {
+              Authorization: `${token}`,
+            },
+          })
           .then(() => {
             Toast.fire({
               icon: "success",
-              title: "Booking cancelled successfully",
+              title: t("noti:booking:cancel:success"),
             });
           })
           .catch((error) => {
             console.log(error);
             Toast.fire({
               icon: "error",
-              title: "Booking cancellation failed",
+              title: t("noti:booking:cancel:fail"),
             });
           });
-      } else {
-        console.log("booking cancellation cancelled");
       }
     });
   };
 
   useEffect(() => {
     if (location.state?.data.reservationId && location.state?.data.serviceId) {
-      document.title = "Booking Success";
+      document.title = t("title:bookingSuccess");
       Toast.fire({
         icon: "success",
-        title: "Create booking successfully",
+        title: t("noti:booking:create:success"),
       });
-      console.log("success");
       setLists([
         {
-          label: "What",
+          label: t("what"),
           text: location.state?.lists.what,
         },
         {
-          label: "When",
+          label: t("when"),
           text: location.state?.lists.when,
         },
         {
-          label: "Where",
+          label: t("where"),
           text: location.state?.lists.where,
         },
         {
-          label: "Who",
+          label: t("who"),
           text: location.state?.lists.who,
         },
         {
-          label: "Price",
+          label: t("price"),
           text: location.state?.lists.price,
         },
         {
-          label: "Note",
+          label: t("notes"),
           text: location.state?.lists.note,
         },
       ]);
     } else {
-      document.title = "My Booking";
+      document.title = t("title:myBookings");
       setLists([
         {
-          label: "What",
+          label: t("what"),
           text: bookingById?.title,
         },
         {
-          label: "When",
+          label: t("when"),
           text: `${moment(bookingById?.bookingDate).format(
             "dddd, MMMM D, YYYY"
           )}`,
         },
         {
-          label: "Where",
+          label: t("where"),
           text: bookingById?.address,
         },
         {
-          label: "Who",
+          label: t("who"),
           text: `${bookingById?.userName} (${bookingById?.guestNumber} person)`,
         },
         {
-          label: "Price",
+          label: t("price"),
           text: bookingById?.price,
         },
         {
-          label: "Note",
+          label: t("notes"),
           text: bookingById?.remark ? bookingById?.remark : "-",
         },
       ]);
@@ -156,12 +153,9 @@ const BookingSummaryWrapper = () => {
   return (
     <div className="p-5">
       <p className="text-[25px] font-semibold mt-14">
-        This booking is confirmed
+        {t("title:bookingIsconfirmed")}
       </p>
-      <p className="my-3">
-        We've sent an SMS to confirm your booking, You can review your booking
-        details there.
-      </p>
+      <p className="my-3">{t("desc:weSendSms")}</p>
       <Divider />
       <div className="py-4">
         {lists?.map((item: any, index: number) => {
@@ -173,23 +167,23 @@ const BookingSummaryWrapper = () => {
           );
         })}
       </div>
-      <Divider />
-      <div className="flex justify-center">
+      <div className={id ? "flex justify-center" : "hidden"}>
+        <Divider />
         <span className="py-5 w-2/3 text-center">
-          Need to{" "}
+          {t("fragment:needTo")}{" "}
           <button type="button" className="underline" onClick={cancelBooking}>
-            Cancelled
+            {t("fragment:cancel")}
           </button>{" "}
-          a booking?
+          {t("fragment:aBooking")}?
         </span>
+        <Divider />
       </div>
-      <Divider />
       <button
         type="button"
         className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
         onClick={() => navigate("/my-bookings")}
       >
-        Go to my booking
+        {t("button:goToMyBookingButton")}
       </button>
     </div>
   );

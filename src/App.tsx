@@ -3,6 +3,7 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import './i18n.ts'
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
 import BookingSummaryWrapper from "./pages/booking-summary/BookingSummaryWrapper";

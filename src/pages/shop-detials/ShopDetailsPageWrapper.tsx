@@ -1,7 +1,9 @@
 import { createContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null); //create context to store all the data
 import moment from "moment";
+import "moment/locale/th";
 // icon
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
@@ -10,6 +12,7 @@ import {
   Backdrop,
   Chip,
   CircularProgress,
+  Switch,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -37,7 +40,13 @@ const theme = createTheme({
 
 const ShopDetailsPageWrapper = () => {
   const { id } = useParams(); // id from params
-  
+
+  // i18n
+  const {
+    t,
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+
   // get shop details by id connected api
   const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
 
@@ -49,8 +58,6 @@ const ShopDetailsPageWrapper = () => {
     max: 10,
     min: 1,
   });
-
-
 
   // handle calendar date
   const [calendar, setCalendar] = useState({
@@ -155,8 +162,8 @@ const ShopDetailsPageWrapper = () => {
   // browser tab title
   useEffect(() => {
     document.title = shopDetail?.title || "Shop Detail";
-  }, [shopDetail])
-  
+  }, [shopDetail]);
+
   // catch errors api
   if (bussDataError | servicesDataError | serviceByIdError)
     return <div>Api Error</div>;
@@ -185,17 +192,19 @@ const ShopDetailsPageWrapper = () => {
           setModalState,
         }}
       >
-      
+        {/* loading progress */}
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={servByIdLoading}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
+        {/* loading progress */}
         <div className="relative lg:grid lg:grid-cols-2">
           <Slideshow data={shopDetail?.imagesURL || []} />
 
-          <div id="shop-details" className="relative my-auto p-5">
+          {/* shop details */}
+          <div className="relative my-auto p-5">
             <h1 className="text-[25px] font-semibold">{shopDetail?.title}</h1>
             <span className="text-[14px] font-normal">
               {shopDetail?.description || "No detail for this shop"}
@@ -221,12 +230,13 @@ const ShopDetailsPageWrapper = () => {
               />
             </div>
           </div>
+          {/* shop details */}
+
+          <ServiceOptions />
 
           <Quantity />
 
           <Calendar />
-
-          <ServiceOptions />
 
           <TimeSlots />
 
@@ -249,9 +259,24 @@ const ShopDetailsPageWrapper = () => {
                 }
               }}
             >
-              Confirm & Booking
+              {t("button:confirmBookingButton")}
             </button>
-            <span className="text-[12px]">Please review details carefully</span>
+            <span className="text-[12px] py-2">{t("reviewDetails")}</span>
+            {/* change lang */}
+            <div className="flex justify-center items-center">
+              <label>en</label>
+              <Switch
+                value={language === "th" ? true : false}
+                onChange={(e) => {
+                  if (e.target.checked === true) {
+                    changeLanguage("th");
+                  } else {
+                    changeLanguage("en");
+                  }
+                }}
+              />
+              <label>th</label>
+            </div>
           </div>
 
           {/* Starts:: dialog */}

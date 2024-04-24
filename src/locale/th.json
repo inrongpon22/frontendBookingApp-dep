@@ -1,0 +1,74 @@
+{
+  "translation": {
+    "loading": "กำลังดำเนินการ",
+    "numberOfGuests": "จำนวนคน (คน)",
+    "serviceOptions": "ตัวเลือกแพ็คเกจ",
+    "time": "เวลา",
+    "available": "ว่าง",
+    "full": "เต็ม",
+    "reviewDetails": "โปรดตรวจสอบรายละเอียด",
+    "verifyPhoneNumber": "ยืนยันหมายเลขโทรศัพท์",
+    "verifyPhoneNumberDesc": "โปรดใส่หมายเลขโทรศัพท์ของคุณเพื่อยืนยันตัวตน",
+    "otpVerification": "กรอกรหัสรักษาความปลอดภัย 6 หลักที่เราส่งให้คุณที่ ******",
+    "dontReceiveCode": "ฉันไม่ได้รับรหัส",
+    "bookingDetails": "รายละเอียดการจอง",
+    "services": "บริการ",
+    "date": "วันที่",
+    "guests": "จำนวน (​คน)",
+    "price": "ราคา",
+    "what":"บริการอะไร",
+    "where":"ที่ไหน",
+    "when":"เมื่อไหร่",
+    "who":"ชื่อผู้จอง",
+    "bookingName": "ชื่อผู้จอง",
+    "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",
+    "notes": "คำขอเพิ่มเติม(Optional)",
+    "termsAndprivacy": "โดยการคลิก 'ยืนยันการจอง' คุณยินยอมตามข้อกำหนดและเงื่อนไขการให้บริการและนโยบายความเป็นส่วนตัวของเรา โดยที่คุณให้สิทธิในการใช้ข้อมูลส่วนบุคคลของคุณตามนโยบายของเรา"
+  },
+  "title": {
+    "bookingIsconfirmed": "การจองได้รับการยืนยัน",
+    "confirmBookingDialogHeader": "ยืนยันการจอง",
+    "myBookings": "การจองของฉัน",
+    "bookingSuccess": "จองเสร็จสิ้น"
+  },
+  "desc": {
+    "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น"
+  },
+  "button": {
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยัน",
+    "goToMyBookingButton": "ไปยังการจองของฉัน",
+    "confirmBookingButton": "ยืนยันการจอง",
+    "continueButton": "ถัดไป",
+    "cancelBookingButton": "ยกเลิกการจอง",
+    "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
+    "bookingFailedTryAgainButton": "ลองอีกครั้ง",
+    "bookingFailedCloseButton": "ปิด"
+  },
+  "noti": {
+    "booking": {
+      "create": {
+        "success": "การสร้างการจองสำเร็จ",
+        "fail": "การสร้างการจองล้มเหลว"
+      },
+      "cancel": {
+        "success": "ยกเลิกการจองสำเร็จ",
+        "fail": "ยกเลิกการจองล้มเหลว",
+        "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
+        "confirmationDesc": "ช่องเวลาการจองจะเปิดให้ผู้อื่นใช้งานได้"
+      }
+    }
+  },
+  "error":{
+    "required": "จำเป็นต้องกรอก",
+    "invalidPhoneNumber": "หมายเลขโทรศัพท์ไม่ถูกต้อง",
+    "invalidOTP": "รหัส OTP ไม่ถูกต้อง",
+    "bookingFailed": "การจองล้มเหลว",
+    "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง"
+  },
+  "fragment":{
+    "needTo": "ต้องการที่จะ",
+    "cancel": "ยกเลิก",
+    "aBooking": "การจอง"
+  }
+}
