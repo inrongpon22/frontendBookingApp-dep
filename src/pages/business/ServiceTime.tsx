@@ -74,6 +74,67 @@ export default function CreateServiceTwo() {
         setDuration((pre) => pre - 0.5);
     };
 
+    const handleIncreaseCapacityManual = (
+        startTime: string,
+        endTime: string,
+        capacity: number
+    ) => {
+        // Find the index of the slot in manualCapacity array
+        const index = manualCapacity.findIndex(
+            (slot) => slot.startTime === startTime && slot.endTime === endTime
+        );
+        // If the slot already exists, update its capacity
+        if (index !== -1) {
+            setManualCapacity((prevCapacity) => {
+                const updatedCapacity = [...prevCapacity];
+                updatedCapacity[index] = {
+                    startTime,
+                    endTime,
+                    capacity: updatedCapacity[index].capacity + 1,
+                };
+                return updatedCapacity;
+            });
+        } else {
+            // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
+            setManualCapacity((prevCapacity) => [
+                ...prevCapacity,
+                { startTime, endTime, capacity: capacity + 1 },
+            ]);
+        }
+    };
+
+    const handleDecreaseCapacityManual = (
+        startTime: string,
+        endTime: string
+    ) => {
+        const index = manualCapacity.findIndex(
+            (slot) => slot.startTime === startTime && slot.endTime === endTime
+        );
+
+        // If the slot exists and its capacity is greater than 0, decrease its capacity
+        if (index !== -1) {
+            setManualCapacity((prevCapacity) => {
+                const updatedCapacity = [...prevCapacity];
+                updatedCapacity[index] = {
+                    startTime,
+                    endTime,
+                    capacity:
+                        updatedCapacity[index].capacity > 0
+                            ? updatedCapacity[index].capacity - 1
+                            : 0,
+                };
+                return updatedCapacity;
+            });
+        } else {
+            console.log("GG");
+            // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
+            setManualCapacity((prevCapacity) => [
+                ...prevCapacity,
+                { startTime, endTime, capacity: guestNumber - 1 },
+            ]);
+        }
+    };
+
     generateTimeSlots(openTime, closeTime, duration * 60);
 
     return (
@@ -258,17 +319,29 @@ export default function CreateServiceTwo() {
                                 </div>
                                 <div className="flex justify-between gap-3 items-center p-3">
                                     <button
-                                        disabled={guestNumber === 1}
                                         onClick={() =>
-                                            setGuestNumber((prev) => prev - 1)
+                                            handleDecreaseCapacityManual(
+                                                TimeSlots[element],
+                                                TimeSlots[element + 1]
+                                            )
                                         }
                                         className="border flex justify-center items-center w-8 h-8 rounded-md">
                                         <KeyboardArrowDownIcon />
                                     </button>
-                                    {guestNumber}
+                                    {manualCapacity.find(
+                                        (item) =>
+                                            item.startTime ==
+                                                TimeSlots[element] &&
+                                            item.endTime ==
+                                                TimeSlots[element + 1]
+                                    )?.capacity ?? guestNumber}
                                     <button
                                         onClick={() =>
-                                            setGuestNumber((prev) => prev + 1)
+                                            handleIncreaseCapacityManual(
+                                                TimeSlots[element],
+                                                TimeSlots[element + 1],
+                                                guestNumber
+                                            )
                                         }
                                         className="border flex justify-center items-center w-8 h-8 rounded-md">
                                         <KeyboardArrowUpIcon />
