@@ -4,7 +4,7 @@ import moment from "moment";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { ShopContext } from "../ShopDetailsPageWrapper";
+import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
 // const thaiMonths: string[] = [
 //   "มกราคม",

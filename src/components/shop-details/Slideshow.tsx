@@ -1,10 +1,25 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { createClient } from "@supabase/supabase-js";
+import { useTranslation } from "react-i18next";
 
 interface slideTypes {
   data: string[];
 }
+
+const languageLists: {
+  code: string;
+  name: string;
+}[] = [
+  {
+    code: "en",
+    name: "English",
+  },
+  {
+    code: "th",
+    name: "Thai",
+  },
+];
 
 export const Slideshow = ({ data }: slideTypes) => {
   const [images, setImages] = useState<
@@ -12,6 +27,10 @@ export const Slideshow = ({ data }: slideTypes) => {
       publicUrl: string;
     }[]
   >([]);
+
+  const {
+    i18n: { changeLanguage, language },
+  } = useTranslation();
 
   const supabase = createClient(
     import.meta.env.VITE_PROJECT_URL,
@@ -51,7 +70,22 @@ export const Slideshow = ({ data }: slideTypes) => {
   }, [data]);
 
   return (
-    <main className="mb-5">
+    <main className="relative mb-5">
+      <div className="absolute right-3 top-3 z-50">
+        <select
+          value={language}
+          className="bg-white rounded border"
+          onChange={(e) => changeLanguage(e.target.value)}
+        >
+          {languageLists.map((item: any, index: number) => {
+            return (
+              <option key={index} value={item.code}>
+                {item.name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
       <Slider {...settings}>
         {images?.map((item: any, index: number) => (
           <div className="slide" key={index}>
