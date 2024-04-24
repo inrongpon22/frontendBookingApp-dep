@@ -4,15 +4,10 @@ import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null); //create context to store all the data
 import moment from "moment";
 import "moment/locale/th";
-// icon
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 // styled
 import {
   Backdrop,
-  Chip,
   CircularProgress,
-  Switch,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -20,7 +15,11 @@ import {
 import useSWR from "swr";
 import axios from "axios";
 import { app_api } from "../../helper/url";
-import { quantityTypes, serviceTypes, shopDetailTypes } from "../../components/shop-details/detailTypes"; //types
+import {
+  quantityTypes,
+  serviceTypes,
+  shopDetailTypes,
+} from "../../components/shop-details/detailTypes"; //types
 // components
 import { Slideshow } from "../../components/shop-details/Slideshow";
 import Calendar from "../../components/shop-details/Calendar";
@@ -28,6 +27,7 @@ import ServiceOptions from "../../components/shop-details/ServiceOptions";
 import Quantity from "../../components/shop-details/Quantity";
 import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
+import ShopInformation from "../../components/shop-details/ShopInformation";
 
 const theme = createTheme({
   // create theme for custom color mui
@@ -40,35 +40,28 @@ const theme = createTheme({
 
 const ShopDetailsPageWrapper = () => {
   const { id } = useParams(); // id from params
+  const { t } = useTranslation();
 
-  // i18n
-  const {
-    t,
-    i18n: { changeLanguage, language },
-  } = useTranslation();
+  const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by id connected api
 
-  // get shop details by id connected api
-  const [shopDetail, setShopDetail] = useState<shopDetailTypes>();
-
-  // handle quantities
   const [quantities, setQuantities] = useState<quantityTypes>({
     title: "Guest",
     desc: "Number of guest",
     quantities: 1,
     max: 10,
     min: 1,
-  });
+  }); // handle quantities
 
-  // handle calendar date
   const [calendar, setCalendar] = useState({
+    // handle calendar date
     start: moment(),
     end: moment().add(10, "day"),
   });
-  // get calendar date for custom render
-  const [dateArr, setDateArr] = useState<object[]>([]);
 
-  // handle select date on calendar
+  const [dateArr, setDateArr] = useState<object[]>([]); // get calendar date for custom render
+
   const [selectedDate, setSelectedDate] = useState<any>({
+    // handle select date on calendar
     date: moment(),
   });
 
@@ -203,34 +196,7 @@ const ShopDetailsPageWrapper = () => {
         <div className="relative lg:grid lg:grid-cols-2">
           <Slideshow data={shopDetail?.imagesURL || []} />
 
-          {/* shop details */}
-          <div className="relative my-auto p-5">
-            <h1 className="text-[25px] font-semibold">{shopDetail?.title}</h1>
-            <span className="text-[14px] font-normal">
-              {shopDetail?.description || "No detail for this shop"}
-            </span>
-            <div className="mt-2">
-              <Chip
-                className="mt-1 custom-chip-label"
-                icon={<LocationOnIcon fontSize="small" />}
-                label={shopDetail?.address}
-                color="info"
-              />
-              <Chip
-                className="mt-1 custom-chip-label"
-                icon={<LocalPhoneIcon fontSize="small" />}
-                label={shopDetail?.phoneNumber}
-                color="info"
-              />
-              <Chip
-                className="mt-1 ms-1 custom-chip-label"
-                // icon={<LocalPhoneIcon fontSize="small" />}
-                label="Hair Cut"
-                color="info"
-              />
-            </div>
-          </div>
-          {/* shop details */}
+          <ShopInformation />
 
           <ServiceOptions />
 
@@ -262,25 +228,14 @@ const ShopDetailsPageWrapper = () => {
               {t("button:confirmBookingButton")}
             </button>
             <span className="text-[12px] py-2">{t("reviewDetails")}</span>
-            {/* change lang */}
-            <div className="flex justify-center items-center">
-              <label>en</label>
-              <Switch
-                value={language === "th" ? true : false}
-                onChange={(e) => {
-                  if (e.target.checked === true) {
-                    changeLanguage("th");
-                  } else {
-                    changeLanguage("en");
-                  }
-                }}
-              />
-              <label>th</label>
-            </div>
           </div>
 
           {/* Starts:: dialog */}
-          <DialogWrapper show={isShowDialog} setShow={setIsShowDialog} userSide='user' />
+          <DialogWrapper
+            show={isShowDialog}
+            setShow={setIsShowDialog}
+            userSide="user"
+          />
           {/* Ends:: dialog */}
         </div>
       </ShopContext.Provider>
