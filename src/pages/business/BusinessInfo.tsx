@@ -7,19 +7,29 @@ import { useFormik } from 'formik';
 import { Badge, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { supabase } from "../../helper/createSupabase";
+import { useNavigate } from "react-router-dom";
 
 
 interface IParameter {
     locationData: ILocation;
-    businessInfo: IBusinessInfo;
-    handleBusinessChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => void;
     businessData: (inputData: IaddBusiness) => void;
 }
 
 export default function BusinessInfo(props: IParameter) {
+    const navigate = useNavigate();
     const [file, setFile] = useState<File[]>([]);
     const [imagesURL, setImagesURL] = useState<string[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
+    // const [businessInfo, setBusinessInfo] = useState<IBusinessInfo>({
+    //     title: '',
+    //     description: '',
+    //     phoneNumber: ''
+    // });
+    const businessInfo: IBusinessInfo = {
+        title: '',
+        description: '',
+        phoneNumber: ''
+    };
 
     const schema = Yup.object().shape({
         title: Yup.string()
@@ -99,9 +109,9 @@ export default function BusinessInfo(props: IParameter) {
 
     const formik = useFormik({
         initialValues: {
-            title: props.businessInfo.title || '',
-            phoneNumber: props.businessInfo.phoneNumber || '',
-            description: props.businessInfo.description || ''
+            title: businessInfo.title || '',
+            phoneNumber: businessInfo.phoneNumber || '',
+            description: businessInfo.description || ''
         },
         validationSchema: schema,
         onSubmit: (values) => {
@@ -117,6 +127,7 @@ export default function BusinessInfo(props: IParameter) {
                 userId: 13,
             };
             props.businessData(insertData);
+            navigate('/createBusiness/3');
             // insertBusiness(insertData);
         }
     });
