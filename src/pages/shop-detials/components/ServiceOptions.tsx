@@ -1,4 +1,4 @@
-// styled
+// context
 import { useContext } from "react";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 
@@ -7,7 +7,7 @@ const ServiceOptions = () => {
   return (
     <div id="service-option" className="p-5">
       <h2 className="text-[20px] font-semibold">Service Option</h2>
-      <div className="grid grid-cols-1 gap-4 mt-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
         {services?.map((item: any, index: number) => {
           return (
             <div
@@ -18,17 +18,15 @@ const ServiceOptions = () => {
                   : ""
               }`}
               onClick={() => {
-                // if (quantities.quantities <= item.totalCapacity) {
-                  setServices(
-                    services.map((ii: any) => {
-                      if (ii.id === item.id) {
-                        return { ...ii, isSelected: true };
-                      } else {
-                        return { ...ii, isSelected: false };
-                      }
-                    })
-                  );
-                // }
+                setServices(
+                  services.map((ii: any) => {
+                    if (ii.id === item.id) {
+                      return { ...ii, isSelected: true };
+                    } else {
+                      return { ...ii, isSelected: false };
+                    }
+                  })
+                );
               }}
             >
               <div className="">

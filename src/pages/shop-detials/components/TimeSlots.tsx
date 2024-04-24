@@ -11,7 +11,11 @@ const TimeSlots = () => {
       <h2 className="text-[17px] font-semibold">
         {moment(selectedDate.date).format("ll")}
       </h2>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+      <div
+        className={`grid ${
+          serviceById?.bookingSlots.length > 1 ? "grid-cols-2" : " grid-cols-1"
+        } gap-4 mt-2`}
+      >
         {serviceById ? (
           serviceById?.bookingSlots.map((item: any, index: number) => {
             return (

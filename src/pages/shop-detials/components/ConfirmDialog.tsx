@@ -5,23 +5,20 @@ import { app_api } from "../../../helper/url";
 import { ShopContext } from "../ShopDetailsPageWrapper";
 // validation
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import {
   CircularProgress,
   Dialog,
   DialogContent,
-  Divider,
   Slide,
   Toolbar,
 } from "@mui/material";
 // icons
-import DateRangeIcon from "@mui/icons-material/DateRange";
 import CloseIcon from "@mui/icons-material/Close";
-import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import CheckIcon from "@mui/icons-material/Check";
 import { TransitionProps } from "@mui/material/transitions";
-import useSWR from "swr";
+import { useNavigate } from "react-router-dom";
+import { Toast } from "../../../helper/alerts";
+import { confirmationDialogSchemas } from "../detailTypes";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -32,33 +29,8 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// form validation schema for phone number
-const phoneOtpSchema = Yup.object().shape({
-  phoneNumbers: Yup.string()
-    .min(
-      9,
-      "Your phone numbers is too short. It must be at least 9 numbers long."
-    )
-    .required("Phone number is required"),
-});
-// form validation schema for sign up
-const confirmationSchema = Yup.object().shape({
-  username: Yup.string()
-    .min(
-      1,
-      "Your username is too short. It must be at least 1 characters long."
-    )
-    .required("Username is required"),
-  phoneNumbers: Yup.string()
-    .min(
-      9,
-      "Your phone numbers is too short. It must be at least 9 numbers long."
-    )
-    .required("Phone number is required"),
-  additionalNotes: Yup.string(),
-});
-
 const ConfirmDialog = () => {
+  const navigate = useNavigate();
   const {
     shopDetail,
     services,
@@ -67,9 +39,9 @@ const ConfirmDialog = () => {
     quantities,
     isShowDialog,
     setIsShowDialog,
+    modalState,
+    setModalState,
   } = useContext(ShopContext);
-
-  const [state, setState] = useState<string>("my-reservation"); //phone-input
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -82,17 +54,42 @@ const ConfirmDialog = () => {
       userId: 0,
       username: "",
       phoneNumbers: "",
+      otp: "",
       additionalNotes: "",
     },
     validationSchema:
-      state === "phone-input" ? phoneOtpSchema : confirmationSchema,
+      confirmationDialogSchemas[
+        modalState as keyof typeof confirmationDialogSchemas
+      ],
     onSubmit: async (values) => {
-      switch (state) {
+      switch (modalState) {
         case "phone-input":
           setIsLoading(true);
           await axios
-            .post(`${app_api}/user`, {
+            .post(`${app_api}/requestOTP/${values.phoneNumbers}`)
+            .then(async (res) => {
+              if (res.status === 200) {
+                setIsLoading(false);
+                setModalState("otp-verify");
+              }
+            })
+            .catch((err) => {
+              if (err.response.status === 429) {
+                formik.setFieldError(
+                  "phoneNumbers",
+                  `${err.response.data}, please try again in 60 seconds`
+                );
+              }
+              setIsLoading(false);
+            });
+          break;
+
+        case "otp-verify":
+          setIsLoading(true);
+          await axios
+            .post(`${app_api}/checkOTP`, {
               phoneNumber: values.phoneNumbers,
+              otpCode: values.otp,
             })
             .then(async (res) => {
               if (res.status === 200) {
@@ -100,20 +97,16 @@ const ConfirmDialog = () => {
                 formik.setFieldValue("userId", res.data.userId);
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
-                setState("sign-up");
-              } else {
-                setIsLoading(false);
-                setState("sign-up");
+                setModalState("booking-detail-preview");
               }
             })
             .catch((err) => {
-              console.log(err);
+              formik.setFieldError(
+                "otp",
+                `${err.response.data.message} ${err.message}`
+              );
               setIsLoading(false);
             });
-          break;
-
-        case "sign-up":
-          setState("booking-summary");
           break;
 
         default:
@@ -122,25 +115,9 @@ const ConfirmDialog = () => {
     },
   });
 
-  const { data: myReservDatas } = useSWR(
-    state === "my-reservation" &&
-      isShowDialog &&
-      `${app_api}/getReservationByUserId/14`, //${formik.values}
-    (url: string) =>
-      axios
-        .get(url, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => res.data)
-  );
-
-  console.log(myReservDatas);
-
   const createReservation = async () => {
     const body = {
-      userId: formik.values.userId, // static id
+      userId: formik.values.userId,
       serviceId: Number(services.find((item: any) => item.isSelected)?.id),
       phoneNumber: formik.values.phoneNumbers,
       remark: formik.values.additionalNotes,
@@ -154,61 +131,51 @@ const ConfirmDialog = () => {
       bookingDate: selectedDate.date.format("YYYY-MM-DD"),
       guestNumber: quantities.quantities,
     };
+
     axios
       .post(`${app_api}/reservation`, body, {
         headers: {
           Authorization: `${token}`,
         },
       })
-      .then(() => {
-        setState("my-reservation");
+      .then((res) => {
+        navigate("/booking-success", {
+          state: {
+            lists: {
+              what: services.find((item: any) => item.isSelected)?.title,
+              when: `${selectedDate.date.format("dddd, MMMM D, YYYY")} ${
+                serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                  ?.startTime
+              } - ${
+                serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                  ?.endTime
+              }`,
+              where: `${shopDetail?.address}`,
+              who: `${formik.values.username} (${quantities?.quantities} person)`,
+              price: `${services.find((item: any) => item.isSelected)?.price} ${
+                services.find((item: any) => item.isSelected)?.currency
+              }`,
+              note: formik.values.additionalNotes,
+            },
+            data: {
+              reservationId: res.data.reservationId,
+              serviceId: Number(
+                services.find((item: any) => item.isSelected)?.id
+              ),
+            },
+          },
+        });
       })
       .catch((err) => {
-        console.log(err);
+        Toast.fire({
+          icon: "error",
+          title: err.response.data.message,
+        });
       });
   };
 
-  const lists: {
-    label: string;
-    text: string;
-  }[] = [
-    {
-      label: "What",
-      text: services.find((item: any) => item.isSelected)?.title,
-    },
-    {
-      label: "When",
-      text: `${selectedDate.date.format("dddd, MMMM D, YYYY")} ${
-        serviceById?.bookingSlots.find((item: any) => item.isSelected)
-          ?.startTime
-      } - ${
-        serviceById?.bookingSlots.find((item: any) => item.isSelected)?.endTime
-      }`,
-    },
-    {
-      label: "Where",
-      text: `${shopDetail?.address}`,
-    },
-    {
-      label: "Who",
-      text: `${formik.values.username} (${quantities?.quantities} person)`,
-    },
-    {
-      label: "Price",
-      text: `${services.find((item: any) => item.isSelected)?.price} ${
-        services.find((item: any) => item.isSelected)?.currency
-      }`,
-    },
-    {
-      label: "Note",
-      text: formik.values.additionalNotes
-        ? `${formik.values.additionalNotes}`
-        : "-",
-    },
-  ];
-
   const SwitchState = (): React.ReactNode => {
-    switch (state) {
+    switch (modalState) {
       case "phone-input":
         return (
           <>
@@ -228,6 +195,7 @@ const ConfirmDialog = () => {
                   : "border border-black"
               }`}
               placeholder="+66 12 345 6789"
+              maxLength={10}
               value={formik.values.phoneNumbers}
               onChange={(e) => {
                 const value = e.target.value;
@@ -262,7 +230,10 @@ const ConfirmDialog = () => {
       case "otp-verify":
         return (
           <>
-            <p>Enter the 6-digit security code we send to you at ******1234</p>
+            <p>
+              Enter the 6-digit security code we send to you at ******
+              {formik.values.phoneNumbers.slice(-4)}
+            </p>
             <input
               type="text"
               className={`w-full px-3 py-2 mt-5 rounded-lg ${
@@ -271,53 +242,109 @@ const ConfirmDialog = () => {
                   : "border border-black"
               }`}
               placeholder="X-X-X-X-X-X"
-              value="******"
-              onChange={(e) => console.log(e)}
+              value={formik.values.otp}
+              maxLength={6}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d+$/.test(value) || value === "") {
+                  formik.setFieldValue("otp", value);
+                }
+              }}
             />
+            {formik.touched.otp && formik.errors.otp && (
+              <p className="text-[14px] text-rose-500">
+                {formik.errors?.otp}
+              </p>
+            )}
             <button
               type="button"
               className="bg-gray-200 rounded-lg text-[14px] px-2 py-1 mt-5"
+              onClick={async () => {
+                await axios
+                  .post(`${app_api}/requestOTP/${formik.values.phoneNumbers}`)
+                  .catch((err) => {
+                    if (err.response.status === 429) {
+                      formik.setFieldError(
+                        "otp",
+                        `${err.response.data}, please try again in 60 seconds`
+                      );
+                    }
+                    setIsLoading(false);
+                  });
+              }}
             >
               I didn’t receive a code
             </button>
+
             <button
               type="button"
               className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
-              onClick={() => setState("sign-up")}
+              onClick={() => formik.handleSubmit()}
             >
               Continue
             </button>
           </>
         );
 
-      case "sign-up":
+      case "booking-detail-preview":
         return (
           <>
-            <div className="flex">
-              <div className=" bg-[#E6F1FD] p-1 rounded-lg">
-                <span className="flex items-center text-[14px]">
-                  <DateRangeIcon fontSize="small" />
-                  {selectedDate.date.format("MMMM DD, YYYY")}
-                </span>
-              </div>
-              <div className=" bg-[#E6F1FD] p-1 rounded-lg ms-1">
-                <span className="flex items-center text-[14px]">
-                  <PersonIcon fontSize="small" />
-                  {quantities.quantities}
-                </span>
+            <div className="">
+              <p className="text-[14px] font-semibold">Booking Detail</p>
+              <div className="border rounded-md mt-1">
+                <p className="flex justify-between p-3">
+                  <span>Services:</span>
+                  <span className="text-[14px] font-bold">
+                    {shopDetail.title}{" "}
+                    {services?.find((item: any) => item.isSelected)?.title}
+                  </span>
+                </p>
+                <p className="flex justify-between p-3">
+                  <span>Date:</span>
+                  <span className="text-[14px] font-bold">
+                    {selectedDate?.date.format("MMMM DD, YYYY")}
+                  </span>
+                </p>
+                <p className="flex justify-between p-3">
+                  <span>Time:</span>
+                  <span className="text-[14px] font-bold">
+                    {
+                      serviceById?.bookingSlots.find(
+                        (item: any) => item.isSelected
+                      )?.startTime
+                    }{" "}
+                    -{" "}
+                    {
+                      serviceById?.bookingSlots.find(
+                        (item: any) => item.isSelected
+                      )?.endTime
+                    }
+                  </span>
+                </p>
+                <p className="flex justify-between p-3">
+                  <span>Guest:</span>
+                  <span className="text-[14px] font-bold">
+                    {quantities.quantities}
+                  </span>
+                </p>
+                <p className="flex justify-between p-3">
+                  <span>Price:</span>
+                  <span className="text-[14px] font-bold">
+                    {services?.find((item: any) => item.isSelected)?.price}{" "}
+                    {serviceById?.currency}
+                  </span>
+                </p>
               </div>
             </div>
-            <div className="flex flex-col py-2">
-              <label htmlFor="" className="required">
-                Username
-              </label>
+            <div className="mt-3">
+              <p className="text-[14px] font-semibold">Booking Name</p>
               <input
                 type="text"
                 {...formik.getFieldProps("username")}
-                className={`py-2 px-3 border rounded-lg ${
+                className={`w-full py-2 px-3 mt-1 border rounded-lg ${
                   formik.errors?.username
                     ? "border-2 border-rose-500"
-                    : "border border-black"
+                    : "border"
                 }`}
                 placeholder="meetsoftware123"
               />
@@ -326,22 +353,16 @@ const ConfirmDialog = () => {
                   {formik.errors?.username}
                 </span>
               )}
-              <span className="text-[12px] font-thin mt-2">
-                Username is for user identification, personalization, privacy,
-                and account security.
-              </span>
             </div>
-            <div className="flex flex-col py-2">
-              <label htmlFor="" className="required">
-                Phone Number
-              </label>
+            <div className="mt-3">
+              <p className="text-[14px] font-semibold">Booking Number</p>
               <input
                 type="text"
                 {...formik.getFieldProps("phoneNumbers")}
-                className={`py-2 px-3 border rounded-lg ${
+                className={`w-full py-2 px-3 mt-1 border rounded-lg ${
                   formik.errors?.phoneNumbers
                     ? "border-2 border-rose-500"
-                    : "border border-black"
+                    : "border"
                 }`}
                 placeholder="+66 12 345 6789"
               />
@@ -351,14 +372,12 @@ const ConfirmDialog = () => {
                 </span>
               )}
             </div>
-            <div className="flex flex-col py-2">
-              <label htmlFor="" className="required">
-                Additional Notes (optional)
-              </label>
+            <div className="mt-3">
+              <p className="text-[14px] font-semibold">Note (Optional)</p>
               <textarea
                 rows={3}
                 {...formik.getFieldProps("additionalNotes")}
-                className="py-2 px-3 border rounded-lg"
+                className="w-full py-2 px-3 mt-1 border rounded-lg"
                 placeholder="ex. Hair cut with spa and treatment"
               />
             </div>
@@ -372,101 +391,9 @@ const ConfirmDialog = () => {
             <button
               type="button"
               className="bg-[#020873] w-full text-white p-2 rounded-lg"
-              onClick={() => formik.handleSubmit()}
-            >
-              Confirm Information
-            </button>
-          </>
-        );
-
-      case "booking-summary":
-        return (
-          <>
-            <p className="text-[25px] font-semibold mt-14">
-              This meeting is scheldule
-            </p>
-            <p className="my-3">
-              We sent an email with a calendar invitation with the details to
-              everyone.
-            </p>
-            <Divider />
-            <div className="py-4">
-              {lists.map((item: any, index: number) => {
-                return (
-                  <div key={index} className="grid grid-cols-4 py-1">
-                    <div className="font-semibold">{item.label}:</div>
-                    <span className="col-span-3">{item.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-            <Divider />
-            <div className="flex justify-center">
-              <span className="py-5 w-2/3 text-center">
-                Need to make a change?{" "}
-                <button
-                  type="button"
-                  className="underline"
-                  onClick={() => setIsShowDialog(false)}
-                >
-                  Reschedule
-                </button>{" "}
-                or{" "}
-                <button
-                  type="button"
-                  className="underline"
-                  onClick={() => setIsShowDialog(false)}
-                >
-                  Cancel
-                </button>
-              </span>
-            </div>
-            <Divider />
-            <button
-              type="button"
-              className="bg-[#020873] w-full text-white p-2 mt-5 rounded-lg"
               onClick={createReservation}
             >
               Confirm & Booking
-            </button>
-          </>
-        );
-
-      case "booking-completed":
-        return (
-          <div className="h-full flex flex-col items-center justify-center">
-            <div className="flex flex-col justify-center items-center w-5/6 mt-auto">
-              <div className="flex justify-center items-center border-2 border-[#020873] rounded-full w-[72px] h-[72px]">
-                <CheckIcon fontSize="large" htmlColor="#020873" />
-              </div>
-              <p className="font-semibold text-[17px] my-3">
-                Booking complete!
-              </p>
-              <p className="font-normal text-[14px] text-center">
-                We sent an email with a calendar invitation with the details to
-                everyone.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="bg-[#020873] w-full text-white p-2 rounded-lg mt-auto"
-              onClick={() => setState("my-reservation")}
-            >
-              Go to my reservation
-            </button>
-          </div>
-        );
-
-      case "my-reservation":
-        return (
-          <>
-            <h1>My reservation</h1>
-            <button
-              type="button"
-              className="bg-[#020873] w-full text-white p-2 rounded-lg"
-              onClick={() => formik.handleSubmit()}
-            >
-              Go to my reservation
             </button>
           </>
         );
@@ -477,20 +404,18 @@ const ConfirmDialog = () => {
   };
 
   const handleBackButton = () => {
-    switch (state) {
+    switch (modalState) {
       case "phone-input":
         setIsShowDialog(false);
         break;
 
       case "otp-verify":
-        setState("phone-input");
+        setModalState("phone-input");
         break;
 
-      case "sign-up":
-        setIsShowDialog(false);
-        break;
-
-      case "my-reservation":
+      case "booking-detail-preview":
+        formik.resetForm();
+        setModalState("phone-input");
         setIsShowDialog(false);
         break;
 
@@ -507,20 +432,15 @@ const ConfirmDialog = () => {
       open={isShowDialog}
       TransitionComponent={Transition}
     >
-      {state !== "booking-summary" && state !== "booking-completed" && (
-        <Toolbar className="grid grid-cols-4">
-          <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-            {state === "phone-input" || state === "my-reservation" ? (
-              <CloseIcon />
-            ) : (
-              <ArrowBackIosIcon />
-            )}
-          </span>
-          <span className="w-full font-semibold col-span-3 text-center ">
-            Confirm Booking
-          </span>
-        </Toolbar>
-      )}
+      <Toolbar className="grid grid-cols-4">
+        <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
+          {modalState === "phone-input" ? <CloseIcon /> : <ArrowBackIosIcon />}
+        </span>
+        <span className="w-full font-semibold col-span-3 text-center">
+          Confirm Booking
+        </span>
+      </Toolbar>
+
       <DialogContent>{SwitchState()}</DialogContent>
     </Dialog>
   );

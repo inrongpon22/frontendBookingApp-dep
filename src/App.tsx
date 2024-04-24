@@ -5,6 +5,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
+import BookingSummaryWrapper from "./pages/booking-summary/BookingSummaryWrapper";
+import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import Business from "./pages/business/Business";
 
@@ -17,7 +19,15 @@ function App() {
                         path="/details/:id"
                         element={<ShopDetailsPageWrapper />}
                     />
-                    {/* <Route path="/findLocation" element={<FindLocation />} /> */}
+                    <Route
+                        path="/booking-success"
+                        element={<BookingSummaryWrapper />}
+                    />
+                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
+                    <Route
+                        path="/booking/:id"
+                        element={<BookingSummaryWrapper />}
+                    />
                     <Route
                         path="/createBusiness/:page"
                         element={<CreateBusiness />}
@@ -28,5 +38,4 @@ function App() {
         </>
     );
 }
-
 export default App;
