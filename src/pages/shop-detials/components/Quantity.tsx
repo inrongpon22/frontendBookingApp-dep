@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 // styled
 import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -7,6 +8,9 @@ import { ShopContext } from "../ShopDetailsPageWrapper";
 
 const Quantity = () => {
   const { quantities, setQuantities, serviceById } = useContext(ShopContext);
+
+  // i18n
+  const { t } = useTranslation();
 
   // handle quantity chage
   const quantityChanges = (type: string) => {
@@ -38,7 +42,7 @@ const Quantity = () => {
 
   return (
     <div id="quantity" className="flex justify-between items-center px-5">
-      <h2 className="text-[17px] font-semibold">Number of guest(s)</h2>
+      <h2 className="text-[17px] font-semibold">{t("numberOfGuests")}</h2>
       <div className="w-[140px] flex justify-around items-center p-2 border border-black rounded-lg">
         <IconButton
           disabled={quantities.quantities === quantities.min}
@@ -54,8 +58,9 @@ const Quantity = () => {
         <IconButton
           disabled={
             quantities.quantities === quantities.max ||
-            serviceById?.bookingSlots.find((item: any) => item.isSelected === true)?.capacity ===
-              quantities.quantities
+            serviceById?.bookingSlots.find(
+              (item: any) => item.isSelected === true
+            )?.capacity === quantities.quantities
           }
           aria-label="delete"
           size="small"

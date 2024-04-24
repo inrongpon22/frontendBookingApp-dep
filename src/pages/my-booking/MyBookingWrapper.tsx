@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
 import useSWR from "swr";
@@ -15,6 +16,8 @@ const MyBookingWrapper = () => {
     ? JSON.parse(localStorage.getItem("token")!)
     : null;
 
+  const { t } = useTranslation();
+
   const { data: myReservDatas } = useSWR(
     `${app_api}/getReservationByUserId/14`,
     (url: string) =>
@@ -29,12 +32,14 @@ const MyBookingWrapper = () => {
   );
 
   useEffect(() => {
-    document.title = "My Bookings";
+    document.title = t("title:myBookings");
   }, []);
 
   return (
     <div className="flex flex-col gap-4 p-5">
-      <span className="text-[17px] font-semibold text-center">My Bookings ({myReservDatas?.length})</span>
+      <span className="text-[17px] font-semibold text-center">
+        {t('title:myBookings')} ({myReservDatas?.length})
+      </span>
       <div className="flex flex-col gap-4">
         {myReservDatas?.map((item: any, index: number) => {
           const start: string = `${moment(item.bookingDate).format(
