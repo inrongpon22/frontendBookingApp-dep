@@ -7,7 +7,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Divider, IconButton } from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { alpha } from "@mui/system";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+// import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -64,37 +64,33 @@ export default function SearchMap(props: IParameter) {
                     loading,
                 }) => (
                     <>
-                        <form className="mt-4 border-black">
-                            <div className="relative">
-                                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <SearchOutlinedIcon
+                        <div className="relative">
+                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <SearchOutlinedIcon sx={{ color: "#8B8B8B" }} />
+                            </div>
+                            <input
+                                {...getInputProps({
+                                    placeholder: "Search Places ...",
+                                    className: "location-search-input",
+                                })}
+                                value={address}
+                                type="search"
+                                id="default-search"
+                                style={{ color: "#8B8B8B" }}
+                                className="ps-10 mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
+                                placeholder="Name, street, building ..."
+                            />
+                            {address != "" && (
+                                <div
+                                    onClick={() => handleChange("")}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <CloseOutlinedIcon
                                         sx={{ color: "#8B8B8B" }}
                                     />
                                 </div>
-                                <input
-                                    {...getInputProps({
-                                        placeholder: "Search Places ...",
-                                        className: "location-search-input",
-                                    })}
-                                    value={address}
-                                    type="search"
-                                    id="default-search"
-                                    style={{ color: "#8B8B8B" }}
-                                    className="w-full p-4 border-black ps-10 text-sm border rounded-lg focus:outline-none"
-                                    placeholder="Name, street, building ..."
-                                />
-                                {address != "" && (
-                                    <div
-                                        onClick={() => handleChange("")}
-                                        className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <CloseOutlinedIcon
-                                            sx={{ color: "#8B8B8B" }}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </form>
-                        <div
+                            )}
+                        </div>
+                        {/* <div
                             className="flex justify-center mt-2 p-2 rounded-lg gap-2"
                             style={{ backgroundColor: "rgb(2, 8, 115, 0.1)" }}>
                             <div>
@@ -105,8 +101,8 @@ export default function SearchMap(props: IParameter) {
                                 style={{ color: "#020873" }}>
                                 Open map
                             </div>
-                        </div>
-                        <div className="mt-6">
+                        </div> */}
+                        <div className="mt-2">
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map((suggestion: Suggestion) => {
@@ -115,13 +111,13 @@ export default function SearchMap(props: IParameter) {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                            backgroundColor: "#fafafa",
-                                            cursor: "pointer",
-                                        }
+                                              backgroundColor: "#fafafa",
+                                              cursor: "pointer",
+                                          }
                                         : {
-                                            backgroundColor: "#ffffff",
-                                            cursor: "pointer",
-                                        };
+                                              backgroundColor: "#ffffff",
+                                              cursor: "pointer",
+                                          };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(
