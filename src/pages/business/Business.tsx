@@ -1,5 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
 export default function Business() {
     // const navigate = useNavigate();
     return (
