@@ -29,10 +29,12 @@
     "bookingIsconfirmed": "The Booking is confirmed",
     "confirmBookingDialogHeader": "Confirm Booking",
     "myBookings": "My Bookings",
-    "bookingSuccess": "Booking Success"
+    "bookingSuccess": "Booking Success",
+    "bussRootTitle": "Book. Build. Thrive."
   },
   "desc": {
-    "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there."
+    "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
+    "bussRootDesc": "Elevate your booking experience quickly and conveniently."
   },
   "button": {
     "cancel": "Cancel",
@@ -43,7 +45,8 @@
     "cancelBookingButton": "Cancel",
     "bookingFailedBackButton": "Back to main",
     "bookingFailedTryAgainButton": "Try again",
-    "bookingFailedCloseButton": "Close"
+    "bookingFailedCloseButton": "Close",
+    "getStartedButton": "Get Started"
   },
   "noti": {
     "booking": {

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ShopContext } from "../ShopDetailsPageWrapper";
+import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 

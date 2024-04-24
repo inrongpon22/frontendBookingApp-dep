@@ -20,14 +20,14 @@ import {
 import useSWR from "swr";
 import axios from "axios";
 import { app_api } from "../../helper/url";
-import { quantityTypes, serviceTypes, shopDetailTypes } from "./detailTypes"; //types
+import { quantityTypes, serviceTypes, shopDetailTypes } from "../../components/shop-details/detailTypes"; //types
 // components
-import { Slideshow } from "./components/Slideshow";
-import Calendar from "./components/Calendar";
-import ServiceOptions from "./components/ServiceOptions";
-import Quantity from "./components/Quantity";
-import TimeSlots from "./components/TimeSlots";
-import ConfirmDialog from "./components/ConfirmDialog";
+import { Slideshow } from "../../components/shop-details/Slideshow";
+import Calendar from "../../components/shop-details/Calendar";
+import ServiceOptions from "../../components/shop-details/ServiceOptions";
+import Quantity from "../../components/shop-details/Quantity";
+import TimeSlots from "../../components/shop-details/TimeSlots";
+import DialogWrapper from "../../components/dialog/DialogWrapper";
 
 const theme = createTheme({
   // create theme for custom color mui
@@ -280,7 +280,7 @@ const ShopDetailsPageWrapper = () => {
           </div>
 
           {/* Starts:: dialog */}
-          <ConfirmDialog />
+          <DialogWrapper show={isShowDialog} setShow={setIsShowDialog} userSide='user' />
           {/* Ends:: dialog */}
         </div>
       </ShopContext.Provider>

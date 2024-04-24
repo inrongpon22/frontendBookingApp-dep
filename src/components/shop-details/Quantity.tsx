@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { useContext } from "react";
-import { ShopContext } from "../ShopDetailsPageWrapper";
+import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
 const Quantity = () => {
   const { quantities, setQuantities, serviceById } = useContext(ShopContext);
