@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { IServiceInfo, IServiceTime } from "./interfaces/business";
 import { addService } from "../../api/service";
+import Header from "./components/Header";
+import { Divider } from "@mui/material";
 
 const PinkSwitch = styled(Switch)(({ theme }) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
@@ -27,34 +29,35 @@ const label = { inputProps: { "aria-label": "Color switch demo" } };
 
 export default function CreateService() {
     const navigate = useNavigate();
+    const businessId = parseInt(localStorage.getItem('businessId') ?? "");
 
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
     ) as IServiceInfo;
     const serviceTime = JSON.parse(
         localStorage.getItem("serviceTime") ||
-            JSON.stringify([
-                {
-                    daysOpen: [],
-                    selectedSlots: [],
-                    duration: 1,
-                    openTime: "",
-                    closeTime: "",
-                    guestNumber: 1,
-                    manualCapacity: [],
-                    availableFromDate: new Date().toISOString().split("T")[0],
-                    availableToDate: "",
-                },
-            ])
+        JSON.stringify([
+            {
+                daysOpen: [],
+                selectedSlots: [],
+                duration: 1,
+                openTime: "",
+                closeTime: "",
+                guestNumber: 1,
+                manualCapacity: [],
+                availableFromDate: new Date().toISOString().split("T")[0],
+                availableToDate: "",
+            },
+        ])
     ) as IServiceTime[];
 
     const [isAutoApprove, setIsAutoApprove] = useState(true);
     const [isHidePrice, setIsHidePrice] = useState(true);
-    console.log(serviceInfo, serviceTime);
+
 
     const handleCreateService = async () => {
         const insertData = {
-            businessId: 15,
+            businessId: businessId,
             title: serviceInfo.serviceName,
             duration: serviceTime[0].duration,
             description: serviceInfo.serviceDescription,
@@ -74,20 +77,28 @@ export default function CreateService() {
 
         try {
             await addService(insertData);
-            navigate("/createBusiness/2");
+            localStorage.removeItem("serviceInfo");
+            localStorage.removeItem("serviceTime");
+            navigate(`/service/${businessId}`);
         } catch (error) {
             console.log(error);
         }
     };
 
     return (
-        <div
-            style={{ marginBottom: "100px" }}
-            className="mt-4 flex flex-col gap-3">
-            <ServiceCard />
-            <TimeCard />
+        <>
+            <div className="pr-4 pl-4 pt-6">
+                <Header context={"Service Info"} />
+            </div>
+            <Divider sx={{ marginTop: "16px", width: "100%" }} />
+            <div className="flex flex-col pr-4 pl-4">
+                <div
+                    style={{ marginBottom: "100px" }}
+                    className="mt-4 flex flex-col gap-3">
+                    <ServiceCard />
+                    <TimeCard />
 
-            {/* <button
+                    {/* <button
                 style={{
                     display: "flex",
                     background: `${alpha("#020873", 0.1)}`,
@@ -105,33 +116,33 @@ export default function CreateService() {
                 </div>
             </button> */}
 
-            <p className=" font-bold " style={{ fontSize: "14px" }}>
-                Service setting
-            </p>
+                    <p className=" font-bold " style={{ fontSize: "14px" }}>
+                        Service setting
+                    </p>
 
-            <div
-                style={{ borderColor: `${alpha("#000000", 0.2)}` }}
-                className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                <div>Auto-approve reservations</div>
-                <PinkSwitch
-                    {...label}
-                    defaultChecked
-                    onClick={() => setIsAutoApprove(!isAutoApprove)}
-                />
-            </div>
-            <div
-                style={{ borderColor: `${alpha("#000000", 0.2)}` }}
-                className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                <div>Hide the service price</div>
-                <PinkSwitch
-                    {...label}
-                    defaultChecked
-                    onClick={() => setIsHidePrice(!isHidePrice)}
-                />
-            </div>
+                    <div
+                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
+                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
+                        <div>Auto-approve reservations</div>
+                        <PinkSwitch
+                            {...label}
+                            defaultChecked
+                            onClick={() => setIsAutoApprove(!isAutoApprove)}
+                        />
+                    </div>
+                    <div
+                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
+                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
+                        <div>Hide the service price</div>
+                        <PinkSwitch
+                            {...label}
+                            defaultChecked
+                            onClick={() => setIsHidePrice(!isHidePrice)}
+                        />
+                    </div>
 
-            <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
-                {/* <button
+                    <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
+                        {/* <button
                     className="border text-white mt-4 rounded-lg font-semibold mb-6"
                     style={{
                         borderColor: `${alpha("#000000", 0.2)}`,
@@ -144,21 +155,23 @@ export default function CreateService() {
                     }}>
                     Preview
                 </button> */}
-                <button
-                    onClick={handleCreateService}
-                    type="submit"
-                    className="text-white mt-4 rounded-lg font-semibold mb-6"
-                    style={{
-                        // width: "166px",
-                        width: "90%",
-                        height: "51px",
-                        cursor: "pointer",
-                        backgroundColor: "#020873",
-                        fontSize: "14px",
-                    }}>
-                    Confirm
-                </button>
+                        <button
+                            onClick={handleCreateService}
+                            type="submit"
+                            className="text-white mt-4 rounded-lg font-semibold mb-6"
+                            style={{
+                                // width: "166px",
+                                width: "90%",
+                                height: "51px",
+                                cursor: "pointer",
+                                backgroundColor: "#020873",
+                                fontSize: "14px",
+                            }}>
+                            Confirm
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 }

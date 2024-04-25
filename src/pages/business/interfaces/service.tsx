@@ -27,3 +27,16 @@ export interface InsertService {
     availableFromDate: string;
     availableToDate: string | null;
 }
+
+export interface IService {
+    businessName: string;
+    address: string;
+    daysOpen: string[]; // You might want to change the type to match the actual data type
+    phoneNumber: string;
+    title: string;
+    price: number; // Assuming it's a number
+    description: string;
+    currency: string;
+    openTime: string; // Assuming it's a string representing time
+    closeTime: string; // Assuming it's a string representing time
+}

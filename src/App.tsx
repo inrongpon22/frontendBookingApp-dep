@@ -3,13 +3,17 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import './i18n.ts'
+import './i18n.ts';
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
 import BookingSummaryWrapper from "./pages/booking-summary/BookingSummaryWrapper";
 import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 import CreateBusiness from "./pages/business/CreateBusiness";
-import Business from "./pages/business/Business";
+// import Business from "./pages/business/Business";
+import ServiceList from "./pages/business/ServiceList.tsx";
+import ServiceInfo from "./pages/business/ServiceInfo.tsx";
+import ServiceTime from "./pages/business/ServiceTime.tsx";
+import CreateService from "./pages/business/CreateService.tsx";
 
 function App() {
     return (
@@ -30,10 +34,15 @@ function App() {
                         element={<BookingSummaryWrapper />}
                     />
                     <Route
-                        path="/createBusiness/:page"
+                        path="/createBusiness"
                         element={<CreateBusiness />}
                     />
-                    <Route path="/business" element={<Business />} />
+                    {/* <Route path="/business" element={<Business />} /> */}
+                    <Route path="/service/:businessId" element={<ServiceList />} />
+                    <Route path="/serviceInfo" element={<ServiceInfo />} />
+                    <Route path="/serviceTime" element={<ServiceTime />} />
+                    <Route path="/createService" element={<CreateService />} />
+
                 </Routes>
             </BrowserRouter>
         </>
