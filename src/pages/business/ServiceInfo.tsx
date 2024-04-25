@@ -13,7 +13,7 @@ const validationSchema = Yup.object().shape({
         .min(0, "Price must be greater than or equal to 0"),
 });
 
-export default function CreateServiceOne() {
+export default function ServiceInfo() {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -60,18 +60,17 @@ export default function CreateServiceOne() {
                     name="serviceDescription"
                     style={{ color: "#8B8B8B" }}
                     placeholder="introduce this service to the customer"
-                    className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                        formik.touched.serviceDescription &&
+                    className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
                         formik.errors.serviceDescription
-                            ? "border-red-500"
-                            : ""
-                    }`}
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     value={formik.values.serviceDescription}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                 />
                 {formik.touched.serviceDescription &&
-                formik.errors.serviceDescription ? (
+                    formik.errors.serviceDescription ? (
                     <div className="text-red-500 text-sm mt-1">
                         {formik.errors.serviceDescription}
                     </div>
@@ -97,11 +96,10 @@ export default function CreateServiceOne() {
                         style={{ textAlign: "right" }}
                         name="price"
                         type="number"
-                        className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
-                            formik.touched.price && formik.errors.price
-                                ? "border-red-500"
-                                : ""
-                        }`}
+                        className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
+                            ? "border-red-500"
+                            : ""
+                            }`}
                         value={formik.values.price}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -113,14 +111,12 @@ export default function CreateServiceOne() {
                     </div>
                 ) : null}
 
-                <div
-                    style={{ marginTop: "50vh" }}
-                    className="w-full flex justify-center">
+                <div className="w-full flex justify-center fixed bottom-0 inset-x-0 mt-8">
                     <button
                         type="submit"
                         className="text-white mt-4 rounded-lg font-semibold mb-6"
                         style={{
-                            width: "100%",
+                            width: "343px",
                             height: "51px",
                             cursor: "pointer",
                             backgroundColor: "#020873",

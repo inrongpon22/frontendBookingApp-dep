@@ -186,11 +186,10 @@ export default function BusinessInfo() {
                         name="title"
                         style={{ color: "#8B8B8B" }}
                         placeholder="fill the name of your store"
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.title
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                        }`}
+                            }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500">
@@ -224,11 +223,10 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -304,11 +302,10 @@ export default function BusinessInfo() {
                         type="text"
                         style={{ color: "#8B8B8B" }}
                         placeholder="enter the service phone number"
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.phoneNumber
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                        }`}
+                            }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500">

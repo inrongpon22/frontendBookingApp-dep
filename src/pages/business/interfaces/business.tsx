@@ -21,3 +21,9 @@ export interface IaddBusiness {
     daysOpen: string[];
     userId: number;
 }
+
+export interface IBookingSlot {
+    startTime: string;
+    endTime: string;
+    capacity: number;
+}
