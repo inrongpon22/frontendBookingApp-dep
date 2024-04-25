@@ -81,6 +81,7 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
             .then(async (res) => {
               if (res.status === 200) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
+                localStorage.setItem("userId", res.data.userId);
                 formik.setFieldValue("userId", res.data.userId);
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
@@ -102,9 +103,9 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
                       )
                       .then((resp) => {
                         if (resp.status === 200) {
-                          navigate("/bussiness-overview");
+                          navigate(`/bussiness-profile/${resp.data[0].id}`);
                         } else if (resp.status === 404) {
-                          navigate("/createBusiness");
+                          navigate("/createBusiness/1");
                         }
                       })
                       .catch((err) => {
