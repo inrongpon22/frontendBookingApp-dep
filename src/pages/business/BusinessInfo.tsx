@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { IBusinessInfo, ILocation } from "./interfaces/business";
 import { ChangeEvent, useState } from "react";
 import { useFormik } from "formik";
-import { Badge, IconButton } from "@mui/material";
+import { alpha, Badge, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useNavigate } from "react-router-dom";
@@ -184,12 +184,16 @@ export default function BusinessInfo() {
                         onBlur={formik.handleBlur}
                         type="text"
                         name="title"
-                        style={{ color: "#8B8B8B" }}
+                        style={{
+                            color: "#8B8B8B",
+                            borderColor: `${alpha("#000000", 0.2)}`,
+                        }}
                         placeholder="fill the name of your store"
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                            }`}
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500">
@@ -217,16 +221,17 @@ export default function BusinessInfo() {
                                     height: "47px",
                                     borderColor: isDaySelected(day.value)
                                         ? "#020873"
-                                        : "",
+                                        : `${alpha("#000000", 0.2)}`,
                                     backgroundColor: isDaySelected(day.value)
                                         ? "rgb(2, 8, 115,0.2)"
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -234,7 +239,11 @@ export default function BusinessInfo() {
                     </div>
                     <div className="flex justify-between mt-2">
                         <div
-                            style={{ width: "156px", height: "51px" }}
+                            style={{
+                                width: "156px",
+                                height: "51px",
+                                borderColor: `${alpha("#000000", 0.2)}`,
+                            }}
                             className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
                             <div
                                 style={{
@@ -267,7 +276,11 @@ export default function BusinessInfo() {
                             -
                         </div>
                         <div
-                            style={{ width: "156px", height: "51px" }}
+                            style={{
+                                width: "156px",
+                                height: "51px",
+                                borderColor: `${alpha("#000000", 0.2)}`,
+                            }}
                             className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
                             <div style={{ fontSize: "14px" }}>To</div>
                             <div className="flex">
@@ -300,12 +313,16 @@ export default function BusinessInfo() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="text"
-                        style={{ color: "#8B8B8B" }}
+                        style={{
+                            color: "#8B8B8B",
+                            borderColor: `${alpha("#000000", 0.2)}`,
+                        }}
                         placeholder="enter the service phone number"
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                            }`}
+                        }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500">
@@ -322,7 +339,10 @@ export default function BusinessInfo() {
                     </div>
                     <div
                         className="mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
-                        style={{ height: "124px" }}>
+                        style={{
+                            height: "124px",
+                            borderColor: `${alpha("#000000", 0.2)}`,
+                        }}>
                         <textarea
                             name="description"
                             value={formik.values.description}

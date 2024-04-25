@@ -27,3 +27,23 @@ export interface IBookingSlot {
     endTime: string;
     capacity: number;
 }
+
+export interface IServiceTime {
+    daysOpen: string[];
+    openTime: string;
+    closeTime: string;
+    duration: number;
+    guestNumber: number;
+    TimeSlots: string[];
+    selectedSlots: number[];
+    manualCapacity: IBookingSlot[];
+    availableFromDate: string;
+    availableToDate: string;
+}
+
+export interface IServiceInfo {
+    serviceName: string;
+    serviceDescription: string;
+    price: number;
+    currency: string;
+}

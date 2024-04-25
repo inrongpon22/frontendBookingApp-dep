@@ -3,9 +3,10 @@ import { Divider } from "@mui/material";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import BusinessInfo from "./BusinessInfo";
-import CreateServiceOne from "./ServiceInfo";
+import ServiceInfo from "./ServiceInfo";
 import ServiceList from "./ServiceList";
-import CreateServiceTwo from "./ServiceTime";
+import ServiceTime from "./ServiceTime";
+import CreateService from "./CreateService";
 
 export default function CreateBusiness() {
     const { page } = useParams();
@@ -32,7 +33,9 @@ export default function CreateBusiness() {
                             ? "Service List"
                             : page == "3"
                             ? "Service Info"
-                            : "Service Time"}
+                            : page == "4"
+                            ? "Service Time"
+                            : "Create Service"}
                     </div>
 
                     <div></div>
@@ -45,9 +48,11 @@ export default function CreateBusiness() {
                 ) : page === "2" ? (
                     <ServiceList />
                 ) : page === "3" ? (
-                    <CreateServiceOne />
+                    <ServiceInfo />
+                ) : page == "4" ? (
+                    <ServiceTime />
                 ) : (
-                    <CreateServiceTwo />
+                    <CreateService />
                 )}
             </div>
         </div>
