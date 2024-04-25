@@ -14,9 +14,7 @@ const BookingSummaryWrapper = () => {
   const location = useLocation();
   const { id } = useParams(); // id click from my-bookings
 
-  const token = localStorage.getItem("token")
-    ? JSON.parse(localStorage.getItem("token")!)
-    : null;
+  const token = localStorage.getItem("token");
 
   const { t } = useTranslation();
 
@@ -48,7 +46,6 @@ const BookingSummaryWrapper = () => {
       html: `
     <span style="font-size: 14px;">
     ${t("noti:booking:cancel:confirmationDesc")}
-    
     </span>`,
       showCancelButton: true,
       cancelButtonText: t("button:cancel"),

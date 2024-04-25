@@ -6,6 +6,9 @@ const BusinessAuth = () => {
   const { t } = useTranslation();
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [dialogState, setDialogState] = useState<string | undefined>(
+    "phone-input"
+  );
 
   useEffect(() => {
     document.title = t("title:bussRootTitle");
@@ -25,7 +28,13 @@ const BusinessAuth = () => {
         </button>
       </div>
 
-      <DialogWrapper show={showDialog} setShow={setShowDialog} userSide='business' />
+      <DialogWrapper
+        show={showDialog}
+        setShow={setShowDialog}
+        userSide="business"
+        dialogState={dialogState}
+        setDialogState={setDialogState}
+      />
     </div>
   );
 };

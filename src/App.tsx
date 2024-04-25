@@ -18,14 +18,19 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          {/* business part */}
           <Route path="/" element={<BusinessAuth />} />
           <Route path="/bussiness-profile/:id" element={<BusinessProfile />} />
           <Route path="/bussiness-overview" element={<BusinessOverview />} />
-          <Route path="/details/:id" element={<ShopDetailsPageWrapper />} />
           <Route path="/booking-approval/:id" element={<BookingApproval />} />
-          <Route path="/booking-success" element={<BookingSummaryWrapper />} />
+          {/* business part */}
+
+          {/* user part */}
+          <Route path="/details/:id" element={<ShopDetailsPageWrapper />} />
           <Route path="/my-bookings" element={<MyBookingWrapper />} />
           <Route path="/booking/:id" element={<BookingSummaryWrapper />} />
+          {/* user part */}
+          <Route path="/booking-success" element={<BookingSummaryWrapper />} />
         </Routes>
       </BrowserRouter>
     </>

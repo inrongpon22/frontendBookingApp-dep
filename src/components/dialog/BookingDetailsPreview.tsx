@@ -16,7 +16,7 @@ const BookingDetailsPreview = () => {
 
   const { t } = useTranslation();
 
-  const token = JSON.parse(localStorage.getItem("token") || "{}");
+  const token = localStorage.getItem("token");
 
   const createReservation = async () => {
     const body = {
@@ -38,7 +38,7 @@ const BookingDetailsPreview = () => {
     axios
       .post(`${app_api}/reservation`, body, {
         headers: {
-          Authorization: `${token}`,
+          Authorization: token,
         },
       })
       .then((res) => {

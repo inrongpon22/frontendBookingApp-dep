@@ -19,6 +19,8 @@ import OtpVerify from "./OtpVerify";
 import BookingDetailsPreview from "./BookingDetailsPreview";
 import { Toast } from "../../helper/alerts";
 import { useNavigate } from "react-router-dom";
+import BookingApprovalSummary from "./BookingApprovalSummary";
+import BookingApprovalReject from "./BookingApprovalReject";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,11 +31,15 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
+const DialogWrapper = ({
+  show,
+  setShow,
+  userSide,
+  dialogState,
+  setDialogState,
+}: DialogTypes) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const [dialogState, setDialogState] = useState<string>("phone-input");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formik = useFormik({
@@ -80,11 +86,13 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
             })
             .then(async (res) => {
               if (res.status === 200) {
-                localStorage.setItem("token", JSON.stringify(res.data.token));
+                localStorage.setItem("token", res.data.token);
                 localStorage.setItem("userId", res.data.userId);
                 formik.setFieldValue("userId", res.data.userId);
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
+
+                console.log(userSide)
 
                 switch (userSide) {
                   case "user":
@@ -136,6 +144,19 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
     },
   });
 
+  const DialogHeader = (): string => {
+    switch (dialogState) {
+      case "booking-approval-summary":
+        return "Booking Approval"
+
+      case "booking-approval-reject":
+        return "Booking Rejection"
+
+      default:
+        return t("title:confirmBookingDialogHeader")
+    }
+  };
+
   const SwitchState = () => {
     switch (dialogState) {
       case "phone-input":
@@ -146,6 +167,12 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
 
       case "booking-detail-preview":
         return <BookingDetailsPreview />;
+
+      case "booking-approval-summary":
+        return <BookingApprovalSummary />;
+
+      case "booking-approval-reject":
+        return <BookingApprovalReject />;
 
       default:
         break;
@@ -168,6 +195,16 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
         setShow(false);
         break;
 
+      case "booking-approval-summary":
+        formik.resetForm();
+        setShow(false);
+        break;
+
+      case "booking-approval-reject":
+        formik.resetForm();
+        setDialogState("booking-approval-summary");
+        break;
+
       default:
         break;
     }
@@ -182,21 +219,26 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
         fullWidth={true}
         fullScreen
         open={show}
+        style={{ zIndex: 1000 }}
         TransitionComponent={Transition}
       >
         <Toolbar className="grid grid-cols-4">
           <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-            {dialogState === "phone-input" ? (
+            {dialogState === "phone-input" ||
+            dialogState === "booking-approval-summary" ? (
               <CloseIcon />
             ) : (
               <ArrowBackIosIcon />
             )}
           </span>
           <span className="w-full font-semibold col-span-3 text-center">
-            {t("title:confirmBookingDialogHeader")}
+            {DialogHeader()}
+            {/* {dialogState === "booking-approval-summary" ||
+            dialogState === "booking-approval-reject"
+              ? "Booking Approval"
+              : t("title:confirmBookingDialogHeader")} */}
           </span>
         </Toolbar>
-
         <DialogContent>{SwitchState()}</DialogContent>
       </Dialog>
     </DialogContext.Provider>

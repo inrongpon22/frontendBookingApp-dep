@@ -235,6 +235,8 @@ const ShopDetailsPageWrapper = () => {
             show={isShowDialog}
             setShow={setIsShowDialog}
             userSide="user"
+            dialogState={modalState}
+            setDialogState={setModalState}
           />
           {/* Ends:: dialog */}
         </div>

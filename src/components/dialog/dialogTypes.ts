@@ -4,6 +4,8 @@ export interface DialogTypes {
   show: boolean;
   setShow: Function;
   userSide: "user" | "business";
+  dialogState: string | undefined;
+  setDialogState: Function;
 }
 
 // Define your validation schemas
