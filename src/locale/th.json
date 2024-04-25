@@ -16,10 +16,10 @@
     "date": "วันที่",
     "guests": "จำนวน (​คน)",
     "price": "ราคา",
-    "what":"บริการอะไร",
-    "where":"ที่ไหน",
-    "when":"เมื่อไหร่",
-    "who":"ชื่อผู้จอง",
+    "what": "บริการอะไร",
+    "where": "ที่ไหน",
+    "when": "เมื่อไหร่",
+    "who": "ชื่อผู้จอง",
     "bookingName": "ชื่อผู้จอง",
     "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",
     "notes": "คำขอเพิ่มเติม(Optional)",
@@ -29,10 +29,12 @@
     "bookingIsconfirmed": "การจองได้รับการยืนยัน",
     "confirmBookingDialogHeader": "ยืนยันการจอง",
     "myBookings": "การจองของฉัน",
-    "bookingSuccess": "จองเสร็จสิ้น"
+    "bookingSuccess": "จองเสร็จสิ้น",
+    "bussRootTitle": "จอง. สร้าง. เติบโต."
   },
   "desc": {
-    "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น"
+    "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
+    "bussRootDesc": "ยกระดับประสบการณ์การจองของคุณอย่างรวดเร็วและสะดวกสบาย"
   },
   "button": {
     "cancel": "ยกเลิก",
@@ -43,7 +45,8 @@
     "cancelBookingButton": "ยกเลิกการจอง",
     "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
     "bookingFailedTryAgainButton": "ลองอีกครั้ง",
-    "bookingFailedCloseButton": "ปิด"
+    "bookingFailedCloseButton": "ปิด",
+    "getStartedButton": "เริ่มต้นใช้งาน"
   },
   "noti": {
     "booking": {
@@ -59,14 +62,14 @@
       }
     }
   },
-  "error":{
+  "error": {
     "required": "จำเป็นต้องกรอก",
     "invalidPhoneNumber": "หมายเลขโทรศัพท์ไม่ถูกต้อง",
     "invalidOTP": "รหัส OTP ไม่ถูกต้อง",
     "bookingFailed": "การจองล้มเหลว",
     "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง"
   },
-  "fragment":{
+  "fragment": {
     "needTo": "ต้องการที่จะ",
     "cancel": "ยกเลิก",
     "aBooking": "การจอง"

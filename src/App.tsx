@@ -3,11 +3,14 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import './i18n.ts';
+import "./i18n.ts";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
 import BookingSummaryWrapper from "./pages/booking-summary/BookingSummaryWrapper";
 import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
+import BusinessAuth from "./pages/auth/BusinessAuth.tsx";
+import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
+import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 // import Business from "./pages/business/Business";
 import ServiceList from "./pages/business/ServiceList.tsx";
@@ -20,24 +23,19 @@ function App() {
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route
-                        path="/details/:id"
-                        element={<ShopDetailsPageWrapper />}
-                    />
-                    <Route
-                        path="/booking-success"
-                        element={<BookingSummaryWrapper />}
-                    />
+                    <Route path="/" element={<BusinessAuth />} />
+                    <Route path="/bussiness-overview" element={<BusinessOverview />} />
+                    <Route path="/details/:id" element={<ShopDetailsPageWrapper />} />
+                    <Route path="/booking-approval" element={<BookingApproval />} />
+                    <Route path="/booking-success" element={<BookingSummaryWrapper />} />
                     <Route path="/my-bookings" element={<MyBookingWrapper />} />
-                    <Route
-                        path="/booking/:id"
-                        element={<BookingSummaryWrapper />}
-                    />
+                    <Route path="/booking/:id" element={<BookingSummaryWrapper />} />
+
+                    {/* <Route path="/business" element={<Business />} /> */}
                     <Route
                         path="/createBusiness"
                         element={<CreateBusiness />}
                     />
-                    {/* <Route path="/business" element={<Business />} /> */}
                     <Route path="/service/:businessId" element={<ServiceList />} />
                     <Route path="/serviceInfo" element={<ServiceInfo />} />
                     <Route path="/serviceTime" element={<ServiceTime />} />
