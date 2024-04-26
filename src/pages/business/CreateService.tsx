@@ -29,31 +29,31 @@ const label = { inputProps: { "aria-label": "Color switch demo" } };
 
 export default function CreateService() {
     const navigate = useNavigate();
-    const businessId = parseInt(localStorage.getItem('businessId') ?? "");
+    const businessId = parseInt(localStorage.getItem("businessId") ?? "");
+    const token = localStorage.getItem("token");
 
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
     ) as IServiceInfo;
     const serviceTime = JSON.parse(
         localStorage.getItem("serviceTime") ||
-        JSON.stringify([
-            {
-                daysOpen: [],
-                selectedSlots: [],
-                duration: 1,
-                openTime: "",
-                closeTime: "",
-                guestNumber: 1,
-                manualCapacity: [],
-                availableFromDate: new Date().toISOString().split("T")[0],
-                availableToDate: "",
-            },
-        ])
+            JSON.stringify([
+                {
+                    daysOpen: [],
+                    selectedSlots: [],
+                    duration: 1,
+                    openTime: "",
+                    closeTime: "",
+                    guestNumber: 1,
+                    manualCapacity: [],
+                    availableFromDate: new Date().toISOString().split("T")[0],
+                    availableToDate: "",
+                },
+            ])
     ) as IServiceTime[];
 
     const [isAutoApprove, setIsAutoApprove] = useState(true);
     const [isHidePrice, setIsHidePrice] = useState(true);
-
 
     const handleCreateService = async () => {
         const insertData = {
@@ -76,7 +76,8 @@ export default function CreateService() {
         };
 
         try {
-            await addService(insertData);
+            if (token === null) throw new Error("Token is not found");
+            await addService(insertData, token);
             localStorage.removeItem("serviceInfo");
             localStorage.removeItem("serviceTime");
             navigate(`/service/${businessId}`);

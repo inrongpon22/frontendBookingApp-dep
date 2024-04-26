@@ -47,3 +47,10 @@ export interface IServiceInfo {
     price: number;
     currency: string;
 }
+
+export interface IBusinessInfo {
+    title: string;
+    address: string;
+    daysOpen: string[];
+    phoneNumber: string;
+}

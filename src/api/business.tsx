@@ -2,12 +2,12 @@ import axios from "axios";
 import { IaddBusiness } from "../pages/business/interfaces/business";
 
 export const insertBusiness = async (
-    businessData: IaddBusiness,
+    businessData: IaddBusiness
     // token: string
 ) => {
     try {
         return await axios.post(
-            `${import.meta.env.VITE_SERVICE_URL}/business`,
+            `${import.meta.env.VITE_APP_API}/business`,
             businessData,
             {
                 headers: {
@@ -15,6 +15,23 @@ export const insertBusiness = async (
                 },
             }
         );
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getBusinessId = async (businessId: number, token: string) => {
+    try {
+        const business = await axios.get(
+            `${import.meta.env.VITE_APP_API}/business/${businessId}`,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+        return business.data;
     } catch (error) {
         console.error(error);
         throw error;

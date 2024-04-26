@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const insertUser = async (userData: { phoneNumber: string; }) => {
+export const insertUser = async (userData: { phoneNumber: string }) => {
     try {
         return await axios.post(
-            `${import.meta.env.VITE_SERVICE_URL}/user`,
+            `${import.meta.env.VITE_APP_API}/user`,
             userData
         );
     } catch (error) {
