@@ -300,12 +300,12 @@ export default function ServiceTime() {
     });
   };
 
-    const increaseDuration = () => {
-        setDuration((prev) => prev + 0.5);
-    };
-    const decreaseDuration = () => {
-        setDuration((prev) => prev - 0.5);
-    };
+    // const increaseDuration = () => {
+    //     setDuration((prev) => prev + 0.5);
+    // };
+    // const decreaseDuration = () => {
+    //     setDuration((prev) => prev - 0.5);
+    // };
 
   return (
     <div className="mb-10">
