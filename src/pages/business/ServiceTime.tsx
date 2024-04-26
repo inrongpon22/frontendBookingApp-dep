@@ -300,6 +300,13 @@ export default function ServiceTime() {
     });
   };
 
+    const increaseDuration = () => {
+        setDuration((prev) => prev + 0.5);
+    };
+    const decreaseDuration = () => {
+        setDuration((prev) => prev - 0.5);
+    };
+
   return (
     <div className="mb-10">
       <div className="pr-4 pl-4 pt-6">
@@ -669,7 +676,14 @@ export default function ServiceTime() {
 
           <div className="w-full flex justify-center fixed bottom-0 inset-x-0">
             <button
-              // disabled={serviceTime == undefined || !formik.isValid}
+              disabled={
+                                daysOpen.length < 0 ||
+                                !openTime ||
+                                !closeTime ||
+                                !duration ||
+                                !guestNumber ||
+                                !availableFromDate
+                            }
               onClick={handleSubmit}
               type="submit"
               className="text-white mt-4 rounded-lg font-semibold mb-6"
