@@ -300,10 +300,17 @@ export default function ServiceTime() {
         });
     };
 
+    const increaseDuration = () => {
+        setDuration((prev) => prev + 0.5);
+    };
+    const decreaseDuration = () => {
+        setDuration((prev) => prev - 0.5);
+    };
+
     return (
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
-                <Header context={"Service Info"} />
+                <Header context={"Service Time"} />
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
@@ -511,26 +518,26 @@ export default function ServiceTime() {
                                 }
                             />
                             <p>hr</p>
-                            {/* <div className="flex flex-col">
-                            <button onClick={increaseDuration}>
-                                <KeyboardArrowUpIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        marginBottom: "-15px",
-                                    }}
-                                />
-                            </button>
-                            <button
-                                disabled={duration == 0.5}
-                                onClick={decreaseDuration}>
-                                <KeyboardArrowDownIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        marginTop: "-15px",
-                                    }}
-                                />
-                            </button>
-                        </div> */}
+                            <div className="flex flex-col">
+                                <button onClick={increaseDuration}>
+                                    <KeyboardArrowUpIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            marginBottom: "-5px",
+                                        }}
+                                    />
+                                </button>
+                                <button
+                                    disabled={duration == 0.5}
+                                    onClick={decreaseDuration}>
+                                    <KeyboardArrowDownIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            marginTop: "-5px",
+                                        }}
+                                    />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -689,7 +696,14 @@ export default function ServiceTime() {
 
                     <div className="w-full flex justify-center fixed bottom-0 inset-x-0">
                         <button
-                            // disabled={serviceTime == undefined || !formik.isValid}
+                            disabled={
+                                daysOpen.length < 0 ||
+                                !openTime ||
+                                !closeTime ||
+                                !duration ||
+                                !guestNumber ||
+                                !availableFromDate
+                            }
                             onClick={handleSubmit}
                             type="submit"
                             className="text-white mt-4 rounded-lg font-semibold mb-6"
