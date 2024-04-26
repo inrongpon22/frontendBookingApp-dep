@@ -30,7 +30,7 @@ function App() {
                         element={<ShopDetailsPageWrapper />}
                     />
                     <Route
-                        path="/booking-approval"
+                        path="/booking-approval/:id/:serviceId"
                         element={<BookingApproval />}
                     />
                     <Route
