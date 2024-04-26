@@ -8,13 +8,13 @@ import BusinessCard from "./components/BusinessCard";
 import ListServiceCard from "./components/ListServiceCard";
 import { IService } from "./interfaces/service";
 import { getBusinessId } from "../../api/business";
-import { IBusinessInfo } from "./interfaces/business";
+import { IBusinessInfoList } from "./interfaces/business";
 
 export default function ServiceList() {
     const { businessId } = useParams();
     const navigate = useNavigate();
     const [services, setService] = useState<IService[]>([]);
-    const [business, setBusiness] = useState<IBusinessInfo>();
+    const [business, setBusiness] = useState<IBusinessInfoList>();
     const token = localStorage.getItem("token");
 
     useEffect(() => {
