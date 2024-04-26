@@ -1,17 +1,20 @@
 import { useContext } from "react";
 import { ApproveContext } from "../../pages/booking-approval/BookingApproval";
+import { useTranslation } from "react-i18next";
 
 const BookingApprovalReject = () => {
   const { bookingDatas, rejectRequested } = useContext(ApproveContext);
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-4 h-full">
-      <p>Tell the customer why they were rejected.</p>
+      <p>{t("desc:bookingRejectDesc")}</p>
       <textarea
         name=""
         id=""
         rows={4}
-        placeholder="Additional note (optional)"
+        placeholder={`${t("placeholder:bookingReject")}...`}
         className="w-full border rounded-lg p-3"
       ></textarea>
       <button
@@ -21,7 +24,7 @@ const BookingApprovalReject = () => {
           rejectRequested(bookingDatas?.id, bookingDatas?.serviceId)
         }
       >
-        Reject
+        {t("button:reject")}
       </button>
     </div>
   );

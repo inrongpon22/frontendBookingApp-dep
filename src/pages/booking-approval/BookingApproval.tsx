@@ -10,10 +10,13 @@ import RequestCards from "../../components/business-approval/RequestCards";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { Toast } from "../../helper/alerts";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 const BookingApproval = () => {
   const { id } = useParams();
   const token = localStorage.getItem("token");
+
+  const { t } = useTranslation();
 
   const [show, setShow] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<string | undefined>(
@@ -50,12 +53,15 @@ const BookingApproval = () => {
   const approveRequested = async (id: string, serviceId: string) => {
     Swal.fire({
       icon: "warning",
-      title: `<span style="font-size: 17px; font-weight: bold;">Are you sure you want to approve this booking?</span>`,
-      html: `<p style="font-size: 14px;">Once approved, the customer will be notified, 
-      and the booking will be finalized.</p>`,
+      title: `<span style="font-size: 17px; font-weight: bold;">${t(
+        "noti:booking:approve:confirmation"
+      )}?</span>`,
+      html: `<p style="font-size: 14px;">${t(
+        "noti:booking:approve:confirmationDesc"
+      )}</p>`,
       showCancelButton: true,
-      cancelButtonText: "Cancel",
-      confirmButtonText: "Approve",
+      cancelButtonText: t("button:cancel"),
+      confirmButtonText: t("button:approve"),
       reverseButtons: true,
       customClass: {
         confirmButton: "border rounded-lg py-3 px-10 text-white bg-[#020873]",
@@ -75,12 +81,18 @@ const BookingApproval = () => {
             setShow(false);
             Toast.fire({
               icon: "success",
-              title: "Booking approved successfully",
+              title: `${t("noti:booking:approve:success")}`,
             });
             setShow(false);
             mutate();
           })
-          .catch((err) => Toast.fire({ icon: "error", title: err.message }));
+          .catch((err) => {
+            console.log(err);
+            Toast.fire({
+              icon: "error",
+              title: `${t("noti:booking:approve:fail")}`,
+            });
+          });
       }
     });
   };
@@ -88,12 +100,15 @@ const BookingApproval = () => {
   const rejectRequested = async (id: string, serviceId: string) => {
     Swal.fire({
       icon: "warning",
-      title: `<span style="font-size: 17px; font-weight: bold;">Are you sure you want to reject this booking?</span>`,
-      html: `<p style="font-size: 14px;">Once approved, the customer will be notified, 
-      and the booking will be finalized.</p>`,
+      title: `<span style="font-size: 17px; font-weight: bold;">${t(
+        "noti:booking:reject:confirmation"
+      )}?</span>`,
+      html: `<p style="font-size: 14px;">${t(
+        "noti:booking:reject:confirmationDesc"
+      )}</p>`,
       showCancelButton: true,
-      cancelButtonText: "Cancel",
-      confirmButtonText: "Reject",
+      cancelButtonText: t("button:cancel"),
+      confirmButtonText: t("button:reject"),
       reverseButtons: true,
       customClass: {
         confirmButton: "border rounded-lg py-3 px-10 text-white bg-[#020873]",
@@ -113,18 +128,21 @@ const BookingApproval = () => {
             setShow(false);
             Toast.fire({
               icon: "success",
-              title: "Booking has been reject",
+              title: t("noti:booking:reject:success"),
             });
             setShow(false);
             mutate();
           })
-          .catch((err) => Toast.fire({ icon: "error", title: err.message }));
+          .catch((err) => {
+            console.log(err);
+            Toast.fire({ icon: "error", title: t("noti:booking:reject:fail") });
+          });
       }
     });
   };
 
   useEffect(() => {
-    document.title = "Booking Approval";
+    document.title = t("title:bookingApproval");
   }, []);
 
   if (BusinessByIdError || ReservByBusiIdError) return <div>API ERROR</div>;
@@ -157,7 +175,7 @@ const BookingApproval = () => {
         </p>
         <div className="bg-gray-100">
           <p className="p-4 text-[14px]">
-            Booking request({getReservByBusiId?.length})
+            {t("title:bookingRequests")} ({getReservByBusiId?.length})
           </p>
           <div className="">
             {getReservByBusiId ? (
@@ -165,7 +183,7 @@ const BookingApproval = () => {
                 return <RequestCards key={index} data={item} />;
               })
             ) : (
-              <p className="p-4 text-[14px]">No booking request</p>
+              <p className="p-4 text-[14px]">{t("error:noBookingReq")}</p>
             )}
           </div>
         </div>

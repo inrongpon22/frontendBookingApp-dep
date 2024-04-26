@@ -1,48 +1,52 @@
 import { useContext } from "react";
 import { ApproveContext } from "../../pages/booking-approval/BookingApproval";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { Divider } from "@mui/material";
 
 const BookingApprovalSummary = () => {
   const { bookingDatas, approveRequested, setDialogState } =
     useContext(ApproveContext);
 
+  const { t } = useTranslation();
+
   const BookingDataLists: { label: string; text: string }[] = [
     {
-      label: "Service:",
+      label: `${t("services")}:`,
       text: bookingDatas?.title,
     },
     {
-      label: "Date:",
+      label: `${t("date")}:`,
       text: moment(bookingDatas?.bookingDate).format("dddd, DD MMMM YYYY"),
     },
     {
-      label: "Time:",
+      label: `${t("time")}:`,
       text: `${bookingDatas?.startTime.slice(
         0,
         -3
       )} - ${bookingDatas?.endTime.slice(0, -3)}`,
     },
     {
-      label: "Price:",
+      label: `${t("price")}:`,
       text: `${bookingDatas?.price} ฿`,
     },
   ];
 
   const GuestDataLists: { label: string; text: string }[] = [
     {
-      label: "Name:",
+      label: `${t('bookingName')}:`,
       text: bookingDatas?.userName,
     },
     {
-      label: "Phone Numbers:",
+      label: `${t('phoneNumbers')}:`,
       text: bookingDatas?.phoneNumber,
     },
     {
-      label: "Number of guest:",
+      label: `${t('numberOfGuest')}:`,
       text: bookingDatas?.guestNumber,
     },
     {
-      label: "Note:",
+      label: `${t('note')}:`,
       text: bookingDatas?.remark,
     },
   ];
@@ -62,6 +66,7 @@ const BookingApprovalSummary = () => {
         </div>
 
         <div className="flex flex-col gap-3 mt-5">
+          <Divider />
           {GuestDataLists?.map((item: any, index: number) => {
             return (
               <div key={index} className="flex justify-between">
@@ -82,14 +87,14 @@ const BookingApprovalSummary = () => {
               approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
             }
           >
-            Approve
+            {t("button:approve")}
           </button>
           <button
             type="button"
             className="border p-3 rounded-lg"
             onClick={() => setDialogState("booking-approval-reject")}
           >
-            Reject
+            {t("button:reject")}
           </button>
         </div>
       </div>

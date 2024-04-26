@@ -1,6 +1,7 @@
 import moment from "moment";
 import { useContext } from "react";
 import { ApproveContext } from "../../pages/booking-approval/BookingApproval";
+import { useTranslation } from "react-i18next";
 
 interface cardTypes {
   data: {
@@ -30,6 +31,8 @@ const RequestCards = ({ data }: cardTypes) => {
   const { setShow, approveRequested, setBookingDatas } =
     useContext(ApproveContext);
 
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white flex flex-col mb-2">
       <div className="flex justify-between items-center pt-4 px-4">
@@ -52,14 +55,14 @@ const RequestCards = ({ data }: cardTypes) => {
             setBookingDatas(data);
           }}
         >
-          view more details
+          {t("desc:viewMoreDetails")}
         </p>
         <button
           type="button"
           className="px-4 py-2 text-[14px] text-white rounded bg-deep-blue"
           onClick={() => approveRequested(data.id, data.serviceId)}
         >
-          Approve
+          {t("button:approve")}
         </button>
       </div>
     </div>
