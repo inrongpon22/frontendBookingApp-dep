@@ -27,7 +27,10 @@ export default function ServiceInfo() {
         initialValues: {
             serviceName: serviceInfo.serviceName,
             serviceDescription: serviceInfo.serviceDescription,
-            currency: serviceInfo.currency == undefined ? "THB" : serviceInfo.currency,
+            currency:
+                serviceInfo.currency == undefined
+                    ? "THB"
+                    : serviceInfo.currency,
             price: serviceInfo.price,
         },
         validationSchema: validationSchema,
@@ -49,7 +52,9 @@ export default function ServiceInfo() {
             <div className="flex flex-col pr-4 pl-4">
                 <div className="flex flex-col">
                     <form onSubmit={formik.handleSubmit}>
-                        <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-4 font-semibold">
                             Service name
                         </p>
                         <input
@@ -62,13 +67,16 @@ export default function ServiceInfo() {
                             placeholder="fill the name of the service"
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
-                        {formik.touched.serviceName && formik.errors.serviceName ? (
+                        {formik.touched.serviceName &&
+                        formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
                         ) : null}
 
-                        <p style={{ fontSize: "14px" }} className="mt-3 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-3 font-semibold">
                             Service describe
                         </p>
                         <input
@@ -76,23 +84,26 @@ export default function ServiceInfo() {
                             name="serviceDescription"
                             style={{ color: "#8B8B8B" }}
                             placeholder="introduce this service to the customer"
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                                formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                ? "border-red-500"
-                                : ""
-                                }`}
+                                    ? "border-red-500"
+                                    : ""
+                            }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                            formik.errors.serviceDescription ? (
+                        formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
                         ) : null}
 
-                        <p style={{ fontSize: "14px" }} className="mt-3 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-3 font-semibold">
                             Price
                         </p>
                         <div className="flex items-center">
@@ -112,10 +123,11 @@ export default function ServiceInfo() {
                                 style={{ textAlign: "right" }}
                                 name="price"
                                 type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                                    ? "border-red-500"
-                                    : ""
-                                    }`}
+                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
+                                    formik.touched.price && formik.errors.price
+                                        ? "border-red-500"
+                                        : ""
+                                }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}

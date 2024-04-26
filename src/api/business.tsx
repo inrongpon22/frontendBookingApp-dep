@@ -2,16 +2,17 @@ import axios from "axios";
 import { IaddBusiness } from "../pages/business/interfaces/business";
 
 export const insertBusiness = async (
-    businessData: IaddBusiness
-    // token: string
+    businessData: IaddBusiness,
+    token: string
 ) => {
+    token = token.replace(/"/g, "");
     try {
         return await axios.post(
             `${import.meta.env.VITE_APP_API}/business`,
             businessData,
             {
                 headers: {
-                    Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMyIsInVzZXJUeXBlIjoiYWRtaW4iLCJpYXQiOjE3MTQwMzc3OTcsImV4cCI6MTcxNDEyNDE5N30.w26OgvVKfT7L5Mse7eAuuShy_9YVXwgkcdmRA6mPIFA`,
+                    Authorization: token,
                 },
             }
         );
@@ -22,6 +23,7 @@ export const insertBusiness = async (
 };
 
 export const getBusinessId = async (businessId: number, token: string) => {
+    token = token.replace(/"/g, "");
     try {
         const business = await axios.get(
             `${import.meta.env.VITE_APP_API}/business/${businessId}`,
