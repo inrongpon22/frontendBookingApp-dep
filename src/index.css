@@ -3,35 +3,34 @@
 @tailwind utilities;
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  /* height: 100%; */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* height: 100%; */
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: #000000;
-  background-color: #ffffff;
+    color: #000000;
+    background-color: #ffffff;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 input {
-  color: #000000;
-  background-color: #ffffff;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 textarea {
-  color: #000000;
-  background-color: #ffffff;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 .custom-swal {
@@ -40,45 +39,45 @@ textarea {
 
 /* Slideshow */
 .slideshow {
-  margin: 0 auto;
-  overflow: hidden;
-  max-width: 500px;
-  display: relative;
+    margin: 0 auto;
+    overflow: hidden;
+    max-width: 500px;
+    display: relative;
 }
 
 .slideshowSlider {
-  white-space: nowrap;
-  transition: ease 1000ms;
+    white-space: nowrap;
+    transition: ease 1000ms;
 }
 
 .slide {
-  display: inline-block;
-  /* height: 400px; */
-  width: 100%;
+    display: inline-block;
+    /* height: 400px; */
+    width: 100%;
 }
 
 /* Buttons */
 .slideshowDots {
-  text-align: center;
+    text-align: center;
 }
 
 .slideshowDot {
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  margin: 15px 7px 0px;
-  background-color: #0000004d;
-  z-index: 1000;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 15px 7px 0px;
+    background-color: #0000004d;
+    z-index: 1000;
 }
 
 .slideshowDot.active {
-  background-color: #000000;
+    background-color: #000000;
 }
 
 .custom-chip-label {
-  color: #003b95 !important;
-  font-weight: 400;
-  font-size: 14px;
+    color: #003b95 !important;
+    font-weight: 400;
+    font-size: 14px;
 }
