@@ -14,19 +14,19 @@ export default function ServiceTime() {
     const editValue = Number(urlParams.get("edit"));
     const serviceTime = JSON.parse(
         localStorage.getItem("serviceTime") ||
-        JSON.stringify([
-            {
-                daysOpen: [],
-                selectedSlots: [],
-                duration: 1,
-                openTime: "",
-                closeTime: "",
-                guestNumber: 1,
-                manualCapacity: [],
-                availableFromDate: new Date().toISOString().split("T")[0],
-                availableToDate: "",
-            },
-        ])
+            JSON.stringify([
+                {
+                    daysOpen: [],
+                    selectedSlots: [],
+                    duration: 1,
+                    openTime: "",
+                    closeTime: "",
+                    guestNumber: 1,
+                    manualCapacity: [],
+                    availableFromDate: new Date().toISOString().split("T")[0],
+                    availableToDate: "",
+                },
+            ])
     ) as IServiceTime[];
 
     const [daysOpen, setDaysOpen] = useState<string[]>(
@@ -301,13 +301,15 @@ export default function ServiceTime() {
     };
 
     return (
-        <>
+        <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
                 <Header context={"Service Info"} />
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
-                <div style={{ marginBottom: "70px" }} className="mt-4 flex flex-col">
+                <div
+                    style={{ marginBottom: "70px" }}
+                    className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         Available date
                     </p>
@@ -319,7 +321,11 @@ export default function ServiceTime() {
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
                             className="rounded-lg flex items-center gap-4 border p-2 justify-between">
-                            <div style={{ fontSize: "14px", marginRight: "-10px" }}>
+                            <div
+                                style={{
+                                    fontSize: "14px",
+                                    marginRight: "-10px",
+                                }}>
                                 From
                             </div>
                             <input
@@ -328,10 +334,14 @@ export default function ServiceTime() {
                                 style={{ border: "none" }}
                                 name="availableFromDate"
                                 value={availableFromDate}
-                                onChange={(e) => setAvailableFromDate(e.target.value)}
+                                onChange={(e) =>
+                                    setAvailableFromDate(e.target.value)
+                                }
                             />
                         </div>
-                        <div className="flex justify-center items-center">-</div>
+                        <div className="flex justify-center items-center">
+                            -
+                        </div>
                         <div
                             style={{
                                 width: "45%",
@@ -339,7 +349,11 @@ export default function ServiceTime() {
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
                             className="rounded-lg flex items-center gap-4 border border-black-50 p-2 justify-between">
-                            <div style={{ fontSize: "14px", marginRight: "10px" }}>
+                            <div
+                                style={{
+                                    fontSize: "14px",
+                                    marginRight: "10px",
+                                }}>
                                 To
                             </div>
                             <input
@@ -348,7 +362,9 @@ export default function ServiceTime() {
                                 style={{ border: "none" }}
                                 name="availableToDate"
                                 value={availableToDate}
-                                onChange={(e) => setAvailableToDate(e.target.value)}
+                                onChange={(e) =>
+                                    setAvailableToDate(e.target.value)
+                                }
                             />
                         </div>
                     </div>
@@ -362,7 +378,9 @@ export default function ServiceTime() {
                     </div>
                 ) : null} */}
 
-                    <p className="font-semibold mt-3" style={{ fontSize: "14px" }}>
+                    <p
+                        className="font-semibold mt-3"
+                        style={{ fontSize: "14px" }}>
                         Active days
                     </p>
                     <div className="flex justify-between mt-3">
@@ -381,10 +399,11 @@ export default function ServiceTime() {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -396,7 +415,9 @@ export default function ServiceTime() {
                         </div>
                     ) : null}
 
-                    <p className="font-semibold mt-3" style={{ fontSize: "14px" }}>
+                    <p
+                        className="font-semibold mt-3"
+                        style={{ fontSize: "14px" }}>
                         Available time
                     </p>
                     <div className="flex justify-between mt-3">
@@ -407,14 +428,20 @@ export default function ServiceTime() {
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
                             className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
-                            <div style={{ fontSize: "14px", marginRight: "15px" }}>
+                            <div
+                                style={{
+                                    fontSize: "14px",
+                                    marginRight: "15px",
+                                }}>
                                 From
                             </div>
                             <div className="flex">
                                 <input
                                     className="font-black-500 focus:outline-none"
                                     value={openTime}
-                                    onChange={(e) => setOpenTime(e.target.value)}
+                                    onChange={(e) =>
+                                        setOpenTime(e.target.value)
+                                    }
                                     type="time"
                                     style={{
                                         border: "none",
@@ -423,7 +450,9 @@ export default function ServiceTime() {
                                 />
                             </div>
                         </div>
-                        <div className="flex justify-center items-center">-</div>
+                        <div className="flex justify-center items-center">
+                            -
+                        </div>
                         <div
                             style={{
                                 width: "156px",
@@ -435,7 +464,9 @@ export default function ServiceTime() {
                             <div className="flex">
                                 <input
                                     value={closeTime}
-                                    onChange={(e) => setCloseTime(e.target.value)}
+                                    onChange={(e) =>
+                                        setCloseTime(e.target.value)
+                                    }
                                     type="time"
                                     style={{ border: "none" }}
                                     className="focus:outline-none"
@@ -475,7 +506,9 @@ export default function ServiceTime() {
                                 }}
                                 name="duration"
                                 value={duration}
-                                onChange={(e) => setDuration(Number(e.target.value))}
+                                onChange={(e) =>
+                                    setDuration(Number(e.target.value))
+                                }
                             />
                             <p>hr</p>
                             {/* <div className="flex flex-col">
@@ -501,7 +534,9 @@ export default function ServiceTime() {
                         </div>
                     </div>
 
-                    <p className="font-semibold mt-3" style={{ fontSize: "14px" }}>
+                    <p
+                        className="font-semibold mt-3"
+                        style={{ fontSize: "14px" }}>
                         Open slot
                     </p>
                     <div className="flex justify-between gap-2 w-full flex-wrap mt-3">
@@ -509,17 +544,20 @@ export default function ServiceTime() {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                ${selectedSlots.includes(index)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }`}
+                ${
+                    selectedSlots.includes(index)
+                        ? "border-custom-color border-2"
+                        : "border-black-50 border"
+                }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
                                     borderColor: selectedSlots.includes(index)
                                         ? "#020873"
                                         : `${alpha("#000000", 0.2)}`,
-                                    backgroundColor: selectedSlots.includes(index)
+                                    backgroundColor: selectedSlots.includes(
+                                        index
+                                    )
                                         ? "rgb(2, 8, 115,0.2)"
                                         : "white",
                                 }}
@@ -563,7 +601,9 @@ export default function ServiceTime() {
                                                     onClick={() =>
                                                         handleDecreaseCapacityManual(
                                                             TimeSlots[element],
-                                                            TimeSlots[element + 1]
+                                                            TimeSlots[
+                                                                element + 1
+                                                            ]
                                                         )
                                                     }
                                                     className="border flex justify-center items-center w-8 h-8 rounded-md">
@@ -572,15 +612,21 @@ export default function ServiceTime() {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                        TimeSlots[element] &&
+                                                            TimeSlots[
+                                                                element
+                                                            ] &&
                                                         item.endTime ==
-                                                        TimeSlots[element + 1]
+                                                            TimeSlots[
+                                                                element + 1
+                                                            ]
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
                                                         handleIncreaseCapacityManual(
                                                             TimeSlots[element],
-                                                            TimeSlots[element + 1],
+                                                            TimeSlots[
+                                                                element + 1
+                                                            ],
                                                             guestNumber
                                                         )
                                                     }
@@ -591,7 +637,10 @@ export default function ServiceTime() {
                                         </div>
                                         <hr
                                             style={{
-                                                borderColor: `${alpha("#000000", 0.2)}`,
+                                                borderColor: `${alpha(
+                                                    "#000000",
+                                                    0.2
+                                                )}`,
                                             }}
                                             className="border-1 border-black-50"
                                         />
@@ -605,12 +654,19 @@ export default function ServiceTime() {
                             }}
                             className="flex justify-between border rounded-lg mt-3">
                             <div className="p-3">
-                                <p style={{ fontSize: "14px", color: "#1C1C1C" }}>
+                                <p
+                                    style={{
+                                        fontSize: "14px",
+                                        color: "#1C1C1C",
+                                    }}>
                                     Available guest(s) per slot
                                 </p>
                                 <u
                                     onClick={() => setIsManually(true)}
-                                    style={{ color: "#020873", fontSize: "12px" }}>
+                                    style={{
+                                        color: "#020873",
+                                        fontSize: "12px",
+                                    }}>
                                     Manually adjust
                                 </u>
                             </div>
@@ -648,7 +704,7 @@ export default function ServiceTime() {
                         </button>
                     </div>
                 </div>
-            </div >
-        </>
+            </div>
+        </div>
     );
 }
