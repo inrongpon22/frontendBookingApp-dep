@@ -48,7 +48,7 @@ export interface IServiceInfo {
     currency: string;
 }
 
-export interface IBusinessInfo {
+export interface IBusinessInfoList {
     title: string;
     address: string;
     daysOpen: string[];
