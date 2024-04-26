@@ -24,6 +24,7 @@ function App() {
                         path="/bussiness-overview"
                         element={<BusinessOverview />}
                     />
+                    <Route path="/bussiness-profile/:id" element={<BusinessProfile />} />
                     <Route
                         path="/details/:id"
                         element={<ShopDetailsPageWrapper />}
