@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 export const ApproveContext = createContext<any>(null); //create context to store all the data
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import axios from "axios";
 import { app_api, fetcher } from "../../helper/url";
 import { Backdrop, CircularProgress } from "@mui/material";
+// icons
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 // components
 import RequestCards from "../../components/business-approval/RequestCards";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
@@ -15,6 +17,7 @@ import { useTranslation } from "react-i18next";
 const BookingApproval = () => {
   const { id, serviceId } = useParams();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate()
 
   const { t } = useTranslation();
 
@@ -172,9 +175,10 @@ const BookingApproval = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
         {/* loading progress */}
-        <p className="drop-shadow-lg p-4 font-semibold text-[14px]">
-          {getBusinessById?.title}
-        </p>
+        <div className="flex drop-shadow-lg p-4 font-semibold text-[14px]">
+          <button type="button" onClick={() => navigate(-1)}><ArrowBackIosIcon fontSize="small" /></button>
+          <span className="mx-auto">{getBusinessById?.title}</span>
+        </div>
         <div className="bg-gray-100">
           <p className="p-4 text-[14px]">
             {t("title:bookingRequests")} ({getReservByBusiId?.length})
