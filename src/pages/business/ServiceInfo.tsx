@@ -25,13 +25,13 @@ export default function ServiceInfo() {
     ) as IServiceInfo;
     const formik = useFormik({
         initialValues: {
-            serviceName: serviceInfo.serviceName,
-            serviceDescription: serviceInfo.serviceDescription,
+            serviceName: serviceInfo.serviceName ?? "",
+            serviceDescription: serviceInfo.serviceDescription ?? "",
             currency:
                 serviceInfo.currency == undefined
                     ? "THB"
                     : serviceInfo.currency,
-            price: serviceInfo.price,
+            price: serviceInfo.price ?? 0,
         },
         validationSchema: validationSchema,
         onSubmit: (values: IServiceInfo) => {
@@ -44,7 +44,7 @@ export default function ServiceInfo() {
     });
 
     return (
-        <>
+        <div>
             <div className="pr-4 pl-4 pt-6">
                 <Header context={"Service Info"} />
             </div>
@@ -156,6 +156,6 @@ export default function ServiceInfo() {
                     </form>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

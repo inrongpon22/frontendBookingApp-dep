@@ -34,7 +34,7 @@ export default function TimeCard() {
                             }}>
                             <EditOutlinedIcon
                                 onClick={() =>
-                                    navigate(`/createBusiness/4?edit=${index}`)
+                                    navigate(`/serviceTime?edit=${index}`)
                                 }
                                 sx={{
                                     cursor: "pointer",
