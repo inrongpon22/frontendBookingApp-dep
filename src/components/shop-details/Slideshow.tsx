@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { createClient } from "@supabase/supabase-js";
 import { useTranslation } from "react-i18next";
+import { supabase } from "../../helper/createSupabase";
 
 interface slideTypes {
   data: string[];
+  fixedHeight?: number;
 }
 
 const languageLists: {
@@ -21,7 +22,7 @@ const languageLists: {
   },
 ];
 
-export const Slideshow = ({ data }: slideTypes) => {
+export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
   const [images, setImages] = useState<
     {
       publicUrl: string;
@@ -31,11 +32,6 @@ export const Slideshow = ({ data }: slideTypes) => {
   const {
     i18n: { changeLanguage, language },
   } = useTranslation();
-
-  const supabase = createClient(
-    import.meta.env.VITE_PROJECT_URL,
-    import.meta.env.VITE_API_KEY
-  );
 
   const settings = {
     dots: true,
@@ -65,7 +61,9 @@ export const Slideshow = ({ data }: slideTypes) => {
       }
     };
 
-    fetchImageUrls();
+    if (data !== undefined) {
+      fetchImageUrls();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -89,7 +87,11 @@ export const Slideshow = ({ data }: slideTypes) => {
       <Slider {...settings}>
         {images?.map((item: any, index: number) => (
           <div className="slide" key={index}>
-            <img className="w-full" src={item.publicUrl} />
+            <img
+              className={`w-full `} //${fixedHeight ? `h-[${fixedHeight}px]` : ""}
+              src={item.publicUrl}
+              style={{ height: `${fixedHeight}px` }}
+            />
           </div>
         ))}
       </Slider>

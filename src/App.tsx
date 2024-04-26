@@ -24,12 +24,13 @@ function App() {
                         path="/bussiness-overview"
                         element={<BusinessOverview />}
                     />
+                    <Route path="/bussiness-profile/:id" element={<BusinessProfile />} />
                     <Route
                         path="/details/:id"
                         element={<ShopDetailsPageWrapper />}
                     />
                     <Route
-                        path="/booking-approval"
+                        path="/booking-approval/:id/:serviceId"
                         element={<BookingApproval />}
                     />
                     <Route

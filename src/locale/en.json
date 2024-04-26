@@ -20,12 +20,25 @@
     "where": "Where",
     "when": "When",
     "who": "Who",
+    "from": "From",
+    "to": "To",
+    "duration": "Duration",
+    "present": "Present",
     "bookingName": "Booking Name",
+    "serviceName": "Service name",
+    "serviceDesc": "Service Describe",
+    "serviceSetting": "Service Setting",
+    "isAutoApprove": "Auto-approve reservations",
+    "isHideServPrice": "Hide the service price",
     "phoneNumbers": "Phone Numbers",
     "numberOfGuest": "Number of Guest",
     "bookingNumbers": "Booking Numbers",
     "note": "Note",
     "notes": "Notes (Optional)",
+    "availableDate": "Available Date",
+    "activeDays": "Active Days",
+    "availableTime": "Available Time",
+    "openSlot": "Open Slot",
     "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies."
   },
   "title": {
@@ -36,7 +49,8 @@
     "bussRootTitle": "Book. Build. Thrive.",
     "bookingRequests": "Booking Requests",
     "bookingApproval": "Booking Approval",
-    "bookingReject": "Booking Reject"
+    "bookingReject": "Booking Reject",
+    "serviceInformation": "Service Information"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -49,6 +63,7 @@
     "confirm": "Confirm",
     "approve": "Approve",
     "reject": "Reject",
+    "next": "Next",
     "goToMyBookingButton": "Go to My Booking",
     "confirmBookingButton": "Confirm & Booking",
     "continueButton": "Continue",
@@ -95,7 +110,9 @@
   "fragment": {
     "needTo": "Need to",
     "cancel": "Cancelled",
-    "aBooking": "a Booking"
+    "aBooking": "a Booking",
+    "avaiGuest": "Available guest(s) per slot",
+    "manualAdjust": "Manually adjust"
   },
   "placeholder": {
     "bookingReject": "Ex. The service is not available at the requested time."

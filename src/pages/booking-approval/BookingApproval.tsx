@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 
 const BookingApproval = () => {
-  const { id } = useParams();
+  const { id, serviceId } = useParams();
   const token = localStorage.getItem("token");
 
   const { t } = useTranslation();
@@ -45,7 +45,9 @@ const BookingApproval = () => {
           },
         })
         .then((res) =>
-          res.data.filter((item: any) => item.status === "pending")
+          res.data
+            .filter((item: any) => item.status === "pending")
+            .filter((item: any) => item.serviceId === serviceId)
         ),
     { revalidateOnFocus: false }
   );

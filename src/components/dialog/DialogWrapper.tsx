@@ -21,6 +21,7 @@ import { Toast } from "../../helper/alerts";
 import { useNavigate } from "react-router-dom";
 import BookingApprovalSummary from "./BookingApprovalSummary";
 import BookingApprovalReject from "./BookingApprovalReject";
+import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -148,10 +149,10 @@ const DialogWrapper = ({
         return t("title:bookingApproval");
 
       case "booking-approval-reject":
-        return t("title:bookingReject")
+        return t("title:bookingReject");
 
       default:
-        return t("title:confirmBookingDialogHeader")
+        return "";
     }
   };
 
@@ -171,6 +172,9 @@ const DialogWrapper = ({
 
       case "booking-approval-reject":
         return <BookingApprovalReject />;
+
+      case "business-more-options":
+        return <BusinessProfileMoreOptions />;
 
       default:
         break;
@@ -203,6 +207,12 @@ const DialogWrapper = ({
         setDialogState("booking-approval-summary");
         break;
 
+      case "business-more-options":
+        formik.resetForm();
+        setShow(false);
+        setDialogState("business-more-options");
+        break;
+
       default:
         break;
     }
@@ -214,29 +224,35 @@ const DialogWrapper = ({
     >
       <Dialog
         maxWidth="xl"
-        fullWidth={true}
+        fullWidth
         fullScreen
         open={show}
         style={{ zIndex: 1000 }}
+        classes={{
+          paper: dialogState === "business-more-options" ? "custom-dialog" : "",
+        }}
         TransitionComponent={Transition}
+        onClose={() => setShow(false)}
       >
-        <Toolbar className="grid grid-cols-4">
-          <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-            {dialogState === "phone-input" ||
-            dialogState === "booking-approval-summary" ? (
-              <CloseIcon />
-            ) : (
-              <ArrowBackIosIcon />
-            )}
-          </span>
-          <span className="w-full font-semibold col-span-3 text-center">
-            {DialogHeader()}
-            {/* {dialogState === "booking-approval-summary" ||
-            dialogState === "booking-approval-reject"
-              ? "Booking Approval"
-              : t("title:confirmBookingDialogHeader")} */}
-          </span>
-        </Toolbar>
+        {dialogState !== "business-more-options" && (
+          <Toolbar className="grid grid-cols-4">
+            <span
+              className="w-[24px] h-[24px] cursor-pointer"
+              onClick={handleBackButton}
+            >
+              {dialogState === "phone-input" ||
+              dialogState === "booking-approval-summary" ||
+              dialogState === "business-more-options" ? (
+                <CloseIcon />
+              ) : (
+                <ArrowBackIosIcon />
+              )}
+            </span>
+            <span className="w-full font-semibold col-span-3 text-center">
+              {DialogHeader()}
+            </span>
+          </Toolbar>
+        )}
         <DialogContent>{SwitchState()}</DialogContent>
       </Dialog>
     </DialogContext.Provider>
