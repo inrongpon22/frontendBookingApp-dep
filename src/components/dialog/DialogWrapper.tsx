@@ -93,6 +93,8 @@ const DialogWrapper = ({
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
 
+                console.log(res.data)
+
                 switch (userSide) {
                   case "user":
                     setDialogState("booking-detail-preview");
@@ -114,10 +116,9 @@ const DialogWrapper = ({
                         }
                       })
                       .catch((err) => {
-                        if(err.response.status === 404) {
+                        if (err.response.status === 404) {
                           navigate("/createBusiness/1");
-                        }else{
-
+                        } else {
                           Toast.fire({
                             icon: "error",
                             title: err.message,
