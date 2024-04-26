@@ -33,6 +33,10 @@ textarea {
     background-color: #ffffff;
 }
 
+.custom-swal {
+  z-index: 9999 !important;
+}
+
 /* Slideshow */
 .slideshow {
     margin: 0 auto;

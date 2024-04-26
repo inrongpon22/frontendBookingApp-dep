@@ -7,6 +7,7 @@ import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 import BusinessAuth from "./pages/auth/BusinessAuth.tsx";
 import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
 import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
+import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceList from "./pages/business/ServiceList.tsx";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";

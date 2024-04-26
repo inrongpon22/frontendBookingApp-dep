@@ -12,9 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const MyBookingWrapper = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")
-    ? JSON.parse(localStorage.getItem("token")!)
-    : null;
+  const token = localStorage.getItem("token");
 
   const { t } = useTranslation();
 
