@@ -111,15 +111,18 @@ const DialogWrapper = ({
                       .then((resp) => {
                         if (resp.status === 200) {
                           navigate(`/bussiness-profile/${resp.data[0].id}`);
-                        } else if (resp.status === 404) {
-                          navigate("/createBusiness/1");
                         }
                       })
                       .catch((err) => {
-                        Toast.fire({
-                          icon: "error",
-                          title: err.message,
-                        });
+                        if(err.response.status === 404) {
+                          navigate("/createBusiness/1");
+                        }else{
+
+                          Toast.fire({
+                            icon: "error",
+                            title: err.message,
+                          });
+                        }
                       });
                     break;
 

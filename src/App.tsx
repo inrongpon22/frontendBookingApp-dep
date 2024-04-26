@@ -31,7 +31,7 @@ function App() {
           <Route path="/my-bookings" element={<MyBookingWrapper />} />
           <Route path="/booking/:id" element={<BookingSummaryWrapper />} />
 
-          <Route path="/createBusiness" element={<CreateBusiness />} />
+          <Route path="/createBusiness/:id" element={<CreateBusiness />} />
           <Route path="/service/:businessId" element={<ServiceList />} />
           <Route path="/serviceInfo" element={<ServiceInfo />} />
           <Route path="/serviceTime" element={<ServiceTime />} />

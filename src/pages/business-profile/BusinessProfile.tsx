@@ -43,13 +43,13 @@ const BusinessProfile = () => {
         <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
         <p className="flex gap-5">
           <span>
-            Today <b className="text-deep-blue">0</b>
+            Today <b className="text-deep-blue">10</b>
           </span>
           <span>
-            Monthly <b className="text-deep-blue">0</b>
+            Monthly <b className="text-deep-blue">5</b>
           </span>
           <span>
-            Total visitors <b className="text-deep-blue">0</b>
+            Total visitors <b className="text-deep-blue">190</b>
           </span>
         </p>
         <div className="flex gap-2">
