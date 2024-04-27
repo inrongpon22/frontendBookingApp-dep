@@ -20,9 +20,25 @@
     "where": "Where",
     "when": "When",
     "who": "Who",
+    "from": "From",
+    "to": "To",
+    "duration": "Duration",
+    "present": "Present",
     "bookingName": "Booking Name",
+    "serviceName": "Service name",
+    "serviceDesc": "Service Describe",
+    "serviceSetting": "Service Setting",
+    "isAutoApprove": "Auto-approve reservations",
+    "isHideServPrice": "Hide the service price",
+    "phoneNumbers": "Phone Numbers",
+    "numberOfGuest": "Number of Guest",
     "bookingNumbers": "Booking Numbers",
+    "note": "Note",
     "notes": "Notes (Optional)",
+    "availableDate": "Available Date",
+    "activeDays": "Active Days",
+    "availableTime": "Available Time",
+    "openSlot": "Open Slot",
     "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies."
   },
   "title": {
@@ -30,15 +46,24 @@
     "confirmBookingDialogHeader": "Confirm Booking",
     "myBookings": "My Bookings",
     "bookingSuccess": "Booking Success",
-    "bussRootTitle": "Book. Build. Thrive."
+    "bussRootTitle": "Book. Build. Thrive.",
+    "bookingRequests": "Booking Requests",
+    "bookingApproval": "Booking Approval",
+    "bookingReject": "Booking Reject",
+    "serviceInformation": "Service Information"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
-    "bussRootDesc": "Elevate your booking experience quickly and conveniently."
+    "bussRootDesc": "Elevate your booking experience quickly and conveniently.",
+    "viewMoreDetails": "view more details",
+    "bookingRejectDesc": "Tell the customer why they were rejected."
   },
   "button": {
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "approve": "Approve",
+    "reject": "Reject",
+    "next": "Next",
     "goToMyBookingButton": "Go to My Booking",
     "confirmBookingButton": "Confirm & Booking",
     "continueButton": "Continue",
@@ -59,6 +84,18 @@
         "fail": "Booking cancelled fail",
         "confirmation": "Are you sure to cancel booking",
         "confirmationDesc": "Booking slot will be available to others."
+      },
+      "approve": {
+        "success": "Booking approved successfully",
+        "fail": "Booking approved fail",
+        "confirmation": "Are you sure you want to approve this booking",
+        "confirmationDesc": "Once approved, the customer will be notified, and the booking will be finalized."
+      },
+      "reject": {
+        "success": "Booking has been reject successfully",
+        "fail": "Booking rejected fail",
+        "confirmation": "Are you sure you want to reject this booking",
+        "confirmationDesc": "Once rejected, the customer will be notified, and the booking will be finalized."
       }
     }
   },
@@ -67,11 +104,17 @@
     "invalidPhoneNumber": "invalid phone number",
     "invalidOTP": "invalid OTP",
     "bookingFailed": "Booking failed",
-    "bookingFailedMessage": "booking"
+    "bookingFailedMessage": "booking",
+    "noBookingReq": "No booking request"
   },
   "fragment": {
     "needTo": "Need to",
     "cancel": "Cancelled",
-    "aBooking": "a Booking"
+    "aBooking": "a Booking",
+    "avaiGuest": "Available guest(s) per slot",
+    "manualAdjust": "Manually adjust"
+  },
+  "placeholder": {
+    "bookingReject": "Ex. The service is not available at the requested time."
   }
 }

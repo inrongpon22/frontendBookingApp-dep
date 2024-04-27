@@ -19,6 +19,9 @@ import OtpVerify from "./OtpVerify";
 import BookingDetailsPreview from "./BookingDetailsPreview";
 import { Toast } from "../../helper/alerts";
 import { useNavigate } from "react-router-dom";
+import BookingApprovalSummary from "./BookingApprovalSummary";
+import BookingApprovalReject from "./BookingApprovalReject";
+import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,11 +32,15 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
+const DialogWrapper = ({
+  show,
+  setShow,
+  userSide,
+  dialogState,
+  setDialogState,
+}: DialogTypes) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const [dialogState, setDialogState] = useState<string>("phone-input");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formik = useFormik({
@@ -80,10 +87,13 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
             })
             .then(async (res) => {
               if (res.status === 200) {
-                localStorage.setItem("token", JSON.stringify(res.data.token));
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("userId", res.data.userId);
                 formik.setFieldValue("userId", res.data.userId);
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
+
+                console.log(res.data)
 
                 switch (userSide) {
                   case "user":
@@ -102,16 +112,18 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
                       )
                       .then((resp) => {
                         if (resp.status === 200) {
-                          navigate("/bussiness-overview");
-                        } else if (resp.status === 404) {
-                          navigate("/createBusiness");
+                          navigate(`/bussiness-profile/${resp.data[0].id}`);
                         }
                       })
                       .catch((err) => {
-                        Toast.fire({
-                          icon: "error",
-                          title: err.message,
-                        });
+                        if (err.response.status === 404) {
+                          navigate("/createBusiness/1");
+                        } else {
+                          Toast.fire({
+                            icon: "error",
+                            title: err.message,
+                          });
+                        }
                       });
                     break;
 
@@ -135,6 +147,19 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
     },
   });
 
+  const DialogHeader = (): string => {
+    switch (dialogState) {
+      case "booking-approval-summary":
+        return t("title:bookingApproval");
+
+      case "booking-approval-reject":
+        return t("title:bookingReject");
+
+      default:
+        return "";
+    }
+  };
+
   const SwitchState = () => {
     switch (dialogState) {
       case "phone-input":
@@ -145,6 +170,15 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
 
       case "booking-detail-preview":
         return <BookingDetailsPreview />;
+
+      case "booking-approval-summary":
+        return <BookingApprovalSummary />;
+
+      case "booking-approval-reject":
+        return <BookingApprovalReject />;
+
+      case "business-more-options":
+        return <BusinessProfileMoreOptions />;
 
       default:
         break;
@@ -167,6 +201,22 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
         setShow(false);
         break;
 
+      case "booking-approval-summary":
+        formik.resetForm();
+        setShow(false);
+        break;
+
+      case "booking-approval-reject":
+        formik.resetForm();
+        setDialogState("booking-approval-summary");
+        break;
+
+      case "business-more-options":
+        formik.resetForm();
+        setShow(false);
+        setDialogState("business-more-options");
+        break;
+
       default:
         break;
     }
@@ -178,24 +228,35 @@ const DialogWrapper = ({ show, setShow, userSide }: DialogTypes) => {
     >
       <Dialog
         maxWidth="xl"
-        fullWidth={true}
+        fullWidth
         fullScreen
         open={show}
+        style={{ zIndex: 1000 }}
+        classes={{
+          paper: dialogState === "business-more-options" ? "custom-dialog" : "",
+        }}
         TransitionComponent={Transition}
+        onClose={() => setShow(false)}
       >
-        <Toolbar className="grid grid-cols-4">
-          <span className="w-[24px] h-[24px]" onClick={handleBackButton}>
-            {dialogState === "phone-input" ? (
-              <CloseIcon />
-            ) : (
-              <ArrowBackIosIcon />
-            )}
-          </span>
-          <span className="w-full font-semibold col-span-3 text-center">
-            {t("title:confirmBookingDialogHeader")}
-          </span>
-        </Toolbar>
-
+        {dialogState !== "business-more-options" && (
+          <Toolbar className="grid grid-cols-4">
+            <span
+              className="w-[24px] h-[24px] cursor-pointer"
+              onClick={handleBackButton}
+            >
+              {dialogState === "phone-input" ||
+              dialogState === "booking-approval-summary" ||
+              dialogState === "business-more-options" ? (
+                <CloseIcon />
+              ) : (
+                <ArrowBackIosIcon />
+              )}
+            </span>
+            <span className="w-full font-semibold col-span-3 text-center">
+              {DialogHeader()}
+            </span>
+          </Toolbar>
+        )}
         <DialogContent>{SwitchState()}</DialogContent>
       </Dialog>
     </DialogContext.Provider>
