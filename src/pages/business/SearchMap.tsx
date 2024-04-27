@@ -8,7 +8,6 @@ import { Divider, IconButton } from "@mui/material";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { alpha } from "@mui/system";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useState } from "react";
 import { ILocation } from "./interfaces/business";
 
@@ -80,15 +79,6 @@ export default function SearchMap(props: IParameter) {
                                 className="ps-10 mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
                                 placeholder="Name, street, building ..."
                             />
-                            {address != "" && (
-                                <div
-                                    onClick={() => handleChange("")}
-                                    className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <CloseOutlinedIcon
-                                        sx={{ color: "#8B8B8B" }}
-                                    />
-                                </div>
-                            )}
                         </div>
                         {/* <div
                             className="flex justify-center mt-2 p-2 rounded-lg gap-2"
