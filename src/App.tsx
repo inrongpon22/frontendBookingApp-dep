@@ -33,9 +33,9 @@ function App() {
 
           <Route path="/createBusiness/:id" element={<CreateBusiness />} />
           <Route path="/service/:businessId" element={<ServiceList />} />
-          <Route path="/serviceInfo" element={<ServiceInfo />} />
-          <Route path="/serviceTime" element={<ServiceTime />} />
-          <Route path="/createService" element={<CreateService />} />
+          <Route path="/serviceInfo/:businessId" element={<ServiceInfo />} />
+          <Route path="/serviceTime/:businessId" element={<ServiceTime />} />
+          <Route path="/createService/:businessId" element={<CreateService />} />
         </Routes>
       </BrowserRouter>
     </>

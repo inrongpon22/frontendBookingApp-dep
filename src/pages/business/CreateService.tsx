@@ -1,10 +1,10 @@
 import { alpha, Switch, styled } from "@mui/material";
 import ServiceCard from "./components/ServiceCard";
 import TimeCard from "./components/TimeCard";
-// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useNavigate } from "react-router-dom";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { IServiceInfo, IServiceTime } from "./interfaces/business";
+import { IServiceInfo, IServiceTime } from "./interfaces/service";
 import { addService } from "../../api/service";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
@@ -26,8 +26,8 @@ const PinkSwitch = styled(Switch)(({ theme }) => ({
 const label = { inputProps: { "aria-label": "Color switch demo" } };
 
 export default function CreateService() {
+  const { businessId } = useParams();
   const navigate = useNavigate();
-  const businessId = parseInt(localStorage.getItem("businessId") ?? "");
   const token = localStorage.getItem("token");
 
   const { t } = useTranslation();
@@ -37,19 +37,19 @@ export default function CreateService() {
   ) as IServiceInfo;
   const serviceTime = JSON.parse(
     localStorage.getItem("serviceTime") ||
-      JSON.stringify([
-        {
-          daysOpen: [],
-          selectedSlots: [],
-          duration: 1,
-          openTime: "",
-          closeTime: "",
-          guestNumber: 1,
-          manualCapacity: [],
-          availableFromDate: new Date().toISOString().split("T")[0],
-          availableToDate: "",
-        },
-      ])
+    JSON.stringify([
+      {
+        daysOpen: [],
+        selectedSlots: [],
+        duration: 1,
+        openTime: "",
+        closeTime: "",
+        guestNumber: 1,
+        manualCapacity: [],
+        availableFromDate: new Date().toISOString().split("T")[0],
+        availableToDate: "",
+      },
+    ])
   ) as IServiceTime[];
 
   const [isAutoApprove, setIsAutoApprove] = useState(true);
@@ -57,7 +57,7 @@ export default function CreateService() {
 
   const handleCreateService = async () => {
     const insertData = {
-      businessId: businessId,
+      businessId: Number(businessId ?? ""),
       title: serviceInfo.serviceName,
       duration: serviceTime[0].duration,
       description: serviceInfo.serviceDescription,
@@ -67,12 +67,21 @@ export default function CreateService() {
       currency: serviceInfo.currency,
       openTime: serviceTime[0].openTime,
       closeTime: serviceTime[0].closeTime,
-      bookingSlots: serviceTime[0].manualCapacity,
+      bookingSlots: [{
+        daysOpen: serviceTime[0].daysOpen,
+        availableFromDate: serviceTime[0].availableFromDate,
+        availableToDate:
+          serviceTime[0].availableToDate === ""
+            ? null
+            : serviceTime[0].availableToDate,
+        slotsTime: serviceTime[0].manualCapacity
+      }],
       availableFromDate: serviceTime[0].availableFromDate,
       availableToDate:
         serviceTime[0].availableToDate === ""
           ? null
           : serviceTime[0].availableToDate,
+      isHidePrice: isHidePrice
     };
 
     try {
@@ -100,23 +109,23 @@ export default function CreateService() {
           <ServiceCard />
           <TimeCard />
 
-          {/* <button
-                style={{
-                    display: "flex",
-                    background: `${alpha("#020873", 0.1)}`,
-                    width: "135px",
-                    height: "27px",
-                    fontSize: "14px",
-                    borderRadius: "8px",
-                }}
-                className=" items-center gap-1 p-1 ">
-                <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
-                <div
-                    className=" font-medium "
-                    onClick={() => navigate("/createBusiness/4")}>
-                    Add more time
-                </div>
-            </button> */}
+          <button
+            style={{
+              display: "flex",
+              background: `${alpha("#020873", 0.1)}`,
+              width: "135px",
+              height: "27px",
+              fontSize: "14px",
+              borderRadius: "8px",
+            }}
+            className=" items-center gap-1 p-1 ">
+            <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
+            <div
+              className=" font-medium "
+              onClick={() => navigate(`/serviceTime/${businessId}`)}>
+              Add more time
+            </div>
+          </button>
 
           <p className=" font-bold " style={{ fontSize: "14px" }}>
             {t("serviceSetting")}
