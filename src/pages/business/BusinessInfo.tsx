@@ -9,13 +9,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../helper/createSupabase";
 import SearchMap from "./SearchMap";
-import { dataOfWeekEng } from "../../helper/daysOfWeek";
+import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
 import { insertBusiness } from "../../api/business";
+import { useTranslation } from "react-i18next";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const {
+        t,
+        i18n: { language },
+    } = useTranslation();
+
     const [file, setFile] = useState<File[]>([]);
     const [imagesURL, setImagesURL] = useState<string[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -33,19 +39,43 @@ export default function BusinessInfo() {
         phoneNumber: "",
     };
 
+    const dayOfWeek = () => {
+        switch (language) {
+            case "th":
+                return dataOfWeekThai;
+
+            case "en":
+                return dataOfWeekEng;
+
+            default:
+                return dataOfWeekThai;
+        }
+    };
+
     const schema = Yup.object().shape({
         title: Yup.string()
-            .min(2, "Title must be at least 2 characters")
-            .max(50, "Title must be at most 50 characters")
-            .required("Title is required"),
+            .min(2, t("formValidation:business:create:shopName:shopNameMin"))
+            .max(50, t("formValidation:business:create:shopName:shopNameMax"))
+            .required(t("formValidation:business:create:shopName:shopNameReq")),
         phoneNumber: Yup.string()
-            .matches(/^[0-9]+$/, "Phone number must contain only digits")
-            .min(10, "Phone number must be at least 10 digits")
-            .max(10, "Phone number must be at most 10 digits")
-            .required("Phone number is required"),
+            .matches(
+                /^[0-9]+$/,
+                t("formValidation:business:create:phoneNumber:phoneNumberMatch")
+            )
+            .min(
+                10,
+                t("formValidation:business:create:phoneNumber:phoneNumberMin")
+            )
+            .max(
+                10,
+                t("formValidation:business:create:phoneNumber:phoneNumberMax")
+            )
+            .required(
+                t("formValidation:business:create:phoneNumber:phoneNumberReq")
+            ),
         description: Yup.string().max(
             200,
-            "Description must be at most 200 characters"
+            t("formValidation:business:create:description:descriptionMax")
         ),
     });
 
@@ -180,16 +210,15 @@ export default function BusinessInfo() {
 
     return (
         <>
-            <div className="flex flex-col mb-32 ">
+            <div className="flex flex-col">
                 <form onSubmit={formik.handleSubmit}>
                     <p
                         style={{ fontSize: "14px" }}
                         className="mt-4 font-semibold">
-                        Shop name
+                        {t("form:business:create:shopName")}
                     </p>
                     <input
-                        value={formik.values.title}
-                        onChange={formik.handleChange}
+                        {...formik.getFieldProps("title")}
                         onBlur={formik.handleBlur}
                         type="text"
                         name="title"
@@ -197,30 +226,31 @@ export default function BusinessInfo() {
                             color: "#8B8B8B",
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
-                        placeholder="fill the name of your store"
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        placeholder={t("placeholder:shopName")}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
-                        <div className="text-red-500">
+                        <div className="text-red-500 mt-1">
                             {formik.errors.title}
                         </div>
                     ) : null}
                     <p
                         style={{ fontSize: "14px" }}
                         className="mt-4 font-semibold">
-                        Location
+                        {t("form:business:create:location")}
                     </p>
                     <SearchMap handleChangeLocation={handleChangeLocation} />
                     <p
                         style={{ fontSize: "14px" }}
                         className="mt-4 font-semibold">
-                        Open time
+                        {t("form:business:create:openTime")}
                     </p>
                     <div className="flex justify-between mt-1">
-                        {dataOfWeekEng.map((day, index) => (
+                        {dayOfWeek()?.map((day, index) => (
                             <div
                                 onClick={() => toggleDay(day.value)}
                                 key={index}
@@ -235,10 +265,11 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -257,7 +288,7 @@ export default function BusinessInfo() {
                                     fontSize: "14px",
                                     marginRight: "15px",
                                 }}>
-                                From
+                                {t("from")}
                             </div>
                             <div className="flex">
                                 <input
@@ -289,7 +320,7 @@ export default function BusinessInfo() {
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
                             className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
-                            <div style={{ fontSize: "14px" }}>To</div>
+                            <div style={{ fontSize: "14px" }}>{t("to")}</div>
                             <div className="flex">
                                 <input
                                     className="focus:outline-none"
@@ -312,7 +343,7 @@ export default function BusinessInfo() {
                     <p
                         style={{ fontSize: "14px" }}
                         className="mt-3 font-semibold">
-                        Business number
+                        {t("form:business:create:businessNumber")}
                     </p>
                     <input
                         name="phoneNumber"
@@ -324,14 +355,15 @@ export default function BusinessInfo() {
                             color: "#8B8B8B",
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
-                        placeholder="enter the service phone number"
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        placeholder={t("placeholder:businessNumber")}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                        <div className="text-red-500">
+                        <div className="text-red-500 mt-1">
                             {formik.errors.phoneNumber}
                         </div>
                     ) : null}
@@ -339,9 +371,11 @@ export default function BusinessInfo() {
                         <div
                             style={{ fontSize: "14px" }}
                             className="font-semibold">
-                            Short describe
+                            {t("form:business:create:shortDescribe")}
                         </div>
-                        <div style={{ fontSize: "14px" }}>(optional)</div>
+                        <div style={{ fontSize: "14px" }}>
+                            ({t("fragment:optional")})
+                        </div>
                     </div>
                     <div
                         className="mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
@@ -354,15 +388,19 @@ export default function BusinessInfo() {
                             value={formik.values.description}
                             onChange={formik.handleChange}
                             style={{ color: "#8B8B8B" }}
-                            placeholder="briefly introduce your store "
+                            placeholder={t("placeholder:shortDescribe")}
                             className="w-full focus:outline-none resize-none"
                             rows={3}
                             maxLength={150}
                         />
                     </div>
                     <div className="mt-4 flex">
-                        <div className="font-semibold mr-1">Image</div>
-                        <div style={{ color: "gray" }}>(optional)</div>
+                        <div className="font-semibold mr-1">
+                            {t("form:business:create:images")}
+                        </div>
+                        <div style={{ color: "gray" }}>
+                            ({t("fragment:optional")})
+                        </div>
                     </div>
                     <div className="flex gap-4 flex-wrap">
                         {previewImages.map((image, index) => (
@@ -416,19 +454,19 @@ export default function BusinessInfo() {
                         </div>
                     </div>
 
-                    <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
+                    <div className="w-full flex justify-center bottom-0 inset-x-0 gap-2">
                         <button
-                            type="submit"
-                            // onClick={() => navigate()}
-                            className="text-white mt-4 rounded-lg font-semibold mb-6"
+                            type="button"
+                            className="text-white rounded-lg font-semibold my-5"
                             style={{
                                 width: "343px",
                                 height: "51px",
                                 cursor: "pointer",
                                 backgroundColor: "#020873",
                                 fontSize: "14px",
-                            }}>
-                            Next
+                            }}
+                            onClick={() => formik.handleSubmit()}>
+                            {t("button:next")}
                         </button>
                     </div>
                 </form>
