@@ -50,7 +50,8 @@
     "bookingRequests": "Booking Requests",
     "bookingApproval": "Booking Approval",
     "bookingReject": "Booking Reject",
-    "serviceInformation": "Service Information"
+    "serviceInformation": "Service Information",
+    "createBusiness": "Create Business"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -99,6 +100,38 @@
       }
     }
   },
+  "form": {
+    "business": {
+      "create": {
+        "shopName": "Shop Name",
+        "location": "Location",
+        "openTime": "Open Time",
+        "businessNumber": "Business Numbers",
+        "shortDescribe": "Short Describe",
+        "images": "Images"
+      }
+    }
+  },
+  "formValidation": {
+    "business": {
+      "create": {
+        "shopName": {
+          "shopNameReq": "Shop name is required",
+          "shopNameMin": "Shop name must be at least 3 characters",
+          "shopNameMax": "Shop name must be less than 50 characters"
+        },
+        "phoneNumber": {
+          "phoneNumberReq": "Business phone number is required",
+          "phoneNumberMatch": "Phone number must contain only digits",
+          "phoneNumberMin": "Business phone number must be at least 9 digits",
+          "phoneNumberMax": "Business phone number must be less than 15 digits"
+        },
+        "description": {
+          "descriptionMax": "Description must be less than 500 characters"
+        }
+      }
+    }
+  },
   "error": {
     "required": "required",
     "invalidPhoneNumber": "invalid phone number",
@@ -112,9 +145,14 @@
     "cancel": "Cancelled",
     "aBooking": "a Booking",
     "avaiGuest": "Available guest(s) per slot",
-    "manualAdjust": "Manually adjust"
+    "manualAdjust": "Manually adjust",
+    "optional": "optional"
   },
   "placeholder": {
-    "bookingReject": "Ex. The service is not available at the requested time."
+    "bookingReject": "Ex. The service is not available at the requested time.",
+    "shopName": "Enter your shop name",
+    "location": "Enter your location",
+    "businessNumber": "Enter your business phone numbers",
+    "shortDescribe": "Enter a short description"
   }
 }
