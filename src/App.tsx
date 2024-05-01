@@ -47,7 +47,7 @@ function App() {
                     />
 
                     <Route
-                        path="/createBusiness/:id"
+                        path="/createBusiness"
                         element={<CreateBusiness />}
                     />
                     <Route
