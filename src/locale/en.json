@@ -39,7 +39,8 @@
     "activeDays": "Active Days",
     "availableTime": "Available Time",
     "openSlot": "Open Slot",
-    "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies."
+    "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies.",
+    "reset":"Reset"
   },
   "title": {
     "bookingIsconfirmed": "The Booking is confirmed",
