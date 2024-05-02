@@ -30,6 +30,7 @@
     "serviceSetting": "การตั้งค่าบริการ",
     "isAutoApprove": "อนุมัติการจองอัตโนมัติ",
     "isHideServPrice": "ซ่อนราคาบริการ",
+    "isHideEndDate": "ซ่อนเวลาสิ้นสุด",
     "phoneNumbers": "หมายเลขโทรศัพท์",
     "numberOfGuest": "จำนวนผู้ใช้บริการ",
     "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",

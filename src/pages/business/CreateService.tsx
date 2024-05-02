@@ -1,4 +1,4 @@
-import { alpha, Switch, styled } from "@mui/material";
+import { alpha } from "@mui/material";
 import ServiceCard from "./components/ServiceCard";
 import TimeCard from "./components/TimeCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -9,54 +9,38 @@ import { addService } from "../../api/service";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
-const PinkSwitch = styled(Switch)(({ theme }) => ({
-    "& .MuiSwitch-switchBase.Mui-checked": {
-        color: "#FFFFFF",
-        "&:hover": {
-            backgroundColor: alpha(
-                "#020873",
-                theme.palette.action.hoverOpacity
-            ),
-        },
-    },
-    "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-        color: "#020873",
-        backgroundColor: "#020873",
-    },
-}));
-
-const label = { inputProps: { "aria-label": "Color switch demo" } };
+import { ToggleButton as MuiToggleButton } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function CreateService() {
     const { businessId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-
     const { t } = useTranslation();
-
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
     ) as IServiceInfo;
     const serviceTime = JSON.parse(
         localStorage.getItem("serviceTime") ||
-            JSON.stringify([
-                {
-                    daysOpen: [],
-                    selectedSlots: [],
-                    duration: 1,
-                    openTime: "",
-                    closeTime: "",
-                    guestNumber: 1,
-                    manualCapacity: [],
-                    availableFromDate: new Date().toISOString().split("T")[0],
-                    availableToDate: "",
-                },
-            ])
+        JSON.stringify([
+            {
+                daysOpen: [],
+                selectedSlots: [],
+                duration: 1,
+                openTime: "",
+                closeTime: "",
+                guestNumber: 1,
+                manualCapacity: [],
+                availableFromDate: new Date().toISOString().split("T")[0],
+                availableToDate: "",
+            },
+        ])
     ) as IServiceTime[];
+    const [isHideEndTime, setIsHideEndTime] = useState(false);
 
-    const [isAutoApprove, setIsAutoApprove] = useState(true);
-    const [isHidePrice, setIsHidePrice] = useState(true);
+    const [isAutoApprove, setIsAutoApprove] = useState(false);
+    const [isHidePrice, setIsHidePrice] = useState(false);
 
     const handleCreateService = async () => {
         const insertData = {
@@ -87,6 +71,7 @@ export default function CreateService() {
                     ? null
                     : serviceTime[0].availableToDate,
             isHidePrice: isHidePrice,
+            isHideEndTime: isHideEndTime,
         };
 
         try {
@@ -141,22 +126,85 @@ export default function CreateService() {
                         style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                         className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
                         <div>{t("isAutoApprove")}</div>
-                        <PinkSwitch
-                            {...label}
-                            defaultChecked
+                        <MuiToggleButton
+                            value={isAutoApprove}
+                            aria-label="Toggle switch"
                             onClick={() => setIsAutoApprove(!isAutoApprove)}
-                        />
+                            sx={{
+                                width: 49, height: 28, borderRadius: 16, backgroundColor: isAutoApprove ? '#020873' : '#ffffff',
+                                border: isAutoApprove ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                                    : { outline: "none" }, ":hover": { backgroundColor: isAutoApprove ? '#020873' : '#ffffff' }
+                            }}
+                        >
+                            <span
+                                style={{
+                                    width: 23, height: 23, marginLeft: isAutoApprove ? '' : "1px", marginRight: isAutoApprove ? '100px' : " ",
+                                    backgroundColor: isAutoApprove ? '#ffffff' : '#9E9E9E', color: isAutoApprove ? '#020873' : '#ffffff', borderRadius: "50%"
+                                }}
+                                className={`absolute left-0 rounded-full 
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove ? 'transform translate-x-full' : ''
+                                    }`}
+                            >
+                                {isAutoApprove ? <CheckIcon sx={{ fontSize: "14px" }} /> : <CloseIcon sx={{ fontSize: "14px" }} />}
+                            </span>
+                        </MuiToggleButton>
                     </div>
                     <div
                         style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                         className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
                         <div>{t("isHideServPrice")}</div>
-                        <PinkSwitch
-                            {...label}
-                            defaultChecked
+                        <MuiToggleButton
+                            value={isHidePrice}
+                            aria-label="Toggle switch"
                             onClick={() => setIsHidePrice(!isHidePrice)}
-                        />
+                            sx={{
+                                width: 49, height: 28, borderRadius: 16, backgroundColor: isHidePrice ? '#020873' : '#ffffff',
+                                border: isHidePrice ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                                    : { outline: "none" }, ":hover": { backgroundColor: isHidePrice ? '#020873' : '#ffffff' }
+                            }}
+                        >
+                            <span
+                                style={{
+                                    width: 23, height: 23, marginLeft: isHidePrice ? '' : "1px", marginRight: isHidePrice ? '100px' : " ",
+                                    backgroundColor: isHidePrice ? '#ffffff' : '#9E9E9E', color: isHidePrice ? '#020873' : '#ffffff', borderRadius: "50%"
+                                }}
+                                className={`absolute left-0 rounded-full 
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice ? 'transform translate-x-full' : ''
+                                    }`}
+                            >
+                                {isHidePrice ? <CheckIcon sx={{ fontSize: "14px" }} /> : <CloseIcon sx={{ fontSize: "14px" }} />}
+                            </span>
+                        </MuiToggleButton>
                     </div>
+
+                    <div
+                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
+                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
+                        <div>{t("isHideEndDate")}</div>
+                        <MuiToggleButton
+                            value={isHideEndTime}
+                            aria-label="Toggle switch"
+                            onChange={() => setIsHideEndTime(!isHideEndTime)}
+                            sx={{
+                                width: 49, height: 28, borderRadius: 16, backgroundColor: isHideEndTime ? '#020873' : '#ffffff',
+                                border: isHideEndTime ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                                    : { outline: "none" }, ":hover": { backgroundColor: isHideEndTime ? '#020873' : '#ffffff' }
+                            }}
+                        >
+                            <span
+                                style={{
+                                    width: 23, height: 23, marginLeft: isHideEndTime ? '' : "1px", marginRight: isHideEndTime ? '100px' : " ",
+                                    backgroundColor: isHideEndTime ? '#ffffff' : '#9E9E9E', color: isHideEndTime ? '#020873' : '#ffffff', borderRadius: "50%"
+                                }}
+                                className={`absolute left-0 rounded-full 
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime ? 'transform translate-x-full' : ''
+                                    }`}
+                            >
+                                {isHideEndTime ? <CheckIcon sx={{ fontSize: "14px" }} /> : <CloseIcon sx={{ fontSize: "14px" }} />}
+                            </span>
+                        </MuiToggleButton>
+                    </div>
+
 
                     <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
                         {/* <button
