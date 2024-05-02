@@ -227,11 +227,10 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.title
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                        }`}
+                            }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -265,11 +264,10 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -330,6 +328,7 @@ export default function BusinessInfo() {
                                     }
                                     type="time"
                                     style={{ border: "none" }}
+                                    disabled={openTime === ""}
                                 />
                                 {/* <div
                             className="flex flex-col"
@@ -356,11 +355,10 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.phoneNumber
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                        }`}
+                            }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">

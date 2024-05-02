@@ -30,6 +30,7 @@
     "serviceSetting": "Service Setting",
     "isAutoApprove": "Auto-approve reservations",
     "isHideServPrice": "Hide the service price",
+    "isHideEndDate": "Hide the end time of slot",
     "phoneNumbers": "Phone Numbers",
     "numberOfGuest": "Number of Guest",
     "bookingNumbers": "Booking Numbers",
