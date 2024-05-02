@@ -93,8 +93,6 @@ const DialogWrapper = ({
                 formik.setFieldValue("username", res.data.userName);
                 setIsLoading(false);
 
-                console.log(res.data)
-
                 switch (userSide) {
                   case "user":
                     setDialogState("booking-detail-preview");
@@ -149,6 +147,9 @@ const DialogWrapper = ({
 
   const DialogHeader = (): string => {
     switch (dialogState) {
+      case "booking-detail-preview":
+        return t("title:confirmBookingDialogHeader");
+
       case "booking-approval-summary":
         return t("title:bookingApproval");
 

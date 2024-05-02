@@ -40,8 +40,8 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
     speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    // autoplay: true,
+    // autoplaySpeed: 3000,
   };
 
   useEffect(() => {

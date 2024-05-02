@@ -25,17 +25,12 @@ const Calendar = () => {
   const {
     calendar,
     setCalendar,
-    services,
+    // services,
     dateArr,
     setDateArr,
     selectedDate,
     setSelectedDate,
   } = useContext(ShopContext);
-
-  // const {
-  //   t,
-  //   i18n: { language },
-  // } = useTranslation();
 
   const handleDateChange = (meth: string) => {
     switch (meth) {
@@ -103,9 +98,9 @@ const Calendar = () => {
 
       <div className="mt-5 grid grid-cols-5 gap-2">
         {dateArr.map((item: any, index: number) => {
-          const isOpen: boolean = services
-            ?.find((item: any) => item.isSelected)
-            ?.daysOpen.includes(item.format("dddd"));
+          // const isOpen: boolean = services
+          //   ?.find((item: any) => item.isSelected)
+          //   ?.daysOpen.includes(item.format("dddd"));
           return (
             <div
               key={index}
@@ -114,14 +109,18 @@ const Calendar = () => {
                     moment(selectedDate?.date).isSame(item, "day")
                       ? "border-2 border-[#003B95] bg-[#006CE31A] text-[#003B95]"
                       : ""
-                  } ${
-                isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
-              }`}
-              onClick={() => {
-                if (isOpen) {
-                  setSelectedDate({ date: item });
-                }
-              }}
+                  }`}
+              // ${
+              //   isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
+              // }
+              onClick={
+                () => setSelectedDate({ date: item })
+                //   {
+                //   if (isOpen) {
+                //     setSelectedDate({ date: item });
+                //   }
+                // }
+              }
             >
               <p className="text-[14px] font-thin">{item.format("dd")}</p>
               <p className="text-[25px] font-semibold">{item.format("D")}</p>

@@ -138,7 +138,8 @@
     "invalidOTP": "รหัส OTP ไม่ถูกต้อง",
     "bookingFailed": "การจองล้มเหลว",
     "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง",
-    "noBookingReq": "ไม่มีคำขอการจอง"
+    "noBookingReq": "ไม่มีคำขอการจอง",
+    "noTimeSlots": "ไม่มีช่วงเวลาที่เปิดให้บริการ"
   },
   "fragment": {
     "needTo": "ต้องการที่จะ",

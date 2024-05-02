@@ -138,7 +138,8 @@
     "invalidOTP": "invalid OTP",
     "bookingFailed": "Booking failed",
     "bookingFailedMessage": "booking",
-    "noBookingReq": "No booking request"
+    "noBookingReq": "No booking request",
+    "noTimeSlots": "No time slots available"
   },
   "fragment": {
     "needTo": "Need to",

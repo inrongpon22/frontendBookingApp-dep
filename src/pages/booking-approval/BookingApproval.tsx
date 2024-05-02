@@ -4,7 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import axios from "axios";
 import { app_api, fetcher } from "../../helper/url";
-import { Backdrop, CircularProgress } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  Tab,
+  Tabs,
+  styled,
+} from "@mui/material";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 // components
@@ -17,7 +24,7 @@ import { useTranslation } from "react-i18next";
 const BookingApproval = () => {
   const { id, serviceId } = useParams();
   const token = localStorage.getItem("token");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { t } = useTranslation();
 
@@ -26,6 +33,8 @@ const BookingApproval = () => {
     "booking-approval-summary"
   );
   const [bookingDatas, setBookingDatas] = useState<any>();
+  const [tabStatus, setTabStatus] = useState<number>(0);
+  // approval
 
   const { data: getBusinessById, error: BusinessByIdError } = useSWR(
     `${app_api}/business/${id}`,
@@ -49,7 +58,10 @@ const BookingApproval = () => {
         })
         .then((res) =>
           res.data
-            .filter((item: any) => item.status === "pending")
+            .filter(
+              (item: any) =>
+                item.status === `${tabStatus === 0 ? "pending" : "approval"}`
+            )
             .filter((item: any) => item.serviceId === serviceId)
         ),
     { revalidateOnFocus: false }
@@ -77,11 +89,15 @@ const BookingApproval = () => {
     }).then((result: any) => {
       if (result.isConfirmed) {
         axios
-          .post(`${app_api}/approveReservation/${id}/${serviceId}`, undefined, {
-            headers: {
-              Authorization: token,
-            },
-          })
+          .post(
+            `${app_api}/approveReservation/${id}/${serviceId}/th`,
+            undefined,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
           .then(() => {
             setShow(false);
             Toast.fire({
@@ -124,11 +140,15 @@ const BookingApproval = () => {
     }).then((result: any) => {
       if (result.isConfirmed) {
         axios
-          .post(`${app_api}/cancelReservation/${id}/${serviceId}`, undefined, {
-            headers: {
-              Authorization: token,
-            },
-          })
+          .post(
+            `${app_api}/cancelReservation/${id}/${serviceId}/th`,
+            undefined,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          )
           .then(() => {
             setShow(false);
             Toast.fire({
@@ -145,6 +165,49 @@ const BookingApproval = () => {
       }
     });
   };
+
+  const AntTabs = styled(Tabs)({
+    borderBottom: "1px solid #e8e8e8",
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#1890ff",
+    },
+  });
+
+  const AntTab = styled((props: any) => <Tab disableRipple {...props} />)(
+    ({ theme }) => ({
+      textTransform: "none",
+      minWidth: 0,
+      [theme.breakpoints.up("sm")]: {
+        minWidth: 0,
+      },
+      fontWeight: theme.typography.fontWeightRegular,
+      marginRight: theme.spacing(1),
+      color: "rgba(0, 0, 0, 0.85)",
+      fontFamily: [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        '"Segoe UI"',
+        "Roboto",
+        '"Helvetica Neue"',
+        "Arial",
+        "sans-serif",
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(","),
+      "&:hover": {
+        color: "#40a9ff",
+        opacity: 1,
+      },
+      "&.Mui-selected": {
+        color: "#1890ff",
+        fontWeight: theme.typography.fontWeightMedium,
+      },
+      "&.Mui-focusVisible": {
+        backgroundColor: "#d1eaff",
+      },
+    })
+  );
 
   useEffect(() => {
     document.title = t("title:bookingApproval");
@@ -175,10 +238,22 @@ const BookingApproval = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
         {/* loading progress */}
+
         <div className="flex drop-shadow-lg p-4 font-semibold text-[14px]">
-          <button type="button" onClick={() => navigate(-1)}><ArrowBackIosIcon fontSize="small" /></button>
-          <span className="mx-auto">{getBusinessById?.title}</span>
+          <button type="button" onClick={() => navigate(-1)}>
+            <ArrowBackIosIcon fontSize="small" />
+          </button>
+          {/* <span className="mx-auto">{getBusinessById?.title}</span> */}
         </div>
+        <Box sx={{ bgcolor: "#fff" }}>
+          <AntTabs
+            value={tabStatus}
+            onChange={(_, newValue: number) => setTabStatus(newValue)}
+          >
+            <AntTab label="Pending" />
+            <AntTab label="Approved" />
+          </AntTabs>
+        </Box>
         <div className="bg-gray-100">
           <p className="p-4 text-[14px]">
             {t("title:bookingRequests")} ({getReservByBusiId?.length})
