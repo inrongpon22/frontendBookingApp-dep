@@ -20,7 +20,7 @@ const PhoneInput = () => {
             ? "border-2 border-rose-500"
             : "border border-black"
         }`}
-        placeholder="+66 12 345 6789"
+        placeholder="061 234 567"
         maxLength={10}
         value={formik.values.phoneNumbers}
         onChange={(e) => {

@@ -1,8 +1,8 @@
 import { currencyList } from "../../helper/currency";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { IServiceInfo } from "./interfaces/business";
+import { IServiceInfo } from "./interfaces/service";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function ServiceInfo() {
+  const { businessId } = useParams();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const editValue = Boolean(urlParams.get("edit"));
@@ -39,7 +40,7 @@ export default function ServiceInfo() {
       const valueInString = JSON.stringify(values);
       localStorage.setItem("serviceInfo", valueInString);
       if (editValue) navigate("/createService");
-      else navigate("/serviceTime");
+      else navigate(`/serviceTime/${businessId}`);
     },
   });
 
@@ -80,9 +81,9 @@ export default function ServiceInfo() {
               style={{ color: "#8B8B8B" }}
               placeholder="introduce this service to the customer"
               className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
-                  formik.errors.serviceDescription
-                  ? "border-red-500"
-                  : ""
+                formik.errors.serviceDescription
+                ? "border-red-500"
+                : ""
                 }`}
               value={formik.values.serviceDescription}
               onChange={formik.handleChange}
@@ -117,8 +118,8 @@ export default function ServiceInfo() {
                 name="price"
                 type="number"
                 className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                    ? "border-red-500"
-                    : ""
+                  ? "border-red-500"
+                  : ""
                   }`}
                 value={formik.values.price}
                 onChange={formik.handleChange}
