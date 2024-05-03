@@ -40,8 +40,8 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
     speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    // autoplay: true,
+    // autoplaySpeed: 3000,
   };
 
   useEffect(() => {
@@ -60,6 +60,8 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
         console.error("Error fetching image URLs:", error);
       }
     };
+
+    console.log(`${fixedHeight}px`)
 
     if (data !== undefined) {
       fetchImageUrls();
@@ -88,7 +90,7 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
         {images?.map((item: any, index: number) => (
           <div className="slide" key={index}>
             <img
-              className={`w-full `} //${fixedHeight ? `h-[${fixedHeight}px]` : ""}
+              className={`w-full object-cover`}
               src={item.publicUrl}
               style={{ height: `${fixedHeight}px` }}
             />

@@ -6,6 +6,7 @@ export interface ILocation {
 
 export interface IBusinessInfo {
     title: string;
+    location: string;
     description: string;
     phoneNumber: string;
 }

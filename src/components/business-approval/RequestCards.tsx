@@ -37,7 +37,9 @@ const RequestCards = ({ data }: cardTypes) => {
     <div className="bg-white flex flex-col mb-2">
       <div className="flex justify-between items-center pt-4 px-4">
         <p className="text-[14px] font-semibold">{data.title}</p>
-        <p className="text-[14px] font-semibold">฿{data.price}</p>
+        <p className="text-[14px] font-semibold">
+          ฿{data.price * Number(data.guestNumber)}
+        </p>
       </div>
       <div className="flex flex-col ps-4 pb-4 border-b border-gray-300">
         <p className="text-[14px]">

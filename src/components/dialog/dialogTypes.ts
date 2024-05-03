@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { t } from "i18next";
 
 export interface DialogTypes {
   show: boolean;
@@ -12,32 +13,25 @@ export interface DialogTypes {
 export const confirmationDialogSchemas = {
   "phone-input": Yup.object().shape({
     phoneNumbers: Yup.string()
-      .min(
-        9,
-        "Your phone numbers is too short. It must be at least 9 numbers long."
-      )
-      .max(10, "Your phone numbers is too long. It must be 10 numbers long.")
-      .required("Phone number is required"),
+      .min(9, t("formValidation:business:auth:phoneNumber:phoneNumberMin"))
+      .max(10, t("formValidation:business:auth:phoneNumber:phoneNumberMax"))
+      .required(t("formValidation:business:auth:phoneNumber:phoneNumberReq")),
   }),
   "otp-verify": Yup.object().shape({
     otp: Yup.string()
-      .min(6, "OTP must be 6 numbers long.")
-      .max(6, "OTP must be 6 numbers long.")
-      .required("Username is required"),
+      .min(6, t("formValidation:business:auth:otp:otpMin"))
+      .max(6, t("formValidation:business:auth:otp:otpMax"))
+      .required(t("formValidation:business:auth:otp:otpReq")),
   }),
   "booking-detail-preview": Yup.object().shape({
     username: Yup.string()
-      .min(
-        1,
-        "Your username is too short. It must be at least 1 characters long."
-      )
-      .required("Username is required"),
+      .min(1, t("formValidation:booking:create:username:usernamesMin"))
+      .required(t("formValidation:booking:create:username:usernameReq")),
     phoneNumbers: Yup.string()
-      .min(
-        9,
-        "Your phone numbers is too short. It must be at least 9 numbers long."
-      )
-      .required("Phone number is required"),
+      .min(9, t("formValidation:booking:create:phoneNumbers:phoneNumbersMin"))
+      .required(
+        t("formValidation:booking:create:phoneNumbers:phoneNumbersReq")
+      ),
     additionalNotes: Yup.string(),
   }),
 };

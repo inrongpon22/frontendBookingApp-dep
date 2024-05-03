@@ -78,25 +78,20 @@ const DialogWrapper = ({
                         });
                     break;
 
-                case "otp-verify":
-                    setIsLoading(true);
-                    await axios
-                        .post(`${app_api}/checkOTP`, {
-                            phoneNumber: values.phoneNumbers,
-                            otpCode: values.otp,
-                        })
-                        .then(async (res) => {
-                            if (res.status === 200) {
-                                localStorage.setItem("token", res.data.token);
-                                localStorage.setItem("userId", res.data.userId);
-                                formik.setFieldValue("userId", res.data.userId);
-                                formik.setFieldValue(
-                                    "username",
-                                    res.data.userName
-                                );
-                                setIsLoading(false);
-
-                                console.log(res.data);
+        case "otp-verify":
+          setIsLoading(true);
+          await axios
+            .post(`${app_api}/checkOTP`, {
+              phoneNumber: values.phoneNumbers,
+              otpCode: values.otp,
+            })
+            .then(async (res) => {
+              if (res.status === 200) {
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("userId", res.data.userId);
+                formik.setFieldValue("userId", res.data.userId);
+                formik.setFieldValue("username", res.data.userName);
+                setIsLoading(false);
 
                                 switch (userSide) {
                                     case "user":
@@ -157,10 +152,13 @@ const DialogWrapper = ({
         },
     });
 
-    const DialogHeader = (): string => {
-        switch (dialogState) {
-            case "booking-approval-summary":
-                return t("title:bookingApproval");
+  const DialogHeader = (): string => {
+    switch (dialogState) {
+      case "booking-detail-preview":
+        return t("title:confirmBookingDialogHeader");
+
+      case "booking-approval-summary":
+        return t("title:bookingApproval");
 
             case "booking-approval-reject":
                 return t("title:bookingReject");

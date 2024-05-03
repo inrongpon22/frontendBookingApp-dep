@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null); //create context to store all the data
@@ -69,6 +69,12 @@ const ShopDetailsPageWrapper = () => {
   const [services, setServices] = useState<serviceTypes[]>([]);
   const [serviceById, setServiceById] = useState<any>();
 
+  const slotArrays = serviceById?.bookingSlots.find(
+    (item: any) =>
+      item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
+      selectedDate.date.isAfter(item.availableFromDate)
+  );
+
   // handle dialog
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
   const [modalState, setModalState] = useState<string>("phone-input"); //phone-input
@@ -122,7 +128,12 @@ const ShopDetailsPageWrapper = () => {
         setServiceById({
           ...res.data,
           bookingSlots: res.data.bookingSlots.map((item: any) => {
-            return { ...item, isSelected: false };
+            return {
+              ...item,
+              slotsTime: item.slotsTime.map((ii: any) => {
+                return { ...ii, isSelected: false };
+              }),
+            };
           }),
         })
       ),
@@ -133,24 +144,24 @@ const ShopDetailsPageWrapper = () => {
     }
   );
 
-  useMemo(() => {
-    if (
-      // if today not includes days open, auto select next available date
-      services.length > 0 &&
-      !services
-        .find((item: any) => item.isSelected)
-        ?.daysOpen.includes(selectedDate.date.format("dddd"))
-    ) {
-      const nextavailable = dateArr.filter((item: any) =>
-        services
-          .find((item: any) => item.isSelected)
-          ?.daysOpen.includes(item.format("dddd"))
-      )[0];
-      setSelectedDate({ date: nextavailable });
-    } else {
-      setSelectedDate({ date: moment() });
-    }
-  }, [services]);
+  // useMemo(() => {
+  //   if (
+  //     // if today not includes days open, auto select next available date
+  //     services.length > 0 &&
+  //     !services
+  //       .find((item: any) => item.isSelected)
+  //       ?.daysOpen.includes(selectedDate.date.format("dddd"))
+  //   ) {
+  //     const nextavailable = dateArr.filter((item: any) =>
+  //       services
+  //         .find((item: any) => item.isSelected)
+  //         ?.daysOpen.includes(item.format("dddd"))
+  //     )[0];
+  //     setSelectedDate({ date: nextavailable });
+  //   } else {
+  //     setSelectedDate({ date: moment() });
+  //   }
+  // }, [services]);
 
   // browser tab title
   useEffect(() => {
@@ -210,16 +221,16 @@ const ShopDetailsPageWrapper = () => {
             <button
               type="button"
               disabled={
-                !serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                !slotArrays?.slotsTime.find((item: any) => item.isSelected)
               }
               className={`${
-                !serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                !slotArrays?.slotsTime.find((item: any) => item.isSelected)
                   ? "bg-gray-300"
                   : "bg-[#020873]"
               }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
               onClick={() => {
                 if (
-                  serviceById?.bookingSlots.find((item: any) => item.isSelected)
+                  slotArrays?.slotsTime.find((item: any) => item.isSelected)
                 ) {
                   setIsShowDialog(true);
                 }

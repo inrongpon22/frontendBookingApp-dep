@@ -41,7 +41,7 @@ const BusinessProfile = () => {
 
       <div className="flex flex-col gap-2 p-5">
         <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
-        <p className="flex gap-5">
+        {/* <p className="flex gap-5">
           <span>
             Today <b className="text-deep-blue">10</b>
           </span>
@@ -51,7 +51,7 @@ const BusinessProfile = () => {
           <span>
             Total visitors <b className="text-deep-blue">190</b>
           </span>
-        </p>
+        </p> */}
         <div className="flex gap-2">
           <button
             type="button"
@@ -101,10 +101,10 @@ const BusinessProfile = () => {
                     {item.openTime.slice(0, -3)} - {item.closeTime.slice(0, -3)}
                   </span>
                 </p>
-                <p className="flex flex-col gap-1 text-end">
-                  <span className="text-[14px] font-semibold">6 of 10</span>
+                {/* <p className="flex flex-col gap-1 text-end">
+                  <span className="text-[14px] font-semibold">6 of {item.totalCapacity}</span>
                   <span className="text-green-400">4 pending</span>
-                </p>
+                </p> */}
               </div>
             );
           })}

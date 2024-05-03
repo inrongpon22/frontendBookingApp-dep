@@ -8,6 +8,34 @@ import { app_api } from "../../helper/url";
 import useSWR from "swr";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+// icons
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
+
+const switchIcons = (status: string) => {
+  switch (status) {
+    case "pending":
+      return <HourglassTopIcon />;
+
+    case "approval":
+      return <CheckIcon fontSize="large" color="success" />;
+
+    case "cancel":
+      return <CloseIcon />;
+
+    case "expired":
+      return <QueryBuilderIcon />;
+
+    case "declinded":
+      return <SentimentNeutralIcon />;
+
+    default:
+      break;
+  }
+};
 
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
@@ -59,11 +87,14 @@ const BookingSummaryWrapper = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .post(`${app_api}/cancelReservation/${id}/${bookingById.serviceId}`, {
-            headers: {
-              Authorization: `${token}`,
-            },
-          })
+          .post(
+            `${app_api}/cancelReservation/${id}/${bookingById.serviceId}/th`,
+            {
+              headers: {
+                Authorization: `${token}`,
+              },
+            }
+          )
           .then(() => {
             Toast.fire({
               icon: "success",
@@ -149,8 +180,9 @@ const BookingSummaryWrapper = () => {
 
   return (
     <div className="p-5">
-      <p className="text-[25px] font-semibold mt-14">
-        {t("title:bookingIsconfirmed")}
+      <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
+        <span>{switchIcons(bookingById?.status)}</span>
+        <span>{t("title:bookingIsconfirmed")}</span>
       </p>
       <p className="my-3">{t("desc:weSendSms")}</p>
       <Divider />
