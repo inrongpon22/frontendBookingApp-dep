@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 export default function BusinessInfo() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    // const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
     const {
         t,
         i18n: { language },
