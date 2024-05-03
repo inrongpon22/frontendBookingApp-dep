@@ -22,23 +22,22 @@ export default function BusinessInfo() {
         i18n: { language },
     } = useTranslation();
 
-  const [file, setFile] = useState<File[]>([]);
-  const [imagesURL, setImagesURL] = useState<string[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [openTime, setOpenTime] = useState("");
-  const [closeTime, setCloseTime] = useState("");
-  const [locationData, setLocationData] = useState<ILocation>({
-    lat: 0,
-    lng: 0,
-    address: "",
-  });
-  const [daysOpen, setDaysOpen] = useState<string[]>([]);
-  const businessInfo: IBusinessInfo = {
-    title: "",
-    location: "",
-    description: "",
-    phoneNumber: "",
-  };
+    const [file, setFile] = useState<File[]>([]);
+    const [previewImages, setPreviewImages] = useState<string[]>([]);
+    const [openTime, setOpenTime] = useState("");
+    const [closeTime, setCloseTime] = useState("");
+    const [locationData, setLocationData] = useState<ILocation>({
+        lat: 0,
+        lng: 0,
+        address: "",
+    });
+    const [daysOpen, setDaysOpen] = useState<string[]>([]);
+    const businessInfo: IBusinessInfo = {
+        title: "",
+        location: "",
+        description: "",
+        phoneNumber: "",
+    };
 
     const dayOfWeek = () => {
         switch (language) {
@@ -53,32 +52,40 @@ export default function BusinessInfo() {
         }
     };
 
-  const schema = Yup.object().shape({
-    title: Yup.string()
-      .min(2, t("formValidation:business:create:shopName:shopNameMin"))
-      .max(50, t("formValidation:business:create:shopName:shopNameMax"))
-      .required(t("formValidation:business:create:shopName:shopNameReq")),
-    phoneNumber: Yup.string()
-      .matches(
-        /^[0-9]+$/,
-        t("formValidation:business:create:phoneNumber:phoneNumberMatch")
-      )
-      .min(10, t("formValidation:business:create:phoneNumber:phoneNumberMin"))
-      .max(10, t("formValidation:business:create:phoneNumber:phoneNumberMax"))
-      .required(t("formValidation:business:create:phoneNumber:phoneNumberReq")),
-    location: Yup.string().required(
-      t("formValidation:business:create:location:locationReq")
-    ),
-    description: Yup.string().max(
-      200,
-      t("formValidation:business:create:description:descriptionMax")
-    ),
-  });
+    const schema = Yup.object().shape({
+        title: Yup.string()
+            .min(2, t("formValidation:business:create:shopName:shopNameMin"))
+            .max(50, t("formValidation:business:create:shopName:shopNameMax"))
+            .required(t("formValidation:business:create:shopName:shopNameReq")),
+        phoneNumber: Yup.string()
+            .matches(
+                /^[0-9]+$/,
+                t("formValidation:business:create:phoneNumber:phoneNumberMatch")
+            )
+            .min(
+                10,
+                t("formValidation:business:create:phoneNumber:phoneNumberMin")
+            )
+            .max(
+                10,
+                t("formValidation:business:create:phoneNumber:phoneNumberMax")
+            )
+            .required(
+                t("formValidation:business:create:phoneNumber:phoneNumberReq")
+            ),
+        location: Yup.string().required(
+            t("formValidation:business:create:location:locationReq")
+        ),
+        description: Yup.string().max(
+            200,
+            t("formValidation:business:create:description:descriptionMax")
+        ),
+    });
 
-  const handleChangeLocation = (inputData: ILocation) => {
-    formik.setFieldValue('location', inputData.address);
-    setLocationData(inputData);
-  };
+    const handleChangeLocation = (inputData: ILocation) => {
+        formik.setFieldValue("location", inputData.address);
+        setLocationData(inputData);
+    };
 
     function generateUniqueRandomNumber() {
         let randomNumber;
@@ -117,66 +124,64 @@ export default function BusinessInfo() {
         }
     };
 
-    const handleFormSubmit = async () => {
-        const uniqueRandomNumber = generateUniqueRandomNumber();
-        if (file) {
-            file.forEach(async (element) => {
-                const { data, error } = await supabase.storage
-                    .from("BookingSystem/images")
-                    .upload(
-                        file !== null
-                            ? element.name + `${uniqueRandomNumber}`
-                            : "",
-                        element
-                    );
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(data.path);
-                    if (imagesURL.length > 1) {
-                        setImagesURL((prevImagesURL) => {
-                            return [...prevImagesURL, data.path];
-                        });
+    const formik = useFormik({
+        initialValues: {
+            title: businessInfo.title || "",
+            phoneNumber: businessInfo.phoneNumber || "",
+            location: businessInfo.location || "",
+            description: businessInfo.description || "",
+        },
+        validationSchema: schema,
+        onSubmit: async (values) => {
+            const imagesURL: string[] = [];
+            const uniqueRandomNumber = generateUniqueRandomNumber();
+            if (file.length > 0) {
+                for (const element of file) {
+                    const { data, error } = await supabase.storage
+                        .from("BookingSystem/images")
+                        .upload(
+                            file !== null
+                                ? element.name + `${uniqueRandomNumber}`
+                                : "",
+                            element
+                        );
+                    if (error) {
+                        console.error(error);
                     } else {
-                        setImagesURL([data.path]);
+                        console.log(data.path);
+                        imagesURL.push(data.path);
                     }
                 }
-            });
-        } else {
-            return;
-        }
-    };
 
-  const formik = useFormik({
-    initialValues: {
-      title: businessInfo.title || "",
-      phoneNumber: businessInfo.phoneNumber || "",
-      location: businessInfo.location || "",
-      description: businessInfo.description || "",
-    },
-    validationSchema: schema,
-    onSubmit: async (values) => {
-      handleFormSubmit();
-      const insertData = {
-        title: values.title,
-        imagesURL: imagesURL,
-        description: values.description,
-        phoneNumber: values.phoneNumber,
-        address: locationData.address,
-        latitude: locationData.lat,
-        longitude: locationData.lng,
-        daysOpen: daysOpen,
-        userId: 13,
-      };
-      if (token === null) {
-        throw new Error("Token is not found");
-      }
-      const business = await insertBusiness(insertData, token);
+                const insertData = {
+                    title: values.title,
+                    imagesURL: imagesURL,
+                    description: values.description,
+                    phoneNumber: values.phoneNumber,
+                    address: locationData.address,
+                    latitude: locationData.lat,
+                    longitude: locationData.lng,
+                    daysOpen: daysOpen,
+                    userId: userId ? Number(userId) : 0,
+                };
+                console.log(insertData);
 
-      localStorage.setItem("businessId", String(business.data.businessId));
-      navigate(`/bussiness-profile/${business.data.businessId}`);
-    },
-  });
+                if (token === null) {
+                    throw new Error("Token is not found");
+                }
+
+                const business = await insertBusiness(insertData, token);
+
+                localStorage.setItem(
+                    "businessId",
+                    String(business.data.businessId)
+                );
+                navigate(`/bussiness-profile/${business.data.businessId}`);
+            } else {
+                return;
+            }
+        },
+    });
 
     const handleClearImages = (index: number) => {
         setPreviewImages((prevImages) => {
@@ -222,10 +227,11 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                            }`}
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -259,10 +265,11 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -350,10 +357,11 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
                                 ? "border-2 border-rose-500"
                                 : "border border-black-50"
-                            }`}
+                        }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">
