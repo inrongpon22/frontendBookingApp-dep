@@ -39,7 +39,7 @@ export default function ServiceInfo() {
       // Handle form submission here
       const valueInString = JSON.stringify(values);
       localStorage.setItem("serviceInfo", valueInString);
-      if (editValue) navigate("/createService");
+      if (editValue) navigate("/createService/${businessId}");
       else navigate(`/serviceTime/${businessId}`);
     },
   });

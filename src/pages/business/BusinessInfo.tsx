@@ -203,62 +203,66 @@ export default function BusinessInfo() {
         }
     };
 
-  return (
-    <>
-      <div className="flex flex-col">
-        <form onSubmit={formik.handleSubmit}>
-          <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
-            {t("form:business:create:shopName")}
-          </p>
-          <input
-            {...formik.getFieldProps("title")}
-            onBlur={formik.handleBlur}
-            type="text"
-            name="title"
-            style={{
-              borderColor: `${alpha("#000000", 0.2)}`,
-            }}
-            placeholder={t("placeholder:shopName")}
-            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-              formik.errors?.title
-                ? "border-2 border-rose-500"
-                : "border border-black-50"
-            }`}
-          />
-          {formik.touched.title && formik.errors.title ? (
-            <div className="text-red-500 mt-1">{formik.errors.title}</div>
-          ) : null}
-          <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
-            {t("form:business:create:location")}
-          </p>
-          <SearchMap handleChangeLocation={handleChangeLocation} />
-          {formik.touched.location && formik.errors.location ? (
-            <div className="text-red-500 mt-1">{formik.errors.location}</div>
-          ) : null}
-          <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
-            {t("form:business:create:openTime")}
-          </p>
-          <div className="flex justify-between mt-1">
-            {dayOfWeek()?.map((day, index) => (
-              <div
-                onClick={() => toggleDay(day.value)}
-                key={index}
-                style={{
-                  width: "45px",
-                  height: "47px",
-                  borderColor: isDaySelected(day.value)
-                    ? "#020873"
-                    : `${alpha("#000000", 0.2)}`,
-                  backgroundColor: isDaySelected(day.value)
-                    ? "rgb(2, 8, 115,0.2)"
-                    : "white",
-                }}
-                className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+    return (
+        <>
+            <div className="flex flex-col">
+                <form onSubmit={formik.handleSubmit}>
+                    <p
+                        style={{ fontSize: "14px" }}
+                        className="mt-4 font-semibold">
+                        {t("form:business:create:shopName")}
+                    </p>
+                    <input
+                        {...formik.getFieldProps("title")}
+                        onBlur={formik.handleBlur}
+                        type="text"
+                        name="title"
+                        style={{
+                            color: "#8B8B8B",
+                            borderColor: `${alpha("#000000", 0.2)}`,
+                        }}
+                        placeholder={t("placeholder:shopName")}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                            }`}
+                    />
+                    {formik.touched.title && formik.errors.title ? (
+                        <div className="text-red-500 mt-1">
+                            {formik.errors.title}
+                        </div>
+                    ) : null}
+                    <p
+                        style={{ fontSize: "14px" }}
+                        className="mt-4 font-semibold">
+                        {t("form:business:create:location")}
+                    </p>
+                    <SearchMap handleChangeLocation={handleChangeLocation} />
+                    <p
+                        style={{ fontSize: "14px" }}
+                        className="mt-4 font-semibold">
+                        {t("form:business:create:openTime")}
+                    </p>
+                    <div className="flex justify-between mt-1">
+                        {dayOfWeek()?.map((day, index) => (
+                            <div
+                                onClick={() => toggleDay(day.value)}
+                                key={index}
+                                style={{
+                                    width: "45px",
+                                    height: "47px",
+                                    borderColor: isDaySelected(day.value)
+                                        ? "#020873"
+                                        : `${alpha("#000000", 0.2)}`,
+                                    backgroundColor: isDaySelected(day.value)
+                                        ? "rgb(2, 8, 115,0.2)"
+                                        : "white",
+                                }}
+                                className={`
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -319,6 +323,7 @@ export default function BusinessInfo() {
                                     }
                                     type="time"
                                     style={{ border: "none" }}
+                                    disabled={openTime === ""}
                                 />
                                 {/* <div
                             className="flex flex-col"
@@ -326,96 +331,104 @@ export default function BusinessInfo() {
                             <KeyboardArrowUpIcon sx={{ fontSize: "20px" }} />
                             <KeyboardArrowDownIcon sx={{ fontSize: "20px" }} />
                         </div> */}
-              </div>
-            </div>
-          </div>
-          <p style={{ fontSize: "14px" }} className="mt-3 font-semibold">
-            {t("form:business:create:businessNumber")}
-          </p>
-          <input
-            name="phoneNumber"
-            value={formik.values.phoneNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            type="text"
-            style={{
-              borderColor: `${alpha("#000000", 0.2)}`,
-            }}
-            placeholder={t("placeholder:businessNumber")}
-            className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-              formik.errors?.phoneNumber
-                ? "border-2 border-rose-500"
-                : "border border-black-50"
-            }`}
-          />
-          {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-            <div className="text-red-500 mt-1">{formik.errors.phoneNumber}</div>
-          ) : null}
-          <div className="flex mt-3 items-center gap-1">
-            <div style={{ fontSize: "14px" }} className="font-semibold">
-              {t("form:business:create:shortDescribe")}
-            </div>
-            <div style={{ fontSize: "14px" }}>({t("fragment:optional")})</div>
-          </div>
-          <div
-            className="mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
-            style={{
-              height: "124px",
-              borderColor: `${alpha("#000000", 0.2)}`,
-            }}
-          >
-            <textarea
-              name="description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              placeholder={t("placeholder:shortDescribe")}
-              className="w-full focus:outline-none resize-none"
-              rows={3}
-              maxLength={150}
-            />
-          </div>
-          <div className="mt-4 flex">
-            <div className="font-semibold mr-1">
-              {t("form:business:create:images")}
-            </div>
-            <div style={{ color: "gray" }}>({t("fragment:optional")})</div>
-          </div>
-          <div className="flex gap-4 flex-wrap">
-            {previewImages.map((image, index) => (
-              <div key={index} className="mt-3">
-                <Badge
-                  onClick={() => handleClearImages(index)}
-                  badgeContent={
-                    <IconButton
-                      size="small"
-                      sx={{
-                        background: "black",
-                        ":hover": {
-                          background: "black",
-                        },
-                      }}
-                    >
-                      <CloseIcon
-                        sx={{
-                          fontSize: "12px",
-                          color: "white",
+                            </div>
+                        </div>
+                    </div>
+                    <p
+                        style={{ fontSize: "14px" }}
+                        className="mt-3 font-semibold">
+                        {t("form:business:create:businessNumber")}
+                    </p>
+                    <input
+                        name="phoneNumber"
+                        value={formik.values.phoneNumber}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        type="text"
+                        style={{
+                            color: "#8B8B8B",
+                            borderColor: `${alpha("#000000", 0.2)}`,
                         }}
-                      />
-                    </IconButton>
-                  }
-                >
-                  <img
-                    src={image}
-                    className="rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Badge>
-              </div>
-            ))}
+                        placeholder={t("placeholder:businessNumber")}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                            }`}
+                    />
+                    {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                        <div className="text-red-500 mt-1">
+                            {formik.errors.phoneNumber}
+                        </div>
+                    ) : null}
+                    <div className="flex mt-3 items-center gap-1">
+                        <div
+                            style={{ fontSize: "14px" }}
+                            className="font-semibold">
+                            {t("form:business:create:shortDescribe")}
+                        </div>
+                        <div style={{ fontSize: "14px" }}>
+                            ({t("fragment:optional")})
+                        </div>
+                    </div>
+                    <div
+                        className="mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
+                        style={{
+                            height: "124px",
+                            borderColor: `${alpha("#000000", 0.2)}`,
+                        }}>
+                        <textarea
+                            name="description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            style={{ color: "#8B8B8B" }}
+                            placeholder={t("placeholder:shortDescribe")}
+                            className="w-full focus:outline-none resize-none"
+                            rows={3}
+                            maxLength={150}
+                        />
+                    </div>
+                    <div className="mt-4 flex">
+                        <div className="font-semibold mr-1">
+                            {t("form:business:create:images")}
+                        </div>
+                        <div style={{ color: "gray" }}>
+                            ({t("fragment:optional")})
+                        </div>
+                    </div>
+                    <div className="flex gap-4 flex-wrap">
+                        {previewImages.map((image, index) => (
+                            <div key={index} className="mt-3">
+                                <Badge
+                                    onClick={() => handleClearImages(index)}
+                                    badgeContent={
+                                        <IconButton
+                                            size="small"
+                                            sx={{
+                                                background: "black",
+                                                ":hover": {
+                                                    background: "black",
+                                                },
+                                            }}>
+                                            <CloseIcon
+                                                sx={{
+                                                    fontSize: "12px",
+                                                    color: "white",
+                                                }}
+                                            />
+                                        </IconButton>
+                                    }>
+                                    <img
+                                        src={image}
+                                        className="rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
+                                        style={{
+                                            width: "100px",
+                                            height: "100px",
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Badge>
+                            </div>
+                        ))}
 
                         <div
                             className="outline-dashed outline-1 outline-offset-1 flex items-center justify-center rounded-lg mt-3"
