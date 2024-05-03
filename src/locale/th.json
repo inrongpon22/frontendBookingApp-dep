@@ -41,7 +41,9 @@
     "availableTime": "เวลาที่เปิดให้บริการ",
     "openSlot": "ช่องเวลาที่เปิดให้บริการ",
     "termsAndprivacy": "โดยการคลิก 'ยืนยันการจอง' คุณยินยอมตามข้อกำหนดและเงื่อนไขการให้บริการและนโยบายความเป็นส่วนตัวของเรา โดยที่คุณให้สิทธิในการใช้ข้อมูลส่วนบุคคลของคุณตามนโยบายของเรา",
-    "reset":"รีเซ็ต"
+    "reset": "รีเซ็ต",
+    "totalPending": "การจองที่รอดำเนินการทั้งหมด",
+    "pending": "รออนุมัติ"
   },
   "title": {
     "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -74,7 +76,13 @@
     "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
     "bookingFailedTryAgainButton": "ลองอีกครั้ง",
     "bookingFailedCloseButton": "ปิด",
-    "getStartedButton": "เริ่มต้นใช้งาน"
+    "getStartedButton": "เริ่มต้นใช้งาน",
+    "overview": "ภาพรวม",
+    "overviewSchedule": "ภาพรวมการจอง",
+    "shareBookingLink": "แชร์ลิงก์การจอง",
+    "businessSetting": "ตั้งค่าธุรกิจ",
+    "serviceSetting": "ตั้งค่าบริการ",
+    "logout": "ออกจากระบบ"
   },
   "noti": {
     "booking": {
@@ -171,7 +179,8 @@
     "bookingFailed": "การจองล้มเหลว",
     "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง",
     "noBookingReq": "ไม่มีคำขอการจอง",
-    "noTimeSlots": "ไม่มีช่วงเวลาที่เปิดให้บริการ"
+    "noTimeSlots": "ไม่มีช่วงเวลาที่เปิดให้บริการ",
+    "noServicesYet": "ยังไม่มีบริการ, โปรดเพิ่มบริการของคุณ"
   },
   "fragment": {
     "needTo": "ต้องการที่จะ",

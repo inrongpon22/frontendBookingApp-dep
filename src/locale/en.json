@@ -41,7 +41,9 @@
     "availableTime": "Available Time",
     "openSlot": "Open Slot",
     "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies.",
-    "reset":"Reset"
+    "reset": "Reset",
+    "totalPending": "Total Pending",
+    "pending" : "pending"
   },
   "title": {
     "bookingIsconfirmed": "The Booking is confirmed",
@@ -74,7 +76,13 @@
     "bookingFailedBackButton": "Back to main",
     "bookingFailedTryAgainButton": "Try again",
     "bookingFailedCloseButton": "Close",
-    "getStartedButton": "Get Started"
+    "getStartedButton": "Get Started",
+    "overview": "Overview",
+    "overviewSchedule": "Overview Schedule",
+    "shareBookingLink": "Share Booking Link",
+    "businessSetting": "Business Setting",
+    "serviceSetting": "Service Setting",
+    "logout": "Logout"
   },
   "noti": {
     "booking": {
@@ -170,7 +178,8 @@
     "bookingFailed": "Booking failed",
     "bookingFailedMessage": "booking",
     "noBookingReq": "No booking request",
-    "noTimeSlots": "No time slots available"
+    "noTimeSlots": "No time slots available",
+    "noServicesYet": "Your business doesn't have any service, create service frist"
   },
   "fragment": {
     "needTo": "Need to",

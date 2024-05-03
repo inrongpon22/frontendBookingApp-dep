@@ -36,11 +36,11 @@ const BookingApproval = () => {
   const [tabStatus, setTabStatus] = useState<number>(0);
   // approval
 
-  const { data: getBusinessById, error: BusinessByIdError } = useSWR(
-    `${app_api}/business/${id}`,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  // const { data: getServiceById, error: ServiceByIdError } = useSWR(
+  //   `${app_api}/services`,
+  //   fetcher,
+  //   { revalidateOnFocus: false }
+  // );
 
   const {
     data: getReservByBusiId,
@@ -58,11 +58,11 @@ const BookingApproval = () => {
         })
         .then((res) =>
           res.data
+            .filter((item: any) => item.serviceId === serviceId)
             .filter(
               (item: any) =>
                 item.status === `${tabStatus === 0 ? "pending" : "approval"}`
             )
-            .filter((item: any) => item.serviceId === serviceId)
         ),
     { revalidateOnFocus: false }
   );
@@ -213,7 +213,9 @@ const BookingApproval = () => {
     document.title = t("title:bookingApproval");
   }, []);
 
-  if (BusinessByIdError || ReservByBusiIdError) return <div>API ERROR</div>;
+  console.log(getReservByBusiId);
+
+  if (ReservByBusiIdError) return <div>API ERROR</div>;
 
   return (
     <ApproveContext.Provider
@@ -243,15 +245,14 @@ const BookingApproval = () => {
           <button type="button" onClick={() => navigate(-1)}>
             <ArrowBackIosIcon fontSize="small" />
           </button>
-          {/* <span className="mx-auto">{getBusinessById?.title}</span> */}
         </div>
         <Box sx={{ bgcolor: "#fff" }}>
           <AntTabs
             value={tabStatus}
             onChange={(_, newValue: number) => setTabStatus(newValue)}
           >
-            <AntTab label="Pending" />
-            <AntTab label="Approved" />
+            <AntTab label="รออนุมัติ" />
+            <AntTab label="อนุมัติแล้ว" />
           </AntTabs>
         </Box>
         <div className="bg-gray-100">

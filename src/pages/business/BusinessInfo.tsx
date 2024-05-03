@@ -24,6 +24,7 @@ export default function BusinessInfo() {
 
   const [file, setFile] = useState<File[]>([]);
   const [imagesURL, setImagesURL] = useState<string[]>([]);
+  
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [openTime, setOpenTime] = useState("");
   const [closeTime, setCloseTime] = useState("");

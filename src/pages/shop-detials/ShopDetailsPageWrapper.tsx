@@ -39,10 +39,10 @@ const theme = createTheme({
 });
 
 const ShopDetailsPageWrapper = () => {
-  const { id } = useParams(); // id from params
+  const { businessId } = useParams(); // businessId from params
   const { t } = useTranslation();
 
-  const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by id connected api
+  const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by businessId connected api
 
   const [quantities, setQuantities] = useState<quantityTypes>({
     title: "Guest",
@@ -79,16 +79,16 @@ const ShopDetailsPageWrapper = () => {
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
   const [modalState, setModalState] = useState<string>("phone-input"); //phone-input
 
-  // get business by id from params
+  // get business by businessId from params
   const { error: bussDataError } = useSWR(
-    `${app_api}/business/${id}`,
+    `${app_api}/business/${businessId}`,
     (url: string) => axios.get(url).then((res) => setShopDetail(res.data)),
     { revalidateOnFocus: false }
   );
 
-  // get services by business id
+  // get services by business businessId
   const { error: servicesDataError } = useSWR(
-    `${app_api}/serviceByBusinessId/${id}`,
+    `${app_api}/serviceByBusinessId/${businessId}`,
     (url: string) =>
       axios.get(url).then((res) =>
         setServices(
@@ -116,12 +116,12 @@ const ShopDetailsPageWrapper = () => {
     { revalidateOnFocus: false }
   );
 
-  // get time slots by service id
+  // get time slots by service businessId
   const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
     () =>
       services.find((item: any) => item.isSelected) &&
       `${app_api}/service/${
-        services.find((item: any) => item.isSelected)?.id
+        services.find((item: any) => item.isSelected)?.businessId
       }/${selectedDate.date.format("YYYY-MM-DD")}`,
     (url: string) =>
       axios.get(url).then((res) =>
