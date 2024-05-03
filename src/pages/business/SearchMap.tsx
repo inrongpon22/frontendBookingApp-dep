@@ -1,7 +1,7 @@
 import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-  Suggestion,
+    geocodeByAddress,
+    getLatLng,
+    Suggestion,
 } from "react-places-autocomplete";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Divider, IconButton } from "@mui/material";
@@ -14,41 +14,41 @@ import { ILocation } from "./interfaces/business";
 import { useTranslation } from "react-i18next";
 
 type LocationData = {
-  lat: number;
-  lng: number;
-  address: string;
+    lat: number;
+    lng: number;
+    address: string;
 };
 
 interface IParameter {
-  handleChangeLocation: (inputData: ILocation) => void;
+    handleChangeLocation: (inputData: ILocation) => void;
 }
 
 export default function SearchMap(props: IParameter) {
-  const { t } = useTranslation();
-  const [address, setAddress] = useState("");
+    const { t } = useTranslation();
+    const [address, setAddress] = useState("");
 
-  const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
-    const locationData: LocationData = { lat, lng, address };
-    props.handleChangeLocation(locationData);
-  };
+    const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
+        const locationData: LocationData = { lat, lng, address };
+        props.handleChangeLocation(locationData);
+    };
 
-  const handleChange = (address: string) => {
-    setAddress(address);
-  };
-
-  const handleSelect = (address: string) => {
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        handleChangeAddress({
-          lat: latLng.lat,
-          lng: latLng.lng,
-          address: address,
-        });
+    const handleChange = (address: string) => {
         setAddress(address);
-      })
-      .catch((error) => console.error("Error", error));
-  };
+    };
+
+    const handleSelect = (address: string) => {
+        geocodeByAddress(address)
+            .then((results) => getLatLng(results[0]))
+            .then((latLng) => {
+                handleChangeAddress({
+                    lat: latLng.lat,
+                    lng: latLng.lng,
+                    address: address,
+                });
+                setAddress(address);
+            })
+            .catch((error) => console.error("Error", error));
+    };
 
   return (
     <div>
@@ -85,8 +85,8 @@ export default function SearchMap(props: IParameter) {
                   <CloseOutlinedIcon sx={{ color: "#8B8B8B" }} />
                 </div>
               )} */}
-            </div>
-            {/* <div
+                        </div>
+                        {/* <div
                             className="flex justify-center mt-2 p-2 rounded-lg gap-2"
                             style={{ backgroundColor: "rgb(2, 8, 115, 0.1)" }}>
                             <div>
@@ -98,63 +98,70 @@ export default function SearchMap(props: IParameter) {
                                 Open map
                             </div>
                         </div> */}
-            <div className="mt-2">
-              <div className="autocomplete-dropdown-container">
-                {loading && <div>Loading...</div>}
-                {suggestions.map((suggestion: Suggestion) => {
-                  const className = suggestion.active
-                    ? "suggestion-item--active"
-                    : "suggestion-item";
-                  const style = suggestion.active
-                    ? {
-                        backgroundColor: "#fafafa",
-                        cursor: "pointer",
-                      }
-                    : {
-                        backgroundColor: "#ffffff",
-                        cursor: "pointer",
-                      };
-                  return (
-                    <div
-                      {...getSuggestionItemProps(suggestion, {
-                        className,
-                        style,
-                      })}
-                      key={suggestion.placeId}
-                    >
-                      <span key={suggestion.placeId}>
-                        <IconButton
-                          sx={{
-                            background: `${alpha("#020873", 0.1)}`,
-                            mr: "8px",
-                          }}
-                          size="small"
-                        >
-                          <FmdGoodOutlinedIcon
-                            sx={{
-                              color: "#020873",
-                              width: "20px",
-                              height: "20px",
-                            }}
-                          />
-                        </IconButton>
-                        {suggestion.description}
-                      </span>
-                      <Divider
-                        sx={{
-                          marginBottom: "16px",
-                          marginTop: "16px",
-                          border: `0.5px solid ${alpha("#8B8B8B", 0.5)}`,
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </>
-        )}
-      </PlacesAutocomplete>
-    </div>
-  );
+                        <div className="mt-2">
+                            <div className="autocomplete-dropdown-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map((suggestion: Suggestion) => {
+                                    const className = suggestion.active
+                                        ? "suggestion-item--active"
+                                        : "suggestion-item";
+                                    const style = suggestion.active
+                                        ? {
+                                              backgroundColor: "#fafafa",
+                                              cursor: "pointer",
+                                          }
+                                        : {
+                                              backgroundColor: "#ffffff",
+                                              cursor: "pointer",
+                                          };
+                                    return (
+                                        <div
+                                            {...getSuggestionItemProps(
+                                                suggestion,
+                                                {
+                                                    className,
+                                                    style,
+                                                }
+                                            )}
+                                            key={suggestion.placeId}>
+                                            <span key={suggestion.placeId}>
+                                                <IconButton
+                                                    sx={{
+                                                        background: `${alpha(
+                                                            "#020873",
+                                                            0.1
+                                                        )}`,
+                                                        mr: "8px",
+                                                    }}
+                                                    size="small">
+                                                    <FmdGoodOutlinedIcon
+                                                        sx={{
+                                                            color: "#020873",
+                                                            width: "20px",
+                                                            height: "20px",
+                                                        }}
+                                                    />
+                                                </IconButton>
+                                                {suggestion.description}
+                                            </span>
+                                            <Divider
+                                                sx={{
+                                                    marginBottom: "16px",
+                                                    marginTop: "16px",
+                                                    border: `0.5px solid ${alpha(
+                                                        "#8B8B8B",
+                                                        0.5
+                                                    )}`,
+                                                }}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </PlacesAutocomplete>
+        </div>
+    );
 }

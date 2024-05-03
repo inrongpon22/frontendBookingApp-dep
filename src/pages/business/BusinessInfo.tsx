@@ -14,13 +14,13 @@ import { insertBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
 
 export default function BusinessInfo() {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const {
+        t,
+        i18n: { language },
+    } = useTranslation();
 
   const [file, setFile] = useState<File[]>([]);
   const [imagesURL, setImagesURL] = useState<string[]>([]);
@@ -40,18 +40,18 @@ export default function BusinessInfo() {
     phoneNumber: "",
   };
 
-  const dayOfWeek = () => {
-    switch (language) {
-      case "th":
-        return dataOfWeekThai;
+    const dayOfWeek = () => {
+        switch (language) {
+            case "th":
+                return dataOfWeekThai;
 
-      case "en":
-        return dataOfWeekEng;
+            case "en":
+                return dataOfWeekEng;
 
-      default:
-        return dataOfWeekThai;
-    }
-  };
+            default:
+                return dataOfWeekThai;
+        }
+    };
 
   const schema = Yup.object().shape({
     title: Yup.string()
@@ -80,70 +80,72 @@ export default function BusinessInfo() {
     setLocationData(inputData);
   };
 
-  function generateUniqueRandomNumber() {
-    let randomNumber;
-    const generatedNumbers = new Set();
+    function generateUniqueRandomNumber() {
+        let randomNumber;
+        const generatedNumbers = new Set();
 
-    do {
-      randomNumber = Math.floor(10000 + Math.random() * 90000); // Generate a random 5-digit number
-    } while (generatedNumbers.has(randomNumber)); // Check if the number has been generated before
+        do {
+            randomNumber = Math.floor(10000 + Math.random() * 90000); // Generate a random 5-digit number
+        } while (generatedNumbers.has(randomNumber)); // Check if the number has been generated before
 
-    generatedNumbers.add(randomNumber); // Add the generated number to the set of generated numbers
-    return randomNumber;
-  }
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const fileReader = new FileReader();
-      const newFile = e.target.files ? e.target.files[0] : null;
-      if (newFile) {
-        fileReader.onload = () => {
-          const previewURL = fileReader.result as string;
-          setPreviewImages((pre) => {
-            return [...pre, previewURL];
-          });
-        };
-
-        fileReader.readAsDataURL(newFile);
-      }
-
-      setFile((prevFiles) => {
-        if (newFile) {
-          return [...prevFiles, newFile];
-        } else {
-          return prevFiles;
-        }
-      });
+        generatedNumbers.add(randomNumber); // Add the generated number to the set of generated numbers
+        return randomNumber;
     }
-  };
 
-  const handleFormSubmit = async () => {
-    const uniqueRandomNumber = generateUniqueRandomNumber();
-    if (file) {
-      file.forEach(async (element) => {
-        const { data, error } = await supabase.storage
-          .from("BookingSystem/images")
-          .upload(
-            file !== null ? element.name + `${uniqueRandomNumber}` : "",
-            element
-          );
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(data.path);
-          if (imagesURL.length > 1) {
-            setImagesURL((prevImagesURL) => {
-              return [...prevImagesURL, data.path];
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const fileReader = new FileReader();
+            const newFile = e.target.files ? e.target.files[0] : null;
+            if (newFile) {
+                fileReader.onload = () => {
+                    const previewURL = fileReader.result as string;
+                    setPreviewImages((pre) => {
+                        return [...pre, previewURL];
+                    });
+                };
+
+                fileReader.readAsDataURL(newFile);
+            }
+
+            setFile((prevFiles) => {
+                if (newFile) {
+                    return [...prevFiles, newFile];
+                } else {
+                    return prevFiles;
+                }
             });
-          } else {
-            setImagesURL([data.path]);
-          }
         }
-      });
-    } else {
-      return;
-    }
-  };
+    };
+
+    const handleFormSubmit = async () => {
+        const uniqueRandomNumber = generateUniqueRandomNumber();
+        if (file) {
+            file.forEach(async (element) => {
+                const { data, error } = await supabase.storage
+                    .from("BookingSystem/images")
+                    .upload(
+                        file !== null
+                            ? element.name + `${uniqueRandomNumber}`
+                            : "",
+                        element
+                    );
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log(data.path);
+                    if (imagesURL.length > 1) {
+                        setImagesURL((prevImagesURL) => {
+                            return [...prevImagesURL, data.path];
+                        });
+                    } else {
+                        setImagesURL([data.path]);
+                    }
+                }
+            });
+        } else {
+            return;
+        }
+    };
 
   const formik = useFormik({
     initialValues: {
@@ -176,30 +178,30 @@ export default function BusinessInfo() {
     },
   });
 
-  const handleClearImages = (index: number) => {
-    setPreviewImages((prevImages) => {
-      const newImages = [...prevImages];
-      newImages.splice(index, 1);
-      return newImages;
-    });
-    setFile((prevFiles) => {
-      const newImages = [...prevFiles];
-      newImages.splice(index, 1);
-      return newImages;
-    });
-  };
+    const handleClearImages = (index: number) => {
+        setPreviewImages((prevImages) => {
+            const newImages = [...prevImages];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+        setFile((prevFiles) => {
+            const newImages = [...prevFiles];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+    };
 
-  const isDaySelected = (dayValue: string) => {
-    return daysOpen.includes(dayValue);
-  };
+    const isDaySelected = (dayValue: string) => {
+        return daysOpen.includes(dayValue);
+    };
 
-  const toggleDay = (dayValue: string) => {
-    if (isDaySelected(dayValue)) {
-      setDaysOpen(daysOpen.filter((day) => day !== dayValue));
-    } else {
-      setDaysOpen([...daysOpen, dayValue]);
-    }
-  };
+    const toggleDay = (dayValue: string) => {
+        if (isDaySelected(dayValue)) {
+            setDaysOpen(daysOpen.filter((day) => day !== dayValue));
+        } else {
+            setDaysOpen([...daysOpen, dayValue]);
+        }
+    };
 
   return (
     <>
@@ -253,70 +255,72 @@ export default function BusinessInfo() {
                 }}
                 className={`
                             ${
-                              isDaySelected(day.value)
-                                ? "border-custom-color border-2"
-                                : "border-black-50 border"
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
                             }
-                            flex items-center justify-center rounded-lg`}
-              >
-                {day.name}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-2">
-            <div
-              style={{
-                width: "156px",
-                height: "51px",
-                borderColor: `${alpha("#000000", 0.2)}`,
-              }}
-              className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4"
-            >
-              <div
-                style={{
-                  fontSize: "14px",
-                  marginRight: "15px",
-                }}
-              >
-                {t("from")}
-              </div>
-              <div className="flex">
-                <input
-                  className="font-black-500 focus:outline-none"
-                  value={openTime}
-                  onChange={(e) => setOpenTime(e.target.value)}
-                  type="time"
-                  style={{
-                    border: "none",
-                  }}
-                />
-                {/* <div
+                            flex items-center justify-center rounded-lg`}>
+                                {day.name}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex justify-between mt-2">
+                        <div
+                            style={{
+                                width: "156px",
+                                height: "51px",
+                                borderColor: `${alpha("#000000", 0.2)}`,
+                            }}
+                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            <div
+                                style={{
+                                    fontSize: "14px",
+                                    marginRight: "15px",
+                                }}>
+                                {t("from")}
+                            </div>
+                            <div className="flex">
+                                <input
+                                    className="font-black-500 focus:outline-none"
+                                    value={openTime}
+                                    onChange={(e) =>
+                                        setOpenTime(e.target.value)
+                                    }
+                                    type="time"
+                                    style={{
+                                        border: "none",
+                                    }}
+                                />
+                                {/* <div
                             className="flex flex-col"
                             style={{ marginLeft: "-20px" }}>
                             <KeyboardArrowUpIcon sx={{ fontSize: "20px" }} />
                             <KeyboardArrowDownIcon sx={{ fontSize: "20px" }} />
                         </div> */}
-              </div>
-            </div>
-            <div className="flex justify-center items-center">-</div>
-            <div
-              style={{
-                width: "156px",
-                height: "51px",
-                borderColor: `${alpha("#000000", 0.2)}`,
-              }}
-              className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4"
-            >
-              <div style={{ fontSize: "14px" }}>{t("to")}</div>
-              <div className="flex">
-                <input
-                  className="focus:outline-none"
-                  value={closeTime}
-                  onChange={(e) => setCloseTime(e.target.value)}
-                  type="time"
-                  style={{ border: "none" }}
-                />
-                {/* <div
+                            </div>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            -
+                        </div>
+                        <div
+                            style={{
+                                width: "156px",
+                                height: "51px",
+                                borderColor: `${alpha("#000000", 0.2)}`,
+                            }}
+                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            <div style={{ fontSize: "14px" }}>{t("to")}</div>
+                            <div className="flex">
+                                <input
+                                    className="focus:outline-none"
+                                    value={closeTime}
+                                    onChange={(e) =>
+                                        setCloseTime(e.target.value)
+                                    }
+                                    type="time"
+                                    style={{ border: "none" }}
+                                />
+                                {/* <div
                             className="flex flex-col"
                             style={{ marginLeft: "-20px" }}>
                             <KeyboardArrowUpIcon sx={{ fontSize: "20px" }} />
@@ -413,40 +417,40 @@ export default function BusinessInfo() {
               </div>
             ))}
 
-            <div
-              className="outline-dashed outline-1 outline-offset-1 flex items-center justify-center rounded-lg mt-3"
-              style={{ width: "100px", height: "100px" }}
-            >
-              <label htmlFor={`fileInput`} style={{ cursor: "pointer" }}>
-                <input
-                  id={`fileInput`}
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-                <AddIcon />
-              </label>
-            </div>
-          </div>
+                        <div
+                            className="outline-dashed outline-1 outline-offset-1 flex items-center justify-center rounded-lg mt-3"
+                            style={{ width: "100px", height: "100px" }}>
+                            <label
+                                htmlFor={`fileInput`}
+                                style={{ cursor: "pointer" }}>
+                                <input
+                                    id={`fileInput`}
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={handleFileChange}
+                                />
+                                <AddIcon />
+                            </label>
+                        </div>
+                    </div>
 
-          <div className="w-full flex justify-center bottom-0 inset-x-0 gap-2">
-            <button
-              type="button"
-              className="text-white rounded-lg font-semibold my-5"
-              style={{
-                width: "343px",
-                height: "51px",
-                cursor: "pointer",
-                backgroundColor: "#020873",
-                fontSize: "14px",
-              }}
-              onClick={() => formik.handleSubmit()}
-            >
-              {t("button:next")}
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
-  );
+                    <div className="w-full flex justify-center bottom-0 inset-x-0 gap-2">
+                        <button
+                            type="button"
+                            className="text-white rounded-lg font-semibold my-5"
+                            style={{
+                                width: "343px",
+                                height: "51px",
+                                cursor: "pointer",
+                                backgroundColor: "#020873",
+                                fontSize: "14px",
+                            }}
+                            onClick={() => formik.handleSubmit()}>
+                            {t("button:next")}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
 }

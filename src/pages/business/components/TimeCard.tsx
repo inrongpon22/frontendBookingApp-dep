@@ -1,19 +1,40 @@
 import { alpha, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IServiceTime } from "../interfaces/business";
-import { useNavigate } from "react-router-dom";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { IServiceTime } from "../interfaces/service";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 export default function TimeCard() {
   const navigate = useNavigate();
-  const serviceTime = JSON.parse(
-    localStorage.getItem("serviceTime") || "[{}]"
-  ) as IServiceTime[];
+  const { businessId } = useParams();
+  const [timeDetails, setTimeDetails] = useState<IServiceTime[]>([]);
+  const [refresh, setRefresh] = useState(0);
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
+
+  const handleDeleteSlot = (index: number) => {
+    timeDetails.splice(index, 1);
+    localStorage.setItem("serviceTime", JSON.stringify(timeDetails.splice(index, 1)));
+    if (timeDetails.length == 0) {
+      localStorage.removeItem("serviceTime");
+      navigate(`/serviceTime/${businessId}`);
+    }
+    setRefresh(pre => pre + 1);
+  };
+
+  useEffect(() => {
+    const serviceTime = JSON.parse(
+      localStorage.getItem("serviceTime") || "[{}]"
+    ) as IServiceTime[];
+    setTimeDetails(serviceTime);
+  }, [refresh]);
+
+
   return (
     <>
-      {serviceTime.map((item, index) => (
+      {timeDetails.map((item, index) => (
         <div
           key={index}
           style={{ borderColor: `${alpha("#000000", 0.2)}` }}
@@ -24,27 +45,53 @@ export default function TimeCard() {
               {item.availableFromDate} -{" "}
               {item.availableToDate == "" ? t("present") : item.availableToDate}
             </div>
-            <Box
-              sx={{
-                display: "flex",
-                height: "32px",
-                padding: "8px",
-                borderRadius: "8px",
-                background: `${alpha("#020873", 0.1)}`,
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <EditOutlinedIcon
-                onClick={() => navigate(`/serviceTime?edit=${index}`)}
+            <div className="flex gap-1">
+              <Box
                 sx={{
-                  cursor: "pointer",
-                  color: "#020873",
-                  width: "20px",
-                  height: "20px",
+                  display: "flex",
+                  height: "32px",
+                  padding: "8px",
+                  borderRadius: "8px",
+                  background: `${alpha("#020873", 0.1)}`,
+                  alignContent: "center",
+                  alignItems: "center",
                 }}
-              />
-            </Box>
+              >
+                <DeleteOutlineOutlinedIcon
+                  onClick={() => handleDeleteSlot(index)}
+                  sx={{
+                    cursor: "pointer",
+                    color: "#020873",
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  height: "32px",
+                  padding: "8px",
+                  borderRadius: "8px",
+                  background: `${alpha("#020873", 0.1)}`,
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <EditOutlinedIcon
+                  onClick={() => navigate(`/serviceTime/${businessId}?edit=${index}`)}
+                  sx={{
+                    cursor: "pointer",
+                    color: "#020873",
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              </Box>
+
+            </div>
+
+
           </div>
           <div style={{ fontSize: "14px", marginTop: "-10px" }}>
             {item?.daysOpen?.map((day) => day + ", ")}

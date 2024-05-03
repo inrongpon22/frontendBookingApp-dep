@@ -23,9 +23,15 @@ export interface InsertService {
     openTime: string;
     closeTime: string;
     specialOpenDate?: ISpecialOpenDate[];
-    bookingSlots: IBookingSlot[];
+    bookingSlots: {
+        daysOpen: string[];
+        availableFromDate: string;
+        availableToDate: string | null;
+        slotsTime: IBookingSlot[];
+    }[];
     availableFromDate: string;
     availableToDate: string | null;
+    isHidePrice: boolean;
 }
 
 export interface IService {
@@ -39,4 +45,24 @@ export interface IService {
     currency: string;
     openTime: string; // Assuming it's a string representing time
     closeTime: string; // Assuming it's a string representing time
+}
+
+export interface IServiceTime {
+    daysOpen: string[];
+    openTime: string;
+    closeTime: string;
+    duration: number;
+    guestNumber: number;
+    TimeSlots: string[];
+    selectedSlots: number[];
+    manualCapacity: IBookingSlot[];
+    availableFromDate: string;
+    availableToDate: string;
+}
+
+export interface IServiceInfo {
+    serviceName: string;
+    serviceDescription: string;
+    price: number;
+    currency: string;
 }
