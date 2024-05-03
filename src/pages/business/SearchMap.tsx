@@ -72,7 +72,6 @@ export default function SearchMap(props: IParameter) {
                 type="search"
                 id="default-search"
                 style={{
-                  color: "#8B8B8B",
                   borderColor: `${alpha("#000000", 0.2)}`,
                 }}
                 className="ps-10 mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"

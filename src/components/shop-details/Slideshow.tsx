@@ -61,6 +61,8 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
       }
     };
 
+    console.log(`${fixedHeight}px`)
+
     if (data !== undefined) {
       fetchImageUrls();
     }
@@ -88,7 +90,7 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
         {images?.map((item: any, index: number) => (
           <div className="slide" key={index}>
             <img
-              className={`w-full `} //${fixedHeight ? `h-[${fixedHeight}px]` : ""}
+              className={`w-full object-cover`}
               src={item.publicUrl}
               style={{ height: `${fixedHeight}px` }}
             />

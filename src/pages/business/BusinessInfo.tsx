@@ -35,6 +35,7 @@ export default function BusinessInfo() {
   const [daysOpen, setDaysOpen] = useState<string[]>([]);
   const businessInfo: IBusinessInfo = {
     title: "",
+    location: "",
     description: "",
     phoneNumber: "",
   };
@@ -65,6 +66,9 @@ export default function BusinessInfo() {
       .min(10, t("formValidation:business:create:phoneNumber:phoneNumberMin"))
       .max(10, t("formValidation:business:create:phoneNumber:phoneNumberMax"))
       .required(t("formValidation:business:create:phoneNumber:phoneNumberReq")),
+    location: Yup.string().required(
+      t("formValidation:business:create:location:locationReq")
+    ),
     description: Yup.string().max(
       200,
       t("formValidation:business:create:description:descriptionMax")
@@ -72,6 +76,7 @@ export default function BusinessInfo() {
   });
 
   const handleChangeLocation = (inputData: ILocation) => {
+    formik.setFieldValue('location', inputData.address);
     setLocationData(inputData);
   };
 
@@ -144,6 +149,7 @@ export default function BusinessInfo() {
     initialValues: {
       title: businessInfo.title || "",
       phoneNumber: businessInfo.phoneNumber || "",
+      location: businessInfo.location || "",
       description: businessInfo.description || "",
     },
     validationSchema: schema,
@@ -166,7 +172,7 @@ export default function BusinessInfo() {
       const business = await insertBusiness(insertData, token);
 
       localStorage.setItem("businessId", String(business.data.businessId));
-      navigate(`/service/${business.data.businessId}`);
+      navigate(`/bussiness-profile/${business.data.businessId}`);
     },
   });
 
@@ -208,7 +214,6 @@ export default function BusinessInfo() {
             type="text"
             name="title"
             style={{
-              color: "#8B8B8B",
               borderColor: `${alpha("#000000", 0.2)}`,
             }}
             placeholder={t("placeholder:shopName")}
@@ -225,6 +230,9 @@ export default function BusinessInfo() {
             {t("form:business:create:location")}
           </p>
           <SearchMap handleChangeLocation={handleChangeLocation} />
+          {formik.touched.location && formik.errors.location ? (
+            <div className="text-red-500 mt-1">{formik.errors.location}</div>
+          ) : null}
           <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
             {t("form:business:create:openTime")}
           </p>
@@ -327,7 +335,6 @@ export default function BusinessInfo() {
             onBlur={formik.handleBlur}
             type="text"
             style={{
-              color: "#8B8B8B",
               borderColor: `${alpha("#000000", 0.2)}`,
             }}
             placeholder={t("placeholder:businessNumber")}
@@ -357,7 +364,6 @@ export default function BusinessInfo() {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
-              style={{ color: "#8B8B8B" }}
               placeholder={t("placeholder:shortDescribe")}
               className="w-full focus:outline-none resize-none"
               rows={3}
