@@ -72,6 +72,11 @@ textarea {
   text-align: center;
 }
 
+/* custom tabs on booking approval */
+.custom-selected-tab {
+  border-bottom: none !important;
+}
+
 .slideshowDot {
   display: inline-block;
   height: 8px;

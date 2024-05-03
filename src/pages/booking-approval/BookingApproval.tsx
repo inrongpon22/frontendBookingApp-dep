@@ -3,7 +3,7 @@ export const ApproveContext = createContext<any>(null); //create context to stor
 import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import axios from "axios";
-import { app_api, fetcher } from "../../helper/url";
+import { app_api } from "../../helper/url";
 import {
   Backdrop,
   Box,
@@ -20,6 +20,7 @@ import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { Toast } from "../../helper/alerts";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 const BookingApproval = () => {
   const { id, serviceId } = useParams();
@@ -34,13 +35,29 @@ const BookingApproval = () => {
   );
   const [bookingDatas, setBookingDatas] = useState<any>();
   const [tabStatus, setTabStatus] = useState<number>(0);
-  // approval
+  // const [lists, setLists] = useState([]);
 
-  const { data: getBusinessById, error: BusinessByIdError } = useSWR(
-    `${app_api}/business/${id}`,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  const converted = (): string => {
+    switch (tabStatus) {
+      case 0:
+        return "pending";
+
+      case 1:
+        return "approval";
+
+      case 2:
+        return "cancel";
+
+      default:
+        return "pending";
+    }
+  };
+
+  // const { data: getServiceById, error: ServiceByIdError } = useSWR(
+  //   `${app_api}/services`,
+  //   fetcher,
+  //   { revalidateOnFocus: false }
+  // );
 
   const {
     data: getReservByBusiId,
@@ -48,7 +65,7 @@ const BookingApproval = () => {
     error: ReservByBusiIdError,
     mutate,
   } = useSWR(
-    id && `${app_api}/getReservationByBusinessId/${id}`,
+    id && `${app_api}/getReservationByBusinessId/${id}/${converted()}`,
     (url: string) =>
       axios
         .get(url, {
@@ -56,13 +73,20 @@ const BookingApproval = () => {
             Authorization: token,
           },
         })
-        .then((res) =>
-          res.data
-            .filter(
-              (item: any) =>
-                item.status === `${tabStatus === 0 ? "pending" : "approval"}`
-            )
-            .filter((item: any) => item.serviceId === serviceId)
+        .then(
+          (res) =>
+            res.data
+              .filter((item: any) => item.serviceId === serviceId)
+              .sort(
+                (a: any, b: any) =>
+                  moment(a.bookingDate).valueOf() -
+                  moment(b.bookingDate).valueOf()
+              )
+
+          // .filter(
+          //   (item: any) =>
+          //     item.status === `${tabStatus === 0 ? "pending" : "approval"}`
+          // )
         ),
     { revalidateOnFocus: false }
   );
@@ -167,44 +191,28 @@ const BookingApproval = () => {
   };
 
   const AntTabs = styled(Tabs)({
-    borderBottom: "1px solid #e8e8e8",
     "& .MuiTabs-indicator": {
-      backgroundColor: "#1890ff",
+      // backgroundColor: "#1890ff",
+      display: "none",
     },
   });
 
   const AntTab = styled((props: any) => <Tab disableRipple {...props} />)(
     ({ theme }) => ({
-      textTransform: "none",
-      minWidth: 0,
-      [theme.breakpoints.up("sm")]: {
-        minWidth: 0,
-      },
       fontWeight: theme.typography.fontWeightRegular,
-      marginRight: theme.spacing(1),
+      margin: theme.spacing(1),
+      padding: "8px 16px !important",
       color: "rgba(0, 0, 0, 0.85)",
-      fontFamily: [
-        "-apple-system",
-        "BlinkMacSystemFont",
-        '"Segoe UI"',
-        "Roboto",
-        '"Helvetica Neue"',
-        "Arial",
-        "sans-serif",
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(","),
       "&:hover": {
         color: "#40a9ff",
         opacity: 1,
       },
       "&.Mui-selected": {
-        color: "#1890ff",
+        color: "#020873",
+        background: "#E6E7F1",
         fontWeight: theme.typography.fontWeightMedium,
-      },
-      "&.Mui-focusVisible": {
-        backgroundColor: "#d1eaff",
+        borderRadius: "66px",
+        border: "none !important",
       },
     })
   );
@@ -213,7 +221,7 @@ const BookingApproval = () => {
     document.title = t("title:bookingApproval");
   }, []);
 
-  if (BusinessByIdError || ReservByBusiIdError) return <div>API ERROR</div>;
+  if (ReservByBusiIdError) return <div>API ERROR</div>;
 
   return (
     <ApproveContext.Provider
@@ -243,20 +251,32 @@ const BookingApproval = () => {
           <button type="button" onClick={() => navigate(-1)}>
             <ArrowBackIosIcon fontSize="small" />
           </button>
-          {/* <span className="mx-auto">{getBusinessById?.title}</span> */}
         </div>
         <Box sx={{ bgcolor: "#fff" }}>
           <AntTabs
             value={tabStatus}
             onChange={(_, newValue: number) => setTabStatus(newValue)}
           >
-            <AntTab label="Pending" />
-            <AntTab label="Approved" />
+            <AntTab label={t("pending")} />
+            <AntTab label={t("approved")} />
+            <AntTab label={t("cancelled")} />
           </AntTabs>
         </Box>
         <div className="bg-gray-100">
           <p className="p-4 text-[14px]">
-            {t("title:bookingRequests")} ({getReservByBusiId?.length})
+            {(() => {
+              switch (tabStatus) {
+                case 0:
+                  return t("title:bookingRequests");
+                case 1:
+                  return t("title:bookingApproved");
+                case 2:
+                  return t("title:bookingCancelled");
+                default:
+                  return t("title:bookingRequests");
+              }
+            })()}{" "}
+            ({getReservByBusiId?.length})
           </p>
           <div className="">
             {getReservByBusiId ? (
