@@ -60,7 +60,7 @@ const DialogWrapper = ({
                 case "phone-input":
                     setIsLoading(true);
                     await axios
-                        .post(`${app_api}/requestOTP/${values.phoneNumbers}`)
+                        .post(`${app_api}/requestOTP/${values.phoneNumbers}/th`)
                         .then(async (res) => {
                             if (res.status === 200) {
                                 setIsLoading(false);

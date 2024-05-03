@@ -13,6 +13,7 @@ import ServiceList from "./pages/business/ServiceList.tsx";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
 import CreateService from "./pages/business/CreateService.tsx";
+import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 
 function App() {
     return (
@@ -46,10 +47,13 @@ function App() {
                         element={<BookingSummaryWrapper />}
                     />
 
+                    {/* business */}
                     <Route
                         path="/createBusiness"
                         element={<CreateBusiness />}
                     />
+
+                    {/* service */}
                     <Route
                         path="/service/:businessId"
                         element={<ServiceList />}
@@ -65,6 +69,10 @@ function App() {
                     <Route
                         path="/createService/:businessId"
                         element={<CreateService />}
+                    />
+                    <Route
+                        path="/serviceSetting/:serviceId"
+                        element={<ServiceSetting />}
                     />
                 </Routes>
             </BrowserRouter>
