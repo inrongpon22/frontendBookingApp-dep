@@ -57,7 +57,7 @@
     "bookingApproved": "คำขอที่ได้รับการอนุมัติ",
     "bookingCancelled": "คำขอที่ได้รับการยกเลิก",
     "bookingAll": "คำขอทั้งหมด",
-    "bookingApproval": "การอนุมัติการจอง",
+    "bookingApproval": "รายละเอียดการจอง",
     "bookingReject": "การยกเลิกการจอง",
     "serviceInformation": "ข้อมูลบริการ",
     "createBusiness": "สร้างธุรกิจของคุณ"
@@ -211,7 +211,9 @@
     "aBooking": "การจอง",
     "avaiGuest": "จำนวนผู้ใช้บริการ",
     "manualAdjust": "ปรับเป็นจำนวนที่คุณต้องการ",
-    "optional": "ไม่บังคับ"
+    "optional": "ไม่บังคับ",
+    "amount": "จำนวน",
+    "people": "ท่าน"
   },
   "placeholder": {
     "bookingReject": "ตัวอย่าง บริการไม่สามารถใช้งานได้ในขณะนี้ โปรดลองอีกครั้งในภายหลัง",

@@ -211,7 +211,9 @@
     "aBooking": "a Booking",
     "avaiGuest": "Available guest(s) per slot",
     "manualAdjust": "Manually adjust",
-    "optional": "optional"
+    "optional": "optional",
+    "amount": "amount",
+    "people": "people"
   },
   "placeholder": {
     "bookingReject": "Ex. The service is not available at the requested time.",

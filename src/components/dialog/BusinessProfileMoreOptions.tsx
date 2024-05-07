@@ -5,7 +5,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Toast } from "../../helper/alerts";
+import { Toast, shareBookingLink } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
 
 const BusinessProfileMoreOptions = () => {
@@ -19,6 +19,7 @@ const BusinessProfileMoreOptions = () => {
         icon: <LinkIcon />,
         label: t("button:shareBookingLink"),
         url: undefined,
+        function: () => shareBookingLink(businessId)
       },
     ],
     setting: [
@@ -59,7 +60,11 @@ const BusinessProfileMoreOptions = () => {
               onClick={() => {
                 if (item.url) {
                   navigate(item.url);
-                } else {
+                } else if(item.function){
+                  item.function();
+                  
+                } 
+                else {
                   Toast.fire({
                     icon: "info",
                     title: "Coming Soon",
