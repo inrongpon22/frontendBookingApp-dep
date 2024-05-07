@@ -1,10 +1,8 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useNavigate } from "react-router-dom";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 interface IProps {
     context: string;
-    toggleDeleteBox?: () => void;
 }
 
 export default function Header(props: IProps) {
@@ -26,8 +24,7 @@ export default function Header(props: IProps) {
                 {props.context}
             </div>
 
-            <div onClick={props.toggleDeleteBox}>
-                <SettingsOutlinedIcon />
+            <div>
             </div>
         </div>
     );

@@ -1,9 +1,9 @@
 import { deleteService } from "../../../api/service";
-import { dataOfWeekThai, dataOfWeekEng } from "../../../helper/daysOfWeek";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { truncateContext } from "../../../helper/limitedText";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import { useNavigate, useParams } from "react-router-dom";
+import { styled } from '@mui/material/styles';
 
 interface IProps {
     serviceId: number;
@@ -14,12 +14,29 @@ interface IProps {
     openTime: string;
     closeTime: string;
     daysOpen: string[];
-    isDeleteBoxVisible: boolean;
+    open: boolean;
     handleRefresh: () => void;
 }
 
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+    open?: boolean;
+}>(({ theme, open }) => ({
+    flexGrow: 1,
+    transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: 120,
+    }),
+    position: 'relative',
+}));
+
 export default function ListServiceCard(props: IProps) {
-    const lan = localStorage.getItem("lan");
     const token = localStorage.getItem("token") ?? "";
     const navigate = useNavigate();
     const { businessId } = useParams();
@@ -34,16 +51,17 @@ export default function ListServiceCard(props: IProps) {
     };
 
     return (
+
         <div className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative">
             <div
                 style={{ width: "65px", height: "100%", background: "#FA6056" }}
                 className={`absolute top-0 right-0 
-            transition-opacity duration-500 ease-in-out ${
-                props.isDeleteBoxVisible ? "opacity-100" : "opacity-0"
-            } shadow-md flex justify-center items-center`}>
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
+                    } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={handleDeleteService}>
+                    onClick={handleDeleteService}
+                >
                     <DeleteOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
@@ -57,9 +75,8 @@ export default function ListServiceCard(props: IProps) {
                     right: "65px",
                 }}
                 className={`absolute top-0 
-            transition-opacity duration-500 ease-in-out ${
-                props.isDeleteBoxVisible ? "opacity-100" : "opacity-0"
-            } shadow-md flex justify-center items-center`}>
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
+                    } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
                     onClick={() =>
@@ -72,43 +89,28 @@ export default function ListServiceCard(props: IProps) {
                     />
                 </div>
             </div>
-
-            <div className="flex justify-between">
-                <div style={{ fontSize: "14px" }} className="font-semibold">
-                    {props.serviceName}
-                </div>
-                <div
-                    style={{
-                        fontSize: "14px",
-                        marginRight: props.isDeleteBoxVisible ? "90px" : "",
-                    }}
-                    className="font-semibold transition-opacity duration-700 ease-in-out">
-                    {props.currency} {props.price}
-                </div>
-            </div>
-            <p style={{ fontSize: "12px", width: "80%" }}>
-                {truncateContext(props.description, 90)}
-            </p>
-            <p style={{ fontSize: "12px" }}>
-                {props.openTime} - {props.closeTime}
-            </p>
-            {/* <p style={{ fontSize: "12px" }}>
-                {props.daysOpen.map((item, index) => (
-                    <span key={item}>
-                        {lan === "th"
-                            ? dataOfWeekThai.find((x) => x.value === item)
-                                  ?.thaiName
-                            : dataOfWeekEng.find((x) => x.value === item)?.name}
-                        {index === props.daysOpen.length - 2
-                            ? lan === "th"
-                                ? " และ "
-                                : " and "
-                            : index === props.daysOpen.length - 1
-                            ? " "
-                            : ", "}
-                    </span>
-                ))}
-            </p> */}
+            <Main open={props.open}>
+                <>
+                    <div className="flex justify-between">
+                        <div style={{ fontSize: "14px" }} className="font-semibold">
+                            {props.serviceName}
+                        </div>
+                        <div
+                            style={{
+                                fontSize: "14px",
+                            }}
+                            className="font-semibold transition-opacity duration-700 ease-in-out">
+                            {props.currency} {props.price}
+                        </div>
+                    </div>
+                    <p style={{ fontSize: "12px", width: "80%" }}>
+                        {truncateContext(props.description, 90)}
+                    </p>
+                    <p style={{ fontSize: "12px" }}>
+                        {props.openTime} - {props.closeTime}
+                    </p>
+                </>
+            </Main>
         </div>
     );
 }
