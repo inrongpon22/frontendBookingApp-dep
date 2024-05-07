@@ -35,7 +35,7 @@
     "numberOfGuest": "จำนวนผู้ใช้บริการ",
     "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",
     "note": "หมายเหตุ",
-    "notes": "คำขอเพิ่มเติม(Optional)",
+    "notes": "คำขอเพิ่มเติม",
     "availableDate": "วันที่ว่าง",
     "activeDays": "วันที่เปิดให้บริการ",
     "availableTime": "เวลาที่เปิดให้บริการ",
@@ -60,13 +60,23 @@
     "bookingApproval": "รายละเอียดการจอง",
     "bookingReject": "การยกเลิกการจอง",
     "serviceInformation": "ข้อมูลบริการ",
-    "createBusiness": "สร้างธุรกิจของคุณ"
+    "createBusiness": "สร้างธุรกิจของคุณ",
+    "bookingHasApproved": "การจองได้รับการอนุมัติ",
+    "bookingHasCancelled": "การจองถูกยกเลิก",
+    "bookingHasDeclined": "การจองถูกปฏิเสธ",
+    "bookingHasExpired": "การจองหมดอายุ",
+    "waitingForApproval": "รอการอนุมัติ"
   },
   "desc": {
     "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
     "bussRootDesc": "ยกระดับประสบการณ์การจองของคุณอย่างรวดเร็วและสะดวกสบาย",
     "viewMoreDetails": "ดูรายละเอียดเพิ่มเติม",
-    "bookingRejectDesc": "บอกลูกค้าว่าทำไมพวกเขาถูกปฏิเสธ"
+    "bookingRejectDesc": "บอกลูกค้าว่าทำไมพวกเขาถูกปฏิเสธ",
+    "bookingHasApproved": "การจองของคุณได้รับการอนุมัติแล้ว คุณสามารถดูรายละเอียดการจองของคุณได้ที่ SMS",
+    "bookingHasCancelled": "การจองของคุณถูกยกเลิก คุณมาสามารถสร้างการนัดหมายใหม่ได้",
+    "bookingHasDeclined": "ขออภัยในความไม่สะดวก การจองของคุณถูกยกเลิก",
+    "bookingHasExpired": "ขออภัยในความไม่สะดวก การจองของคุณหมดอายุแล้ว",
+    "waitingForApproval": "เราได้ส่งการยืนยันไปทางร้านค้า เราจะส่ง SMS แจ้งให้คุณทราบเมื่อร้านค้ายืนยันการจองของคุณ"
   },
   "button": {
     "cancel": "ยกเลิก",
@@ -74,6 +84,8 @@
     "approve": "ยืนยันการจอง",
     "reject": "ยกเลิกการจอง",
     "next": "ถัดไป",
+    "backToMyBooking": "กลับไปที่การจองของฉัน",
+    "rebook": "จองอีกครั้ง",
     "goToMyBookingButton": "ไปยังการจองของฉัน",
     "confirmBookingButton": "ยืนยันการจอง",
     "continueButton": "ถัดไป",

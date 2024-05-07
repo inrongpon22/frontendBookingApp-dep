@@ -17,8 +17,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 // components
 import RequestCards from "../../components/business-approval/RequestCards";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { Toast } from "../../helper/alerts";
-import Swal from "sweetalert2";
+import { Toast, globalConfirmation } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 
@@ -35,7 +34,6 @@ const BookingApproval = () => {
   );
   const [bookingDatas, setBookingDatas] = useState<any>();
   const [tabStatus, setTabStatus] = useState<number>(0);
-  // const [lists, setLists] = useState([]);
 
   const converted = (): string => {
     switch (tabStatus) {
@@ -53,12 +51,6 @@ const BookingApproval = () => {
     }
   };
 
-  // const { data: getServiceById, error: ServiceByIdError } = useSWR(
-  //   `${app_api}/services`,
-  //   fetcher,
-  //   { revalidateOnFocus: false }
-  // );
-
   const {
     data: getReservByBusiId,
     isLoading,
@@ -73,44 +65,26 @@ const BookingApproval = () => {
             Authorization: token,
           },
         })
-        .then(
-          (res) =>
-            res.data
-              .filter((item: any) => item.serviceId === serviceId)
-              .sort(
-                (a: any, b: any) =>
-                  moment(a.bookingDate).valueOf() -
-                  moment(b.bookingDate).valueOf()
-              )
-
-          // .filter(
-          //   (item: any) =>
-          //     item.status === `${tabStatus === 0 ? "pending" : "approval"}`
-          // )
+        .then((res) =>
+          res.data
+            .filter((item: any) => item.serviceId === serviceId)
+            .sort(
+              (a: any, b: any) =>
+                moment(a.bookingDate).valueOf() -
+                moment(b.bookingDate).valueOf()
+            )
         ),
     { revalidateOnFocus: false }
   );
 
   const approveRequested = async (id: string, serviceId: string) => {
-    Swal.fire({
-      icon: "warning",
-      title: `<span style="font-size: 17px; font-weight: bold;">${t(
-        "noti:booking:approve:confirmation"
-      )}?</span>`,
-      html: `<p style="font-size: 14px;">${t(
-        "noti:booking:approve:confirmationDesc"
-      )}</p>`,
-      showCancelButton: true,
-      cancelButtonText: t("button:cancel"),
-      confirmButtonText: t("button:approve"),
-      reverseButtons: true,
-      customClass: {
-        confirmButton: "border rounded-lg py-3 px-10 text-white bg-[#020873]",
-        cancelButton: "border rounded-lg py-3 px-10 text-black bg-white me-5",
-        popup: "custom-swal",
-      },
-      buttonsStyling: false,
-    }).then((result: any) => {
+    globalConfirmation(
+      t("noti:booking:approve:confirmation"),
+      t("noti:booking:approve:confirmationDesc"),
+      t("button:approve"),
+      "warning",
+      t("button:cancel")
+    ).then((result: any) => {
       if (result.isConfirmed) {
         axios
           .post(
@@ -143,25 +117,13 @@ const BookingApproval = () => {
   };
 
   const rejectRequested = async (id: string, serviceId: string) => {
-    Swal.fire({
-      icon: "warning",
-      title: `<span style="font-size: 17px; font-weight: bold;">${t(
-        "noti:booking:reject:confirmation"
-      )}?</span>`,
-      html: `<p style="font-size: 14px;">${t(
-        "noti:booking:reject:confirmationDesc"
-      )}</p>`,
-      showCancelButton: true,
-      cancelButtonText: t("button:cancel"),
-      confirmButtonText: t("button:reject"),
-      reverseButtons: true,
-      customClass: {
-        confirmButton: "border rounded-lg py-3 px-10 text-white bg-[#020873]",
-        cancelButton: "border rounded-lg py-3 px-10 text-black bg-white me-5",
-        popup: "custom-swal",
-      },
-      buttonsStyling: false,
-    }).then((result: any) => {
+    globalConfirmation(
+      t("noti:booking:reject:confirmation"),
+      t("noti:booking:reject:confirmationDesc"),
+      t("button:approve"),
+      "warning",
+      t("button:cancel")
+    ).then((result: any) => {
       if (result.isConfirmed) {
         axios
           .post(
