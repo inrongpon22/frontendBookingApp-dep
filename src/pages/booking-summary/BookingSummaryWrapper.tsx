@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Toast, globalConfirmation } from "../../helper/alerts";
+import { globalConfirmation } from "../../helper/alerts";
 import axios from "axios";
 import { app_api } from "../../helper/url";
 import useSWR from "swr";
@@ -12,6 +12,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
+import toast from "react-hot-toast";
 
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
@@ -103,17 +104,11 @@ const BookingSummaryWrapper = () => {
             }
           )
           .then(() => {
-            Toast.fire({
-              icon: "success",
-              title: t("noti:booking:cancel:success"),
-            });
+            toast.success(t("noti:booking:cancel:success"));
           })
           .catch((error) => {
             console.log(error);
-            Toast.fire({
-              icon: "error",
-              title: t("noti:booking:cancel:fail"),
-            });
+            toast.error(t("noti:booking:cancel:fail"));
           });
       }
     });
@@ -122,10 +117,7 @@ const BookingSummaryWrapper = () => {
   useEffect(() => {
     if (location.state?.data.reservationId && location.state?.data.serviceId) {
       document.title = t("title:bookingSuccess");
-      Toast.fire({
-        icon: "success",
-        title: t("noti:booking:create:success"),
-      });
+      toast.success(t("noti:booking:create:success"))
       setLists([
         {
           label: t("what"),
@@ -208,7 +200,9 @@ const BookingSummaryWrapper = () => {
               }`}
             >
               <div className="col-span-2 font-semibold">{item.label}:</div>
-              <span className="col-span-4 font-medium text-end">{item.text}</span>
+              <span className="col-span-4 font-medium text-end">
+                {item.text}
+              </span>
             </div>
           );
         })}

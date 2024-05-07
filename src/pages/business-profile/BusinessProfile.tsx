@@ -8,9 +8,10 @@ import LinkIcon from "@mui/icons-material/Link";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { useState } from "react";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { Toast, shareBookingLink } from "../../helper/alerts";
+import { shareBookingLink } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
 import { Divider } from "@mui/material";
+import toast from "react-hot-toast";
 
 const BusinessProfile = () => {
   const { businessId } = useParams();
@@ -63,7 +64,7 @@ const BusinessProfile = () => {
         <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
         <p className="flex gap-5">
           <span>
-            {t('totalPending')}{" "}
+            {t("totalPending")}{" "}
             <b className="text-deep-blue">
               {getTotalPendingByBusiness?.pendingnumber}
             </b>
@@ -74,10 +75,7 @@ const BusinessProfile = () => {
             type="button"
             className="flex justify-center items-center text-[14px] text-white border bg-deep-blue rounded-lg p-2"
             onClick={() => {
-              Toast.fire({
-                icon: "info",
-                title: "Coming Soon",
-              });
+              toast("Coming Soon");
             }}
           >
             <CalendarMonthIcon fontSize="small" />
@@ -112,7 +110,9 @@ const BusinessProfile = () => {
                   key={index}
                   className="flex justify-between border rounded-lg p-3 cursor-pointer hover:bg-gray-100"
                   onClick={() =>
-                    navigate(`/booking-approval/${businessId}/${item.id}`)
+                    navigate(`/booking-approval/${businessId}/${item.id}`, {
+                      state: item,
+                    })
                   }
                 >
                   <p className="flex flex-col gap-1">

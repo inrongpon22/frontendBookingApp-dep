@@ -51,6 +51,8 @@ const BookingApprovalSummary = () => {
     },
   ];
 
+  // console.log(JSON.stringify(bookingDatas))
+
   return (
     <>
       <div className="flex flex-col h-full">

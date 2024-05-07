@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 export const ApproveContext = createContext<any>(null); //create context to store all the data
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import axios from "axios";
 import { app_api } from "../../helper/url";
@@ -17,14 +17,17 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 // components
 import RequestCards from "../../components/business-approval/RequestCards";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { Toast, globalConfirmation } from "../../helper/alerts";
+import { globalConfirmation } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const BookingApproval = () => {
-  const { id, serviceId } = useParams();
-  const token = localStorage.getItem("token");
+  const { businessId, serviceId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const token = localStorage.getItem("token");
 
   const { t } = useTranslation();
 
@@ -57,7 +60,7 @@ const BookingApproval = () => {
     error: ReservByBusiIdError,
     mutate,
   } = useSWR(
-    id && `${app_api}/getReservationByBusinessId/${id}/${converted()}`,
+    businessId && `${app_api}/getReservationByBusinessId/${businessId}/${converted()}`,
     (url: string) =>
       axios
         .get(url, {
@@ -77,18 +80,18 @@ const BookingApproval = () => {
     { revalidateOnFocus: false }
   );
 
-  const approveRequested = async (id: string, serviceId: string) => {
+  const approveRequested = async (businessId: string, serviceId: string) => {
     globalConfirmation(
       t("noti:booking:approve:confirmation"),
       t("noti:booking:approve:confirmationDesc"),
       t("button:approve"),
-      "warning",
+      undefined,
       t("button:cancel")
     ).then((result: any) => {
       if (result.isConfirmed) {
         axios
           .post(
-            `${app_api}/approveReservation/${id}/${serviceId}/th`,
+            `${app_api}/approveReservation/${businessId}/${serviceId}/th`,
             undefined,
             {
               headers: {
@@ -98,36 +101,30 @@ const BookingApproval = () => {
           )
           .then(() => {
             setShow(false);
-            Toast.fire({
-              icon: "success",
-              title: `${t("noti:booking:approve:success")}`,
-            });
+            toast.success(t("noti:booking:approve:success"));
             setShow(false);
             mutate();
           })
           .catch((err) => {
             console.log(err);
-            Toast.fire({
-              icon: "error",
-              title: `${t("noti:booking:approve:fail")}`,
-            });
+            toast.error(t("noti:booking:approve:fail"));
           });
       }
     });
   };
 
-  const rejectRequested = async (id: string, serviceId: string) => {
+  const rejectRequested = async (businessId: string, serviceId: string) => {
     globalConfirmation(
       t("noti:booking:reject:confirmation"),
       t("noti:booking:reject:confirmationDesc"),
       t("button:approve"),
-      "warning",
+      undefined,
       t("button:cancel")
     ).then((result: any) => {
       if (result.isConfirmed) {
         axios
           .post(
-            `${app_api}/cancelReservation/${id}/${serviceId}/th`,
+            `${app_api}/cancelReservation/${businessId}/${serviceId}/th`,
             undefined,
             {
               headers: {
@@ -137,16 +134,13 @@ const BookingApproval = () => {
           )
           .then(() => {
             setShow(false);
-            Toast.fire({
-              icon: "success",
-              title: t("noti:booking:reject:success"),
-            });
+            toast.success(t("noti:booking:reject:success"));
             setShow(false);
             mutate();
           })
           .catch((err) => {
             console.log(err);
-            Toast.fire({ icon: "error", title: t("noti:booking:reject:fail") });
+            toast.error(t("noti:booking:reject:fail"));
           });
       }
     });
@@ -213,6 +207,7 @@ const BookingApproval = () => {
           <button type="button" onClick={() => navigate(-1)}>
             <ArrowBackIosIcon fontSize="small" />
           </button>
+          <span className="mx-auto">{location.state.title}</span>
         </div>
         <Box sx={{ bgcolor: "#fff" }}>
           <AntTabs

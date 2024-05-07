@@ -72,7 +72,10 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
         <select
           value={language}
           className="bg-white rounded border"
-          onChange={(e) => changeLanguage(e.target.value)}
+          onChange={(e) => {
+            changeLanguage(e.target.value)
+            localStorage.setItem("lang", e.target.value)
+          }}
         >
           {languageLists.map((item: any, index: number) => {
             return (

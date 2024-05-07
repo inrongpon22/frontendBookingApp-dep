@@ -17,11 +17,11 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PhoneInput from "./PhoneInput";
 import OtpVerify from "./OtpVerify";
 import BookingDetailsPreview from "./BookingDetailsPreview";
-import { Toast } from "../../helper/alerts";
 import { useNavigate } from "react-router-dom";
 import BookingApprovalSummary from "./BookingApprovalSummary";
 import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
+import toast from "react-hot-toast";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -117,10 +117,7 @@ const DialogWrapper = ({
                         if (err.response.status === 404) {
                           navigate("/createBusiness");
                         } else {
-                          Toast.fire({
-                            icon: "error",
-                            title: err.message,
-                          });
+                          toast.error(err.message)
                         }
                       });
                     break;

@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import "./i18n.ts";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
@@ -14,22 +16,37 @@ import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
 import CreateService from "./pages/business/CreateService.tsx";
 
+
 function App() {
+  // const token = localStorage.getItem("token");
+  useEffect(() => {
+    localStorage.setItem("lang", "th")
+  }, [])
+  
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<BusinessAuth />} />
           <Route path="/bussiness-overview" element={<BusinessOverview />} />
-          <Route path="/bussiness-profile/:businessId" element={<BusinessProfile />} />
-          <Route path="/details/:businessId" element={<ShopDetailsPageWrapper />} />
           <Route
-            path="/booking-approval/:id/:serviceId"
+            path="/bussiness-profile/:businessId"
+            element={<BusinessProfile />}
+          />
+          <Route
+            path="/details/:businessId"
+            element={<ShopDetailsPageWrapper />}
+          />
+          <Route
+            path="/booking-approval/:businessId/:serviceId"
             element={<BookingApproval />}
           />
           <Route path="/booking-success" element={<BookingSummaryWrapper />} />
           <Route path="/my-bookings" element={<MyBookingWrapper />} />
-          <Route path="/booking/:bookingId" element={<BookingSummaryWrapper />} />
+          <Route
+            path="/booking/:bookingId"
+            element={<BookingSummaryWrapper />}
+          />
 
           <Route path="/createBusiness" element={<CreateBusiness />} />
           <Route path="/service/:businessId" element={<ServiceList />} />
@@ -40,7 +57,9 @@ function App() {
             element={<CreateService />}
           />
         </Routes>
+        {/* {!token && <Navigate to="/" replace={true} />} */}
       </BrowserRouter>
+      <Toaster />
     </>
   );
 }
