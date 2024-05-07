@@ -52,9 +52,9 @@ export default function ListServiceCard(props: IProps) {
 
     return (
 
-        <div className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative">
+        <div className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative" style={{ height: "104px" }}>
             <div
-                style={{ width: "65px", height: "100%", background: "#FA6056" }}
+                style={{ width: "65px", height: "104px", background: "#FA6056" }}
                 className={`absolute top-0 right-0 
                     transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
@@ -70,7 +70,7 @@ export default function ListServiceCard(props: IProps) {
             <div
                 style={{
                     width: "65px",
-                    height: "100%",
+                    height: "104px",
                     background: "#898A8D",
                     right: "65px",
                 }}
