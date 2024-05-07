@@ -6,6 +6,7 @@ import { currencyList } from "../../helper/currency";
 import { IServiceInfo } from "../business/interfaces/service";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { updateServiceInfo } from "../../api/service";
+import { t } from "i18next";
 
 interface IParams {
     serviceId: number;
@@ -17,13 +18,13 @@ interface IParams {
 }
 
 const validationSchema = Yup.object().shape({
-    serviceName: Yup.string().required("Service name is required"),
+    serviceName: Yup.string().required(t("formValidation:service:create:serviceName:serviceNameReq")),
     serviceDescription: Yup.string().required(
-        "Service description is required"
+        t("formValidation:service:create:serviceDesc:serviceDescReq")
     ),
     price: Yup.number()
-        .required("Price is required")
-        .min(0, "Price must be greater than or equal to 0"),
+        .required(t("formValidation:service:create:price:priceReq"))
+        .min(0, t("formValidation:service:create:price:priceMin")),
 });
 
 export default function EditServiceInfo(props: IParams) {
@@ -90,11 +91,11 @@ export default function EditServiceInfo(props: IParams) {
                             type="text"
                             name="serviceName"
                             style={{ color: "#8B8B8B" }}
-                            placeholder="fill the name of the service"
+                            placeholder={t("formValidation:service:create:serviceName:serviceNameFill")}
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
                         {formik.touched.serviceName &&
-                        formik.errors.serviceName ? (
+                            formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
@@ -109,19 +110,18 @@ export default function EditServiceInfo(props: IParams) {
                             type="text"
                             name="serviceDescription"
                             style={{ color: "#8B8B8B" }}
-                            placeholder="introduce this service to the customer"
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                                formik.touched.serviceDescription &&
+                            placeholder={t("formValidation:service:create:serviceDesc:serviceDescFill")}
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                    ? "border-red-500"
-                                    : ""
-                            }`}
+                                ? "border-red-500"
+                                : ""
+                                }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                        formik.errors.serviceDescription ? (
+                            formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
@@ -149,11 +149,10 @@ export default function EditServiceInfo(props: IParams) {
                                 style={{ textAlign: "right" }}
                                 name="price"
                                 type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
-                                    formik.touched.price && formik.errors.price
-                                        ? "border-red-500"
-                                        : ""
-                                }`}
+                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
+                                    ? "border-red-500"
+                                    : ""
+                                    }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
