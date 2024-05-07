@@ -9,11 +9,11 @@ import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
 import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
 import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
-import ServiceList from "./pages/business/ServiceList.tsx";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
 import CreateService from "./pages/business/CreateService.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
+import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 
 function App() {
     return (
@@ -55,10 +55,6 @@ function App() {
 
                     {/* service */}
                     <Route
-                        path="/service/:businessId"
-                        element={<ServiceList />}
-                    />
-                    <Route
                         path="/serviceInfo/:businessId"
                         element={<ServiceInfo />}
                     />
@@ -71,8 +67,12 @@ function App() {
                         element={<CreateService />}
                     />
                     <Route
-                        path="/serviceSetting/:serviceId"
+                        path="/serviceSetting/:businessId"
                         element={<ServiceSetting />}
+                    />
+                    <Route
+                        path="/serviceDetail/:businessId/:serviceId"
+                        element={<ServiceDetail />}
                     />
                 </Routes>
             </BrowserRouter>

@@ -4,6 +4,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 interface IProps {
     context: string;
+    toggleDeleteBox?: () => void;
 }
 
 export default function Header(props: IProps) {
@@ -25,7 +26,7 @@ export default function Header(props: IProps) {
                 {props.context}
             </div>
 
-            <div>
+            <div onClick={props.toggleDeleteBox}>
                 <DeleteOutlinedIcon />
             </div>
         </div>

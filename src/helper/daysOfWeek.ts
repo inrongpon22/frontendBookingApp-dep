@@ -31,30 +31,37 @@ export const dataOfWeekEng = [
 export const dataOfWeekThai = [
     {
         name: "จ",
-        value: "Monday"
+        value: "Monday",
+        thaiName: "จันทร์"
     },
     {
         name: "อ",
-        value: "Tuesday"
+        value: "Tuesday",
+        thaiName: "อังคาร"
     },
     {
         name: "พ",
-        value: "Wednesday"
+        value: "Wednesday",
+        thaiName: "พุธ"
     },
     {
         name: "พฤ",
-        value: "Thursday"
+        value: "Thursday",
+        thaiName: "พฤหัสบดี"
     },
     {
         name: "ศ",
-        value: "Friday"
+        value: "Friday",
+        thaiName: "ศุกร์"
     },
     {
         name: "ส",
-        value: "Saturday"
+        value: "Saturday",
+        thaiName: "เสาร์"
     },
     {
         name: "อา",
-        value: "Sunday"
+        value: "Sunday",
+        thaiName: "อาทิตย์"
     },
 ];

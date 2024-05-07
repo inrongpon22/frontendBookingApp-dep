@@ -1,14 +1,15 @@
 import { alpha, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IServiceInfo } from "../interfaces/service";
-import { useNavigate, useParams } from "react-router-dom";
 
-export default function ServiceCard() {
-    const { businessId } = useParams();
-    const navigate = useNavigate();
-    const serviceInfo = JSON.parse(
-        localStorage.getItem("serviceInfo") || "{}"
-    ) as IServiceInfo;
+interface IParams {
+    handleSetEditInfo: () => void;
+    serviceName: string;
+    serviceDescription: string;
+    price: number;
+    currency: string;
+}
+
+export default function ServiceCard(props: IParams) {
 
     return (
         <div
@@ -16,7 +17,7 @@ export default function ServiceCard() {
             className="flex flex-col p-3 text-sm border rounded-lg focus:outline-none">
             <div className="flex justify-between">
                 <div className=" font-bold " style={{ fontSize: "14px" }}>
-                    {serviceInfo?.serviceName}
+                    {props.serviceName}
                 </div>
                 <Box
                     sx={{
@@ -29,7 +30,7 @@ export default function ServiceCard() {
                         alignItems: "center",
                     }}>
                     <EditOutlinedIcon
-                        onClick={() => navigate(`/serviceInfo/${businessId}?edit=true`)}
+                        onClick={props.handleSetEditInfo}
                         sx={{
                             cursor: "pointer",
                             color: "#020873",
@@ -40,10 +41,10 @@ export default function ServiceCard() {
                 </Box>
             </div>
             <div style={{ fontSize: "14px", marginTop: "-10px", width: "70%" }}>
-                {serviceInfo?.serviceDescription}
+                {props.serviceDescription}
             </div>
             <div style={{ fontSize: "14px" }}>
-                {serviceInfo?.price} {serviceInfo?.currency}
+                {props.price} {props.currency}
             </div>
         </div>
     );

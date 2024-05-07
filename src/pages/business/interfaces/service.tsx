@@ -32,9 +32,11 @@ export interface InsertService {
     availableFromDate: string;
     availableToDate: string | null;
     isHidePrice: boolean;
+    isHideEndTime: boolean;
 }
 
 export interface IService {
+    id: number;
     businessName: string;
     address: string;
     daysOpen: string[]; // You might want to change the type to match the actual data type
@@ -45,6 +47,8 @@ export interface IService {
     currency: string;
     openTime: string; // Assuming it's a string representing time
     closeTime: string; // Assuming it's a string representing time
+    isHidePrice: boolean;
+    isHideEndTime: boolean;
 }
 
 export interface IServiceTime {
@@ -65,4 +69,18 @@ export interface IServiceInfo {
     serviceDescription: string;
     price: number;
     currency: string;
+}
+
+export interface IEditServiceInfo {
+    title: string;
+    description: string;
+    price: number;
+    currency: string;
+}
+
+export interface IServiceEditTime {
+    daysOpen: string[];
+    availableFromDate: string;
+    availableToDate: string;
+    slotsTime: IBookingSlot[];
 }
