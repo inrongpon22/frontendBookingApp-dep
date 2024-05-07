@@ -18,7 +18,10 @@ export default function ServiceSetting() {
 
     useEffect(() => {
         const fetchService = async () => {
-            const services: IService[] = await getServiceByBusinessId(Number(businessId), token);
+            const services: IService[] = await getServiceByBusinessId(
+                Number(businessId),
+                token
+            );
             setServices(services);
         };
         if (token) fetchService();
@@ -33,7 +36,10 @@ export default function ServiceSetting() {
     return (
         <div className=" overflow-y-hidden">
             <div className="pr-4 pl-4 pt-6">
-                <Header context={t("title:serviceInformation")} toggleDeleteBox={toggleDeleteBox} />
+                <Header
+                    context={t("title:serviceInformation")}
+                    toggleDeleteBox={toggleDeleteBox}
+                />
             </div>
             <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
                 <button
@@ -44,13 +50,22 @@ export default function ServiceSetting() {
                         background: `${alpha("#020873", 0.1)}`,
                     }}
                     className="bg-primary rounded-lg p-2 mt-4">
-                    Create new service
+                    {t("button:createNewService")}
                 </button>
             </div>
             <div style={{ background: "#F7F7F7", height: "100vh" }}>
-                <p className="pr-4 pl-4 pt-3 pb-3">Services {`(${services.length})`} </p>
+                <p className="pr-4 pl-4 pt-3 pb-3">
+                    {t("services")} {`(${services.length})`}{" "}
+                </p>
                 {services.map((service, index) => (
-                    <div key={index} className="mb-2" onClick={() => navigate(`/serviceDetail/${businessId}/${service.id}`)}>
+                    <div
+                        key={index}
+                        className="mb-2"
+                        onClick={() =>
+                            navigate(
+                                `/serviceDetail/${businessId}/${service.id}`
+                            )
+                        }>
                         <ListServiceCard
                             serviceId={service.id}
                             serviceName={service.title}

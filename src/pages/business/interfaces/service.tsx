@@ -84,3 +84,9 @@ export interface IServiceEditTime {
     availableToDate: string;
     slotsTime: IBookingSlot[];
 }
+
+export interface IServiceShowHide {
+    isHidePrice: boolean;
+    isHideEndTime: boolean;
+    isAutoApprove: boolean;
+}

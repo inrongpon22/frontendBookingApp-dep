@@ -1,162 +1,167 @@
 {
-  "translation": {
-    "loading": "กำลังดำเนินการ",
-    "numberOfGuests": "จำนวนคน (คน)",
-    "serviceOptions": "ตัวเลือกแพ็คเกจ",
-    "time": "เวลา",
-    "available": "ว่าง",
-    "full": "เต็ม",
-    "reviewDetails": "โปรดตรวจสอบรายละเอียด",
-    "verifyPhoneNumber": "ยืนยันหมายเลขโทรศัพท์",
-    "verifyPhoneNumberDesc": "โปรดใส่หมายเลขโทรศัพท์ของคุณเพื่อยืนยันตัวตน",
-    "otpVerification": "กรอกรหัสรักษาความปลอดภัย 6 หลักที่เราส่งให้คุณที่ ******",
-    "dontReceiveCode": "ฉันไม่ได้รับรหัส",
-    "bookingDetails": "รายละเอียดการจอง",
-    "services": "บริการ",
-    "date": "วันที่",
-    "guests": "จำนวน (​คน)",
-    "price": "ราคา",
-    "what": "บริการอะไร",
-    "where": "ที่ไหน",
-    "when": "เมื่อไหร่",
-    "who": "ชื่อผู้จอง",
-    "from": "จาก",
-    "to": "ถึง",
-    "duration": "ระยะเวลา",
-    "present": "ปัจจุบัน",
-    "bookingName": "ชื่อผู้จอง",
-    "serviceName": "ชื่อบริการ",
-    "serviceDesc": "รายละเอียดบริการ",
-    "serviceSetting": "การตั้งค่าบริการ",
-    "isAutoApprove": "อนุมัติการจองอัตโนมัติ",
-    "isHideServPrice": "ซ่อนราคาบริการ",
-    "isHideEndDate": "ซ่อนเวลาสิ้นสุด",
-    "phoneNumbers": "หมายเลขโทรศัพท์",
-    "numberOfGuest": "จำนวนผู้ใช้บริการ",
-    "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",
-    "note": "หมายเหตุ",
-    "notes": "คำขอเพิ่มเติม(Optional)",
-    "availableDate": "วันที่ว่าง",
-    "activeDays": "วันที่เปิดให้บริการ",
-    "availableTime": "เวลาที่เปิดให้บริการ",
-    "openSlot": "ช่องเวลาที่เปิดให้บริการ",
-    "termsAndprivacy": "โดยการคลิก 'ยืนยันการจอง' คุณยินยอมตามข้อกำหนดและเงื่อนไขการให้บริการและนโยบายความเป็นส่วนตัวของเรา โดยที่คุณให้สิทธิในการใช้ข้อมูลส่วนบุคคลของคุณตามนโยบายของเรา",
-    "reset":"รีเซ็ต",
-    "hr": "ชั่วโมง",
-    "Availableguests": "จำนวนผู้ใช้บริการที่ว่าง"
-  },
-  "title": {
-    "bookingIsconfirmed": "การจองได้รับการยืนยัน",
-    "confirmBookingDialogHeader": "ยืนยันการจอง",
-    "myBookings": "การจองของฉัน",
-    "bookingSuccess": "จองเสร็จสิ้น",
-    "bussRootTitle": "จอง. สร้าง. เติบโต.",
-    "bookingRequests": "คำขอการจอง",
-    "bookingApproval": "การอนุมัติการจอง",
-    "bookingReject": "การยกเลิกการจอง",
-    "serviceInformation": "ข้อมูลบริการ",
-    "createBusiness": "สร้างธุรกิจของคุณ"
-  },
-  "desc": {
-    "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
-    "bussRootDesc": "ยกระดับประสบการณ์การจองของคุณอย่างรวดเร็วและสะดวกสบาย",
-    "viewMoreDetails": "ดูรายละเอียดเพิ่มเติม",
-    "bookingRejectDesc": "บอกลูกค้าว่าทำไมพวกเขาถูกปฏิเสธ"
-  },
-  "button": {
-    "cancel": "ยกเลิก",
-    "confirm": "ยืนยัน",
-    "approve": "ยืนยันการจอง",
-    "reject": "ยกเลิกการจอง",
-    "next": "ถัดไป",
-    "goToMyBookingButton": "ไปยังการจองของฉัน",
-    "confirmBookingButton": "ยืนยันการจอง",
-    "continueButton": "ถัดไป",
-    "cancelBookingButton": "ยกเลิกการจอง",
-    "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
-    "bookingFailedTryAgainButton": "ลองอีกครั้ง",
-    "bookingFailedCloseButton": "ปิด",
-    "getStartedButton": "เริ่มต้นใช้งาน"
-  },
-  "noti": {
-    "booking": {
-      "create": {
-        "success": "การสร้างการจองสำเร็จ",
-        "fail": "การสร้างการจองล้มเหลว"
-      },
-      "cancel": {
-        "success": "ยกเลิกการจองสำเร็จ",
-        "fail": "ยกเลิกการจองล้มเหลว",
-        "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
-        "confirmationDesc": "ช่องเวลาการจองจะเปิดให้ผู้อื่นใช้งานได้"
-      },
-      "approve": {
-        "success": "การอนุมัติการจองสำเร็จ",
-        "fail": "การอนุมัติการจองล้มเหลว",
-        "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการอนุมัติการจองนี้",
-        "confirmationDesc": "การจองจะถูกยืนยันและผู้ใช้บริการจะได้รับการแจ้งเตือน"
-      },
-      "reject": {
-        "success": "การยกเลิกการจองสำเร็จ",
-        "fail": "การยะเลิกการจองล้มเหลว",
-        "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
-        "confirmationDesc": "การจองจะถูกยกเลิกและผู้ใช้บริการจะได้รับการแจ้งเตือน"
-      }
-    }
-  },
-  "form": {
-    "business": {
-      "create": {
-        "shopName": "ชื่อร้าน",
-        "location": "สถานที่",
-        "openTime": "เวลาที่เปิดให้บริการ",
-        "businessNumber": "เบอร์โทรศัพท์ของธุรกิจ",
-        "shortDescribe": "รายละเอียดสั้นๆธุรกิจของคุณ",
-        "images": "รูปภาพ"
-      }
-    }
-  },
-  "formValidation": {
-    "business": {
-      "create": {
-        "shopName": {
-          "shopNameReq": "ชื่อร้านไม่สามารถเว้นว่างได้",
-          "shopNameMin": "ชื่อร้านต้องมีความยาวอย่างน้อย 2 ตัวอักษร",
-          "shopNameMax": "ชื่อร้านต้องมีความยาวไม่เกิน 50 ตัวอักษร"
-        },
-        "phoneNumber": {
-          "phoneNumberReq": "เบอร์โทรศัพท์ของธุรกิจไม่สามารถเว้นว่างได้",
-          "phoneNumberMatch": "เบอร์โทรศัพท์ของธุรกิจไม่ถูกต้อง",
-          "phoneNumberMin": "เบอร์โทรศัพท์ของธุรกิจต้องมีความยาวอย่างน้อย 10 ตัวเลข",
-          "phoneNumberMax": "เบอร์โทรศัพท์ของธุรกิจต้องมีความยาวไม่เกิน 10 ตัวเลข"
-        },
-        "description": {
-          "descriptionMax": "รายละเอียดสั้นๆธุรกิจของคุณต้องมีความยาวไม่เกิน 100 ตัวอักษร"
+    "translation": {
+        "loading": "กำลังดำเนินการ",
+        "numberOfGuests": "จำนวนคน (คน)",
+        "serviceOptions": "ตัวเลือกแพ็คเกจ",
+        "time": "เวลา",
+        "available": "ว่าง",
+        "full": "เต็ม",
+        "reviewDetails": "โปรดตรวจสอบรายละเอียด",
+        "verifyPhoneNumber": "ยืนยันหมายเลขโทรศัพท์",
+        "verifyPhoneNumberDesc": "โปรดใส่หมายเลขโทรศัพท์ของคุณเพื่อยืนยันตัวตน",
+        "otpVerification": "กรอกรหัสรักษาความปลอดภัย 6 หลักที่เราส่งให้คุณที่ ******",
+        "dontReceiveCode": "ฉันไม่ได้รับรหัส",
+        "bookingDetails": "รายละเอียดการจอง",
+        "services": "บริการ",
+        "date": "วันที่",
+        "guests": "จำนวน (​คน)",
+        "price": "ราคา",
+        "what": "บริการอะไร",
+        "where": "ที่ไหน",
+        "when": "เมื่อไหร่",
+        "who": "ชื่อผู้จอง",
+        "from": "จาก",
+        "to": "ถึง",
+        "duration": "ระยะเวลา",
+        "present": "ปัจจุบัน",
+        "bookingName": "ชื่อผู้จอง",
+        "serviceName": "ชื่อบริการ",
+        "serviceDesc": "รายละเอียดบริการ",
+        "serviceSetting": "การตั้งค่าบริการ",
+        "isAutoApprove": "อนุมัติการจองอัตโนมัติ",
+        "isHideServPrice": "ซ่อนราคาบริการ",
+        "isHideEndDate": "ซ่อนเวลาสิ้นสุด",
+        "phoneNumbers": "หมายเลขโทรศัพท์",
+        "numberOfGuest": "จำนวนผู้ใช้บริการ",
+        "bookingNumbers": "หมายเลขโทรศัพท์ผู้จอง",
+        "note": "หมายเหตุ",
+        "notes": "คำขอเพิ่มเติม(Optional)",
+        "availableDate": "วันที่ว่าง",
+        "activeDays": "วันที่เปิดให้บริการ",
+        "availableTime": "เวลาที่เปิดให้บริการ",
+        "openSlot": "ช่องเวลาที่เปิดให้บริการ",
+        "termsAndprivacy": "โดยการคลิก 'ยืนยันการจอง' คุณยินยอมตามข้อกำหนดและเงื่อนไขการให้บริการและนโยบายความเป็นส่วนตัวของเรา โดยที่คุณให้สิทธิในการใช้ข้อมูลส่วนบุคคลของคุณตามนโยบายของเรา",
+        "reset": "รีเซ็ต",
+        "hr": "ชั่วโมง",
+        "Availableguests": "จำนวนผู้ใช้บริการที่ว่าง",
+        "edit": "แก้ไข",
+        "delete": "ลบ"
+    },
+    "title": {
+        "bookingIsconfirmed": "การจองได้รับการยืนยัน",
+        "confirmBookingDialogHeader": "ยืนยันการจอง",
+        "myBookings": "การจองของฉัน",
+        "bookingSuccess": "จองเสร็จสิ้น",
+        "bussRootTitle": "จอง. สร้าง. เติบโต.",
+        "bookingRequests": "คำขอการจอง",
+        "bookingApproval": "การอนุมัติการจอง",
+        "bookingReject": "การยกเลิกการจอง",
+        "serviceInformation": "ข้อมูลบริการ",
+        "serviceTime": "เวลาในการบริการ",
+        "createBusiness": "สร้างธุรกิจของคุณ"
+    },
+    "desc": {
+        "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
+        "bussRootDesc": "ยกระดับประสบการณ์การจองของคุณอย่างรวดเร็วและสะดวกสบาย",
+        "viewMoreDetails": "ดูรายละเอียดเพิ่มเติม",
+        "bookingRejectDesc": "บอกลูกค้าว่าทำไมพวกเขาถูกปฏิเสธ"
+    },
+    "button": {
+        "cancel": "ยกเลิก",
+        "confirm": "ยืนยัน",
+        "approve": "ยืนยันการจอง",
+        "reject": "ยกเลิกการจอง",
+        "next": "ถัดไป",
+        "goToMyBookingButton": "ไปยังการจองของฉัน",
+        "confirmBookingButton": "ยืนยันการจอง",
+        "continueButton": "ถัดไป",
+        "cancelBookingButton": "ยกเลิกการจอง",
+        "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
+        "bookingFailedTryAgainButton": "ลองอีกครั้ง",
+        "bookingFailedCloseButton": "ปิด",
+        "getStartedButton": "เริ่มต้นใช้งาน",
+        "addMoreTime": "เพิ่มเวลา",
+        "createNewService": "สร้างบริการใหม่"
+    },
+    "noti": {
+        "booking": {
+            "create": {
+                "success": "การสร้างการจองสำเร็จ",
+                "fail": "การสร้างการจองล้มเหลว"
+            },
+            "cancel": {
+                "success": "ยกเลิกการจองสำเร็จ",
+                "fail": "ยกเลิกการจองล้มเหลว",
+                "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
+                "confirmationDesc": "ช่องเวลาการจองจะเปิดให้ผู้อื่นใช้งานได้"
+            },
+            "approve": {
+                "success": "การอนุมัติการจองสำเร็จ",
+                "fail": "การอนุมัติการจองล้มเหลว",
+                "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการอนุมัติการจองนี้",
+                "confirmationDesc": "การจองจะถูกยืนยันและผู้ใช้บริการจะได้รับการแจ้งเตือน"
+            },
+            "reject": {
+                "success": "การยกเลิกการจองสำเร็จ",
+                "fail": "การยะเลิกการจองล้มเหลว",
+                "confirmation": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
+                "confirmationDesc": "การจองจะถูกยกเลิกและผู้ใช้บริการจะได้รับการแจ้งเตือน"
+            }
         }
-      }
+    },
+    "form": {
+        "business": {
+            "create": {
+                "shopName": "ชื่อร้าน",
+                "location": "สถานที่",
+                "openTime": "เวลาที่เปิดให้บริการ",
+                "businessNumber": "เบอร์โทรศัพท์ของธุรกิจ",
+                "shortDescribe": "รายละเอียดสั้นๆธุรกิจของคุณ",
+                "images": "รูปภาพ"
+            }
+        }
+    },
+    "formValidation": {
+        "business": {
+            "create": {
+                "shopName": {
+                    "shopNameReq": "ชื่อร้านไม่สามารถเว้นว่างได้",
+                    "shopNameMin": "ชื่อร้านต้องมีความยาวอย่างน้อย 2 ตัวอักษร",
+                    "shopNameMax": "ชื่อร้านต้องมีความยาวไม่เกิน 50 ตัวอักษร"
+                },
+                "phoneNumber": {
+                    "phoneNumberReq": "เบอร์โทรศัพท์ของธุรกิจไม่สามารถเว้นว่างได้",
+                    "phoneNumberMatch": "เบอร์โทรศัพท์ของธุรกิจไม่ถูกต้อง",
+                    "phoneNumberMin": "เบอร์โทรศัพท์ของธุรกิจต้องมีความยาวอย่างน้อย 10 ตัวเลข",
+                    "phoneNumberMax": "เบอร์โทรศัพท์ของธุรกิจต้องมีความยาวไม่เกิน 10 ตัวเลข"
+                },
+                "description": {
+                    "descriptionMax": "รายละเอียดสั้นๆธุรกิจของคุณต้องมีความยาวไม่เกิน 100 ตัวอักษร"
+                }
+            }
+        }
+    },
+    "error": {
+        "required": "จำเป็นต้องกรอก",
+        "invalidPhoneNumber": "หมายเลขโทรศัพท์ไม่ถูกต้อง",
+        "invalidOTP": "รหัส OTP ไม่ถูกต้อง",
+        "bookingFailed": "การจองล้มเหลว",
+        "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง",
+        "noBookingReq": "ไม่มีคำขอการจอง"
+    },
+    "fragment": {
+        "needTo": "ต้องการที่จะ",
+        "cancel": "ยกเลิก",
+        "aBooking": "การจอง",
+        "avaiGuest": "จำนวนผู้ใช้บริการ",
+        "manualAdjust": "ปรับเป็นจำนวนที่คุณต้องการ",
+        "optional": "ไม่บังคับ"
+    },
+    "placeholder": {
+        "bookingReject": "ตัวอย่าง บริการไม่สามารถใช้งานได้ในขณะนี้ โปรดลองอีกครั้งในภายหลัง",
+        "shopName": "ใส่ชื่อร้านของคุณ",
+        "location": "ใส่ชื่อสถานที่ ถนน ตึก",
+        "businessNumber": "ใส่เบอร์โทรศัพท์ของธุรกิจ",
+        "shortDescribe": "รายละเอียดสั้นๆของธุรกิจของคุณ"
     }
-  },
-  "error": {
-    "required": "จำเป็นต้องกรอก",
-    "invalidPhoneNumber": "หมายเลขโทรศัพท์ไม่ถูกต้อง",
-    "invalidOTP": "รหัส OTP ไม่ถูกต้อง",
-    "bookingFailed": "การจองล้มเหลว",
-    "bookingFailedMessage": "ขออภัย มีบางอย่างผิดพลาด กรุณาลองอีกครั้ง",
-    "noBookingReq": "ไม่มีคำขอการจอง"
-  },
-  "fragment": {
-    "needTo": "ต้องการที่จะ",
-    "cancel": "ยกเลิก",
-    "aBooking": "การจอง",
-    "avaiGuest": "จำนวนผู้ใช้บริการ",
-    "manualAdjust": "ปรับเป็นจำนวนที่คุณต้องการ",
-    "optional": "ไม่บังคับ"
-  },
-  "placeholder": {
-    "bookingReject": "ตัวอย่าง บริการไม่สามารถใช้งานได้ในขณะนี้ โปรดลองอีกครั้งในภายหลัง",
-    "shopName": "ใส่ชื่อร้านของคุณ",
-    "location": "ใส่ชื่อสถานที่ ถนน ตึก",
-    "businessNumber": "ใส่เบอร์โทรศัพท์ของธุรกิจ",
-    "shortDescribe": "รายละเอียดสั้นๆของธุรกิจของคุณ"
-  }
 }

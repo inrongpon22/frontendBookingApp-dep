@@ -14,45 +14,25 @@ interface IParams {
     duration: number;
     openTime: string;
     closeTime: string;
-    editIndex: number;
     serviceId: number;
-    isAddTime: boolean;
-    handleSetEditTime: () => void;
+    handleAddTime: () => void;
 }
 
-export default function EditServiceTime(props: IParams) {
+export default function AddServiceTime(props: IParams) {
     const { t } = useTranslation();
 
-    const [daysOpen, setDaysOpen] = useState<string[]>(
-        props.isAddTime ? [] : props.serviceTime[props.editIndex].daysOpen
-    );
+    const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
-    const [duration, setDuration] = useState(
-        props.isAddTime ? 1 : props.duration
-    );
-    const [openTime, setOpenTime] = useState(
-        props.isAddTime ? "" : props.openTime.substring(0, 5)
-    );
-    const [closeTime, setCloseTime] = useState(
-        props.isAddTime ? "" : props.closeTime.substring(0, 5)
-    );
+    const [duration, setDuration] = useState(1);
+    const [openTime, setOpenTime] = useState("");
+    const [closeTime, setCloseTime] = useState("");
     const [guestNumber, setGuestNumber] = useState(1);
-    const [isManually, setIsManually] = useState(
-        props.editIndex > -1 ? true : false
-    );
-    const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>(
-        props.isAddTime ? [] : props.serviceTime[props.editIndex].slotsTime
-    );
+    const [isManually, setIsManually] = useState(false);
+    const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
     const [availableFromDate, setAvailableFromDate] = useState(
-        props.isAddTime
-            ? new Date().toISOString().split("T")[0]
-            : props.serviceTime[props.editIndex].availableFromDate
+        new Date().toISOString().split("T")[0]
     );
-    const [availableToDate, setAvailableToDate] = useState(
-        props.isAddTime
-            ? ""
-            : props.serviceTime[props.editIndex].availableToDate
-    );
+    const [availableToDate, setAvailableToDate] = useState("");
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
     const timeSlots: {
         startTime: string;
@@ -90,18 +70,18 @@ export default function EditServiceTime(props: IParams) {
     };
 
     useEffect(() => {
-        if (props.serviceTime[0].daysOpen !== undefined) {
-            props.serviceTime.forEach((element) => {
-                if (
-                    element.availableFromDate == availableFromDate &&
-                    element.availableToDate == availableToDate
-                ) {
-                    setDisibleDays(element.daysOpen);
-                } else {
-                    setDisibleDays([]);
-                }
-            });
-        }
+        props.serviceTime.forEach((element) => {
+            if (
+                element.availableFromDate <= availableFromDate &&
+                element.availableToDate == availableToDate
+            ) {
+                element.daysOpen.forEach((day) => {
+                    setDisibleDays((prev) => [...prev, day]);
+                });
+            } else {
+                setDisibleDays([]);
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [availableFromDate, availableToDate]);
 
@@ -220,45 +200,35 @@ export default function EditServiceTime(props: IParams) {
 
     generateTimeSlots(openTime, closeTime, duration);
 
-    useEffect(() => {
-        if (props.serviceTime[props.editIndex].slotsTime !== undefined) {
-            const selectedSlots: number[] = [];
-            props.serviceTime[props.editIndex].slotsTime.forEach((slot) => {
-                const index = timeSlots.findIndex(
-                    (timeSlot) =>
-                        timeSlot.startTime === slot.startTime &&
-                        timeSlot.endTime === slot.endTime
-                );
-                if (index !== -1) {
-                    selectedSlots.push(index);
-                }
-            });
-            setSelectedSlots(selectedSlots);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const handleSubmit = async () => {
+        if (manualCapacity.length == 0) {
+            manualCapacity.push({
+                startTime: timeSlots[0].startTime,
+                endTime: timeSlots[0].endTime,
+                capacity: guestNumber,
+            });
+        }
         const insertData = {
             daysOpen: daysOpen,
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
         };
-        props.serviceTime[props.editIndex] = insertData;
+        props.serviceTime.push(insertData);
+        console.log(props.serviceTime);
         await updateServiceTime(
             props.serviceTime,
             localStorage.getItem("token") ?? "",
             props.serviceId
         );
-        props.handleSetEditTime();
+        props.handleAddTime();
     };
 
     return (
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
-                    <div onClick={props.handleSetEditTime}>
+                    <div onClick={props.handleAddTime}>
                         <ArrowBackIosNewOutlinedIcon
                             sx={{
                                 width: "20px",

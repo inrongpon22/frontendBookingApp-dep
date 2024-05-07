@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { currencyList } from "../../helper/currency";
 import { IServiceInfo } from "../business/interfaces/service";
-import Header from "./components/Header";
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { updateServiceInfo } from "../../api/service";
 
 interface IParams {
@@ -18,7 +18,9 @@ interface IParams {
 
 const validationSchema = Yup.object().shape({
     serviceName: Yup.string().required("Service name is required"),
-    serviceDescription: Yup.string().required("Service description is required"),
+    serviceDescription: Yup.string().required(
+        "Service description is required"
+    ),
     price: Yup.number()
         .required("Price is required")
         .min(0, "Price must be greater than or equal to 0"),
@@ -31,8 +33,7 @@ export default function EditServiceInfo(props: IParams) {
         initialValues: {
             serviceName: props.serviceName ?? "",
             serviceDescription: props.serviceDescription ?? "",
-            currency:
-                props.currency == undefined ? "THB" : props.currency,
+            currency: props.currency == undefined ? "THB" : props.currency,
             price: props.price ?? 0,
         },
         validationSchema: validationSchema,
@@ -55,13 +56,31 @@ export default function EditServiceInfo(props: IParams) {
     return (
         <div>
             <div className="pr-4 pl-4 pt-6">
-                <Header context={t("title:serviceInformation")} />
+                <div className="flex items-center justify-between">
+                    <div onClick={props.handleSetEditInfo}>
+                        <ArrowBackIosNewOutlinedIcon
+                            sx={{
+                                width: "20px",
+                                height: "20px",
+                                cursor: "pointer",
+                            }}
+                        />
+                    </div>
+
+                    <div className="font-bold" style={{ fontSize: "14px" }}>
+                        {t("title:serviceInformation")}
+                    </div>
+
+                    <div></div>
+                </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
                 <div className="flex flex-col">
                     <form onSubmit={formik.handleSubmit}>
-                        <p style={{ fontSize: "14px" }} className="mt-4 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-4 font-semibold">
                             {t("serviceDesc")}
                         </p>
                         <input
@@ -74,13 +93,16 @@ export default function EditServiceInfo(props: IParams) {
                             placeholder="fill the name of the service"
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
-                        {formik.touched.serviceName && formik.errors.serviceName ? (
+                        {formik.touched.serviceName &&
+                        formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
                         ) : null}
 
-                        <p style={{ fontSize: "14px" }} className="mt-3 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-3 font-semibold">
                             {t("serviceDesc")}
                         </p>
                         <input
@@ -88,23 +110,26 @@ export default function EditServiceInfo(props: IParams) {
                             name="serviceDescription"
                             style={{ color: "#8B8B8B" }}
                             placeholder="introduce this service to the customer"
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                                formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                ? "border-red-500"
-                                : ""
-                                }`}
+                                    ? "border-red-500"
+                                    : ""
+                            }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                            formik.errors.serviceDescription ? (
+                        formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
                         ) : null}
 
-                        <p style={{ fontSize: "14px" }} className="mt-3 font-semibold">
+                        <p
+                            style={{ fontSize: "14px" }}
+                            className="mt-3 font-semibold">
                             {t("price")}
                         </p>
                         <div className="flex items-center">
@@ -113,8 +138,7 @@ export default function EditServiceInfo(props: IParams) {
                                 className="border-r-0 h-12 border border-gray-300 rounded-l-lg px-2 focus:outline-none"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.currency}
-                            >
+                                value={formik.values.currency}>
                                 {currencyList.map((item, index) => (
                                     <option key={index} value={item.code}>
                                         {item.code}
@@ -125,10 +149,11 @@ export default function EditServiceInfo(props: IParams) {
                                 style={{ textAlign: "right" }}
                                 name="price"
                                 type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                                    ? "border-red-500"
-                                    : ""
-                                    }`}
+                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
+                                    formik.touched.price && formik.errors.price
+                                        ? "border-red-500"
+                                        : ""
+                                }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -150,8 +175,7 @@ export default function EditServiceInfo(props: IParams) {
                                     cursor: "pointer",
                                     backgroundColor: "#020873",
                                     fontSize: "14px",
-                                }}
-                            >
+                                }}>
                                 {t("button:next")}
                             </button>
                         </div>

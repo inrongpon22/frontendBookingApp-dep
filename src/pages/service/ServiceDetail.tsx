@@ -4,7 +4,11 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { getServiceByServiceId } from "../../api/service";
+import {
+    getServiceByServiceId,
+    updateServiceShowHide,
+    updateServiceTime,
+} from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Header from "../business/components/Header";
@@ -13,10 +17,12 @@ import EditServiceInfo from "./EditServiceInfo";
 import ServiceCard from "./components/ServiceCard";
 import EditServiceTime from "./EditServiceTime";
 import TimeCard from "./components/TimeCard";
+import AddServiceTime from "./AddServiceTime";
+import { IServiceEditTime } from "../business/interfaces/service";
 
 export default function ServiceDetail() {
-    const { serviceId } = useParams();
     const navigate = useNavigate();
+    const { serviceId, businessId } = useParams();
     const token = localStorage.getItem("token");
     const { t } = useTranslation();
     const [serviceInfo, setServiceInfo] = useState<any>();
@@ -28,80 +34,17 @@ export default function ServiceDetail() {
     const [isEditInfo, setIsEditInfo] = useState(false);
     const [isEditTime, setIsEditTime] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    // const [selectedIndex, setSelectedIndex] = useState(0);
-
-
-    // const handleCreateService = async () => {
-    //     const insertData = {
-    //         businessId: Number(businessId ?? ""),
-    //         title: serviceInfo.serviceName,
-    //         duration: serviceTime[0].duration,
-    //         description: serviceInfo.serviceDescription,
-    //         price: serviceInfo.price,
-    //         requireApproval: isAutoApprove,
-    //         daysOpen: serviceTime[0].daysOpen,
-    //         currency: serviceInfo.currency,
-    //         openTime: serviceTime[0].openTime,
-    //         closeTime: serviceTime[0].closeTime,
-    //         bookingSlots: [
-    //             {
-    //                 daysOpen: serviceTime[0].daysOpen,
-    //                 availableFromDate: serviceTime[0].availableFromDate,
-    //                 availableToDate:
-    //                     serviceTime[0].availableToDate === ""
-    //                         ? null
-    //                         : serviceTime[0].availableToDate,
-    //                 slotsTime: serviceTime[0].manualCapacity,
-    //             },
-    //         ],
-    //         availableFromDate: serviceTime[0].availableFromDate,
-    //         availableToDate:
-    //             serviceTime[0].availableToDate === ""
-    //                 ? null
-    //                 : serviceTime[0].availableToDate,
-    //         isHidePrice: isHidePrice,
-    //         isHideEndTime: isHideEndTime,
-    //     };
-
-    //     try {
-    //         if (token === null) throw new Error("Token is not found");
-    //         await addService(insertData, token);
-    //         localStorage.removeItem("serviceInfo");
-    //         localStorage.removeItem("serviceTime");
-    //         navigate(`/serviceSetting/${businessId}`);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const [isAddTime, setIsAddTime] = useState(false);
 
     useEffect(() => {
         const fetchService = async () => {
             try {
                 if (token === null) throw new Error("Token is not found");
-                const service = await getServiceByServiceId(Number(serviceId), token);
+                const service = await getServiceByServiceId(
+                    Number(serviceId),
+                    token
+                );
                 setServiceInfo(service);
-                const valueInServiceInfo = {
-                    serviceName: service.title,
-                    serviceDescription: service.description,
-                    price: service.price,
-                    currency: service.currency,
-                    businessId: service.businessId,
-                    isHidePrice: service.isHidePrice,
-                };
-                const valueServiceTime =
-                    service.bookingSlots.map((slot: any) => {
-                        return {
-                            openTime: service.openTime.substring(0, 5),
-                            closeTime: service.closeTime.substring(0, 5),
-                            daysOpen: slot.daysOpen,
-                            duration: service.duration,
-                            availableFromDate: slot.availableFromDate,
-                            availableToDate: slot.availableToDate,
-                            manualCapacity: slot.slotsTime,
-                        };
-                    });
-                localStorage.setItem("serviceTime", JSON.stringify(valueServiceTime));
-                localStorage.setItem("serviceInfo", JSON.stringify(valueInServiceInfo));
                 setIsAutoApprove(service.isAutoApprove);
                 setIsHideEndTime(service.isHideEndTime);
                 setIsHidePrice(service.isHidePrice);
@@ -119,26 +62,66 @@ export default function ServiceDetail() {
         setIsEditTime(!isEditTime);
     };
 
+    const handleAddTime = () => {
+        setIsAddTime(!isAddTime);
+    };
+
+    const handleUpdateService = async () => {
+        const insertData = {
+            isHidePrice: isHidePrice,
+            isHideEndTime: isHideEndTime,
+            isAutoApprove: isAutoApprove,
+        };
+        await updateServiceShowHide(insertData, token || "", serviceInfo.id);
+        navigate(`/serviceSetting/${businessId}`);
+    };
+
+    const handleDeleteServiceTime = async () => {
+        const updatedTimeDetails = serviceInfo.bookingSlots.filter(
+            (_item: IServiceEditTime, i: number) => i !== selectedIndex
+        );
+        await updateServiceTime(
+            updatedTimeDetails,
+            token || "",
+            serviceInfo.id
+        );
+        setServiceInfo({
+            ...serviceInfo,
+            bookingSlots: updatedTimeDetails,
+        });
+    };
+
     return (
         <>
-            {serviceInfo && (
-                isEditInfo ? (
-                    <>
-                        <EditServiceInfo
-                            serviceName={serviceInfo.title}
-                            serviceDescription={serviceInfo.description}
-                            price={serviceInfo.price}
-                            currency={serviceInfo.currency}
-                            serviceId={serviceInfo.id}
-                            handleSetEditInfo={handleSetEditInfo}
-                        />
-                    </>
+            {serviceInfo &&
+                (isEditInfo ? (
+                    <EditServiceInfo
+                        serviceName={serviceInfo.title}
+                        serviceDescription={serviceInfo.description}
+                        price={serviceInfo.price}
+                        currency={serviceInfo.currency}
+                        serviceId={serviceInfo.id}
+                        handleSetEditInfo={handleSetEditInfo}
+                    />
                 ) : isEditTime ? (
                     <EditServiceTime
                         serviceTime={serviceInfo.bookingSlots}
                         duration={serviceInfo.duration}
                         openTime={serviceInfo.openTime}
                         closeTime={serviceInfo.closeTime}
+                        editIndex={selectedIndex}
+                        serviceId={serviceInfo.id}
+                        isAddTime={isAddTime}
+                        handleSetEditTime={handleSetEditTime}
+                    />
+                ) : isAddTime ? (
+                    <AddServiceTime
+                        serviceTime={serviceInfo.bookingSlots}
+                        duration={serviceInfo.duration}
+                        openTime={serviceInfo.openTime}
+                        closeTime={serviceInfo.closeTime}
+                        serviceId={serviceInfo.id}
+                        handleAddTime={handleAddTime}
                     />
                 ) : (
                     <div>
@@ -150,19 +133,41 @@ export default function ServiceDetail() {
                             <div
                                 style={{ marginBottom: "100px" }}
                                 className="mt-4 flex flex-col gap-3">
-
                                 <ServiceCard
+                                    serviceId={serviceInfo.id}
                                     serviceName={serviceInfo.title}
                                     serviceDescription={serviceInfo.description}
                                     price={serviceInfo.price}
                                     currency={serviceInfo.currency}
                                     handleSetEditInfo={handleSetEditInfo}
                                 />
-                                <TimeCard
-                                    timeDetails={serviceInfo.bookingSlots}
-                                    isHideEndTime={serviceInfo.isHideEndTime}
-                                    handleSetEditTime={handleSetEditTime}
-                                />
+
+                                {serviceInfo.bookingSlots.map(
+                                    (item: IServiceEditTime, index: number) => (
+                                        <div key={index}>
+                                            <TimeCard
+                                                daysOpen={item.daysOpen}
+                                                availableFromDate={
+                                                    item.availableFromDate
+                                                }
+                                                availableToDate={
+                                                    item.availableToDate
+                                                }
+                                                slotsTime={item.slotsTime}
+                                                selectedIndex={index}
+                                                handleSetEditTime={
+                                                    handleSetEditTime
+                                                }
+                                                handleSelectIndex={(
+                                                    index: number
+                                                ) => setSelectedIndex(index)}
+                                                handleDeleteServiceTime={
+                                                    handleDeleteServiceTime
+                                                }
+                                            />
+                                        </div>
+                                    )
+                                )}
 
                                 <button
                                     style={{
@@ -172,19 +177,22 @@ export default function ServiceDetail() {
                                         height: "27px",
                                         fontSize: "14px",
                                         borderRadius: "8px",
+                                        justifyContent: "center",
                                     }}
                                     className=" items-center gap-1 p-1 ">
-                                    <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
+                                    <AddCircleOutlineIcon
+                                        sx={{ fontSize: "13px" }}
+                                    />
                                     <div
                                         className=" font-medium "
-                                        onClick={() =>
-                                            navigate(`/serviceTime/${serviceInfo.businessId}`)
-                                        }>
-                                        Add more time
+                                        onClick={handleAddTime}>
+                                        {t("button:addMoreTime")}
                                     </div>
                                 </button>
 
-                                <p className=" font-bold " style={{ fontSize: "14px" }}>
+                                <p
+                                    className=" font-bold "
+                                    style={{ fontSize: "14px" }}>
                                     {t("serviceSetting")}
                                 </p>
 
@@ -192,17 +200,25 @@ export default function ServiceDetail() {
                                     isAutoApprove={isAutoApprove}
                                     isHidePrice={isHidePrice}
                                     isHideEndTime={isHideEndTime}
-                                    handleAutoApprove={() => setIsAutoApprove(!isAutoApprove)}
-                                    handleHidePrice={() => setIsHidePrice(!isHidePrice)}
-                                    handleHideEndTime={() => setIsHideEndTime(!isHideEndTime)}
+                                    handleAutoApprove={() =>
+                                        setIsAutoApprove(!isAutoApprove)
+                                    }
+                                    handleHidePrice={() =>
+                                        setIsHidePrice(!isHidePrice)
+                                    }
+                                    handleHideEndTime={() =>
+                                        setIsHideEndTime(!isHideEndTime)
+                                    }
                                 />
-
 
                                 <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
                                     <button
                                         className="border text-white mt-4 rounded-lg font-semibold mb-6"
                                         style={{
-                                            borderColor: `${alpha("#000000", 0.2)}`,
+                                            borderColor: `${alpha(
+                                                "#000000",
+                                                0.2
+                                            )}`,
                                             color: "black",
                                             width: "166px",
                                             height: "51px",
@@ -213,7 +229,7 @@ export default function ServiceDetail() {
                                         Preview
                                     </button>
                                     <button
-                                        // onClick={handleCreateService}
+                                        onClick={handleUpdateService}
                                         type="submit"
                                         className="text-white mt-4 rounded-lg font-semibold mb-6"
                                         style={{
@@ -229,9 +245,7 @@ export default function ServiceDetail() {
                             </div>
                         </div>
                     </div>
-                )
-
-            )}
+                ))}
         </>
     );
 }
