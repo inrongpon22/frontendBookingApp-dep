@@ -5,8 +5,11 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Toast, shareBookingLink } from "../../helper/alerts";
+import { shareBookingLink } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
+// icons
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import toast from "react-hot-toast";
 
 const BusinessProfileMoreOptions = () => {
   const navigate = useNavigate();
@@ -65,10 +68,9 @@ const BusinessProfileMoreOptions = () => {
                   
                 } 
                 else {
-                  Toast.fire({
-                    icon: "info",
-                    title: "Coming Soon",
-                  });
+                  toast("Coming Soon", {
+                    icon: (<PriorityHighIcon />)
+                  })
                 }
               }}
             >

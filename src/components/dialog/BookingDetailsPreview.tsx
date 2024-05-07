@@ -3,9 +3,9 @@ import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "../../helper/alerts";
 import axios from "axios";
 import { app_api } from "../../helper/url";
+import toast from "react-hot-toast";
 
 const BookingDetailsPreview = () => {
   const navigate = useNavigate();
@@ -23,7 +23,6 @@ const BookingDetailsPreview = () => {
       item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
       selectedDate.date.isAfter(item.availableFromDate)
   );
-  
 
   const createReservation = async () => {
     const body = {
@@ -50,38 +49,9 @@ const BookingDetailsPreview = () => {
       })
       .then((res) => {
         navigate(`/booking/${res.data.reservationId}`);
-        // navigate("/booking-success", {
-        //   state: {
-        //     lists: {
-        //       what: services.find((item: any) => item.isSelected)?.title,
-        //       when: `${selectedDate.date.format("dddd, MMMM D, YYYY")} ${
-        //         slotArrays?.slotsTime.find((item: any) => item.isSelected)
-        //           ?.startTime
-        //       } - ${
-        //         slotArrays?.slotsTime.find((item: any) => item.isSelected)
-        //           ?.endTime
-        //       }`,
-        //       where: `${shopDetail?.address}`,
-        //       who: `${formik.values.username} (${quantities?.quantities} person)`,
-        //       price: `${services.find((item: any) => item.isSelected)?.price} ${
-        //         services.find((item: any) => item.isSelected)?.currency
-        //       }`,
-        //       note: formik.values.additionalNotes,
-        //     },
-        //     data: {
-        //       reservationId: res.data.reservationId,
-        //       serviceId: Number(
-        //         services.find((item: any) => item.isSelected)?.id
-        //       ),
-        //     },
-        //   },
-        // });
       })
       .catch((err) => {
-        Toast.fire({
-          icon: "error",
-          title: err.response.data.message,
-        });
+        toast.error(err.response.data.message);
       });
   };
 
