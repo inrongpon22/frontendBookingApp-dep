@@ -110,7 +110,7 @@ const DialogWrapper = ({
                       )
                       .then((resp) => {
                         if (resp.status === 200) {
-                          navigate(`/bussiness-profile/${resp.data[0].id}`);
+                          navigate(`/business-profile/${resp.data[0].id}`);
                         }
                       })
                       .catch((err) => {
