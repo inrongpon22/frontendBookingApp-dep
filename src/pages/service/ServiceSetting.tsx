@@ -6,6 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getServiceByBusinessId } from "../../api/service";
 import { IService } from "../business/interfaces/service";
+import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
+import "react-swipeable-list/dist/styles.css";
+import { leadingActions, trailingActions } from "./components/SwipeableList";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function ServiceSetting() {
     const navigate = useNavigate();
@@ -48,8 +52,12 @@ export default function ServiceSetting() {
                         width: "343px",
                         height: "43px",
                         background: `${alpha("#020873", 0.1)}`,
+                        color: "#020873",
                     }}
-                    className="bg-primary rounded-lg p-2 mt-4">
+                    className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center">
+                    <AddCircleOutlineIcon
+                        sx={{ fontSize: "18px", color: "#020873" }}
+                    />
                     {t("button:createNewService")}
                 </button>
             </div>

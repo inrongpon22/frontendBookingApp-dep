@@ -92,7 +92,7 @@ export default function ListServiceCard(props: IProps) {
             <p style={{ fontSize: "12px" }}>
                 {props.openTime} - {props.closeTime}
             </p>
-            <p style={{ fontSize: "12px" }}>
+            {/* <p style={{ fontSize: "12px" }}>
                 {props.daysOpen.map((item, index) => (
                     <span key={item}>
                         {lan === "th"
@@ -108,7 +108,7 @@ export default function ListServiceCard(props: IProps) {
                             : ", "}
                     </span>
                 ))}
-            </p>
+            </p> */}
         </div>
     );
 }
