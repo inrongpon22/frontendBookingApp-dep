@@ -104,7 +104,8 @@
     "shareBookingLink": "แชร์ลิงก์การจอง",
     "businessSetting": "ตั้งค่าธุรกิจ",
     "serviceSetting": "ตั้งค่าบริการ",
-    "logout": "ออกจากระบบ"
+    "logout": "ออกจากระบบ",
+    "createNewService": "สร้างบริการใหม่"
   },
   "noti": {
     "booking": {
