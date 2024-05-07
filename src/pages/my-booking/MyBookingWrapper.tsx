@@ -9,15 +9,17 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MyBookingWrapper = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
   const { t } = useTranslation();
 
   const { data: myReservDatas } = useSWR(
-    `${app_api}/getReservationByUserId/14`,
+    `${app_api}/getReservationByUserId/${userId}`,
     (url: string) =>
       axios
         .get(url, {
@@ -26,7 +28,7 @@ const MyBookingWrapper = () => {
           },
         })
         .then((res) => res.data)
-        .catch((err) => console.log(err))
+        .catch((err) => toast.error(err.response.data.message))
   );
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const MyBookingWrapper = () => {
   return (
     <div className="flex flex-col gap-4 p-5">
       <span className="text-[17px] font-semibold text-center">
-        {t('title:myBookings')} ({myReservDatas?.length})
+        {t("title:myBookings")} ({myReservDatas?.length})
       </span>
       <div className="flex flex-col gap-4">
         {myReservDatas?.map((item: any, index: number) => {
@@ -53,7 +55,20 @@ const MyBookingWrapper = () => {
               onClick={() => navigate(`/booking/${item.id}`)}
             >
               <p className="flex justify-between">
-                <span className="text-[14px] font-semibold">{item.title}</span>
+                <span className="flex items-center gap-4 text-[14px] font-semibold">
+                  <span>{item.title}</span>
+                  <span
+                    className={`p-1 rounded-lg ${
+                      item.status === "pending"
+                        ? "bg-yellow-200"
+                        : item.status === "approval"
+                        ? "bg-green-400"
+                        : "bg-red-400"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
+                </span>
                 <span>{item.price} THB</span>
               </p>
               <p>

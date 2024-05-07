@@ -4,15 +4,19 @@ import { app_api, fetcher } from "../../helper/url";
 import { Slideshow } from "../../components/shop-details/Slideshow";
 // icons
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import LinkIcon from "@mui/icons-material/Link";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { useState } from "react";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { Toast } from "../../helper/alerts";
+import { shareBookingLink } from "../../helper/alerts";
+import { useTranslation } from "react-i18next";
+import { Divider } from "@mui/material";
+import toast from "react-hot-toast";
 
 const BusinessProfile = () => {
-  const { id } = useParams();
+  const { businessId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<string | undefined>(
@@ -20,15 +24,32 @@ const BusinessProfile = () => {
   );
 
   const { data: busiDatas } = useSWR(
-    id && `${app_api}/business/${id}`,
+    businessId && `${app_api}/business/${businessId}`,
     fetcher,
     {
       revalidateOnFocus: false,
     }
   );
 
-  const { data: busiById } = useSWR(
-    id && `${app_api}/serviceByBusinessId/${id}`,
+  const { data: serviceByBusinessId } = useSWR(
+    businessId && `${app_api}/serviceByBusinessId/${businessId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const { data: getTotalReservByBusiness } = useSWR(
+    businessId && `${app_api}/getReservationByBusinessId/${businessId}/all`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const { data: getTotalPendingByBusiness } = useSWR(
+    businessId &&
+      `${app_api}/getTotalNumPendingReservationByBusinessId/${businessId}`,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -43,71 +64,94 @@ const BusinessProfile = () => {
         <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
         <p className="flex gap-5">
           <span>
-            Today <b className="text-deep-blue">10</b>
-          </span>
-          <span>
-            Monthly <b className="text-deep-blue">5</b>
-          </span>
-          <span>
-            Total visitors <b className="text-deep-blue">190</b>
+            {t("totalPending")}{" "}
+            <b className="text-deep-blue">
+              {getTotalPendingByBusiness?.pendingnumber}
+            </b>
           </span>
         </p>
         <div className="flex gap-2">
           <button
             type="button"
-            className="text-white border bg-deep-blue rounded-lg p-2"
+            className="flex justify-center items-center text-[14px] text-white border bg-deep-blue rounded-lg p-2"
             onClick={() => {
-              Toast.fire({
-                icon: "info",
-                title: "Coming Soon",
-              });
+              toast("Coming Soon");
             }}
           >
-            <CalendarMonthIcon />
-            Overview
+            <CalendarMonthIcon fontSize="small" />
+            {t("button:overview")}
           </button>
           <button
             type="button"
-            className=" border rounded-lg p-2"
-            onClick={() => navigate("/serviceInfo")}
+            className="flex justify-center items-center text-[14px] border rounded-lg p-2"
+            onClick={() => shareBookingLink(businessId)}
           >
-            <EditOutlinedIcon />
-            Edit
+            <LinkIcon fontSize="small" />
+            {t("button:shareBookingLink")}
           </button>
           <button
             type="button"
-            className="border rounded-lg p-2"
+            className="flex justify-center items-center border rounded-lg p-2"
             onClick={() => setShowDialog(true)}
           >
-            <MoreHorizOutlinedIcon />
+            <MoreHorizOutlinedIcon fontSize="small" />
           </button>
         </div>
       </div>
-      <div className="px-5">
-        <span className="text-[14px] font-semibold">Services</span>
+      <Divider />
+      {/* <div style={{ height: "4px !important" }} className="bg-[#F7F7F7] mb-5" /> */}
+      <div className="px-5 mt-3">
+        <span className="text-[14px] font-semibold">{t("services")}</span>
         <div className="flex flex-col gap-4 my-5">
-          {busiById?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className="flex justify-between border rounded-lg p-3 cursor-pointer hover:bg-gray-100"
-                onClick={() => navigate(`/booking-approval/${id}/${item.id}`)}
-              >
-                <p className="flex flex-col gap-1">
-                  <span className="text-[14px] font-semibold">
-                    {item.title}
-                  </span>
-                  <span>
-                    {item.openTime.slice(0, -3)} - {item.closeTime.slice(0, -3)}
-                  </span>
-                </p>
-                <p className="flex flex-col gap-1 text-end">
-                  <span className="text-[14px] font-semibold">6 of 10</span>
-                  <span className="text-green-400">4 pending</span>
-                </p>
-              </div>
-            );
-          })}
+          {serviceByBusinessId?.length > 0 ? (
+            serviceByBusinessId?.map((item: any, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="flex justify-between border rounded-lg p-3 cursor-pointer hover:bg-gray-100"
+                  onClick={() =>
+                    navigate(`/booking-approval/${businessId}/${item.id}`, {
+                      state: item,
+                    })
+                  }
+                >
+                  <p className="flex flex-col gap-1">
+                    <span className="text-[14px] font-semibold">
+                      {item.title}
+                    </span>
+                    <span>
+                      {item.openTime.slice(0, -3)} -{" "}
+                      {item.closeTime.slice(0, -3)}
+                    </span>
+                    <span>
+                      {item.daysOpen?.map((jj: string, kk: number) => {
+                        return (
+                          <span key={kk} className="text-[12px] mx-1">
+                            {jj.slice(0, 3)}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  </p>
+                  <p className="flex flex-col gap-1 text-end justify-end">
+                    <span className="text-green-400">
+                      {
+                        getTotalReservByBusiness?.filter(
+                          (ii: any) =>
+                            ii.serviceId === item.id && ii.status === "pending"
+                        )?.length
+                      }{" "}
+                      {t("pending")}
+                    </span>
+                  </p>
+                </div>
+              );
+            })
+          ) : (
+            <span className="text-[14px] text-gray-400">
+              {t("error:noServicesYet")}
+            </span>
+          )}
         </div>
       </div>
       <DialogWrapper

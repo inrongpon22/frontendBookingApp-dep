@@ -1,48 +1,56 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Toast } from "../../helper/alerts";
-
-const moreOptions = {
-  share: [
-    {
-      icon: <LinkIcon />,
-      label: "Share booking link",
-      url: undefined,
-    },
-  ],
-  setting: [
-    {
-      icon: <CalendarMonthIcon />,
-      label: "Overview Schedule",
-      url: undefined,
-    },
-    {
-      icon: <StoreIcon />,
-      label: "Business setting",
-      url: undefined,
-    },
-    {
-      icon: <SettingsIcon />,
-      label: "Service setting",
-      url: "/serviceInfo",
-    },
-  ],
-  logut: [
-    {
-      icon: <LogoutIcon />,
-      label: "Log out",
-      url: undefined,
-    },
-  ],
-};
+import { shareBookingLink } from "../../helper/alerts";
+import { useTranslation } from "react-i18next";
+// icons
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import toast from "react-hot-toast";
 
 const BusinessProfileMoreOptions = () => {
   const navigate = useNavigate();
+  const { businessId } = useParams();
+  const { t } = useTranslation();
+
+  const moreOptions = {
+    share: [
+      {
+        icon: <LinkIcon />,
+        label: t("button:shareBookingLink"),
+        url: undefined,
+        function: () => shareBookingLink(businessId)
+      },
+    ],
+    setting: [
+      {
+        icon: <CalendarMonthIcon />,
+        label: t("button:overviewSchedule"),
+        url: undefined,
+      },
+      {
+        icon: <StoreIcon />,
+        label: t("button:businessSetting"),
+        url: undefined,
+      },
+      {
+        icon: <SettingsIcon />,
+        label: t("button:serviceSetting"),
+        url: `/serviceInfo/${businessId}`,
+      },
+    ],
+    logut: [
+      {
+        icon: <LogoutIcon />,
+        label: t("button:logout"),
+        url: undefined,
+      },
+    ],
+  };
+
   return (
     <div className="flex flex-col gap-5">
       {Object.values(moreOptions).map((options: any, index: number) => (
@@ -55,11 +63,14 @@ const BusinessProfileMoreOptions = () => {
               onClick={() => {
                 if (item.url) {
                   navigate(item.url);
-                } else {
-                  Toast.fire({
-                    icon: "info",
-                    title: "Coming Soon",
-                  });
+                } else if(item.function){
+                  item.function();
+                  
+                } 
+                else {
+                  toast("Coming Soon", {
+                    icon: (<PriorityHighIcon />)
+                  })
                 }
               }}
             >
