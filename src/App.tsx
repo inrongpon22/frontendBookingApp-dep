@@ -1,6 +1,6 @@
+import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import "./i18n.ts";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
@@ -28,9 +28,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<BusinessAuth />} />
-          <Route path="/bussiness-overview" element={<BusinessOverview />} />
+          <Route path="/business-overview" element={<BusinessOverview />} />
           <Route
-            path="/bussiness-profile/:businessId"
+            path="/business-profile/:businessId"
             element={<BusinessProfile />}
           />
           <Route

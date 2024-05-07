@@ -27,7 +27,8 @@ const BookingApproval = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const token = localStorage.getItem("token");
+  const token: string | null = localStorage.getItem("token");
+  const lang: string | null = localStorage.getItem("lang");
 
   const { t } = useTranslation();
 
@@ -60,7 +61,8 @@ const BookingApproval = () => {
     error: ReservByBusiIdError,
     mutate,
   } = useSWR(
-    businessId && `${app_api}/getReservationByBusinessId/${businessId}/${converted()}`,
+    businessId &&
+      `${app_api}/getReservationByBusinessId/${businessId}/${converted()}`,
     (url: string) =>
       axios
         .get(url, {
@@ -124,7 +126,7 @@ const BookingApproval = () => {
       if (result.isConfirmed) {
         axios
           .post(
-            `${app_api}/cancelReservation/${businessId}/${serviceId}/th`,
+            `${app_api}/cancelReservation/${businessId}/${serviceId}/${lang}/business`,
             undefined,
             {
               headers: {

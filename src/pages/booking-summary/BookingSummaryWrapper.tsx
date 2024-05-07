@@ -20,6 +20,7 @@ const BookingSummaryWrapper = () => {
   const { bookingId } = useParams(); // bookingId click from my-bookings
 
   const token = localStorage.getItem("token");
+  const lang = localStorage.getItem("lang");
 
   const { t } = useTranslation();
 
@@ -96,7 +97,7 @@ const BookingSummaryWrapper = () => {
       if (result.isConfirmed) {
         axios
           .post(
-            `${app_api}/cancelReservation/${bookingId}/${bookingById.serviceId}/th`,
+            `${app_api}/cancelReservation/${bookingId}/${bookingById.serviceId}/${lang}/customer`,{},
             {
               headers: {
                 Authorization: `${token}`,
@@ -105,6 +106,7 @@ const BookingSummaryWrapper = () => {
           )
           .then(() => {
             toast.success(t("noti:booking:cancel:success"));
+            navigate("/my-bookings")
           })
           .catch((error) => {
             console.log(error);

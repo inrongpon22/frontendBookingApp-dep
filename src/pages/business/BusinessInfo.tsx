@@ -176,7 +176,7 @@ export default function BusinessInfo() {
                     "businessId",
                     String(business.data.businessId)
                 );
-                navigate(`/bussiness-profile/${business.data.businessId}`);
+                navigate(`/business-profile/${business.data.businessId}`);
             } else {
                 return;
             }
