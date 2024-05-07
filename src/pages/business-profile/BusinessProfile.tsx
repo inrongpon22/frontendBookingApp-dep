@@ -39,7 +39,7 @@ const BusinessProfile = () => {
   );
 
   const { data: getTotalReservByBusiness } = useSWR(
-    businessId && `${app_api}/getReservationByBusinessId/${businessId}`,
+    businessId && `${app_api}/getReservationByBusinessId/${businessId}/all`,
     fetcher,
     {
       revalidateOnFocus: false,

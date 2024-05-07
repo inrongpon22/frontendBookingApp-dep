@@ -33,10 +33,21 @@ const MyBookingWrapper = () => {
     document.title = t("title:myBookings");
   }, []);
 
+  // console.log(
+  //   myReservDatas?.filter(
+  //     (item) =>
+  //       item.status !== "pending" &&
+  //       item.status !== "approval" &&
+  //       item.status !== "cancel"
+  //       // item.status !== "expired" &&
+  //       // item.status !== "declinded"
+  //   )
+  // );
+
   return (
     <div className="flex flex-col gap-4 p-5">
       <span className="text-[17px] font-semibold text-center">
-        {t('title:myBookings')} ({myReservDatas?.length})
+        {t("title:myBookings")} ({myReservDatas?.length})
       </span>
       <div className="flex flex-col gap-4">
         {myReservDatas?.map((item: any, index: number) => {

@@ -78,13 +78,17 @@ const RequestCards = ({ data }: cardTypes) => {
           {moment(data.bookingDate).format("dddd, DD MMMM YYYY")}
         </p>
         <p className="text-[14px]">
-          {t('guests')} {data.guestNumber}
+          {t("fragment:amount")}: {data.guestNumber} {t("fragment:people")}
         </p>
         <p className="text-[12px] text-[#808080]">
           {data.remark ? data.remark : "no remark"}
         </p>
       </div>
-      <div className="flex justify-between items-center p-4">
+      <div
+        className={`flex ${
+          data.status === "pending" ? "justify-between" : "justify-center"
+        } items-center p-4`}
+      >
         <p
           className="text-[14px] text-deep-blue underline cursor-pointer"
           onClick={() => {
@@ -96,7 +100,9 @@ const RequestCards = ({ data }: cardTypes) => {
         </p>
         <button
           type="button"
-          className="px-6 py-2 text-[14px] text-white rounded-lg bg-deep-blue"
+          className={`${
+            data.status === "pending" ? "block" : "hidden"
+          } px-6 py-2 text-[14px] font-semibold text-white rounded-lg bg-deep-blue`}
           onClick={() => approveRequested(data.id, data.serviceId)}
         >
           {t("approved")}

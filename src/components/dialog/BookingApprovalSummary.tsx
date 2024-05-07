@@ -34,19 +34,19 @@ const BookingApprovalSummary = () => {
 
   const GuestDataLists: { label: string; text: string }[] = [
     {
-      label: `${t('bookingName')}:`,
+      label: `${t("bookingName")}:`,
       text: bookingDatas?.userName,
     },
     {
-      label: `${t('phoneNumbers')}:`,
+      label: `${t("phoneNumbers")}:`,
       text: bookingDatas?.phoneNumber,
     },
     {
-      label: `${t('numberOfGuest')}:`,
+      label: `${t("numberOfGuest")}:`,
       text: bookingDatas?.guestNumber,
     },
     {
-      label: `${t('note')}:`,
+      label: `${t("note")}:`,
       text: bookingDatas?.remark,
     },
   ];
@@ -79,7 +79,13 @@ const BookingApprovalSummary = () => {
           })}
         </div>
 
-        <div className="flex flex-col gap-3 mt-auto">
+        <div
+          className={`${
+            bookingDatas.status === "pending"
+              ? "flex flex-col gap-3"
+              : "hidden"
+          } mt-auto`}
+        >
           <button
             type="button"
             className="bg-deep-blue text-white p-3 rounded-lg"

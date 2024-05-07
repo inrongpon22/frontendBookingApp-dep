@@ -29,7 +29,7 @@ function App() {
           />
           <Route path="/booking-success" element={<BookingSummaryWrapper />} />
           <Route path="/my-bookings" element={<MyBookingWrapper />} />
-          <Route path="/booking/:id" element={<BookingSummaryWrapper />} />
+          <Route path="/booking/:bookingId" element={<BookingSummaryWrapper />} />
 
           <Route path="/createBusiness" element={<CreateBusiness />} />
           <Route path="/service/:businessId" element={<ServiceList />} />

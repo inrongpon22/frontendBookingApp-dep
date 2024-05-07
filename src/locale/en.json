@@ -60,13 +60,23 @@
     "bookingApproval": "Booking Approval",
     "bookingReject": "Booking Reject",
     "serviceInformation": "Service Information",
-    "createBusiness": "Create Business"
+    "createBusiness": "Create Business",
+    "bookingHasApproved": "Booking Confirmed",
+    "bookingHasCancelled": "Booking Canceled",
+    "bookingHasDeclined": "Booking Declined",
+    "bookingHasExpired": "Booking Expired",
+    "waitingForApproval": "Waiting for Confirmation"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
     "bussRootDesc": "Elevate your booking experience quickly and conveniently.",
     "viewMoreDetails": "view more details",
-    "bookingRejectDesc": "Tell the customer why they were rejected."
+    "bookingRejectDesc": "Tell the customer why they were rejected.",
+    "bookingHasApproved": "Your booking has been automatically confirmed. We will send you the details via SMS.",
+    "bookingHasCancelled": "This appointment has been canceled. You can make a new appointment.",
+    "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
+    "bookingHasExpired": "The available time has already passed. This appointment has expired.",
+    "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed."
   },
   "button": {
     "cancel": "Cancel",
@@ -74,6 +84,8 @@
     "approve": "Approve",
     "reject": "Reject",
     "next": "Next",
+    "backToMyBooking": "Back to My Booking",
+    "rebook": "Rebook",
     "goToMyBookingButton": "Go to My Booking",
     "confirmBookingButton": "Confirm & Booking",
     "continueButton": "Continue",
@@ -211,7 +223,9 @@
     "aBooking": "a Booking",
     "avaiGuest": "Available guest(s) per slot",
     "manualAdjust": "Manually adjust",
-    "optional": "optional"
+    "optional": "optional",
+    "amount": "amount",
+    "people": "people"
   },
   "placeholder": {
     "bookingReject": "Ex. The service is not available at the requested time.",
