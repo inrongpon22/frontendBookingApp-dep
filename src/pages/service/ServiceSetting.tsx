@@ -15,7 +15,7 @@ export default function ServiceSetting() {
     const { t } = useTranslation();
     const [services, setServices] = useState<IService[]>([]);
     const [reFresh, setReFresh] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [openIndex, setOpenIndex] = useState<number | null>(null); // Track which service is open
 
     useEffect(() => {
         const fetchService = async () => {
@@ -30,59 +30,59 @@ export default function ServiceSetting() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessId, reFresh]);
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
+    const handleDrawerOpen = (index: number) => {
+        setOpenIndex(index);
     };
 
     const handleDrawerClose = () => {
-        setOpen(false);
+        setOpenIndex(null);
     };
 
-    const handleSlide = (e: any) => {
-        // Adjust threshold as needed
+    const handleSlide = (index: number) => (e: any) => {
+        e.stopPropagation(); // Prevent event propagation to parent elements
         const threshold = 50;
         const startX = e.touches ? e.touches[0].clientX : e.clientX;
         let isSliding = false;
 
         const handleMove = (moveEvent: any) => {
-            const currentX = moveEvent.touches ? moveEvent.touches[0].clientX : moveEvent.clientX;
+            const currentX = moveEvent.touches
+                ? moveEvent.touches[0].clientX
+                : moveEvent.clientX;
             const deltaX = currentX - startX;
 
             if (deltaX > threshold) {
                 isSliding = true;
                 handleDrawerClose();
-                document.removeEventListener('mousemove', handleMove);
-                document.removeEventListener('touchmove', handleMove);
+                document.removeEventListener("mousemove", handleMove);
+                document.removeEventListener("touchmove", handleMove);
             } else if (deltaX < -threshold) {
                 isSliding = true;
-                handleDrawerOpen();
-                document.removeEventListener('mousemove', handleMove);
-                document.removeEventListener('touchmove', handleMove);
+                handleDrawerOpen(index);
+                document.removeEventListener("mousemove", handleMove);
+                document.removeEventListener("touchmove", handleMove);
             }
         };
 
         const handleEnd = () => {
-            document.removeEventListener('mousemove', handleMove);
-            document.removeEventListener('touchmove', handleMove);
-            document.removeEventListener('mouseup', handleEnd);
-            document.removeEventListener('touchend', handleEnd);
+            document.removeEventListener("mousemove", handleMove);
+            document.removeEventListener("touchmove", handleMove);
+            document.removeEventListener("mouseup", handleEnd);
+            document.removeEventListener("touchend", handleEnd);
             if (!isSliding) {
-                handleDrawerOpen();
+                handleDrawerOpen(index);
             }
         };
 
-        document.addEventListener('mousemove', handleMove);
-        document.addEventListener('touchmove', handleMove);
-        document.addEventListener('mouseup', handleEnd);
-        document.addEventListener('touchend', handleEnd);
+        document.addEventListener("mousemove", handleMove);
+        document.addEventListener("touchmove", handleMove);
+        document.addEventListener("mouseup", handleEnd);
+        document.addEventListener("touchend", handleEnd);
     };
 
     return (
         <div className=" overflow-y-hidden">
             <div className="pr-4 pl-4 pt-6">
-                <Header
-                    context={t("title:serviceInformation")}
-                />
+                <Header context={t("title:serviceInformation")} />
             </div>
             <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
                 <button
@@ -108,9 +108,8 @@ export default function ServiceSetting() {
                     <div
                         key={index}
                         className="mb-2"
-                        onTouchStart={handleSlide}
-                        onMouseDown={handleSlide}
-                    >
+                        onTouchStart={handleSlide(index)}
+                        onMouseDown={handleSlide(index)}>
                         <ListServiceCard
                             serviceId={service.id}
                             serviceName={service.title}
@@ -120,7 +119,7 @@ export default function ServiceSetting() {
                             openTime={service.openTime}
                             closeTime={service.closeTime}
                             daysOpen={service.daysOpen}
-                            open={open}
+                            open={openIndex === index} // Set open state based on openIndex
                             handleRefresh={() => setReFresh(!reFresh)}
                         />
                     </div>
