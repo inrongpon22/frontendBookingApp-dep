@@ -33,7 +33,7 @@ export const getServiceByBusinessId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${import.meta.env.VITE_APP_API}/serviceByBusinessId/${businessId}`,
+            `${import.meta.env.VITE_APP_API}/getListServiceByBusinessId/${businessId}`,
             {
                 headers: {
                     Authorization: token,
@@ -74,8 +74,7 @@ export const getServiceByServiceId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/getServiceByServiceId/${serviceId}`,
             {
                 headers: {
@@ -146,8 +145,7 @@ export const updateServiceShowHide = async (
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/updateServiceShowHide/${serviceId}`,
             serviceData,
             {

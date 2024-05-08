@@ -17,8 +17,7 @@ export interface InsertService {
     duration: number;
     description: string;
     price: number;
-    requireApproval: boolean;
-    daysOpen: string[];
+    isAutoApprove: boolean;
     currency: string;
     openTime: string;
     closeTime: string;
