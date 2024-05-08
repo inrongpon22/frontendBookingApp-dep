@@ -97,6 +97,7 @@ export default function ServiceTime() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+
 	useEffect(() => {
 		if (serviceTime[0].daysOpen !== undefined) {
 			serviceTime.forEach(element => {
@@ -230,50 +231,6 @@ export default function ServiceTime() {
 
 	generateTimeSlots(openTime, closeTime, duration * 60);
 
-	// Yup validation schema
-	// const validationSchema = Yup.object().shape({
-	//     // daysOpen: Yup.array().length(1, "At least one day must be selected"),
-	//     // openTime: Yup.string().required("Open time"),
-	//     // closeTime: Yup.string().required("Close time is required"),
-	//     // duration: Yup.number().positive().required("Duration is required"),
-	//     guestNumber: Yup.number()
-	//         .positive()
-	//         .required("Guest number is required"),
-	//     // availableFromDate: Yup.string().required("Available From Date"),
-	//     // availableToDate: Yup.string().required("Available To Date is required"),
-	// });
-
-	// const formik = useFormik({
-	//     initialValues: {
-	//         // openTime: openTime,
-	//         // closeTime: closeTime,
-	//         guestNumber: 1,
-	//         availableFromDate:
-	//             serviceTime.availableFromDate ??
-	//             new Date().toISOString().split("T")[0],
-	//         availableToDate: serviceTime.availableToDate ?? "",
-	//     },
-	//     validationSchema: validationSchema,
-	//     onSubmit: (values) => {
-	//         const insertData = {
-	//             daysOpen: daysOpen,
-	//             openTime: openTime,
-	//             closeTime: closeTime,
-	//             duration: duration,
-	//             guestNumber: guestNumber,
-	//             selectedSlots: selectedSlots,
-	//             TimeSlots: TimeSlots,
-	//             manualCapacity: manualCapacity,
-	//             availableFromDate: values.availableFromDate,
-	//             availableToDate: values.availableToDate,
-	//         };
-	//         const valueInString = JSON.stringify(insertData);
-	//         localStorage.setItem("serviceTime", valueInString);
-
-	//         navigate("/createBusiness/5");
-	//     },
-	// });
-
 	const handleSubmit = () => {
 		const serviceTimeArray =
 			JSON.parse(localStorage.getItem("serviceTime") as string) || [];
@@ -392,16 +349,6 @@ export default function ServiceTime() {
 							/>
 						</div>
 					</div>
-					{/* {formik.touched.availableFromDate &&
-                formik.errors.availableFromDate &&
-                formik.touched.availableToDate &&
-                formik.errors.availableToDate ? (
-                    <div className="text-red-500 text-sm mt-1">
-                        {formik.errors.availableFromDate} and{" "}
-                        {formik.errors.availableToDate}
-                    </div>
-                ) : null} */}
-
 					<p className="font-semibold mt-3" style={{ fontSize: "14px" }}>
 						{t("activeDays")}
 					</p>
@@ -489,14 +436,6 @@ export default function ServiceTime() {
 							</div>
 						</div>
 					</div>
-					{/* {formik.touched.openTime &&
-                formik.errors.openTime &&
-                formik.touched.closeTime &&
-                formik.errors.closeTime ? (
-                    <div className="text-red-500 text-sm mt-1">
-                        {formik.errors.openTime} and {formik.errors.closeTime}
-                    </div>
-                ) : null} */}
 					<div
 						style={{
 							width: "100%",
@@ -519,7 +458,7 @@ export default function ServiceTime() {
 								value={duration}
 								onChange={(e) => setDuration(Number(e.target.value))}
 							/>
-							<p>hr</p>
+							<p>{t("hr")}</p>
 							<div className="flex flex-col">
 								<button onClick={increaseDuration}>
 									<KeyboardArrowUpIcon
@@ -551,7 +490,7 @@ export default function ServiceTime() {
 							<div
 								key={index}
 								className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                ${selectedSlots.includes(index)
+                				${selectedSlots.includes(index)
 										? "border-custom-color border-2"
 										: "border-black-50 border"
 									}`}
@@ -579,9 +518,9 @@ export default function ServiceTime() {
 					</div>
 
 					{isManually == true ? (
-						<div className="flex flex-col mt-5">
+						<div className="flex flex-col mt-5 border-black-50 border p-3">
 							<div className="flex justify-between">
-								<p className="text-sm">Available guest(s)</p>
+								<p className="text-sm">{t("Availableguests")}</p>
 								<u
 									onClick={handleResetGustNumber}
 									style={{
@@ -627,6 +566,7 @@ export default function ServiceTime() {
 														)
 													}
 													className="border flex justify-center items-center w-8 h-8 rounded-md"
+													style={{ cursor: "pointer", marginRight: "-5px" }}
 												>
 													<KeyboardArrowUpIcon />
 												</button>

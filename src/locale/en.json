@@ -45,7 +45,11 @@
     "totalPending": "Total Pending",
     "pending": "Pending",
     "approved": "Approved",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "hr": "hr",
+    "Availableguests": "Available guests",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "title": {
     "bookingIsconfirmed": "The Booking is confirmed",
@@ -99,7 +103,9 @@
     "shareBookingLink": "Share Booking Link",
     "businessSetting": "Business Setting",
     "serviceSetting": "Service Setting",
-    "logout": "Logout"
+    "logout": "Logout",
+    "addMoreTime": "Add More Time",
+    "createNewService": "Create New Service"
   },
   "noti": {
     "booking": {
@@ -180,12 +186,14 @@
         "serviceName": {
           "serviceNameReq": "Service name is required",
           "serviceNameMin": "Service name must be at least 2 characters",
-          "serviceNameMax": "Service name must be less than 50 characters"
+          "serviceNameMax": "Service name must be less than 50 characters",
+          "serviceNameFill": "Fill the name of the service"
         },
         "serviceDesc": {
           "serviceDescReq": "Service description is required",
           "serviceDescMin": "Service description must be at least 10 characters",
-          "serviceDescMax": "Service description must be less than 500 characters"
+          "serviceDescMax": "Service description must be less than 500 characters",
+          "serviceDescFill": "Introduce this service to the customer"
         },
         "price": {
           "priceReq": "Price is required",

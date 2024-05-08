@@ -53,7 +53,7 @@ const DialogWrapper = ({
     },
     validationSchema:
       confirmationDialogSchemas[
-        dialogState as keyof typeof confirmationDialogSchemas
+      dialogState as keyof typeof confirmationDialogSchemas
       ],
     onSubmit: async (values) => {
       switch (dialogState) {
@@ -117,7 +117,7 @@ const DialogWrapper = ({
                         if (err.response.status === 404) {
                           navigate("/createBusiness");
                         } else {
-                          toast.error(err.message)
+                          toast.error(err.message);
                         }
                       });
                     break;
@@ -249,8 +249,8 @@ const DialogWrapper = ({
               onClick={handleBackButton}
             >
               {dialogState === "phone-input" ||
-              dialogState === "booking-approval-summary" ||
-              dialogState === "business-more-options" ? (
+                dialogState === "booking-approval-summary" ||
+                dialogState === "business-more-options" ? (
                 <CloseIcon />
               ) : (
                 <ArrowBackIosIcon />

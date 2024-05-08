@@ -11,18 +11,19 @@ import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
 import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
 import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
-import ServiceList from "./pages/business/ServiceList.tsx";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
 import CreateService from "./pages/business/CreateService.tsx";
+import ServiceSetting from "./pages/service/ServiceSetting.tsx";
+import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 
 
 function App() {
   // const token = localStorage.getItem("token");
   useEffect(() => {
-    localStorage.setItem("lang", "th")
-  }, [])
-  
+    localStorage.setItem("lang", "th");
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -48,13 +49,32 @@ function App() {
             element={<BookingSummaryWrapper />}
           />
 
-          <Route path="/createBusiness" element={<CreateBusiness />} />
-          <Route path="/service/:businessId" element={<ServiceList />} />
-          <Route path="/serviceInfo/:businessId" element={<ServiceInfo />} />
-          <Route path="/serviceTime/:businessId" element={<ServiceTime />} />
+          {/* business */}
+          <Route
+            path="/createBusiness"
+            element={<CreateBusiness />}
+          />
+
+          {/* service */}
+          <Route
+            path="/serviceInfo/:businessId"
+            element={<ServiceInfo />}
+          />
+          <Route
+            path="/serviceTime/:businessId"
+            element={<ServiceTime />}
+          />
           <Route
             path="/createService/:businessId"
             element={<CreateService />}
+          />
+          <Route
+            path="/serviceSetting/:businessId"
+            element={<ServiceSetting />}
+          />
+          <Route
+            path="/serviceDetail/:businessId/:serviceId"
+            element={<ServiceDetail />}
           />
         </Routes>
         {/* {!token && <Navigate to="/" replace={true} />} */}
