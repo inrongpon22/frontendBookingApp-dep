@@ -1,19 +1,27 @@
 import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
-import { IBusinessInfo, ILocation } from "./interfaces/business";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha, Badge, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../helper/createSupabase";
-import SearchMap from "./SearchMap";
 import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
-import { insertBusiness } from "../../api/business";
+import { updateBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
+import {
+    IBusinessInfo,
+    ILocation,
+    IgetBusiness,
+} from "../business/interfaces/business";
+import SearchMap from "../business/SearchMap";
 
-export default function BusinessInfo() {
+interface IParams {
+    businessData?: IgetBusiness;
+}
+
+export default function BusinessInfo(props: IParams) {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
@@ -24,20 +32,63 @@ export default function BusinessInfo() {
 
     const [file, setFile] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
-    const [openTime, setOpenTime] = useState("");
-    const [closeTime, setCloseTime] = useState("");
+    const [openTime, setOpenTime] = useState(
+        props.businessData?.openTime || ""
+    );
+    const [closeTime, setCloseTime] = useState(
+        props.businessData?.closeTime || ""
+    );
     const [locationData, setLocationData] = useState<ILocation>({
-        lat: 0,
-        lng: 0,
-        address: "",
+        lat: props.businessData?.latitude || 0,
+        lng: props.businessData?.longitude || 0,
+        address: props.businessData?.address || "",
     });
-    const [daysOpen, setDaysOpen] = useState<string[]>([]);
-    const businessInfo: IBusinessInfo = {
-        title: "",
-        location: "",
-        description: "",
-        phoneNumber: "",
-    };
+    const [daysOpen, setDaysOpen] = useState<string[]>(
+        props.businessData?.daysOpen || []
+    );
+    const [businessInfo, setBusinessInfo] = useState<IBusinessInfo>({
+        title: props.businessData?.title || "",
+        phoneNumber: props.businessData?.phoneNumber || "",
+        location: props.businessData?.address || "",
+        description: props.businessData?.description || "",
+    });
+
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            try {
+                const arrayImageUrls: string[] = [];
+                if (props.businessData) {
+                    const imageUrls = await Promise.all(
+                        props.businessData.imagesURL.map(async (element) => {
+                            const { data } = supabase.storage
+                                .from("BookingSystem/images/")
+                                .getPublicUrl(element);
+                            return data;
+                        })
+                    );
+
+                    imageUrls.forEach((element) => {
+                        if (!arrayImageUrls.includes(element.publicUrl)) {
+                            arrayImageUrls.push(element.publicUrl);
+                        }
+                    });
+                    setPreviewImages(arrayImageUrls);
+                }
+            } catch (error) {
+                console.error("Error fetching image URLs:", error);
+            }
+        };
+        fetchImageUrls();
+        setCloseTime(props.businessData?.closeTime || "");
+        setOpenTime(props.businessData?.openTime || "");
+        setBusinessInfo({
+            title: props.businessData?.title || "",
+            phoneNumber: props.businessData?.phoneNumber || "",
+            location: props.businessData?.address || "",
+            description: props.businessData?.description || "",
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.businessData]);
 
     const dayOfWeek = () => {
         switch (language) {
@@ -126,10 +177,10 @@ export default function BusinessInfo() {
 
     const formik = useFormik({
         initialValues: {
-            title: businessInfo.title || "",
-            phoneNumber: businessInfo.phoneNumber || "",
-            location: businessInfo.location || "",
-            description: businessInfo.description || "",
+            title: businessInfo?.title,
+            phoneNumber: businessInfo?.phoneNumber,
+            location: businessInfo?.location,
+            description: businessInfo?.description,
         },
         validationSchema: schema,
         onSubmit: async (values) => {
@@ -172,15 +223,44 @@ export default function BusinessInfo() {
                     throw new Error("Token is not found");
                 }
 
-                const business = await insertBusiness(insertData, token);
-
-                localStorage.setItem(
-                    "businessId",
-                    String(business.data.businessId)
+                const business = await updateBusiness(
+                    insertData,
+                    Number(props.businessData?.id),
+                    token
                 );
-                navigate(`/business-profile/${business.data.businessId}`);
+                if (business.status === 200) {
+                    navigate(`/business-profile/${business.data.id}`);
+                } else {
+                    console.error("Error updating business");
+                }
             } else {
-                return;
+                const insertData = {
+                    title: values.title,
+                    imagesURL: props.businessData?.imagesURL || [],
+                    description: values.description,
+                    phoneNumber: values.phoneNumber,
+                    address: locationData.address,
+                    latitude: locationData.lat,
+                    longitude: locationData.lng,
+                    daysOpen: daysOpen,
+                    openTime: openTime,
+                    closeTime: closeTime,
+                    userId: userId ? Number(userId) : 0,
+                };
+                if (token === null) {
+                    throw new Error("Token is not found");
+                }
+
+                const business = await updateBusiness(
+                    insertData,
+                    Number(props.businessData?.id),
+                    token
+                );
+                if (business.status === 200) {
+                    navigate(`/business-profile/${props.businessData?.id}`);
+                } else {
+                    console.error("Error updating business");
+                }
             }
         },
     });
@@ -245,7 +325,10 @@ export default function BusinessInfo() {
                         className="mt-4 font-semibold">
                         {t("form:business:create:location")}
                     </p>
-                    <SearchMap handleChangeLocation={handleChangeLocation} />
+                    <SearchMap
+                        handleChangeLocation={handleChangeLocation}
+                        oldAddress={locationData.address}
+                    />
                     <p
                         style={{ fontSize: "14px" }}
                         className="mt-4 font-semibold">
@@ -304,12 +387,6 @@ export default function BusinessInfo() {
                                         border: "none",
                                     }}
                                 />
-                                {/* <div
-                            className="flex flex-col"
-                            style={{ marginLeft: "-20px" }}>
-                            <KeyboardArrowUpIcon sx={{ fontSize: "20px" }} />
-                            <KeyboardArrowDownIcon sx={{ fontSize: "20px" }} />
-                        </div> */}
                             </div>
                         </div>
                         <div className="flex justify-center items-center">
@@ -334,12 +411,6 @@ export default function BusinessInfo() {
                                     style={{ border: "none" }}
                                     disabled={openTime === ""}
                                 />
-                                {/* <div
-                            className="flex flex-col"
-                            style={{ marginLeft: "-20px" }}>
-                            <KeyboardArrowUpIcon sx={{ fontSize: "20px" }} />
-                            <KeyboardArrowDownIcon sx={{ fontSize: "20px" }} />
-                        </div> */}
                             </div>
                         </div>
                     </div>

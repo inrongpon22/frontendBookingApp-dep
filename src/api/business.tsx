@@ -22,6 +22,28 @@ export const insertBusiness = async (
     }
 };
 
+export const updateBusiness = async (
+    businessData: IaddBusiness,
+    businessId: number,
+    token: string
+) => {
+    token = token.replace(/"/g, "");
+    try {
+        return await axios.post(
+            `${import.meta.env.VITE_APP_API}/business/${businessId}`,
+            businessData,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 export const getBusinessId = async (businessId: number, token: string) => {
     token = token.replace(/"/g, "");
     try {
