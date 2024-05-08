@@ -12,4 +12,4 @@ export const fetcher = (url: string) =>
         },
       }
     )
-    .then((res) => res.data);
+    .then((res) => res.data)

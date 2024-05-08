@@ -96,10 +96,12 @@
     "getStartedButton": "Get Started",
     "overview": "Overview",
     "overviewSchedule": "Overview Schedule",
+    "setDayoff": "Set Day-off",
     "shareBookingLink": "Share Booking Link",
     "businessSetting": "Business Setting",
     "serviceSetting": "Service Setting",
-    "logout": "Logout"
+    "logout": "Logout",
+    "switchBusiness":"Switch to another business"
   },
   "noti": {
     "booking": {

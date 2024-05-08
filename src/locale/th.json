@@ -96,10 +96,12 @@
     "getStartedButton": "เริ่มต้นใช้งาน",
     "overview": "ภาพรวม",
     "overviewSchedule": "ภาพรวมการจอง",
+    "setDayoff": "ตั้งค่าวันหยุด",
     "shareBookingLink": "แชร์ลิงก์การจอง",
     "businessSetting": "ตั้งค่าธุรกิจ",
     "serviceSetting": "ตั้งค่าบริการ",
-    "logout": "ออกจากระบบ"
+    "logout": "ออกจากระบบ",
+    "switchBusiness": "สลับบัญชีธุรกิจ"
   },
   "noti": {
     "booking": {
