@@ -1,16 +1,18 @@
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
+import { useQuery } from "../../helper/url";
 
 const PhoneInput = () => {
   const { t } = useTranslation();
+  const query = useQuery();
 
   const { formik, isLoading } = useContext<any>(DialogContext);
 
   return (
     <section>
       <div className="">
-        <p className="text-[25px] font-semibold">{t("verifyPhoneNumber")}</p>
+        <p className="text-[25px] font-semibold">{query.get("accessCode") ? t("form:business:auth:login") :t("verifyPhoneNumber")}</p>
         <span className="text-[14px]">{t("verifyPhoneNumberDesc")}</span>
       </div>
       <input

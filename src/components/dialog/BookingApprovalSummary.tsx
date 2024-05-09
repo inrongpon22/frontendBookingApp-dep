@@ -1,112 +1,153 @@
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { ApproveContext } from "../../pages/booking-approval/BookingApproval";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
+// styled
 import { Divider } from "@mui/material";
+// api
+import useSWR from "swr";
+import axios from "axios";
+import { app_api, useQuery } from "../../helper/url";
 
 const BookingApprovalSummary = () => {
   const { bookingDatas, approveRequested, setDialogState } =
     useContext(ApproveContext);
+  const { businessId } = useParams();
+  const token = localStorage.getItem("token");
+
+  const query = useQuery();
+
+  const { data: bookingDetailFromSMS } = useSWR(
+    query.get("accessCode") &&
+      `${app_api}/getReservationByBusinessIdFromMessage/${businessId}/all`,
+    (url: string) =>
+      axios
+        .post(url, { accessCode: query.get("accessCode") })
+        .then((res) => res.data[0]),
+    { revalidateOnFocus: false }
+  );
 
   const { t } = useTranslation();
 
   const BookingDataLists: { label: string; text: string }[] = [
     {
       label: `${t("services")}:`,
-      text: bookingDatas?.title,
+      text: bookingDetailFromSMS
+        ? bookingDetailFromSMS.title
+        : bookingDatas?.title,
     },
     {
       label: `${t("date")}:`,
-      text: moment(bookingDatas?.bookingDate).format("dddd, DD MMMM YYYY"),
+      text: bookingDetailFromSMS
+        ? moment(bookingDetailFromSMS?.bookingDate).format("dddd, DD MMMM YYYY")
+        : moment(bookingDatas?.bookingDate).format("dddd, DD MMMM YYYY"),
     },
     {
       label: `${t("time")}:`,
-      text: `${bookingDatas?.startTime.slice(
-        0,
-        -3
-      )} - ${bookingDatas?.endTime.slice(0, -3)}`,
+      text: bookingDetailFromSMS
+        ? `${bookingDetailFromSMS?.startTime.slice(
+            0,
+            -3
+          )} - ${bookingDetailFromSMS?.endTime.slice(0, -3)}`
+        : `${bookingDatas?.startTime.slice(
+            0,
+            -3
+          )} - ${bookingDatas?.endTime.slice(0, -3)}`,
     },
     {
       label: `${t("price")}:`,
-      text: `${bookingDatas?.price} ฿`,
+      text: bookingDetailFromSMS
+        ? `${bookingDetailFromSMS.price} ฿`
+        : `${bookingDatas?.price} ฿`,
     },
   ];
 
   const GuestDataLists: { label: string; text: string }[] = [
     {
       label: `${t("bookingName")}:`,
-      text: bookingDatas?.userName,
+      text: bookingDetailFromSMS
+        ? bookingDetailFromSMS.userName
+        : bookingDatas?.userName,
     },
     {
       label: `${t("phoneNumbers")}:`,
-      text: bookingDatas?.phoneNumber,
+      text: bookingDetailFromSMS
+        ? bookingDetailFromSMS.phoneNumber
+        : bookingDatas?.phoneNumber,
     },
     {
       label: `${t("numberOfGuest")}:`,
-      text: bookingDatas?.guestNumber,
+      text: bookingDetailFromSMS
+        ? bookingDetailFromSMS.guestNumber
+        : bookingDatas?.guestNumber,
     },
     {
       label: `${t("note")}:`,
-      text: bookingDatas?.remark,
+      text: bookingDetailFromSMS
+        ? bookingDetailFromSMS.remark
+        : bookingDatas?.remark,
     },
   ];
 
-  // console.log(JSON.stringify(bookingDatas))
-
   return (
-    <>
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col gap-3">
-          {BookingDataLists?.map((item: any, index: number) => {
-            return (
-              <div key={index} className="flex justify-between">
-                <span className="text-gray-500">{item.label}</span>
-                <span className="text-[14px] font-semibold">{item.text}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex flex-col gap-3 mt-5">
-          <Divider />
-          {GuestDataLists?.map((item: any, index: number) => {
-            return (
-              <div key={index} className="flex justify-between">
-                <span className="text-gray-500">{item.label}</span>
-                <span className="text-[14px] font-semibold text-end">
-                  {item.text}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div
-          className={`${
-            bookingDatas.status === "pending"
-              ? "flex flex-col gap-3"
-              : "hidden"
-          } mt-auto`}
-        >
-          <button
-            type="button"
-            className="bg-deep-blue text-white p-3 rounded-lg"
-            onClick={() =>
-              approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
-            }
-          >
-            {t("button:approve")}
-          </button>
-          <button
-            type="button"
-            className="border p-3 rounded-lg"
-            onClick={() => setDialogState("booking-approval-reject")}
-          >
-            {t("button:reject")}
-          </button>
-        </div>
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col gap-3">
+        {BookingDataLists?.map((item: any, index: number) => {
+          return (
+            <div key={index} className="flex justify-between">
+              <span className="text-gray-500">{item.label}</span>
+              <span className="text-[14px] font-semibold">{item.text}</span>
+            </div>
+          );
+        })}
       </div>
-    </>
+
+      <div className="flex flex-col gap-3 mt-5">
+        <Divider />
+        {GuestDataLists?.map((item: any, index: number) => {
+          return (
+            <div key={index} className="flex justify-between">
+              <span className="text-gray-500">{item.label}</span>
+              <span className="text-[14px] font-semibold text-end">
+                {item.text}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        className={`${
+          bookingDatas?.status === "pending" || query.get("accessCode")
+            ? "flex flex-col gap-3"
+            : "hidden"
+        } mt-auto`}
+      >
+        <button
+          type="button"
+          className="bg-deep-blue text-white p-3 rounded-lg"
+          onClick={() =>
+            approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
+          }
+        >
+          {t("button:approve")}
+        </button>
+        <button
+          type="button"
+          className="border p-3 rounded-lg"
+          onClick={() => {
+            if (token) {
+              setDialogState("booking-approval-reject");
+            } else {
+              setDialogState("phone-input");
+            }
+          }}
+        >
+          {t("button:reject")}
+        </button>
+      </div>
+    </div>
   );
 };
 

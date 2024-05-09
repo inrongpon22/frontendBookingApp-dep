@@ -3,7 +3,7 @@ export const DialogContext = createContext<any>(null); //create context to store
 import { useTranslation } from "react-i18next";
 // api & fetching data
 import axios from "axios";
-import { app_api } from "../../helper/url";
+import { app_api, useQuery } from "../../helper/url";
 // form validateion
 import { useFormik } from "formik";
 // styled
@@ -22,6 +22,7 @@ import BookingApprovalSummary from "./BookingApprovalSummary";
 import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import toast from "react-hot-toast";
+import BookingApproveResult from "./BookingApproveResult";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -40,7 +41,9 @@ const DialogWrapper = ({
   setDialogState,
 }: DialogTypes) => {
   const navigate = useNavigate();
+  const query = useQuery();
   const { t } = useTranslation();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formik = useFormik({
@@ -69,10 +72,7 @@ const DialogWrapper = ({
             })
             .catch((err) => {
               if (err.response.status === 429) {
-                formik.setFieldError(
-                  "phoneNumbers",
-                  `${err.response.data}, please try again in 60 seconds`
-                );
+                formik.setFieldError("phoneNumbers", t("error:tooManyRequest"));
               }
               setIsLoading(false);
             });
@@ -99,27 +99,31 @@ const DialogWrapper = ({
                     break;
 
                   case "business":
-                    axios
-                      .get(
-                        `${app_api}/getBusinessByUserId/${res.data.userId}`,
-                        {
-                          headers: {
-                            Authorization: res.data.token,
-                          },
-                        }
-                      )
-                      .then((resp) => {
-                        if (resp.status === 200) {
-                          navigate(`/business-profile/${resp.data[0].id}`);
-                        }
-                      })
-                      .catch((err) => {
-                        if (err.response.status === 404) {
-                          navigate("/createBusiness");
-                        } else {
-                          toast.error(err.message);
-                        }
-                      });
+                    if (query.get("accessCode")) {
+                      setDialogState("booking-approval-summary");
+                    } else {
+                      axios
+                        .get(
+                          `${app_api}/getBusinessByUserId/${res.data.userId}`,
+                          {
+                            headers: {
+                              Authorization: res.data.token,
+                            },
+                          }
+                        )
+                        .then((resp) => {
+                          if (resp.status === 200) {
+                            navigate(`/business-profile/${resp.data[0].id}`);
+                          }
+                        })
+                        .catch((err) => {
+                          if (err.response.status === 404) {
+                            navigate("/createBusiness");
+                          } else {
+                            toast.error(err.message);
+                          }
+                        });
+                    }
                     break;
 
                   default:
@@ -174,6 +178,12 @@ const DialogWrapper = ({
 
       case "booking-approval-reject":
         return <BookingApprovalReject />;
+
+      case "booking-approval-result-success":
+        return <BookingApproveResult dialogState={dialogState} />;
+
+      case "booking-approval-result-rejected":
+        return <BookingApproveResult dialogState={dialogState} />;
 
       case "business-more-options":
         return <BusinessProfileMoreOptions />;
@@ -245,7 +255,9 @@ const DialogWrapper = ({
         {dialogState !== "business-more-options" && (
           <Toolbar className="grid grid-cols-4">
             <span
-              className="w-[24px] h-[24px] cursor-pointer"
+              className={`w-[24px] h-[24px] cursor-pointer ${
+                query.get("accessCode") && dialogState !== "booking-approval-reject" ? "hidden" : ""
+              }`}
               onClick={handleBackButton}
             >
               {dialogState === "phone-input" ||

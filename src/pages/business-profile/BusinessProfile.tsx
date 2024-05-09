@@ -6,17 +6,23 @@ import { Slideshow } from "../../components/shop-details/Slideshow";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LinkIcon from "@mui/icons-material/Link";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useState } from "react";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { shareBookingLink } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
 import { Divider } from "@mui/material";
 import toast from "react-hot-toast";
+import { dayOfWeek } from "../../helper/daysOfWeek";
+import axios from "axios";
 
 const BusinessProfile = () => {
   const { businessId } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<string | undefined>(
@@ -33,15 +39,16 @@ const BusinessProfile = () => {
 
   const { data: serviceByBusinessId } = useSWR(
     businessId && `${app_api}/serviceByBusinessId/${businessId}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  const { data: getTotalReservByBusiness } = useSWR(
-    businessId && `${app_api}/getReservationByBusinessId/${businessId}/all`,
-    fetcher,
+    (url: string) =>
+      axios
+        .get(url, {
+          headers: {
+            authorization: localStorage.getItem("token"),
+          },
+        })
+        .then(async (res: any) =>
+          res.data.sort((a: any, b: any) => a.id - b.id)
+        ),
     {
       revalidateOnFocus: false,
     }
@@ -73,7 +80,7 @@ const BusinessProfile = () => {
         <div className="flex gap-2">
           <button
             type="button"
-            className="flex justify-center items-center text-[14px] text-white border bg-deep-blue rounded-lg p-2"
+            className="flex justify-center items-center text-[14px] text-white border bg-deep-blue bg-opacity-80 rounded-lg p-2"
             onClick={() => {
               toast("Coming Soon");
             }}
@@ -99,12 +106,18 @@ const BusinessProfile = () => {
         </div>
       </div>
       <Divider />
-      {/* <div style={{ height: "4px !important" }} className="bg-[#F7F7F7] mb-5" /> */}
       <div className="px-5 mt-3">
         <span className="text-[14px] font-semibold">{t("services")}</span>
         <div className="flex flex-col gap-4 my-5">
           {serviceByBusinessId?.length > 0 ? (
             serviceByBusinessId?.map((item: any, index: number) => {
+              let daysOpenArr: string[] = [];
+
+              for (let i = 0; i < item.bookingSlots.length; i++) {
+                const element = item.bookingSlots[i];
+                daysOpenArr.push(...element.daysOpen);
+              }
+
               return (
                 <div
                   key={index}
@@ -124,25 +137,28 @@ const BusinessProfile = () => {
                       {item.closeTime.slice(0, -3)}
                     </span>
                     <span>
-                      {item.daysOpen?.map((jj: string, kk: number) => {
+                      {daysOpenArr?.map((day: string, jj: number) => {
                         return (
-                          <span key={kk} className="text-[12px] mx-1">
-                            {jj.slice(0, 3)}
+                          <span key={jj} className="text-[12px] mx-1">
+                            {dayOfWeek(language)?.find((ii) => ii.value === day)
+                              ?.name ?? ""}
                           </span>
                         );
                       })}
                     </span>
-                  </p>
-                  <p className="flex flex-col gap-1 text-end justify-end">
-                    <span className="text-green-400">
-                      {
-                        getTotalReservByBusiness?.filter(
-                          (ii: any) =>
-                            ii.serviceId === item.id && ii.status === "pending"
-                        )?.length
-                      }{" "}
-                      {t("pending")}
+                    <span className="flex gap-1">
+                      <span className="px-2 py-1 bg-[#F0AD4E] text-white text-[12px] rounded-lg">
+                        <span className="mx-1">{item.totalpending}</span>
+                        {t("pending")}
+                      </span>
+                      <span className="px-2 py-1 bg-deep-blue bg-opacity-10 text-deep-blue text-[12px] rounded-lg">
+                        <span className="mx-1">{item.totalapproved}</span>
+                        {t("approved")}
+                      </span>
                     </span>
+                  </p>
+                  <p className="flex flex-col gap-1 text-end justify-center">
+                    <NavigateNextIcon />
                   </p>
                 </div>
               );

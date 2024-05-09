@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../helper/createSupabase";
 import SearchMap from "./SearchMap";
-import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
+import { dayOfWeek } from "../../helper/daysOfWeek"; // dataOfWeekEng, dataOfWeekThai, 
 import { insertBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
 
@@ -39,18 +39,18 @@ export default function BusinessInfo() {
         phoneNumber: "",
     };
 
-    const dayOfWeek = () => {
-        switch (language) {
-            case "th":
-                return dataOfWeekThai;
+    // const dayOfWeek = () => {
+    //     switch (language) {
+    //         case "th":
+    //             return dataOfWeekThai;
 
-            case "en":
-                return dataOfWeekEng;
+    //         case "en":
+    //             return dataOfWeekEng;
 
-            default:
-                return dataOfWeekThai;
-        }
-    };
+    //         default:
+    //             return dataOfWeekThai;
+    //     }
+    // };
 
     const schema = Yup.object().shape({
         title: Yup.string()
@@ -252,7 +252,7 @@ export default function BusinessInfo() {
                         {t("form:business:create:openTime")}
                     </p>
                     <div className="flex justify-between mt-1">
-                        {dayOfWeek()?.map((day, index) => (
+                        {dayOfWeek(language)?.map((day, index) => (
                             <div
                                 onClick={() => toggleDay(day.value)}
                                 key={index}
