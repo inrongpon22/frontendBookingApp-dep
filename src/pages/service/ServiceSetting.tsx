@@ -102,9 +102,9 @@ export default function ServiceSetting() {
             </div>
             <div style={{ background: "#F7F7F7", height: "100vh" }}>
                 <p className="pr-4 pl-4 pt-3 pb-3">
-                    {t("services")} {`(${services.length})`}{" "}
+                    {t("services")} {`(${services.filter(item => item.isDeleted == false).length})`}{" "}
                 </p>
-                {services.map((service, index) => (
+                {services.filter((item) => item.isDeleted == false).map((service, index) => (
                     <div
                         key={index}
                         className="mb-2"

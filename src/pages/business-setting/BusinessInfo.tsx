@@ -175,6 +175,31 @@ export default function BusinessInfo(props: IParams) {
         }
     };
 
+    const handleClearImages = (index: number) => {
+        setPreviewImages((prevImages) => {
+            const newImages = [...prevImages];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+        setFile((prevFiles) => {
+            const newImages = [...prevFiles];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+    };
+
+    const isDaySelected = (dayValue: string) => {
+        return daysOpen.includes(dayValue);
+    };
+
+    const toggleDay = (dayValue: string) => {
+        if (isDaySelected(dayValue)) {
+            setDaysOpen(daysOpen.filter((day) => day !== dayValue));
+        } else {
+            setDaysOpen([...daysOpen, dayValue]);
+        }
+    };
+
     const formik = useFormik({
         initialValues: {
             title: businessInfo?.title,
@@ -217,7 +242,6 @@ export default function BusinessInfo(props: IParams) {
                     closeTime: closeTime,
                     userId: userId ? Number(userId) : 0,
                 };
-                console.log(insertData);
 
                 if (token === null) {
                     throw new Error("Token is not found");
@@ -265,31 +289,6 @@ export default function BusinessInfo(props: IParams) {
         },
     });
 
-    const handleClearImages = (index: number) => {
-        setPreviewImages((prevImages) => {
-            const newImages = [...prevImages];
-            newImages.splice(index, 1);
-            return newImages;
-        });
-        setFile((prevFiles) => {
-            const newImages = [...prevFiles];
-            newImages.splice(index, 1);
-            return newImages;
-        });
-    };
-
-    const isDaySelected = (dayValue: string) => {
-        return daysOpen.includes(dayValue);
-    };
-
-    const toggleDay = (dayValue: string) => {
-        if (isDaySelected(dayValue)) {
-            setDaysOpen(daysOpen.filter((day) => day !== dayValue));
-        } else {
-            setDaysOpen([...daysOpen, dayValue]);
-        }
-    };
-
     return (
         <>
             <div className="flex flex-col" style={{ marginBottom: "90px" }}>
@@ -309,11 +308,10 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.title
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -350,11 +348,10 @@ export default function BusinessInfo(props: IParams) {
                                         : "white",
                                 }}
                                 className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -430,11 +427,10 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.phoneNumber
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">
