@@ -98,7 +98,7 @@ export default function ServiceCard(props: IParams) {
                         horizontal: "right",
                         vertical: "bottom",
                     }}>
-                    <MenuItem onClick={handleEdit}>
+                    <MenuItem sx={{ borderRadius: "8px" }} onClick={handleEdit}>
                         <ListItemIcon>
                             <EditOutlinedIcon fontSize="small" />
                         </ListItemIcon>
