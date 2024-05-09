@@ -1,15 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
+// helper
+import { shareBookingLink } from "../../helper/alerts";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { shareBookingLink } from "../../helper/alerts";
-import { useTranslation } from "react-i18next";
-// icons
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import toast from "react-hot-toast";
+import RepeatIcon from '@mui/icons-material/Repeat';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 const BusinessProfileMoreOptions = () => {
   const navigate = useNavigate();
@@ -32,6 +34,11 @@ const BusinessProfileMoreOptions = () => {
         url: undefined,
       },
       {
+        icon: <EventBusyIcon />,
+        label: t("button:setDayoff"),
+        url: undefined,
+      },
+      {
         icon: <StoreIcon />,
         label: t("button:businessSetting"),
         url: undefined,
@@ -42,7 +49,12 @@ const BusinessProfileMoreOptions = () => {
         url: `/serviceInfo/${businessId}`,
       },
     ],
-    logut: [
+    account: [
+      {
+        icon: <RepeatIcon />,
+        label: t("button:switchBusiness"),
+        url: undefined,
+      },
       {
         icon: <LogoutIcon />,
         label: t("button:logout"),
