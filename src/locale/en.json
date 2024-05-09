@@ -49,7 +49,11 @@
         "hr": "hr",
         "Availableguests": "Available guests",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "askForDelete": "Are you sure to delete?",
+        "serviceDeleted": "This action will remove all associated information permanently.",
+        "desDeleteServiceF": "All information of “",
+        "desDeleteServiceL": "” will be permanently deleted."
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -106,7 +110,9 @@
         "serviceSetting": "Service Setting",
         "logout": "Logout",
         "addMoreTime": "Add More Time",
-        "createNewService": "Create New Service"
+        "createNewService": "Create New Service",
+        "back": "Back",
+        "yesDelete": "Yes, delete it"
     },
     "noti": {
         "booking": {

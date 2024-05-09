@@ -49,7 +49,11 @@
         "totalPending": "การจองที่รอดำเนินการทั้งหมด",
         "pending": "รออนุมัติ",
         "approved": "อนุมัติ",
-        "cancelled": "ยกเลิก"
+        "cancelled": "ยกเลิก",
+        "askForDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบบริการนี้?",
+        "serviceDeleted": "การดำเนินการนี้จะลบข้อมูลที่เกี่ยวข้องทั้งหมดอย่างถาวร",
+        "desDeleteServiceF": "ข้อมูลทั้งหมดของ “",
+        "desDeleteServiceL": "” จะถูกลบอย่างถาวร"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -106,7 +110,9 @@
         "businessSetting": "ตั้งค่าธุรกิจ",
         "serviceSetting": "ตั้งค่าบริการ",
         "logout": "ออกจากระบบ",
-        "createNewService": "สร้างบริการใหม่"
+        "createNewService": "สร้างบริการใหม่",
+        "back": "กลับ",
+        "yesDelete": "ลบ"
     },
     "noti": {
         "booking": {
