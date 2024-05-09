@@ -43,8 +43,10 @@ export default function ListServiceCard(props: IProps) {
 
     const handleDeleteService = async () => {
         try {
-            await deleteService(props.serviceId, token);
-            props.handleRefresh();
+            if (token) {
+                await deleteService(props.serviceId, token);
+                props.handleRefresh();
+            }
         } catch (error) {
             console.error(error);
         }
@@ -61,8 +63,7 @@ export default function ListServiceCard(props: IProps) {
                     background: "#FA6056",
                 }}
                 className={`absolute top-0 right-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
@@ -80,8 +81,7 @@ export default function ListServiceCard(props: IProps) {
                     right: "65px",
                 }}
                 className={`absolute top-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
