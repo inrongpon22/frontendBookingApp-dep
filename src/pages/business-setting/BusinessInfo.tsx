@@ -19,6 +19,7 @@ import SearchMap from "../business/SearchMap";
 
 interface IParams {
     businessData?: IgetBusiness;
+    isEdit: boolean;
 }
 
 export default function BusinessInfo(props: IParams) {
@@ -30,7 +31,7 @@ export default function BusinessInfo(props: IParams) {
         i18n: { language },
     } = useTranslation();
 
-    const [file, setFile] = useState<File[]>([]);
+    const [files, setFiles] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
     const [openTime, setOpenTime] = useState(
         props.businessData?.openTime || ""
@@ -165,7 +166,7 @@ export default function BusinessInfo(props: IParams) {
                 fileReader.readAsDataURL(newFile);
             }
 
-            setFile((prevFiles) => {
+            setFiles((prevFiles) => {
                 if (newFile) {
                     return [...prevFiles, newFile];
                 } else {
@@ -181,11 +182,12 @@ export default function BusinessInfo(props: IParams) {
             newImages.splice(index, 1);
             return newImages;
         });
-        setFile((prevFiles) => {
+        setFiles((prevFiles) => {
             const newImages = [...prevFiles];
             newImages.splice(index, 1);
             return newImages;
         });
+        props.businessData?.imagesURL?.splice(index, 1);
     };
 
     const isDaySelected = (dayValue: string) => {
@@ -211,12 +213,12 @@ export default function BusinessInfo(props: IParams) {
         onSubmit: async (values) => {
             const imagesURL: string[] = [];
             const uniqueRandomNumber = generateUniqueRandomNumber();
-            if (file.length > 0) {
-                for (const element of file) {
+            if (files.length > 0) {
+                for (const element of files) {
                     const { data, error } = await supabase.storage
                         .from("BookingSystem/images")
                         .upload(
-                            file !== null
+                            files !== null
                                 ? element.name + `${uniqueRandomNumber}`
                                 : "",
                             element
@@ -231,7 +233,7 @@ export default function BusinessInfo(props: IParams) {
 
                 const insertData = {
                     title: values.title,
-                    imagesURL: imagesURL,
+                    imagesURL: imagesURL.concat(props.businessData?.imagesURL || []),
                     description: values.description,
                     phoneNumber: values.phoneNumber,
                     address: locationData.address,
@@ -253,7 +255,7 @@ export default function BusinessInfo(props: IParams) {
                     token
                 );
                 if (business.status === 200) {
-                    navigate(`/business-profile/${business.data.id}`);
+                    navigate(`/business-profile/${props.businessData?.id}`);
                 } else {
                     console.error("Error updating business");
                 }
@@ -299,6 +301,7 @@ export default function BusinessInfo(props: IParams) {
                         {t("form:business:create:shopName")}
                     </p>
                     <input
+                        disabled={!props.isEdit}
                         {...formik.getFieldProps("title")}
                         onBlur={formik.handleBlur}
                         type="text"
@@ -326,6 +329,7 @@ export default function BusinessInfo(props: IParams) {
                     <SearchMap
                         handleChangeLocation={handleChangeLocation}
                         oldAddress={locationData.address}
+                        isEdit={props.isEdit}
                     />
                     <p
                         style={{ fontSize: "14px" }}
@@ -335,9 +339,10 @@ export default function BusinessInfo(props: IParams) {
                     <div className="flex justify-between mt-1">
                         {dayOfWeek()?.map((day, index) => (
                             <div
-                                onClick={() => toggleDay(day.value)}
+                                onClick={() => props.isEdit && toggleDay(day.value)}
                                 key={index}
                                 style={{
+                                    cursor: props.isEdit ? "pointer" : "default",
                                     width: "45px",
                                     height: "47px",
                                     borderColor: isDaySelected(day.value)
@@ -374,6 +379,7 @@ export default function BusinessInfo(props: IParams) {
                             </div>
                             <div className="flex">
                                 <input
+                                    disabled={!props.isEdit}
                                     className="font-black-500 focus:outline-none"
                                     value={openTime}
                                     onChange={(e) =>
@@ -406,7 +412,7 @@ export default function BusinessInfo(props: IParams) {
                                     }
                                     type="time"
                                     style={{ border: "none" }}
-                                    disabled={openTime === ""}
+                                    disabled={openTime === "" || !props.isEdit}
                                 />
                             </div>
                         </div>
@@ -454,6 +460,7 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}>
                         <textarea
+                            disabled={!props.isEdit}
                             name="description"
                             value={formik.values.description}
                             onChange={formik.handleChange}
@@ -476,9 +483,10 @@ export default function BusinessInfo(props: IParams) {
                         {previewImages.map((image, index) => (
                             <div key={index} className="mt-3">
                                 <Badge
-                                    onClick={() => handleClearImages(index)}
+                                    onClick={props.isEdit ? () => handleClearImages(index) : () => { }}
                                     badgeContent={
                                         <IconButton
+                                            disabled={!props.isEdit}
                                             size="small"
                                             sx={{
                                                 background: "black",
@@ -514,6 +522,7 @@ export default function BusinessInfo(props: IParams) {
                                 htmlFor={`fileInput`}
                                 style={{ cursor: "pointer" }}>
                                 <input
+                                    disabled={!props.isEdit}
                                     id={`fileInput`}
                                     type="file"
                                     style={{ display: "none" }}

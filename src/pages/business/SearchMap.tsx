@@ -22,6 +22,7 @@ type LocationData = {
 interface IParameter {
     handleChangeLocation: (inputData: ILocation) => void;
     oldAddress?: string;
+    isEdit?: boolean;
 }
 
 export default function SearchMap(props: IParameter) {
@@ -56,7 +57,8 @@ export default function SearchMap(props: IParameter) {
             <PlacesAutocomplete
                 value={address}
                 onChange={handleChange}
-                onSelect={handleSelect}>
+                onSelect={handleSelect}
+            >
                 {({
                     getInputProps,
                     suggestions,
@@ -73,6 +75,7 @@ export default function SearchMap(props: IParameter) {
                                     placeholder: "Search Places ...",
                                     className: "location-search-input",
                                 })}
+                                disabled={props.isEdit !== undefined ? !props.isEdit : props.isEdit}
                                 value={address}
                                 type="search"
                                 id="default-search"
@@ -112,13 +115,13 @@ export default function SearchMap(props: IParameter) {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                              backgroundColor: "#fafafa",
-                                              cursor: "pointer",
-                                          }
+                                            backgroundColor: "#fafafa",
+                                            cursor: "pointer",
+                                        }
                                         : {
-                                              backgroundColor: "#ffffff",
-                                              cursor: "pointer",
-                                          };
+                                            backgroundColor: "#ffffff",
+                                            cursor: "pointer",
+                                        };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(
