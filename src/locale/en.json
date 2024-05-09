@@ -49,7 +49,11 @@
         "hr": "hr",
         "Availableguests": "Available guests",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "askForDelete": "Are you sure to delete?",
+        "serviceDeleted": "This action will remove all associated information permanently.",
+        "desDeleteServiceF": "All information of “",
+        "desDeleteServiceL": "” will be permanently deleted."
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -71,8 +75,8 @@
         "bookingHasExpired": "Booking Expired",
         "waitingForApproval": "Waiting for Confirmation",
         "businessSetting": "Business Setting",
-    "busineessApprovedSuccessful": "Approved successfully",
-    "busineessRejectedSuccessful": "Rejected successfully"
+        "busineessApprovedSuccessful": "Approved successfully",
+        "busineessRejectedSuccessful": "Rejected successfully"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -84,8 +88,8 @@
         "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
         "bookingHasExpired": "The available time has already passed. This appointment has expired.",
         "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
-    "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
-    "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection."
+        "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
+        "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection."
     },
     "button": {
         "cancel": "Cancel",
@@ -106,14 +110,16 @@
         "overview": "Overview",
         "overviewSchedule": "Overview Schedule",
         "setDayoff": "Set Day-off",
-    "shareBookingLink": "Share Booking Link",
+        "shareBookingLink": "Share Booking Link",
         "businessSetting": "Business Setting",
         "serviceSetting": "Service Setting",
         "logout": "Logout",
         "addMoreTime": "Add More Time",
         "createNewService": "Create New Service",
-    "switchBusiness": "Switch to another business",
-    "backToMain": "Back to main page"
+        "back": "Back",
+        "yesDelete": "Yes, delete it",
+        "switchBusiness": "Switch to another business",
+        "backToMain": "Back to main page"
     },
     "noti": {
         "booking": {
@@ -144,9 +150,9 @@
     "form": {
         "business": {
             "auth": {
-        "login": "Login to continue"
-      },
-      "create": {
+                "login": "Login to continue"
+            },
+            "create": {
                 "shopName": "Shop Name",
                 "location": "Location",
                 "openTime": "Open Time",
@@ -235,7 +241,7 @@
         "noBookingReq": "No booking request",
         "noTimeSlots": "No time slots available",
         "noServicesYet": "Your business doesn't have any service, create service frist",
-    "tooManyRequest": "Too many requests. Please try again after 60 seconds."
+        "tooManyRequest": "Too many requests. Please try again after 60 seconds."
     },
     "fragment": {
         "needTo": "Need to",

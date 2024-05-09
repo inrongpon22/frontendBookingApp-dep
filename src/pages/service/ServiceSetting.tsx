@@ -102,28 +102,34 @@ export default function ServiceSetting() {
             </div>
             <div style={{ background: "#F7F7F7", height: "100vh" }}>
                 <p className="pr-4 pl-4 pt-3 pb-3">
-                    {t("services")} {`(${services.filter(item => item.isDeleted == false).length})`}{" "}
+                    {t("services")}{" "}
+                    {`(${
+                        services.filter((item) => item.isDeleted == false)
+                            .length
+                    })`}{" "}
                 </p>
-                {services.filter((item) => item.isDeleted == false).map((service, index) => (
-                    <div
-                        key={index}
-                        className="mb-2"
-                        onTouchStart={handleSlide(index)}
-                        onMouseDown={handleSlide(index)}>
-                        <ListServiceCard
-                            serviceId={service.id}
-                            serviceName={service.title}
-                            price={service.price}
-                            description={service.description}
-                            currency={service.currency}
-                            openTime={service.openTime}
-                            closeTime={service.closeTime}
-                            daysOpen={service.daysOpen}
-                            open={openIndex === index} // Set open state based on openIndex
-                            handleRefresh={() => setReFresh(!reFresh)}
-                        />
-                    </div>
-                ))}
+                {services
+                    .filter((item) => item.isDeleted == false)
+                    .map((service, index) => (
+                        <div
+                            key={index}
+                            className="mb-2"
+                            onTouchStart={handleSlide(index)}
+                            onMouseDown={handleSlide(index)}>
+                            <ListServiceCard
+                                serviceId={service.id}
+                                serviceName={service.title}
+                                price={service.price}
+                                description={service.description}
+                                currency={service.currency}
+                                openTime={service.openTime}
+                                closeTime={service.closeTime}
+                                daysOpen={service.daysOpen}
+                                open={openIndex === index} // Set open state based on openIndex
+                                handleRefresh={() => setReFresh(!reFresh)}
+                            />
+                        </div>
+                    ))}
             </div>
         </div>
     );

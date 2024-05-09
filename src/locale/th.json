@@ -49,7 +49,11 @@
         "totalPending": "การจองที่รอดำเนินการทั้งหมด",
         "pending": "รออนุมัติ",
         "approved": "อนุมัติ",
-        "cancelled": "ยกเลิก"
+        "cancelled": "ยกเลิก",
+        "askForDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบบริการนี้?",
+        "serviceDeleted": "การดำเนินการนี้จะลบข้อมูลที่เกี่ยวข้องทั้งหมดอย่างถาวร",
+        "desDeleteServiceF": "ข้อมูลทั้งหมดของ “",
+        "desDeleteServiceL": "” จะถูกลบอย่างถาวร"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -72,8 +76,8 @@
         "waitingForApproval": "รอการอนุมัติ",
         "serviceTime": "เวลาในการบริการ",
         "businessSetting": "ตั้งค่าธุรกิจ",
-    "busineessApprovedSuccessful": "ยืนยันการจองสำเร็จ",
-    "busineessRejectedSuccessful": "ปฏิเสธการจองสำเร็จ"
+        "busineessApprovedSuccessful": "ยืนยันการจองสำเร็จ",
+        "busineessRejectedSuccessful": "ปฏิเสธการจองสำเร็จ"
     },
     "desc": {
         "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
@@ -85,8 +89,8 @@
         "bookingHasDeclined": "ขออภัยในความไม่สะดวก การจองของคุณถูกยกเลิก",
         "bookingHasExpired": "ขออภัยในความไม่สะดวก การจองของคุณหมดอายุแล้ว",
         "waitingForApproval": "เราได้ส่งการยืนยันไปทางร้านค้า เราจะส่ง SMS แจ้งให้คุณทราบเมื่อร้านค้ายืนยันการจองของคุณ",
-    "busineessApprovedSuccessful": "ระบบจะส่งข้อความ SMS ไปให้ลูกค้าเพื่อแจ้งให้ทราบว่าการจองได้รับการยืนยันอย่างเป็นทางการแล้ว",
-    "busineessRejectedSuccessful": "ระบบจะส่งข้อความ SMS ไปให้ลูกค้าเพื่อแจ้งให้ทราบถึงการยกเลิกนี้"
+        "busineessApprovedSuccessful": "ระบบจะส่งข้อความ SMS ไปให้ลูกค้าเพื่อแจ้งให้ทราบว่าการจองได้รับการยืนยันอย่างเป็นทางการแล้ว",
+        "busineessRejectedSuccessful": "ระบบจะส่งข้อความ SMS ไปให้ลูกค้าเพื่อแจ้งให้ทราบถึงการยกเลิกนี้"
     },
     "button": {
         "cancel": "ยกเลิก",
@@ -107,13 +111,15 @@
         "overview": "ภาพรวม",
         "overviewSchedule": "ภาพรวมการจอง",
         "setDayoff": "ตั้งค่าวันหยุด",
-    "shareBookingLink": "แชร์ลิงก์การจอง",
+        "shareBookingLink": "แชร์ลิงก์การจอง",
         "businessSetting": "ตั้งค่าธุรกิจ",
         "serviceSetting": "ตั้งค่าบริการ",
         "logout": "ออกจากระบบ",
         "createNewService": "สร้างบริการใหม่",
-    "switchBusiness": "สลับบัญชีธุรกิจ",
-    "backToMain": "กลับหน้าแรก"
+        "back": "กลับ",
+        "yesDelete": "ลบ",
+        "switchBusiness": "สลับบัญชีธุรกิจ",
+        "backToMain": "กลับหน้าแรก"
     },
     "noti": {
         "booking": {
@@ -144,9 +150,9 @@
     "form": {
         "business": {
             "auth": {
-        "login": "เข้าสู่ระบบเพื่อดำเนินการต่อ"
-      },
-      "create": {
+                "login": "เข้าสู่ระบบเพื่อดำเนินการต่อ"
+            },
+            "create": {
                 "shopName": "ชื่อร้าน",
                 "location": "สถานที่",
                 "openTime": "เวลาที่เปิดให้บริการ",
@@ -235,7 +241,7 @@
         "noBookingReq": "ไม่มีคำขอการจอง",
         "noTimeSlots": "ไม่มีช่วงเวลาที่เปิดให้บริการ",
         "noServicesYet": "ยังไม่มีบริการ, โปรดเพิ่มบริการของคุณ",
-    "tooManyRequest": "มีคำขอมากเกินไป โปรดลองอีกครั้งใน 60 วินาที"
+        "tooManyRequest": "มีคำขอมากเกินไป โปรดลองอีกครั้งใน 60 วินาที"
     },
     "fragment": {
         "needTo": "ต้องการที่จะ",
