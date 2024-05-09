@@ -65,7 +65,9 @@
     "bookingHasCancelled": "Booking Canceled",
     "bookingHasDeclined": "Booking Declined",
     "bookingHasExpired": "Booking Expired",
-    "waitingForApproval": "Waiting for Confirmation"
+    "waitingForApproval": "Waiting for Confirmation",
+    "busineessApprovedSuccessful": "Approved successfully",
+    "busineessRejectedSuccessful": "Rejected successfully"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -76,7 +78,9 @@
     "bookingHasCancelled": "This appointment has been canceled. You can make a new appointment.",
     "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
     "bookingHasExpired": "The available time has already passed. This appointment has expired.",
-    "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed."
+    "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
+    "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
+    "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection."
   },
   "button": {
     "cancel": "Cancel",
@@ -101,7 +105,8 @@
     "businessSetting": "Business Setting",
     "serviceSetting": "Service Setting",
     "logout": "Logout",
-    "switchBusiness":"Switch to another business"
+    "switchBusiness": "Switch to another business",
+    "backToMain": "Back to main page"
   },
   "noti": {
     "booking": {
@@ -131,6 +136,9 @@
   },
   "form": {
     "business": {
+      "auth": {
+        "login": "Login to continue"
+      },
       "create": {
         "shopName": "Shop Name",
         "location": "Location",
@@ -217,7 +225,8 @@
     "bookingFailedMessage": "booking",
     "noBookingReq": "No booking request",
     "noTimeSlots": "No time slots available",
-    "noServicesYet": "Your business doesn't have any service, create service frist"
+    "noServicesYet": "Your business doesn't have any service, create service frist",
+    "tooManyRequest": "Too many requests. Please try again after 60 seconds."
   },
   "fragment": {
     "needTo": "Need to",

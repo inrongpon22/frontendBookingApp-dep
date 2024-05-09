@@ -3,12 +3,11 @@ export const ApproveContext = createContext<any>(null); //create context to stor
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-import "moment/locale/th"; // Import the Thai locale
 import toast from "react-hot-toast";
 // fetcher
 import useSWR from "swr";
 import axios from "axios";
-import { app_api } from "../../helper/url";
+import { app_api, useQuery } from "../../helper/url";
 // styled
 import {
   Accordion,
@@ -35,6 +34,7 @@ const BookingApproval = (): React.ReactElement => {
   const { businessId, serviceId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const query = useQuery();
 
   const token: string | null = localStorage.getItem("token");
   const lang: string | null = localStorage.getItem("lang");
@@ -67,6 +67,17 @@ const BookingApproval = (): React.ReactElement => {
     }
   };
 
+  const { data: getReservByAccessCode } = useSWR(
+    token &&
+      query.get("accessCode") &&
+      `${app_api}/getReservationByBusinessIdFromMessage/${businessId}/all`,
+    (url: string) =>
+      axios
+        .post(url, { accessCode: query.get("accessCode") })
+        .then((res) => res.data[0]),
+    { revalidateOnFocus: false }
+  );
+
   const {
     data: getReservByBusiId,
     isLoading,
@@ -74,7 +85,8 @@ const BookingApproval = (): React.ReactElement => {
     mutate,
   } = useSWR(
     businessId &&
-      `${app_api}/getReservationByBusinessId/${businessId}/${converted()}`,
+      token &&
+      `${app_api}/getReservationByBusinessId/${businessId}/${converted()}?page=1&limit=10`,
     (url: string) =>
       axios
         .get(url, {
@@ -108,69 +120,107 @@ const BookingApproval = (): React.ReactElement => {
   );
 
   const approveRequested = async (reservationId: string, serviceId: string) => {
-    globalConfirmation(
-      t("noti:booking:approve:confirmation"),
-      t("noti:booking:approve:confirmationDesc"),
-      t("button:approve"),
-      undefined,
-      t("button:cancel")
-    ).then((result: any) => {
-      if (result.isConfirmed) {
-        axios
-          .post(
-            `${app_api}/approveReservation/${reservationId}/${serviceId}/th`,
-            undefined,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          )
-          .then(() => {
-            setShow(false);
-            toast.success(t("noti:booking:approve:success"));
-            setShow(false);
-            mutate();
-          })
-          .catch((err) => {
-            console.log(err);
-            toast.error(t("noti:booking:approve:fail"));
-          });
-      }
-    });
+    if (token) {
+      globalConfirmation(
+        t("noti:booking:approve:confirmation"),
+        t("noti:booking:approve:confirmationDesc"),
+        t("button:approve"),
+        undefined,
+        t("button:cancel")
+      ).then((result: any) => {
+        if (result.isConfirmed) {
+          axios
+            .post(
+              `${app_api}/approveReservation/${
+                query.get("accessCode")
+                  ? getReservByAccessCode.id
+                  : reservationId
+              }/${
+                query.get("accessCode")
+                  ? getReservByAccessCode.serviceId
+                  : serviceId
+              }/${lang}`,
+              undefined,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            )
+            .then(() => {
+              if (query.get("accessCode")) {
+                setDialogState("booking-approval-result-success");
+              } else {
+                setShow(false);
+                toast.success(t("noti:booking:approve:success"));
+                setShow(false);
+                mutate();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error(t("noti:booking:approve:fail"));
+            });
+        }
+      });
+    } else {
+      setDialogState("phone-input");
+    }
   };
 
-  const rejectRequested = async (businessId: string, serviceId: string) => {
-    globalConfirmation(
-      t("noti:booking:reject:confirmation"),
-      t("noti:booking:reject:confirmationDesc"),
-      t("button:approve"),
-      undefined,
-      t("button:cancel")
-    ).then((result: any) => {
-      if (result.isConfirmed) {
-        axios
-          .post(
-            `${app_api}/cancelReservation/${businessId}/${serviceId}/${lang}/business`,
-            undefined,
-            {
-              headers: {
-                Authorization: token,
+  const rejectRequested = async (
+    reservationId: string,
+    serviceId: string,
+    rejectNote: string
+  ) => {
+    if (token) {
+      globalConfirmation(
+        t("noti:booking:reject:confirmation"),
+        t("noti:booking:reject:confirmationDesc"),
+        t("button:approve"),
+        undefined,
+        t("button:cancel")
+      ).then((result: any) => {
+        if (result.isConfirmed) {
+          axios
+            .post(
+              `${app_api}/cancelReservation/${
+                query.get("accessCode")
+                  ? getReservByAccessCode.id
+                  : reservationId
+              }/${
+                query.get("accessCode")
+                  ? getReservByAccessCode.serviceId
+                  : serviceId
+              }/${lang}/business`,
+              {
+                rejectNote: rejectNote,
               },
-            }
-          )
-          .then(() => {
-            setShow(false);
-            toast.success(t("noti:booking:reject:success"));
-            setShow(false);
-            mutate();
-          })
-          .catch((err) => {
-            console.log(err);
-            toast.error(t("noti:booking:reject:fail"));
-          });
-      }
-    });
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            )
+            .then(() => {
+              if (query.get("accessCode")) {
+                setDialogState("booking-approval-result-rejected");
+              } else {
+                setShow(false);
+                toast.success(t("noti:booking:reject:success"));
+                setShow(false);
+                mutate();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error(t("noti:booking:reject:fail"));
+            });
+        }
+      });
+    } else {
+      setDialogState("phone-input");
+    }
   };
 
   const AntTabs = styled(Tabs)({
@@ -201,6 +251,9 @@ const BookingApproval = (): React.ReactElement => {
 
   useEffect(() => {
     document.title = t("title:bookingApproval");
+    if (query.get("accessCode")) {
+      setShow(true);
+    }
   }, []);
 
   if (ReservByBusiIdError) return <div>API ERROR</div>;
@@ -230,10 +283,15 @@ const BookingApproval = (): React.ReactElement => {
         {/* loading progress */}
 
         <div className="flex drop-shadow-lg p-4 font-semibold text-[14px]">
-          <button type="button" onClick={() => navigate(-1)}>
+          <button
+            type="button"
+            onClick={() => navigate(`/business-profile/${businessId}`)}
+          >
             <ArrowBackIosIcon fontSize="small" />
           </button>
-          <span className="mx-auto">{location.state.title}</span>
+          <span className="mx-auto">
+            {location.state && location.state.title}
+          </span>
         </div>
         <Box sx={{ bgcolor: "#fff" }}>
           <AntTabs
@@ -241,10 +299,14 @@ const BookingApproval = (): React.ReactElement => {
             onChange={(_, newValue: number) => setTabStatus(newValue)}
           >
             <AntTab
-              label={`${t("pending")} | ${location.state.totalpending}`}
+              label={`${t("pending")} | ${
+                location.state ? location.state.totalpending : ""
+              }`}
             />
             <AntTab
-              label={`${t("approved")} | ${location.state.totalapproved}`}
+              label={`${t("approved")} | ${
+                location.state ? location.state.totalapproved : ""
+              }`}
             />
             <AntTab label={`${t("cancelled")}`} />
           </AntTabs>
@@ -252,7 +314,7 @@ const BookingApproval = (): React.ReactElement => {
         <div className="bg-gray-100">
           <div className="py-1" />
           <div className="">
-            {getReservByBusiId ? (
+            {getReservByBusiId && getReservByBusiId.length > 0 ? (
               getReservByBusiId?.map((item: any, index: number) => {
                 const date = moment(item.date).format("DD");
                 const day = moment(item.date).format("dddd");
