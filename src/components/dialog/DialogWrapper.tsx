@@ -56,7 +56,7 @@ const DialogWrapper = ({
     },
     validationSchema:
       confirmationDialogSchemas[
-        dialogState as keyof typeof confirmationDialogSchemas
+      dialogState as keyof typeof confirmationDialogSchemas
       ],
     onSubmit: async (values) => {
       switch (dialogState) {
@@ -261,8 +261,8 @@ const DialogWrapper = ({
               onClick={handleBackButton}
             >
               {dialogState === "phone-input" ||
-              dialogState === "booking-approval-summary" ||
-              dialogState === "business-more-options" ? (
+                dialogState === "booking-approval-summary" ||
+                dialogState === "business-more-options" ? (
                 <CloseIcon />
               ) : (
                 <ArrowBackIosIcon />

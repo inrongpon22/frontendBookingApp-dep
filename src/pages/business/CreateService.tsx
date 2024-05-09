@@ -49,8 +49,7 @@ export default function CreateService() {
             duration: serviceTime[0].duration,
             description: serviceInfo.serviceDescription,
             price: serviceInfo.price,
-            requireApproval: isAutoApprove,
-            daysOpen: serviceTime[0].daysOpen,
+            isAutoApprove: isAutoApprove,
             currency: serviceInfo.currency,
             openTime: serviceTime[0].openTime,
             closeTime: serviceTime[0].closeTime,
@@ -79,7 +78,7 @@ export default function CreateService() {
             await addService(insertData, token);
             localStorage.removeItem("serviceInfo");
             localStorage.removeItem("serviceTime");
-            navigate(`/service/${businessId}`);
+            navigate(`/serviceSetting/${businessId}`);
         } catch (error) {
             console.log(error);
         }
@@ -207,26 +206,25 @@ export default function CreateService() {
 
 
                     <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
-                        {/* <button
-                    className="border text-white mt-4 rounded-lg font-semibold mb-6"
-                    style={{
-                        borderColor: `${alpha("#000000", 0.2)}`,
-                        color: "black",
-                        width: "166px",
-                        height: "51px",
-                        cursor: "pointer",
-                        backgroundColor: "white",
-                        fontSize: "14px",
-                    }}>
-                    Preview
-                </button> */}
+                        <button
+                            className="border text-white mt-4 rounded-lg font-semibold mb-6"
+                            style={{
+                                borderColor: `${alpha("#000000", 0.2)}`,
+                                color: "black",
+                                width: "166px",
+                                height: "51px",
+                                cursor: "pointer",
+                                backgroundColor: "white",
+                                fontSize: "14px",
+                            }}>
+                            Preview
+                        </button>
                         <button
                             onClick={handleCreateService}
                             type="submit"
                             className="text-white mt-4 rounded-lg font-semibold mb-6"
                             style={{
-                                // width: "166px",
-                                width: "90%",
+                                width: "166px",
                                 height: "51px",
                                 cursor: "pointer",
                                 backgroundColor: "#020873",

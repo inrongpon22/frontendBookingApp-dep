@@ -39,7 +39,7 @@ export default function ServiceCard() {
                     />
                 </Box>
             </div>
-            <div style={{ fontSize: "14px", marginTop: "-10px" }}>
+            <div style={{ fontSize: "14px", marginTop: "-10px", width: "70%" }}>
                 {serviceInfo?.serviceDescription}
             </div>
             <div style={{ fontSize: "14px" }}>
