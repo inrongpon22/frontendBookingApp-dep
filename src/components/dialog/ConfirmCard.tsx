@@ -35,6 +35,7 @@ export default function ConfirmCard(props: IProps) {
                         textAlign: "center",
                         color: alpha("#000000", 0.6),
                         fontSize: "14px",
+                        fontWeight: "normal",
                     }}>
                     {props.description}
                 </Typography>
@@ -48,12 +49,12 @@ export default function ConfirmCard(props: IProps) {
                             borderColor: alpha("#000000", 0.2),
                             fontSize: "14px",
                         }}
-                        className="border p-4 rounded-lg text-[#020873]">
+                        className="border text-[#020873] rounded-lg px-6 py-2 font-semibold transition duration-300 ease-in-out">
                         {props.bntBack}
                     </button>
                     <button
                         onClick={() => props.handleConfirm()}
-                        className="p-4 rounded-lg text-white"
+                        className="p-3 rounded-lg text-white px-6 py-2 font-semibold transition duration-300 ease-in-out"
                         style={{
                             width: "151px",
                             height: "51px",

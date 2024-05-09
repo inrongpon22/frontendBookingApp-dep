@@ -53,7 +53,8 @@
         "askForDelete": "Are you sure to delete?",
         "serviceDeleted": "This action will remove all associated information permanently.",
         "desDeleteServiceF": "All information of “",
-        "desDeleteServiceL": "” will be permanently deleted."
+        "desDeleteServiceL": "” will be permanently deleted.",
+        "titleDiscard": "Discard changes?"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -89,7 +90,8 @@
         "bookingHasExpired": "The available time has already passed. This appointment has expired.",
         "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
         "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
-        "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection."
+        "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection.",
+        "descriptionDiscard": "You have unsaved changes. Are you sure you want to discard them?"
     },
     "button": {
         "cancel": "Cancel",
@@ -119,7 +121,8 @@
         "back": "Back",
         "yesDelete": "Yes, delete it",
         "switchBusiness": "Switch to another business",
-        "backToMain": "Back to main page"
+        "backToMain": "Back to main page",
+        "discard": "Discard"
     },
     "noti": {
         "booking": {
