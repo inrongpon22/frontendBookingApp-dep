@@ -23,10 +23,24 @@ export interface IaddBusiness {
     userId: number;
 }
 
-
 export interface IBusinessInfoList {
     title: string;
     address: string;
     daysOpen: string[];
     phoneNumber: string;
+}
+
+export interface IgetBusiness {
+    id: number;
+    title: string;
+    imagesURL: string[];
+    description: string;
+    phoneNumber: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    daysOpen: string[];
+    openTime: string;
+    closeTime: string;
+    userId: number;
 }

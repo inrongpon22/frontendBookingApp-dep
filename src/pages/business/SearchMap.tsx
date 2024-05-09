@@ -21,11 +21,12 @@ type LocationData = {
 
 interface IParameter {
     handleChangeLocation: (inputData: ILocation) => void;
+    oldAddress?: string;
 }
 
 export default function SearchMap(props: IParameter) {
     const { t } = useTranslation();
-    const [address, setAddress] = useState("");
+    const [address, setAddress] = useState(props.oldAddress ?? "");
 
     const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
         const locationData: LocationData = { lat, lng, address };
@@ -50,34 +51,38 @@ export default function SearchMap(props: IParameter) {
             .catch((error) => console.error("Error", error));
     };
 
-  return (
-    <div>
-      <PlacesAutocomplete
-        value={address}
-        onChange={handleChange}
-        onSelect={handleSelect}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <>
-            <div className="relative">
-              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <SearchOutlinedIcon sx={{ color: "#8B8B8B" }} />
-              </div>
-              <input
-                {...getInputProps({
-                  placeholder: "Search Places ...",
-                  className: "location-search-input",
-                })}
+    return (
+        <div>
+            <PlacesAutocomplete
                 value={address}
-                type="search"
-                id="default-search"
-                style={{
-                  borderColor: `${alpha("#000000", 0.2)}`,
-                }}
-                className="ps-10 mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
-                placeholder={t("placeholder:location")}
-              />
-              {/* {address != "" && (
+                onChange={handleChange}
+                onSelect={handleSelect}>
+                {({
+                    getInputProps,
+                    suggestions,
+                    getSuggestionItemProps,
+                    loading,
+                }) => (
+                    <>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <SearchOutlinedIcon sx={{ color: "#8B8B8B" }} />
+                            </div>
+                            <input
+                                {...getInputProps({
+                                    placeholder: "Search Places ...",
+                                    className: "location-search-input",
+                                })}
+                                value={address}
+                                type="search"
+                                id="default-search"
+                                style={{
+                                    borderColor: `${alpha("#000000", 0.2)}`,
+                                }}
+                                className="ps-10 mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none"
+                                placeholder={t("placeholder:location")}
+                            />
+                            {/* {address != "" && (
                 <div
                   onClick={() => handleChange("")}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"

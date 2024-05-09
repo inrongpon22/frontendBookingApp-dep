@@ -48,6 +48,7 @@ export interface IService {
     closeTime: string; // Assuming it's a string representing time
     isHidePrice: boolean;
     isHideEndTime: boolean;
+    isDeleted: boolean;
 }
 
 export interface IServiceTime {

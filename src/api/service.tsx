@@ -50,17 +50,18 @@ export const getServiceByBusinessId = async (
 
 export const deleteService = async (serviceId: number, token: string) => {
     token = token.replace(/"/g, "");
+    console.log(token);
     try {
-        const services = await axios.delete(
-            `${import.meta.env.VITE_APP_API}/service/${serviceId}`,
+        const response = await axios.put(
+            `${import.meta.env.VITE_APP_API}/deleteServiceByHidden/${serviceId}`, {},
             {
                 headers: {
-                    Authorization: token,
-                },
+                    Authorization: token
+                }
             }
         );
 
-        return services.data;
+        return response.data;
     } catch (error) {
         console.error(error);
         throw error;
