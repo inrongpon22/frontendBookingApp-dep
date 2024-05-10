@@ -48,6 +48,9 @@ export default function BusinessInfo(props: IParams) {
     );
     const [businessInfo, setBusinessInfo] = useState<IBusinessInfo>({
         title: props.businessData?.title || "",
+        daysOpen: props.businessData?.daysOpen || [],
+        openTime: props.businessData?.openTime || "",
+        closeTime: props.businessData?.closeTime || "",
         phoneNumber: props.businessData?.phoneNumber || "",
         location: props.businessData?.address || "",
         description: props.businessData?.description || "",
@@ -83,6 +86,9 @@ export default function BusinessInfo(props: IParams) {
         setOpenTime(props.businessData?.openTime || "");
         setBusinessInfo({
             title: props.businessData?.title || "",
+            daysOpen: props.businessData?.daysOpen || [],
+            openTime: props.businessData?.openTime || "",
+            closeTime: props.businessData?.closeTime || "",
             phoneNumber: props.businessData?.phoneNumber || "",
             location: props.businessData?.address || "",
             description: props.businessData?.description || "",

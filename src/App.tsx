@@ -50,7 +50,7 @@ function App() {
             element={<BookingSummaryWrapper />}
           />
           {/* business */}
-          <Route path="/createBusiness" element={<CreateBusiness />} />
+          <Route path="/create-business" element={<CreateBusiness />} />
           <Route
             path="/businessSetting/:businessId"
             element={<BusinessSetting />}

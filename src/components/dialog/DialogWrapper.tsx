@@ -129,7 +129,7 @@ const DialogWrapper = ({
                         })
                         .catch((err) => {
                           if (err.response.status === 404) {
-                            navigate("/createBusiness");
+                            navigate("/create-business");
                           } else {
                             toast.error(err.message);
                           }
