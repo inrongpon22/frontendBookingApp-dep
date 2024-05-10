@@ -41,12 +41,12 @@ const BusinessProfileMoreOptions = () => {
       {
         icon: <StoreIcon />,
         label: t("button:businessSetting"),
-        url: undefined,
+        url: `/businessSetting/${businessId}`,
       },
       {
         icon: <SettingsIcon />,
         label: t("button:serviceSetting"),
-        url: `/serviceInfo/${businessId}`,
+        url: `/serviceSetting/${businessId}`,
       },
     ],
     account: [

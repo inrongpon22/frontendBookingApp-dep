@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { globalConfirmation } from "../../helper/alerts";
 import axios from "axios";
-import { app_api } from "../../helper/url";
+import { app_api, useQuery } from "../../helper/url";
 import useSWR from "swr";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const query = useQuery();
   const { bookingId } = useParams(); // bookingId click from my-bookings
 
   const token = localStorage.getItem("token");
@@ -74,7 +75,9 @@ const BookingSummaryWrapper = () => {
   >([]);
 
   const { data: bookingById } = useSWR(
-    bookingId && `${app_api}/reservation/${bookingId}`,
+    bookingId &&
+      !query.get("accessCode") &&
+      `${app_api}/reservation/${bookingId}`,
     (url: string) =>
       axios
         .get(url, {
@@ -85,6 +88,21 @@ const BookingSummaryWrapper = () => {
         .then((res) => res.data)
         .catch((err) => console.log(err))
   );
+
+  const { data: bookingFromAccessCode } = useSWR(
+    bookingId &&
+      query.get("accessCode") &&
+      `${app_api}/getReservationByIdFromMessage/${bookingId}`,
+    (url: string) =>
+      axios
+        .post(url, { accessCode: query.get("accessCode") })
+        .then((res) => res.data[0])
+        .catch((err) => console.log(err))
+  );
+
+  const bookingDatas = bookingFromAccessCode
+    ? bookingFromAccessCode
+    : bookingById;
 
   const cancelBooking = async () => {
     globalConfirmation(
@@ -97,7 +115,8 @@ const BookingSummaryWrapper = () => {
       if (result.isConfirmed) {
         axios
           .post(
-            `${app_api}/cancelReservation/${bookingId}/${bookingById.serviceId}/${lang}/customer`,{},
+            `${app_api}/cancelReservation/${bookingId}/${bookingById.serviceId}/${lang}/customer`,
+            {},
             {
               headers: {
                 Authorization: `${token}`,
@@ -106,7 +125,7 @@ const BookingSummaryWrapper = () => {
           )
           .then(() => {
             toast.success(t("noti:booking:cancel:success"));
-            navigate("/my-bookings")
+            navigate("/my-bookings");
           })
           .catch((error) => {
             console.log(error);
@@ -119,7 +138,7 @@ const BookingSummaryWrapper = () => {
   useEffect(() => {
     if (location.state?.data.reservationId && location.state?.data.serviceId) {
       document.title = t("title:bookingSuccess");
-      toast.success(t("noti:booking:create:success"))
+      toast.success(t("noti:booking:create:success"));
       setLists([
         {
           label: t("what"),
@@ -151,42 +170,42 @@ const BookingSummaryWrapper = () => {
       setLists([
         {
           label: t("what"),
-          text: bookingById?.title,
+          text: bookingDatas?.title,
         },
         {
           label: t("when"),
-          text: `${moment(bookingById?.bookingDate).format(
+          text: `${moment(bookingDatas?.bookingDate).format(
             "dddd, MMMM D, YYYY"
           )}`,
         },
         {
           label: t("where"),
-          text: bookingById?.address,
+          text: bookingDatas?.address,
         },
         {
           label: t("who"),
-          text: `${bookingById?.userName} (${bookingById?.guestNumber} person)`,
+          text: `${bookingDatas?.userName} (${bookingDatas?.guestNumber} person)`,
         },
         {
           label: t("price"),
-          text: bookingById?.price,
+          text: bookingDatas?.price,
         },
         {
           label: t("notes"),
-          text: bookingById?.remark ? bookingById?.remark : "-",
+          text: bookingDatas?.remark ? bookingDatas?.remark : "-",
         },
       ]);
     }
-  }, [bookingById]);
+  }, [bookingById, bookingFromAccessCode]);
 
   return (
     <div className="p-5">
       <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
-        <span>{switchStatus(bookingById?.status)?.icon}</span>
-        <span>{switchStatus(bookingById?.status)?.title}</span>
+        <span>{switchStatus(bookingDatas?.status)?.icon}</span>
+        <span>{switchStatus(bookingDatas?.status)?.title}</span>
       </p>
       <p className="my-3 text-center">
-        {switchStatus(bookingById?.status)?.desc}
+        {switchStatus(bookingDatas?.status)?.desc}
       </p>
 
       <div className="p-4 border rounded-lg">
@@ -195,8 +214,8 @@ const BookingSummaryWrapper = () => {
             <div
               key={index}
               className={`text-[14px] grid grid-cols-6 py-1 ${
-                bookingById?.status === "cancel" ||
-                bookingById?.status === "declinded"
+                bookingDatas?.status === "cancel" ||
+                bookingDatas?.status === "declinded"
                   ? "text-gray-500"
                   : ""
               }`}
@@ -212,8 +231,8 @@ const BookingSummaryWrapper = () => {
 
       <div
         className={
-          bookingById?.status === "cancel" ||
-          bookingById?.status === "declinded"
+          bookingDatas?.status === "cancel" ||
+          bookingDatas?.status === "declinded"
             ? "flex gap-3"
             : ""
         }
@@ -221,32 +240,38 @@ const BookingSummaryWrapper = () => {
         <button
           type="button"
           className={`w-full p-2 mt-5 rounded-lg ${
-            bookingById?.status === "cancel" ||
-            bookingById?.status === "declinded"
+            bookingDatas?.status === "cancel" ||
+            bookingDatas?.status === "declinded"
               ? "border-2 border-deep-blue text-deep-blue"
               : "bg-deep-blue text-white"
           }`}
-          onClick={() => navigate("/my-bookings")}
+          onClick={() =>
+            navigate(`/my-bookings${`?accessCode=${query.get("accessCode")}`}`, {
+              state: {
+                userId: bookingDatas?.userId,
+              },
+            })
+          }
         >
           {t("button:goToMyBookingButton")}
         </button>
         <button
           type="button"
           className={`bg-[#020873] w-full text-white p-2 mt-5 rounded-lg ${
-            bookingById?.status === "cancel" ||
-            bookingById?.status === "declinded"
+            bookingDatas?.status === "cancel" ||
+            bookingDatas?.status === "declinded"
               ? "block"
               : "hidden"
           }`}
-          onClick={() => navigate(`/details/${bookingById?.businessId}`)}
+          onClick={() => navigate(`/details/${bookingDatas?.businessId}`)}
         >
           {t("button:rebook")}
         </button>
       </div>
       <div
         className={
-          bookingById?.status === "cancel" ||
-          bookingById?.status === "declinded"
+          bookingDatas?.status === "cancel" ||
+          bookingDatas?.status === "declinded"
             ? "hidden"
             : "flex justify-center"
         }

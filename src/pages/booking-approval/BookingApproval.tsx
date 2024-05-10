@@ -86,7 +86,7 @@ const BookingApproval = (): React.ReactElement => {
   } = useSWR(
     businessId &&
       token &&
-      `${app_api}/getReservationByBusinessId/${businessId}/${converted()}?page=1&limit=10`,
+      `${app_api}/getReservationByServiceId/${serviceId}/${businessId}/${converted()}?page=1&limit=100`,
     (url: string) =>
       axios
         .get(url, {
@@ -371,6 +371,17 @@ const BookingApproval = (): React.ReactElement => {
             )}
           </div>
         </div>
+        {/* <div className="my-3 mx-auto">
+          <Pagination
+            defaultPage={1}
+            count={10}
+            variant="outlined"
+            shape="rounded"
+            onChange={(event: React.ChangeEvent<unknown>, value: number) =>
+              console.log(event, value)
+            }
+          />
+        </div> */}
         <DialogWrapper
           show={show}
           setShow={setShow}

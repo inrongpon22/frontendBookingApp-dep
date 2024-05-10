@@ -6,6 +6,9 @@ export interface ILocation {
 
 export interface IBusinessInfo {
     title: string;
+    daysOpen?: string[];
+    openTime:string;
+    closeTime:string;
     location: string;
     description: string;
     phoneNumber: string;

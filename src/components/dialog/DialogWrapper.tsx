@@ -8,7 +8,14 @@ import { app_api, useQuery } from "../../helper/url";
 import { useFormik } from "formik";
 // styled
 import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typescript types
-import { Dialog, DialogContent, Slide, Toolbar } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  Slide,
+  Toolbar,
+} from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 // icons
 import CloseIcon from "@mui/icons-material/Close";
@@ -56,7 +63,7 @@ const DialogWrapper = ({
     },
     validationSchema:
       confirmationDialogSchemas[
-      dialogState as keyof typeof confirmationDialogSchemas
+        dialogState as keyof typeof confirmationDialogSchemas
       ],
     onSubmit: async (values) => {
       switch (dialogState) {
@@ -95,7 +102,11 @@ const DialogWrapper = ({
 
                 switch (userSide) {
                   case "user":
-                    setDialogState("booking-detail-preview");
+                    if (query.get("accessCode")) {
+                      setShow(false);
+                    } else {
+                      setDialogState("booking-detail-preview");
+                    }
                     break;
 
                   case "business":
@@ -118,7 +129,7 @@ const DialogWrapper = ({
                         })
                         .catch((err) => {
                           if (err.response.status === 404) {
-                            navigate("/createBusiness");
+                            navigate("/create-business");
                           } else {
                             toast.error(err.message);
                           }
@@ -240,6 +251,14 @@ const DialogWrapper = ({
         setIsLoading,
       }}
     >
+      {/* loading progress */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {/* loading progress */}
       <Dialog
         maxWidth="xl"
         fullWidth
@@ -256,13 +275,16 @@ const DialogWrapper = ({
           <Toolbar className="grid grid-cols-4">
             <span
               className={`w-[24px] h-[24px] cursor-pointer ${
-                query.get("accessCode") && dialogState !== "booking-approval-reject" ? "hidden" : ""
+                query.get("accessCode") &&
+                dialogState !== "booking-approval-reject"
+                  ? "hidden"
+                  : ""
               }`}
               onClick={handleBackButton}
             >
               {dialogState === "phone-input" ||
-                dialogState === "booking-approval-summary" ||
-                dialogState === "business-more-options" ? (
+              dialogState === "booking-approval-summary" ||
+              dialogState === "business-more-options" ? (
                 <CloseIcon />
               ) : (
                 <ArrowBackIosIcon />

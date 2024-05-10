@@ -1,5 +1,6 @@
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { createContext, useEffect } from "react";
+export const TopLevelContext = createContext<any>(null); //create context to store all the data
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./i18n.ts";
 // components
@@ -19,77 +20,62 @@ import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 
 function App() {
-    // const token = localStorage.getItem("token");
-    useEffect(() => {
-        localStorage.setItem("lang", "th");
-    }, []);
 
-    return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<BusinessAuth />} />
-                    <Route
-                        path="/business-overview"
-                        element={<BusinessOverview />}
-                    />
-                    <Route
-                        path="/business-profile/:businessId"
-                        element={<BusinessProfile />}
-                    />
-                    <Route
-                        path="/details/:businessId"
-                        element={<ShopDetailsPageWrapper />}
-                    />
-                    <Route
-                        path="/booking-approval/:businessId/:serviceId"
-                        element={<BookingApproval />}
-                    />
-                    <Route
-                        path="/booking-success"
-                        element={<BookingSummaryWrapper />}
-                    />
-                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
-                    <Route
-                        path="/booking/:bookingId"
-                        element={<BookingSummaryWrapper />}
-                    />
-                    {/* business */}
-                    <Route
-                        path="/createBusiness"
-                        element={<CreateBusiness />}
-                    />
-                    <Route
-                        path="/businessSetting/:businessId"
-                        element={<BusinessSetting />}
-                    />
+  useEffect(() => {
+    localStorage.setItem("lang", "th");
+  }, []);
 
-                    {/* service */}
-                    <Route
-                        path="/serviceInfo/:businessId"
-                        element={<ServiceInfo />}
-                    />
-                    <Route
-                        path="/serviceTime/:businessId"
-                        element={<ServiceTime />}
-                    />
-                    <Route
-                        path="/createService/:businessId"
-                        element={<CreateService />}
-                    />
-                    <Route
-                        path="/serviceSetting/:businessId"
-                        element={<ServiceSetting />}
-                    />
-                    <Route
-                        path="/serviceDetail/:businessId/:serviceId"
-                        element={<ServiceDetail />}
-                    />
-                </Routes>
-                {/* {!token && <Navigate to="/" replace={true} />} */}
-            </BrowserRouter>
-            <Toaster />
-        </>
-    );
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<BusinessAuth />} />
+          <Route path="/business-overview" element={<BusinessOverview />} />
+          <Route
+            path="/business-profile/:businessId"
+            element={<BusinessProfile />}
+          />
+          <Route
+            path="/details/:businessId"
+            element={<ShopDetailsPageWrapper />}
+          />
+          <Route
+            path="/booking-approval/:businessId/:serviceId"
+            element={<BookingApproval />}
+          />
+          <Route path="/booking-success" element={<BookingSummaryWrapper />} />
+          <Route path="/my-bookings" element={<MyBookingWrapper />} />
+          <Route
+            path="/booking/:bookingId"
+            element={<BookingSummaryWrapper />}
+          />
+          {/* business */}
+          <Route path="/create-business" element={<CreateBusiness />} />
+          <Route
+            path="/businessSetting/:businessId"
+            element={<BusinessSetting />}
+          />
+
+          {/* service */}
+          <Route path="/serviceInfo/:businessId" element={<ServiceInfo />} />
+          <Route path="/serviceTime/:businessId" element={<ServiceTime />} />
+          <Route
+            path="/createService/:businessId"
+            element={<CreateService />}
+          />
+          <Route
+            path="/serviceSetting/:businessId"
+            element={<ServiceSetting />}
+          />
+          <Route
+            path="/serviceDetail/:businessId/:serviceId"
+            element={<ServiceDetail />}
+          />
+        </Routes>
+        {/* {!token && <Navigate to="/" replace={true} />} */}
+      </BrowserRouter>
+      <Toaster />
+    </>
+  );
 }
 export default App;
