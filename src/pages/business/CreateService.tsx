@@ -206,7 +206,7 @@ export default function CreateService() {
 
 
                     <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
-                        <button
+                        {/* <button
                             className="border text-white mt-4 rounded-lg font-semibold mb-6"
                             style={{
                                 borderColor: `${alpha("#000000", 0.2)}`,
@@ -218,18 +218,12 @@ export default function CreateService() {
                                 fontSize: "14px",
                             }}>
                             Preview
-                        </button>
+                        </button> */}
                         <button
                             onClick={handleCreateService}
                             type="submit"
-                            className="text-white mt-4 rounded-lg font-semibold mb-6"
-                            style={{
-                                width: "166px",
-                                height: "51px",
-                                cursor: "pointer",
-                                backgroundColor: "#020873",
-                                fontSize: "14px",
-                            }}>
+                            className="w-11/12 p-3 text-white text-[14px] bg-deep-blue mt-4 rounded-lg font-semibold mb-6"
+                            >
                             {t("button:confirm")}
                         </button>
                     </div>

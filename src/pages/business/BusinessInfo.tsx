@@ -12,6 +12,7 @@ import SearchMap from "./SearchMap";
 import { dayOfWeek } from "../../helper/daysOfWeek"; // dataOfWeekEng, dataOfWeekThai,
 import { insertBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 export default function BusinessInfo() {
   const navigate = useNavigate();
@@ -48,19 +49,24 @@ export default function BusinessInfo() {
       .max(50, t("formValidation:business:create:shopName:shopNameMax"))
       .required(t("formValidation:business:create:shopName:shopNameReq")),
     daysOpen: Yup.array()
-    //   .of(Yup.string().required(t("formValidation:business:create:daysOpen:req")))
-    //   .min(1, t("formValidation:business:create:daysOpen:req"))
+      .of(
+        Yup.string().required(t("formValidation:business:create:daysOpen:req"))
+      )
+      .min(1, t("formValidation:business:create:daysOpen:req"))
       .required(t("formValidation:business:create:daysOpen:req")),
-    // openTime: Yup.date().required(t("formValidation:business:create:openTime:req")),
-    // closeTime: Yup.string()
-    // .required(t("formValidation:business:create:closeTime:req"))
-    // .when('openTime', (openTime:any, schema) => {
-    //   return schema.test({
-    //     test: closeTime => closeTime > openTime,
-    //     message: t("formValidation:business:create:closeTime:moreThanOpenTime"),
-    //   });
-    // })
-    // ,
+    openTime: Yup.string().required(
+      t("formValidation:business:create:openTime:req")
+    ),
+    closeTime: Yup.string()
+      .required(t("formValidation:business:create:closeTime:req"))
+      .test(
+        "is-greater",
+        t("formValidation:business:create:closeTime:moreThanOpenTime"),
+        function (value) {
+          const { openTime } = this.parent;
+          return moment(value, "HH:mm").isAfter(moment(openTime, "HH:mm"));
+        }
+      ),
     phoneNumber: Yup.string()
       .matches(
         /^[0-9]+$/,
@@ -175,28 +181,28 @@ export default function BusinessInfo() {
         navigate(`/business-profile/${business.data.businessId}`);
       } else {
         const insertData = {
-            title: values.title,
-            imagesURL: imagesURL,
-            description: values.description,
-            phoneNumber: values.phoneNumber,
-            address: locationData.address,
-            latitude: locationData.lat,
-            longitude: locationData.lng,
-            daysOpen: daysOpen,
-            openTime: values.openTime,
-            closeTime: values.closeTime,
-            userId: userId ? Number(userId) : 0,
-          };
-          console.log(insertData);
-  
-          if (token === null) {
-            throw new Error("Token is not found");
-          }
-  
-          const business = await insertBusiness(insertData, token);
-  
-          localStorage.setItem("businessId", String(business.data.businessId));
-          navigate(`/business-profile/${business.data.businessId}`);
+          title: values.title,
+          imagesURL: imagesURL,
+          description: values.description,
+          phoneNumber: values.phoneNumber,
+          address: locationData.address,
+          latitude: locationData.lat,
+          longitude: locationData.lng,
+          daysOpen: daysOpen,
+          openTime: values.openTime,
+          closeTime: values.closeTime,
+          userId: userId ? Number(userId) : 0,
+        };
+        console.log(insertData);
+
+        if (token === null) {
+          throw new Error("Token is not found");
+        }
+
+        const business = await insertBusiness(insertData, token);
+
+        localStorage.setItem("businessId", String(business.data.businessId));
+        navigate(`/business-profile/${business.data.businessId}`);
       }
     },
   });
@@ -221,8 +227,13 @@ export default function BusinessInfo() {
   const toggleDay = (dayValue: string) => {
     if (isDaySelected(dayValue)) {
       setDaysOpen(daysOpen.filter((day) => day !== dayValue));
+      formik.setFieldValue(
+        "daysOpen",
+        formik.values.daysOpen.filter((day) => day !== dayValue)
+      );
     } else {
       setDaysOpen([...daysOpen, dayValue]);
+      formik.setFieldValue("daysOpen", [...formik.values.daysOpen, dayValue]);
     }
   };
 
@@ -454,8 +465,15 @@ export default function BusinessInfo() {
           <div className="w-full flex justify-center  inset-x-0 gap-2">
             <button
               type="button"
-              className="w-11/12 p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold"
-              onClick={() => formik.handleSubmit()}
+              disabled={!!Object.keys(formik.errors).length}
+              className={`w-full p-3 my-5 text-white text-[14px] ${
+                !Object.keys(formik.errors).length ? "bg-deep-blue" : "bg-gray-300"
+              } rounded-lg font-semibold`}
+              onClick={() => {
+                if (!Object.keys(formik.errors).length) {
+                  formik.handleSubmit();
+                }
+              }}
             >
               {t("button:next")}
             </button>
