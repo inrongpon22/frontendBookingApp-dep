@@ -88,7 +88,7 @@ const ShopDetailsPageWrapper = () => {
 
   // get services by business businessId
   const { error: servicesDataError } = useSWR(
-    `${app_api}/serviceByBusinessId/${businessId}`,
+    `${app_api}/serviceByBusinessId/${businessId}?page=1&limit=100`,
     (url: string) =>
       axios.get(url).then((res) =>
         setServices(

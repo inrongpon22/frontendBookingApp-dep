@@ -293,6 +293,9 @@ const DialogWrapper = ({
             <span className="w-full font-semibold col-span-3 text-center">
               {DialogHeader()}
             </span>
+            {/* <span className="w-[24px] h-[24px]" >
+              <ArrowBackIosIcon />
+            </span> */}
           </Toolbar>
         )}
         <DialogContent>{SwitchState()}</DialogContent>

@@ -22,7 +22,7 @@ const OtpVerify = () => {
             ? "border-2 border-rose-500"
             : "border border-black"
         }`}
-        placeholder="X-X-X-X-X-X"
+        // placeholder="X-X-X-X-X-X"
         value={formik.values.otp}
         maxLength={6}
         onChange={(e) => {
