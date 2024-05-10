@@ -78,7 +78,7 @@ export default function CreateService() {
             await addService(insertData, token);
             localStorage.removeItem("serviceInfo");
             localStorage.removeItem("serviceTime");
-            navigate(`/service-setting/${businessId}`);
+            navigate(`/business-profile/${businessId}`);
         } catch (error) {
             console.log(error);
         }
