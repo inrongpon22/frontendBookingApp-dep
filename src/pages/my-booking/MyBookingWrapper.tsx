@@ -27,7 +27,7 @@ const MyBookingWrapper = () => {
     token &&
       `${app_api}/getReservationByUserId/${
         userId ? userId : location.state.userId
-      }`,
+      }?page=1&limit=100`,
     (url: string) =>
       axios
         .get(url, {
@@ -36,7 +36,8 @@ const MyBookingWrapper = () => {
           },
         })
         .then((res) => res.data)
-        .catch((err) => toast.error(err.response.data.message))
+        .catch((err) => toast.error(err.response.data.message)),
+        {revalidateOnFocus: false}
   );
 
   useEffect(() => {
