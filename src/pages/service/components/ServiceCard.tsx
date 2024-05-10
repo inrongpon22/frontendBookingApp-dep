@@ -51,7 +51,7 @@ export default function ServiceCard(props: IParams) {
         );
         handleClose();
         setAnchorEl(null);
-        navigate(`/serviceSetting/${businessId}`);
+        navigate(`/service-setting/${businessId}`);
     };
 
     return (

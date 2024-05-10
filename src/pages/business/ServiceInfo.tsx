@@ -44,7 +44,7 @@ export default function ServiceInfo() {
       const valueInString = JSON.stringify(values);
       localStorage.setItem("serviceInfo", valueInString);
       if (editValue) navigate(-1);
-      else navigate(`/serviceTime/${businessId}`);
+      else navigate(`/service-time/${businessId}`);
     },
   });
 

@@ -18,7 +18,7 @@ export default function TimeCard() {
     localStorage.setItem("serviceTime", JSON.stringify(timeDetails.splice(index, 1)));
     if (timeDetails.length == 0) {
       localStorage.removeItem("serviceTime");
-      navigate(`/serviceTime/${businessId == undefined ? -1 : businessId}`);
+      navigate(`/service-time/${businessId == undefined ? -1 : businessId}`);
     }
     setRefresh(pre => pre + 1);
   };
@@ -78,7 +78,7 @@ export default function TimeCard() {
                 }}
               >
                 <EditOutlinedIcon
-                  onClick={() => navigate(`/serviceTime/${businessId == undefined ? -1 : businessId}?edit=${index}`)}
+                  onClick={() => navigate(`/service-time/${businessId == undefined ? -1 : businessId}?edit=${index}`)}
                   sx={{
                     cursor: "pointer",
                     color: "#020873",

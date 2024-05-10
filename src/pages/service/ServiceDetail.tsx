@@ -73,7 +73,7 @@ export default function ServiceDetail() {
             isAutoApprove: isAutoApprove,
         };
         await updateServiceShowHide(insertData, token || "", serviceInfo.id);
-        navigate(`/serviceSetting/${businessId}`);
+        navigate(`/service-setting/${businessId}`);
     };
 
     const handleDeleteServiceTime = async () => {

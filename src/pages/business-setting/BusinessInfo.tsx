@@ -299,7 +299,7 @@ export default function BusinessInfo(props: IParams) {
 
     return (
         <>
-            <div className="flex flex-col" style={{ marginBottom: "90px" }}>
+            <div className="flex flex-col">
                 <form onSubmit={formik.handleSubmit}>
                     <p
                         style={{ fontSize: "14px" }}
@@ -313,7 +313,6 @@ export default function BusinessInfo(props: IParams) {
                         type="text"
                         name="title"
                         style={{
-                            color: "#8B8B8B",
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
@@ -435,7 +434,6 @@ export default function BusinessInfo(props: IParams) {
                         onBlur={formik.handleBlur}
                         type="text"
                         style={{
-                            color: "#8B8B8B",
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
@@ -470,7 +468,6 @@ export default function BusinessInfo(props: IParams) {
                             name="description"
                             value={formik.values.description}
                             onChange={formik.handleChange}
-                            style={{ color: "#8B8B8B" }}
                             placeholder={t("placeholder:shortDescribe")}
                             className="w-full focus:outline-none resize-none"
                             rows={3}
@@ -539,17 +536,10 @@ export default function BusinessInfo(props: IParams) {
                         </div>
                     </div>
 
-                    <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
+                    <div className="w-full flex justify-center  inset-x-0 gap-2">
                         <button
                             type="button"
-                            className="text-white rounded-lg font-semibold my-5"
-                            style={{
-                                width: "343px",
-                                height: "51px",
-                                cursor: "pointer",
-                                backgroundColor: "#020873",
-                                fontSize: "14px",
-                            }}
+                            className="w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold"
                             onClick={() => formik.handleSubmit()}>
                             {t("button:next")}
                         </button>

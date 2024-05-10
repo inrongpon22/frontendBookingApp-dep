@@ -86,7 +86,7 @@ export default function ServiceSetting() {
             </div>
             <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
                 <button
-                    onClick={() => navigate(`/serviceInfo/${businessId}`)}
+                    onClick={() => navigate(`/service-info/${businessId}`)}
                     style={{
                         width: "343px",
                         height: "43px",
