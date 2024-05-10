@@ -33,7 +33,9 @@ export const getServiceByBusinessId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${import.meta.env.VITE_APP_API}/getListServiceByBusinessId/${businessId}`,
+            `${
+                import.meta.env.VITE_APP_API
+            }/getListServiceByBusinessId/${businessId}?page=1&limit=10`,
             {
                 headers: {
                     Authorization: token,
@@ -50,14 +52,16 @@ export const getServiceByBusinessId = async (
 
 export const deleteService = async (serviceId: number, token: string) => {
     token = token.replace(/"/g, "");
-    console.log(token);
     try {
         const response = await axios.put(
-            `${import.meta.env.VITE_APP_API}/deleteServiceByHidden/${serviceId}`, {},
+            `${
+                import.meta.env.VITE_APP_API
+            }/deleteServiceByHidden/${serviceId}`,
+            {},
             {
                 headers: {
-                    Authorization: token
-                }
+                    Authorization: token,
+                },
             }
         );
 
@@ -75,7 +79,8 @@ export const getServiceByServiceId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/getServiceByServiceId/${serviceId}`,
             {
                 headers: {
@@ -146,7 +151,8 @@ export const updateServiceShowHide = async (
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/updateServiceShowHide/${serviceId}`,
             serviceData,
             {

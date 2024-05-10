@@ -10,6 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dataOfWeekEng, dataOfWeekThai } from "../../../helper/daysOfWeek";
+import ConfirmCard from "../../../components/dialog/ConfirmCard";
 
 interface IParams {
     daysOpen: string[];
@@ -27,6 +28,10 @@ export default function TimeCard(props: IParams) {
     const lan = localStorage.getItem("lan");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const handleOpenConfirm = () => setOpenConfirm(true);
+    const handleCloseConfirm = () => setOpenConfirm(false);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -52,6 +57,22 @@ export default function TimeCard(props: IParams) {
                 onClick={() => props.handleSelectIndex(props.selectedIndex)}
                 style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                 className="flex flex-col p-3 text-sm border rounded-lg focus:outline-none">
+                <ConfirmCard
+                    open={openConfirm}
+                    title={t("askForDelete")}
+                    description={`${t("desDeleteServiceF")} ${
+                        props.availableFromDate
+                    } - ${
+                        props.availableToDate == "" ||
+                        props.availableToDate == null
+                            ? t("present")
+                            : props.availableToDate
+                    } ${t("desDeleteServiceL")}`}
+                    bntConfirm={t("delete")}
+                    bntBack={t("button:back")}
+                    handleClose={handleCloseConfirm}
+                    handleConfirm={handleDeleteSlot}
+                />
                 <div className="flex justify-between">
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
@@ -101,7 +122,7 @@ export default function TimeCard(props: IParams) {
                             </ListItemIcon>
                             <ListItemText>{t("edit")}</ListItemText>
                         </MenuItem>
-                        <MenuItem onClick={handleDeleteSlot}>
+                        <MenuItem onClick={handleOpenConfirm}>
                             <ListItemIcon>
                                 <DeleteOutlineIcon fontSize="small" />
                             </ListItemIcon>

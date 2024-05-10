@@ -4,6 +4,9 @@ import { truncateContext } from "../../../helper/limitedText";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import ConfirmCard from "../../../components/dialog/ConfirmCard";
+import { t } from "i18next";
 
 interface IProps {
     serviceId: number;
@@ -40,6 +43,10 @@ export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
     const navigate = useNavigate();
     const { businessId } = useParams();
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const handleDeleteService = async () => {
         try {
@@ -56,6 +63,16 @@ export default function ListServiceCard(props: IProps) {
         <div
             className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative"
             style={{ height: "104px", marginLeft: props.open ? "-120px" : "" }}>
+            <ConfirmCard
+                open={open}
+                title={t("askForDelete")}
+                description={t("serviceDeleted")}
+                bntConfirm={t("button:yesDelete")}
+                bntBack={t("button:back")}
+                handleClose={handleClose}
+                handleConfirm={handleDeleteService}
+            />
+
             <div
                 style={{
                     width: "65px",
@@ -63,11 +80,12 @@ export default function ListServiceCard(props: IProps) {
                     background: "#FA6056",
                 }}
                 className={`absolute top-0 right-0 
-                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${
+                        props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={handleDeleteService}>
+                    onClick={handleOpen}>
                     <DeleteOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
@@ -81,7 +99,8 @@ export default function ListServiceCard(props: IProps) {
                     right: "65px",
                 }}
                 className={`absolute top-0 
-                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${
+                        props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
