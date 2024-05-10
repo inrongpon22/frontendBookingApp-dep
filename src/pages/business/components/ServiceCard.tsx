@@ -29,7 +29,7 @@ export default function ServiceCard() {
                         alignItems: "center",
                     }}>
                     <EditOutlinedIcon
-                        onClick={() => navigate(`/serviceInfo/${businessId}?edit=true`)}
+                        onClick={() => navigate(`/service-info/${businessId}?edit=true`)}
                         sx={{
                             cursor: "pointer",
                             color: "#020873",

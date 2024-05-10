@@ -253,7 +253,7 @@ export default function ServiceTime() {
 		}
 		localStorage.setItem("serviceTime", JSON.stringify(serviceTimeArray));
 
-		navigate(`/createService/${businessId}`);
+		navigate(`/create-service/${businessId}`);
 	};
 
 	const increaseGuest = () => {

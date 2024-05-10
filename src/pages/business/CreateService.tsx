@@ -78,7 +78,7 @@ export default function CreateService() {
             await addService(insertData, token);
             localStorage.removeItem("serviceInfo");
             localStorage.removeItem("serviceTime");
-            navigate(`/serviceSetting/${businessId}`);
+            navigate(`/service-setting/${businessId}`);
         } catch (error) {
             console.log(error);
         }
@@ -111,7 +111,7 @@ export default function CreateService() {
                         <div
                             className=" font-medium "
                             onClick={() =>
-                                navigate(`/serviceTime/${businessId}`)
+                                navigate(`/service-time/${businessId}`)
                             }>
                             Add more time
                         </div>

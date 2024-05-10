@@ -52,23 +52,23 @@ function App() {
           {/* business */}
           <Route path="/create-business" element={<CreateBusiness />} />
           <Route
-            path="/businessSetting/:businessId"
+            path="/business-setting/:businessId"
             element={<BusinessSetting />}
           />
 
           {/* service */}
-          <Route path="/serviceInfo/:businessId" element={<ServiceInfo />} />
-          <Route path="/serviceTime/:businessId" element={<ServiceTime />} />
+          <Route path="/service-info/:businessId" element={<ServiceInfo />} />
+          <Route path="/service-time/:businessId" element={<ServiceTime />} />
           <Route
-            path="/createService/:businessId"
+            path="/create-service/:businessId"
             element={<CreateService />}
           />
           <Route
-            path="/serviceSetting/:businessId"
+            path="/service-setting/:businessId"
             element={<ServiceSetting />}
           />
           <Route
-            path="/serviceDetail/:businessId/:serviceId"
+            path="/service-detail/:businessId/:serviceId"
             element={<ServiceDetail />}
           />
         </Routes>

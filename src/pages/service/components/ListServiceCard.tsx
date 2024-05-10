@@ -106,7 +106,7 @@ export default function ListServiceCard(props: IProps) {
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
                     onClick={() =>
                         navigate(
-                            `/serviceDetail/${businessId}/${props.serviceId}`
+                            `/service-detail/${businessId}/${props.serviceId}`
                         )
                     }>
                     <ModeEditOutlinedIcon
