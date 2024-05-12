@@ -2,7 +2,6 @@ import { deleteService } from "../../../api/service";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { truncateContext } from "../../../helper/limitedText";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
-import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
@@ -19,6 +18,7 @@ interface IProps {
     daysOpen: string[];
     open: boolean;
     handleRefresh: () => void;
+    handleSelectService?: (serviceId: number) => void;
 }
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -41,8 +41,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
-    const navigate = useNavigate();
-    const { businessId } = useParams();
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -80,8 +78,7 @@ export default function ListServiceCard(props: IProps) {
                     background: "#FA6056",
                 }}
                 className={`absolute top-0 right-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
@@ -99,16 +96,11 @@ export default function ListServiceCard(props: IProps) {
                     right: "65px",
                 }}
                 className={`absolute top-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={() =>
-                        navigate(
-                            `/serviceDetail/${businessId}/${props.serviceId}`
-                        )
-                    }>
+                    onClick={() => props.handleSelectService && props.handleSelectService(props.serviceId)}>
                     <ModeEditOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />

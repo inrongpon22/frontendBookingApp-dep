@@ -1,16 +1,15 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { useNavigate } from "react-router-dom";
 
 interface IProps {
     context: string;
+    handleClose?: () => void;
 }
 
 export default function Header(props: IProps) {
-    const navigate = useNavigate();
 
     return (
         <div className="flex items-center justify-between">
-            <div onClick={() => navigate(-1)}>
+            <div onClick={props.handleClose}>
                 <ArrowBackIosNewOutlinedIcon
                     sx={{
                         width: "20px",
@@ -25,6 +24,7 @@ export default function Header(props: IProps) {
             </div>
 
             <div>
+                <div style={{ width: "20px", height: "20px" }} />
             </div>
         </div>
     );

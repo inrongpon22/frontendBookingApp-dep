@@ -9,7 +9,10 @@ export default function CreateBusiness() {
   return (
     <div>
       <div className="px-4 pt-6">
-        <Header context={t("title:createBusiness")} />
+        <Header
+          context={t("title:createBusiness")}
+          isClose={false}
+        />
       </div>
       <Divider sx={{ marginTop: "16px", width: "100%" }} />
       <div className="flex flex-col p-4">
