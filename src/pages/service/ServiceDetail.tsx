@@ -129,7 +129,8 @@ export default function ServiceDetail(props: IParams) {
                         handleAddTime={handleAddTime}
                     />
                 ) : (
-                    <div>
+                    <div className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+                        style={{ width: "100vw" }}>
                         <div className="pr-4 pl-4 pt-6">
                             <Header
                                 context={t("title:serviceInformation")}

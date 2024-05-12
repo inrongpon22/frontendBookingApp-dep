@@ -3,9 +3,9 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { truncateContext } from "../../../helper/limitedText";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
 import { t } from "i18next";
+import { TrailingActions, SwipeAction, LeadingActions } from "react-swipeable-list";
 
 interface IProps {
     serviceId: number;
@@ -16,7 +16,10 @@ interface IProps {
     openTime: string;
     closeTime: string;
     daysOpen: string[];
-    open: boolean;
+    // open: boolean;
+    openConfirm: boolean;
+    handleOpen: () => void;
+    handleClose: () => void;
     handleRefresh: () => void;
     handleSelectService?: (serviceId: number) => void;
 }
@@ -39,18 +42,78 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     position: "relative",
 }));
 
+export const trailingActions = (handleOpenConfirm: () => void) => (
+    <TrailingActions>
+        <SwipeAction destructive={false} onClick={handleOpenConfirm}>
+            <div
+                style={{
+                    width: "80vw",
+                    height: "104px",
+                    background: "#FA6056",
+                    position: "relative", // Ensure positioning context
+                }}
+            >
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}
+                >
+                    <div
+                        className="text-gray-600 hover:text-gray-800 cursor-pointer"
+                    >
+                        <DeleteOutlinedIcon
+                            sx={{ color: "white", fontSize: "20px" }}
+                        />
+                    </div>
+                </div>
+            </div>
+        </SwipeAction>
+    </TrailingActions>
+);
+export const leadingActions = (handleSelectService: (serviceId: number) => void, serviceId: number) => (
+    <LeadingActions>
+        <SwipeAction destructive={false} onClick={() => handleSelectService(serviceId)}>
+            <div
+                style={{
+                    width: "80vw",
+                    height: "104px",
+                    background: "#898A8D",
+                    position: "relative",
+                }}
+            >
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}
+                >
+                    <div
+                        className="text-gray-600 hover:text-gray-800 cursor-pointer"
+                    >
+                        <ModeEditOutlinedIcon
+                            sx={{ color: "white", fontSize: "25px" }}
+                        />
+                    </div>
+                </div>
+            </div>
+        </SwipeAction>
+    </LeadingActions>
+);
+
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
-    const [open, setOpen] = useState(false);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const handleDeleteService = async () => {
         try {
             if (token) {
                 await deleteService(props.serviceId, token);
                 props.handleRefresh();
+                props.handleClose();
             }
         } catch (error) {
             console.error(error);
@@ -59,19 +122,19 @@ export default function ListServiceCard(props: IProps) {
 
     return (
         <div
-            className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative"
-            style={{ height: "104px", marginLeft: props.open ? "-120px" : "" }}>
+            className="w-full flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative"
+            style={{ height: "104px" }}>
             <ConfirmCard
-                open={open}
+                open={props.openConfirm}
                 title={t("askForDelete")}
                 description={t("serviceDeleted")}
                 bntConfirm={t("button:yesDelete")}
                 bntBack={t("button:back")}
-                handleClose={handleClose}
+                handleClose={props.handleClose}
                 handleConfirm={handleDeleteService}
             />
 
-            <div
+            {/* <div
                 style={{
                     width: "65px",
                     height: "104px",
@@ -82,7 +145,7 @@ export default function ListServiceCard(props: IProps) {
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={handleOpen}>
+                    onClick={props.handleOpen}>
                     <DeleteOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
@@ -105,8 +168,8 @@ export default function ListServiceCard(props: IProps) {
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
                 </div>
-            </div>
-            <Main open={props.open}>
+            </div> */}
+            <Main>
                 <div>
                     <div className="flex justify-between">
                         <div
@@ -117,7 +180,6 @@ export default function ListServiceCard(props: IProps) {
                         <div
                             style={{
                                 fontSize: "14px",
-                                marginRight: props.open ? "15px" : "",
                             }}
                             className="font-semibold transition-opacity duration-700 ease-in-out">
                             {props.currency} {props.price}
