@@ -22,7 +22,7 @@ import { IServiceEditTime } from "../business/interfaces/service";
 
 interface IParams {
     serviceId: number;
-    handleClose: () => void;
+    handleClose?: () => void;
 }
 
 export default function ServiceDetail(props: IParams) {
