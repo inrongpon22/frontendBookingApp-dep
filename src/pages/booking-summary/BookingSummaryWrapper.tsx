@@ -246,11 +246,18 @@ const BookingSummaryWrapper = () => {
               : "bg-deep-blue text-white"
           }`}
           onClick={() =>
-            navigate(`/my-bookings${`?accessCode=${query.get("accessCode")}`}`, {
-              state: {
-                userId: bookingDatas?.userId,
-              },
-            })
+            navigate(
+              `/my-bookings${
+                query.get("accessCode")
+                  ? `?accessCode=${query.get("accessCode")}`
+                  : ""
+              }`,
+              {
+                state: {
+                  userId: bookingDatas?.userId,
+                },
+              }
+            )
           }
         >
           {t("button:goToMyBookingButton")}

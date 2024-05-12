@@ -78,7 +78,7 @@ export default function ServiceDetail(props: IParams) {
             isAutoApprove: isAutoApprove,
         };
         await updateServiceShowHide(insertData, token || "", serviceInfo.id);
-        navigate(`/serviceSetting/${businessId}`);
+        navigate(`/service-setting/${businessId}`);
     };
 
     const handleDeleteServiceTime = async () => {

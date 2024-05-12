@@ -121,7 +121,7 @@ const ShopDetailsPageWrapper = () => {
     () =>
       services.find((item: any) => item.isSelected) &&
       `${app_api}/service/${
-        services.find((item: any) => item.isSelected)?.businessId
+        services.find((item: any) => item.isSelected)?.id
       }/${selectedDate.date.format("YYYY-MM-DD")}`,
     (url: string) =>
       axios.get(url).then((res) =>
@@ -139,7 +139,6 @@ const ShopDetailsPageWrapper = () => {
       ),
     {
       revalidateOnFocus: false,
-      onLoadingSlow: () => setServiceById(undefined),
       loadingTimeout: 0,
     }
   );

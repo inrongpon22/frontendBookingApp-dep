@@ -299,16 +299,35 @@ const BookingApproval = (): React.ReactElement => {
             onChange={(_, newValue: number) => setTabStatus(newValue)}
           >
             <AntTab
-              label={`${t("pending")} | ${
-                location.state ? location.state.totalpending : ""
+              label={`${t("pending")} ${
+                tabStatus == 0
+                  ? `| ${getReservByBusiId?.reduce(
+                      (prev, curr) => prev + curr.children.length,
+                      0
+                    )}`
+                  : ""
               }`}
             />
             <AntTab
-              label={`${t("approved")} | ${
-                location.state ? location.state.totalapproved : ""
+              label={`${t("approved")} ${
+                tabStatus == 1
+                  ? `| ${getReservByBusiId?.reduce(
+                      (prev, curr) => prev + curr.children.length,
+                      0
+                    )}`
+                  : ""
               }`}
             />
-            <AntTab label={`${t("cancelled")}`} />
+            <AntTab
+              label={`${t("cancelled")} ${
+                tabStatus == 2
+                  ? `| ${getReservByBusiId?.reduce(
+                      (prev, curr) => prev + curr.children.length,
+                      0
+                    )}`
+                  : ""
+              }`}
+            />
           </AntTabs>
         </Box>
         <div className="bg-gray-100">
