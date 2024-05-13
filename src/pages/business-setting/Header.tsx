@@ -11,7 +11,6 @@ interface IProps {
     context: string;
     handleIsEdit: () => void;
     isEdit: boolean;
-    IsClickEdit: boolean;
 }
 
 export default function Header(props: IProps) {
@@ -19,7 +18,7 @@ export default function Header(props: IProps) {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
-        if (props.IsClickEdit) {
+        if (props.isEdit) {
             setOpen(true);
         } else {
             navigate(-1);
@@ -33,9 +32,9 @@ export default function Header(props: IProps) {
         <div className="flex items-center justify-between">
             <ConfirmCard
                 open={open}
-                title={t("titleDiscard")}
-                description={t("desc:descriptionDiscard")}
-                bntConfirm={t("button:discard")}
+                title={"Discard Changes"}
+                description={"Are you sure you want to discard the changes?"}
+                bntConfirm={"Discard"}
                 bntBack={t("button:cancel")}
                 handleClose={handleClose}
                 handleConfirm={() => navigate(-1)}

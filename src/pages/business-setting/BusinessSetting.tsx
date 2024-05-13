@@ -14,7 +14,6 @@ export default function BusinessSetting() {
     const { businessId } = useParams();
     const [business, setBusiness] = useState<IgetBusiness>();
     const [isEdit, setIsEdit] = useState(false);
-    const [IsClickEdit, setIsClickEdit] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -34,8 +33,7 @@ export default function BusinessSetting() {
     }, []);
 
     const handleEdit = () => {
-        setIsEdit(true);
-        setIsClickEdit(true);
+        setIsEdit(!isEdit);
     };
 
     return (
@@ -45,7 +43,6 @@ export default function BusinessSetting() {
                     context={t("title:businessSetting")}
                     handleIsEdit={handleEdit}
                     isEdit={isEdit}
-                    IsClickEdit={IsClickEdit}
                 />
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />

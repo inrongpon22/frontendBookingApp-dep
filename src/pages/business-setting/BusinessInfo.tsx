@@ -304,9 +304,15 @@ export default function BusinessInfo(props: IParams) {
         // Check if the form values have changed
         const formValuesChanged = JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues);
 
-        // Update the state variable based on the comparison result
         setIsFormModified(formValuesChanged || props.isEdit);
-    }, [formik.values, formik.initialValues, props.isEdit]);
+        // const daysOpenModified = JSON.stringify(props.businessData?.daysOpen) !== JSON.stringify(daysOpen);
+        // if (daysOpenModified) {
+        //     props.handleIsEdit && props.handleIsEdit();
+        // } else {
+        //     props.handleIsEdit && props.handleIsEdit();
+        // }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formik.values, formik.initialValues]);
 
     const handleOpenTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOpenTime(e.target.value);
