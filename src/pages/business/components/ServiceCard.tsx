@@ -16,7 +16,7 @@ export default function ServiceCard(props: IParams) {
             style={{ borderColor: `${alpha("#000000", 0.2)}` }}
             className="flex flex-col p-3 text-sm border rounded-lg focus:outline-none">
             <div className="flex justify-between">
-                <div className=" font-bold " style={{ fontSize: "14px" }}>
+                <div className=" font-bold mb-2" style={{ fontSize: "14px" }}>
                     {serviceInfo?.serviceName}
                 </div>
                 <Box

@@ -61,16 +61,15 @@ export default function ServiceCard(props: IParams) {
             <ConfirmCard
                 open={openConfirm}
                 title={t("askForDelete")}
-                description={`${t("desDeleteServiceF")} ${
-                    props.serviceName
-                } “ ${t("desDeleteServiceL")}`}
+                description={`${t("desDeleteServiceF")} ${props.serviceName
+                    } “ ${t("desDeleteServiceL")}`}
                 bntConfirm={t("delete")}
                 bntBack={t("button:back")}
                 handleClose={handleCloseConfirm}
                 handleConfirm={handleDeleteService}
             />
             <div className="flex justify-between">
-                <div className=" font-bold " style={{ fontSize: "14px" }}>
+                <div className=" font-bold mb-2" style={{ fontSize: "14px" }}>
                     {props.serviceName}
                 </div>
                 <Box

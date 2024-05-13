@@ -34,7 +34,7 @@ export default function BusinessSetting() {
     }, []);
 
     const handleEdit = () => {
-        setIsEdit(!isEdit);
+        setIsEdit(true);
         setIsClickEdit(true);
     };
 
@@ -50,7 +50,7 @@ export default function BusinessSetting() {
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col p-4">
-                {business && <BusinessInfo businessData={business} isEdit={isEdit} />}
+                {business && <BusinessInfo businessData={business} isEdit={isEdit} handleIsEdit={handleEdit} />}
             </div>
         </div>
     );

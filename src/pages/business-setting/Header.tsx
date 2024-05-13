@@ -1,7 +1,7 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DoDisturbIcon from '@mui/icons-material/DoDisturb';
-import { IconButton } from "@mui/material";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+// import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { useState } from "react";
@@ -55,9 +55,10 @@ export default function Header(props: IProps) {
             </div>
 
             <div>
-                <IconButton onClick={props.handleIsEdit}>
+                {/* <IconButton onClick={props.handleIsEdit}>
                     {props.isEdit ? <DoDisturbIcon /> : <EditOutlinedIcon />}
-                </IconButton>
+                </IconButton> */}
+                <div style={{ width: "20px", height: "20px" }} />
             </div>
         </div>
     );

@@ -105,7 +105,7 @@ export default function CreateService(props: IProps) {
             localStorage.removeItem("serviceTime");
             props.handleCloseServiceInFo && props.handleCloseServiceInFo();
             props.handleCloseServiceTime && props.handleCloseServiceTime();
-            navigate(`/serviceSetting/${businessId}`);
+            navigate(`/service-setting/${businessId}`);
         } catch (error) {
             console.log(error);
         }
