@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
 import { alpha } from "@mui/material";
-import ListServiceCard, { leadingActions, trailingActions } from "./components/ListServiceCard";
+import ListServiceCard from "./components/ListServiceCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getServiceByBusinessId } from "../../api/service";
@@ -17,6 +17,7 @@ import {
     SwipeableListItem,
 } from 'react-swipeable-list';
 import 'react-swipeable-list/dist/styles.css';
+import { trailingActions, leadingActions } from "./components/swipeable-list";
 
 export type Anchor = 'top' | 'left' | 'bottom' | 'right';
 

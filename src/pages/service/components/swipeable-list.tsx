@@ -1,53 +1,66 @@
-import {
-    LeadingActions,
-    SwipeableList,
-    SwipeableListItem,
-    SwipeAction,
-    TrailingActions,
-} from 'react-swipeable-list';
-import 'react-swipeable-list/dist/styles.css';
+import { TrailingActions, SwipeAction, LeadingActions } from "react-swipeable-list";
+import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-const MyComponent = () => {
-    const handleEditClick = () => {
-        console.log('Edit action clicked');
-        // Add your edit action logic here
-    };
-
-    const handleDeleteClick = () => {
-        console.log('Delete action clicked');
-        // Add your delete action logic here
-    };
-    const trailingActions = () => (
-        <TrailingActions>
-            <SwipeAction destructive={true} onClick={handleDeleteClick}>
-                Delete
-            </SwipeAction>
-        </TrailingActions>
-    );
-    const leadingActions = () => (
-        <LeadingActions>
-            <SwipeAction destructive={true} onClick={handleEditClick}>
-                Edit
-            </SwipeAction>
-        </LeadingActions>
-    );
-
-    return (
-        <>
-            <SwipeableList
-                fullSwipe={false}
-                destructiveCallbackDelay={5000}
+export const trailingActions = (handleOpenConfirm: () => void) => (
+    <TrailingActions>
+        <SwipeAction destructive={false} onClick={handleOpenConfirm}>
+            <div
+                style={{
+                    width: "80vw",
+                    height: "104px",
+                    background: "#FA6056",
+                    position: "relative", // Ensure positioning context
+                }}
             >
-                <SwipeableListItem
-                    leadingActions={leadingActions()}
-                    trailingActions={trailingActions()}
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}
                 >
-                    Item content
-                </SwipeableListItem>
-            </SwipeableList>
-        </>
-
-    );
-};
-
-export default MyComponent;
+                    <div
+                        className="text-gray-600 hover:text-gray-800 cursor-pointer"
+                    >
+                        <DeleteOutlinedIcon
+                            sx={{ color: "white", fontSize: "20px" }}
+                        />
+                    </div>
+                </div>
+            </div>
+        </SwipeAction>
+    </TrailingActions>
+);
+export const leadingActions = (handleSelectService: (serviceId: number) => void, serviceId: number) => (
+    <LeadingActions>
+        <SwipeAction destructive={false} onClick={() => handleSelectService(serviceId)}>
+            <div
+                style={{
+                    width: "80vw",
+                    height: "104px",
+                    background: "#898A8D",
+                    position: "relative",
+                }}
+            >
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}
+                >
+                    <div
+                        className="text-gray-600 hover:text-gray-800 cursor-pointer"
+                    >
+                        <ModeEditOutlinedIcon
+                            sx={{ color: "white", fontSize: "25px" }}
+                        />
+                    </div>
+                </div>
+            </div>
+        </SwipeAction>
+    </LeadingActions>
+);
