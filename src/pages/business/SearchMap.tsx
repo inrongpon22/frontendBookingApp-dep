@@ -22,7 +22,6 @@ type LocationData = {
 interface IParameter {
     handleChangeLocation: (inputData: ILocation) => void;
     oldAddress?: string;
-    isEdit?: boolean;
 }
 
 export default function SearchMap(props: IParameter) {
@@ -75,7 +74,6 @@ export default function SearchMap(props: IParameter) {
                                     placeholder: "Search Places ...",
                                     className: "location-search-input",
                                 })}
-                                disabled={props.isEdit !== undefined ? !props.isEdit : props.isEdit}
                                 value={address}
                                 type="search"
                                 id="default-search"

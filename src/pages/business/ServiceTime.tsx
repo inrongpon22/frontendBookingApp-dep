@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
-import { dataOfWeekThai } from "../../helper/daysOfWeek";
+import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { IBookingSlot, IServiceTime } from "./interfaces/service";
-import { alpha } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { Drawer, alpha } from "@mui/material";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Anchor } from "../service/ServiceSetting";
+import CreateService from "./CreateService";
 
-export default function ServiceTime() {
-	const navigate = useNavigate();
-	const urlParams = new URLSearchParams(window.location.search);
-	const editValue = Number(urlParams.get("edit"));
-	const { businessId } = useParams();
+interface IProps {
+	handleClose?: () => void;
+	handleCloseServiceInFo?: () => void;
+}
+
+export default function ServiceTime(props: IProps) {
+	const lan = localStorage.getItem("lang");
+	// const urlParams = new URLSearchParams(window.location.search);
+	// const editValue = Number(urlParams.get("edit"));
 	const { t } = useTranslation();
 	const initalServiceTime = [
 		{
@@ -31,85 +36,47 @@ export default function ServiceTime() {
 	const serviceTime = JSON.parse(
 		localStorage.getItem("serviceTime") || JSON.stringify(initalServiceTime)
 	) as IServiceTime[];
+	const [state, setState] = useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
 
-	const [daysOpen, setDaysOpen] = useState<string[]>(
-		serviceTime[editValue].daysOpen == undefined
-			? []
-			: serviceTime[editValue].daysOpen
-	);
-	const [selectedSlots, setSelectedSlots] = useState<number[]>(
-		serviceTime[editValue].selectedSlots == undefined
-			? []
-			: serviceTime[editValue].selectedSlots
-	);
-	const [duration, setDuration] = useState(
-		serviceTime[editValue].duration == undefined
-			? 1
-			: serviceTime[editValue].duration
-	);
-	const [openTime, setOpenTime] = useState(
-		serviceTime[editValue].openTime == undefined
-			? ""
-			: serviceTime[editValue].openTime
-	);
-	const [closeTime, setCloseTime] = useState(
-		serviceTime[editValue].closeTime == undefined
-			? ""
-			: serviceTime[editValue].closeTime
-	);
-	const [guestNumber, setGuestNumber] = useState(
-		serviceTime[editValue].guestNumber == undefined
-			? 1
-			: serviceTime[editValue].guestNumber
-	);
+	const [daysOpen, setDaysOpen] = useState<string[]>([]);
+	const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
+	const [duration, setDuration] = useState(1);
+	const [openTime, setOpenTime] = useState("");
+	const [closeTime, setCloseTime] = useState("");
+	const [guestNumber, setGuestNumber] = useState(1);
 	const [isManually, setIsManually] = useState(false);
-	const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>(
-		serviceTime[editValue].manualCapacity == undefined
-			? []
-			: serviceTime[editValue].manualCapacity
-	);
-	const [availableFromDate, setAvailableFromDate] = useState(
-		serviceTime[editValue].availableFromDate == undefined
-			? new Date().toISOString().split("T")[0]
-			: serviceTime[editValue].availableFromDate
-	);
-	const [availableToDate, setAvailableToDate] = useState(
-		serviceTime[editValue].availableToDate == undefined
-			? ""
-			: serviceTime[editValue].availableToDate
-	);
+	const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
+	const [availableFromDate, setAvailableFromDate] = useState(new Date().toISOString().split("T")[0]);
+	const [availableToDate, setAvailableToDate] = useState("");
 	const [disibleDays, setDisibleDays] = useState<string[]>([]);
-
+	const [selectIndex, setSelectIndex] = useState<number>(-1);
 	const TimeSlots: string[] = [];
 
 	useEffect(() => {
-		if (urlParams.get("edit") == null) {
-			setDaysOpen([]);
-			setSelectedSlots([]);
-			setDuration(1);
-			setOpenTime("");
-			setCloseTime("");
-			setGuestNumber(1);
-			setIsManually(false);
-			setAvailableFromDate(new Date().toISOString().split("T")[0]);
-			setAvailableToDate("");
+		if (localStorage.getItem("editValue") == null || localStorage.getItem("editValue") == undefined) {
+			resetData();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const resetData = () => {
+		setDaysOpen([]);
+		setSelectedSlots([]);
+		setDuration(1);
+		setOpenTime("");
+		setCloseTime("");
+		setGuestNumber(1);
+		setIsManually(false);
+		setAvailableFromDate(new Date().toISOString().split("T")[0]);
+		setAvailableToDate("");
+		setManualCapacity([]);
 
-	useEffect(() => {
-		if (serviceTime[0].daysOpen !== undefined) {
-			serviceTime.forEach(element => {
-				if (element.availableFromDate == availableFromDate && element.availableToDate == availableToDate) {
-					setDisibleDays(element.daysOpen);
-				} else {
-					setDisibleDays([]);
-				}
-			});
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [availableFromDate, availableToDate]);
+	};
 
 	const isDaySelected = (dayValue: string) => {
 		return daysOpen.includes(dayValue);
@@ -232,8 +199,6 @@ export default function ServiceTime() {
 	generateTimeSlots(openTime, closeTime, duration * 60);
 
 	const handleSubmit = () => {
-		const serviceTimeArray =
-			JSON.parse(localStorage.getItem("serviceTime") as string) || [];
 		const insertData = {
 			daysOpen: daysOpen,
 			openTime: openTime,
@@ -246,14 +211,19 @@ export default function ServiceTime() {
 			availableFromDate: availableFromDate,
 			availableToDate: availableToDate,
 		};
-		if (urlParams.get("edit") !== null) {
-			serviceTimeArray[editValue] = insertData;
+		if (selectIndex !== -1) {
+			serviceTime[selectIndex] = insertData;
 		} else {
-			serviceTimeArray.push(insertData);
+			if (serviceTime[0].daysOpen.length == 0) {
+				serviceTime[0] = insertData;
+				setSelectIndex(0);
+			} else {
+				serviceTime.push(insertData);
+				setSelectIndex(serviceTime.length - 1);
+			}
 		}
-		localStorage.setItem("serviceTime", JSON.stringify(serviceTimeArray));
-
-		navigate(`/create-service/${businessId}`);
+		localStorage.setItem("serviceTime", JSON.stringify(serviceTime));
+		setState({ ...state, ["right"]: true });
 	};
 
 	const increaseGuest = () => {
@@ -283,14 +253,87 @@ export default function ServiceTime() {
 		setIsManually(false);
 	};
 
+	const toggleDrawer =
+		(anchor: Anchor, open: boolean) =>
+			(event: React.KeyboardEvent | React.MouseEvent) => {
+				if (
+					event.type === 'keydown' &&
+					((event as React.KeyboardEvent).key === 'Tab' ||
+						(event as React.KeyboardEvent).key === 'Shift')
+				) {
+					return;
+				}
+				setState({ ...state, [anchor]: open });
+			};
+
+	const addDisbleDays = () => {
+		if (serviceTime[0].daysOpen !== undefined) {
+			const uniqueDays = new Set(); // Create a Set to store unique days
+			serviceTime.forEach(element => {
+				if (element.availableFromDate == availableFromDate && element.availableToDate == availableToDate) {
+					element.daysOpen.forEach(day => uniqueDays.add(day));
+				}
+			});
+			setDisibleDays(Array.from(uniqueDays) as string[]);
+		} else {
+			setDisibleDays(['']);
+		}
+	};
+
+	const handleAddData = () => {
+		resetData();
+		// localStorage.removeItem("editValue");
+		setSelectIndex(-1);
+		addDisbleDays();
+
+	};
+
+	const handleEdit = (index: number) => {
+		setSelectIndex(index);
+		setDaysOpen(serviceTime[index].daysOpen);
+		setSelectedSlots(serviceTime[index].selectedSlots);
+		setDuration(serviceTime[index].duration);
+		setOpenTime(serviceTime[index].openTime);
+		setCloseTime(serviceTime[index].closeTime);
+		setGuestNumber(serviceTime[index].guestNumber);
+		setIsManually(false);
+		setAvailableFromDate(serviceTime[index].availableFromDate);
+		setAvailableToDate(serviceTime[index].availableToDate);
+		setManualCapacity(serviceTime[index].manualCapacity);
+		addDisbleDays();
+	};
+
+	const summaryServiceInFo = () => (
+		<CreateService
+			handleClose={() => setState({ ...state, ['right']: false })}
+			handleAddData={handleAddData}
+			handleEdit={handleEdit}
+			handleCloseServiceInFo={props.handleCloseServiceInFo}
+			handleCloseServiceTime={props.handleClose}
+		/>
+	);
+
 	return (
-		<div className="mb-10">
+		<div
+			className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+		>
+			<Drawer
+				anchor={'right'}
+				open={state['right']}
+				onClose={toggleDrawer('right', false)}
+			>
+				{summaryServiceInFo()}
+			</Drawer>
 			<div className="pr-4 pl-4 pt-6">
-				<Header context={t('title:serviceInformation')} />
+				<Header
+					context={t('title:serviceInformation')}
+					isClose={false}
+					handleClose={props.handleClose}
+				/>
 			</div>
 			<Divider sx={{ marginTop: "16px", width: "100%" }} />
 			<div className="flex flex-col pr-4 pl-4">
-				<div style={{ marginBottom: "70px" }} className="mt-4 flex flex-col">
+				<div className="mt-4 flex flex-col">
 					<p className="font-semibold" style={{ fontSize: "14px" }}>
 						{t("availableDate")}
 					</p>
@@ -353,7 +396,7 @@ export default function ServiceTime() {
 						{t("activeDays")}
 					</p>
 					<div className="flex justify-between mt-3">
-						{dataOfWeekThai.map((day, index) => (
+						{(lan == "th" ? dataOfWeekThai : dataOfWeekEng).map((day, index) => (
 							<button
 								disabled={disibleDays.some(item => item == day.value)}
 								onClick={() => toggleDay(day.value)}
@@ -627,7 +670,7 @@ export default function ServiceTime() {
 						</div>
 					)}
 
-					<div className="w-full flex justify-center fixed bottom-0 inset-x-0">
+					<div className="w-full flex justify-center inset-y-0 mt-8" style={{ marginBottom: (openTime && closeTime) ? "20px" : "" }}>
 						<button
 							disabled={
 								daysOpen.length == 0 ||
@@ -639,7 +682,7 @@ export default function ServiceTime() {
 							}
 							onClick={handleSubmit}
 							type="submit"
-							className="text-white mt-4 rounded-lg font-semibold mb-6"
+							className="text-white mt-4 rounded-lg font-semibold"
 							style={{
 								width: "343px",
 								height: "51px",

@@ -7,6 +7,19 @@ import { useEffect, useState } from "react";
 import { getServiceByBusinessId } from "../../api/service";
 import { IService } from "../business/interfaces/service";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import React from "react";
+import ServiceInfo from "../business/ServiceInfo";
+import ServiceDetail from "./ServiceDetail";
+import {
+    SwipeableList,
+    SwipeableListItem,
+} from 'react-swipeable-list';
+import 'react-swipeable-list/dist/styles.css';
+import { trailingActions, leadingActions } from "./components/swipeable-list";
+
+export type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 export default function ServiceSetting() {
     const navigate = useNavigate();
@@ -15,7 +28,52 @@ export default function ServiceSetting() {
     const { t } = useTranslation();
     const [services, setServices] = useState<IService[]>([]);
     const [reFresh, setReFresh] = useState(false);
-    const [openIndex, setOpenIndex] = useState<number | null>(null); // Track which service is open
+    // const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<number>(0);
+    const [state, setState] = useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    });
+    const [open, setOpen] = useState(false);
+
+    const handleOpenConfirm = () => setOpen(true);
+    const handleCloseConfirm = () => setOpen(false);
+
+    const toggleDrawer =
+        (anchor: Anchor, open: boolean) =>
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === 'keydown' &&
+                    ((event as React.KeyboardEvent).key === 'Tab' ||
+                        (event as React.KeyboardEvent).key === 'Shift')
+                ) {
+                    return;
+                }
+
+                setState({ ...state, [anchor]: open });
+            };
+
+    const addService = (anchor: Anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250, height: "100vh" }}
+            role="presentation"
+        >
+            <ServiceInfo
+                isClose={true}
+                isEdit={false}
+                handleClose={toggleDrawer('bottom', false)}
+                handleCloseFromEdit={() => setState({ ...state, ['bottom']: false })}
+            />
+        </Box>
+    );
+    const serviceDetail = (anchor: Anchor) => (
+        <ServiceDetail
+            serviceId={selectedId}
+            handleClose={() => setState({ ...state, [anchor]: false })}
+        />
+    );
 
     useEffect(() => {
         const fetchService = async () => {
@@ -30,63 +88,82 @@ export default function ServiceSetting() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessId, reFresh]);
 
-    const handleDrawerOpen = (index: number) => {
-        setOpenIndex(index);
-    };
+    // const handleDrawerOpen = (index: number) => {
+    //     setOpenIndex(index);
+    // };
 
-    const handleDrawerClose = () => {
-        setOpenIndex(null);
-    };
+    // const handleDrawerClose = () => {
+    //     setOpenIndex(null);
+    // };
 
-    const handleSlide = (index: number) => (e: any) => {
-        e.stopPropagation(); // Prevent event propagation to parent elements
-        const threshold = 50;
-        const startX = e.touches ? e.touches[0].clientX : e.clientX;
-        let isSliding = false;
+    // const handleSlide = (index: number) => (e: any) => {
+    //     e.stopPropagation(); // Prevent event propagation to parent elements
+    //     const threshold = 50;
+    //     const startX = e.touches ? e.touches[0].clientX : e.clientX;
+    //     let isSliding = false;
 
-        const handleMove = (moveEvent: any) => {
-            const currentX = moveEvent.touches
-                ? moveEvent.touches[0].clientX
-                : moveEvent.clientX;
-            const deltaX = currentX - startX;
+    //     const handleMove = (moveEvent: any) => {
+    //         const currentX = moveEvent.touches
+    //             ? moveEvent.touches[0].clientX
+    //             : moveEvent.clientX;
+    //         const deltaX = currentX - startX;
 
-            if (deltaX > threshold) {
-                isSliding = true;
-                handleDrawerClose();
-                document.removeEventListener("mousemove", handleMove);
-                document.removeEventListener("touchmove", handleMove);
-            } else if (deltaX < -threshold) {
-                isSliding = true;
-                handleDrawerOpen(index);
-                document.removeEventListener("mousemove", handleMove);
-                document.removeEventListener("touchmove", handleMove);
-            }
-        };
+    //         if (deltaX > threshold) {
+    //             isSliding = true;
+    //             handleDrawerClose();
+    //             document.removeEventListener("mousemove", handleMove);
+    //             document.removeEventListener("touchmove", handleMove);
+    //         } else if (deltaX < -threshold) {
+    //             isSliding = true;
+    //             handleDrawerOpen(index);
+    //             document.removeEventListener("mousemove", handleMove);
+    //             document.removeEventListener("touchmove", handleMove);
+    //         }
+    //     };
 
-        const handleEnd = () => {
-            document.removeEventListener("mousemove", handleMove);
-            document.removeEventListener("touchmove", handleMove);
-            document.removeEventListener("mouseup", handleEnd);
-            document.removeEventListener("touchend", handleEnd);
-            if (!isSliding) {
-                handleDrawerOpen(index);
-            }
-        };
+    //     const handleEnd = () => {
+    //         document.removeEventListener("mousemove", handleMove);
+    //         document.removeEventListener("touchmove", handleMove);
+    //         document.removeEventListener("mouseup", handleEnd);
+    //         document.removeEventListener("touchend", handleEnd);
+    //         if (!isSliding) {
+    //             handleDrawerOpen(index);
+    //         }
+    //     };
 
-        document.addEventListener("mousemove", handleMove);
-        document.addEventListener("touchmove", handleMove);
-        document.addEventListener("mouseup", handleEnd);
-        document.addEventListener("touchend", handleEnd);
+    //     document.addEventListener("mousemove", handleMove);
+    //     document.addEventListener("touchmove", handleMove);
+    //     document.addEventListener("mouseup", handleEnd);
+    //     document.addEventListener("touchend", handleEnd);
+    // };
+
+    const handleSelectService = (serviceId: number) => {
+        setSelectedId(serviceId);
+        setState({ ...state, ['right']: true });
     };
 
     return (
         <div className=" overflow-y-hidden">
+            <Drawer
+                anchor={'bottom'}
+                open={state['bottom']}
+                onClose={toggleDrawer('bottom', false)}
+            >
+                {addService('bottom')}
+            </Drawer>
+            <Drawer
+                anchor={'right'}
+                open={state['right']}
+                onClose={toggleDrawer('right', false)}
+            >
+                {serviceDetail('right')}
+            </Drawer>
             <div className="pr-4 pl-4 pt-6">
                 <Header context={t("title:serviceInformation")} />
             </div>
             <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
                 <button
-                    onClick={() => navigate(`/service-info/${businessId}`)}
+                    onClick={toggleDrawer('bottom', true)}
                     style={{
                         width: "343px",
                         height: "43px",
@@ -100,13 +177,12 @@ export default function ServiceSetting() {
                     {t("button:createNewService")}
                 </button>
             </div>
-            <div style={{ background: "#F7F7F7", height: "100vh" }}>
+            <div style={{ background: "#F7F7F7" }}>
                 <p className="pr-4 pl-4 pt-3 pb-3">
                     {t("services")}{" "}
-                    {`(${
-                        services.filter((item) => item.isDeleted == false)
-                            .length
-                    })`}{" "}
+                    {`(${services.filter((item) => item.isDeleted == false)
+                        .length
+                        })`}{" "}
                 </p>
                 {services
                     .filter((item) => item.isDeleted == false)
@@ -114,23 +190,38 @@ export default function ServiceSetting() {
                         <div
                             key={index}
                             className="mb-2"
-                            onTouchStart={handleSlide(index)}
-                            onMouseDown={handleSlide(index)}>
-                            <ListServiceCard
-                                serviceId={service.id}
-                                serviceName={service.title}
-                                price={service.price}
-                                description={service.description}
-                                currency={service.currency}
-                                openTime={service.openTime}
-                                closeTime={service.closeTime}
-                                daysOpen={service.daysOpen}
-                                open={openIndex === index} // Set open state based on openIndex
-                                handleRefresh={() => setReFresh(!reFresh)}
-                            />
+                        >
+                            <SwipeableList
+                                fullSwipe={false}
+                            >
+                                <SwipeableListItem
+                                    trailingActions={trailingActions(handleOpenConfirm)}
+                                    leadingActions={leadingActions(handleSelectService, service.id)}
+                                >
+                                    <ListServiceCard
+                                        serviceId={service.id}
+                                        serviceName={service.title}
+                                        price={service.price}
+                                        description={service.description}
+                                        currency={service.currency}
+                                        openTime={service.openTime}
+                                        closeTime={service.closeTime}
+                                        daysOpen={service.daysOpen}
+                                        // open={openIndex === index}
+                                        openConfirm={open}
+                                        handleOpen={handleOpenConfirm}
+                                        handleClose={handleCloseConfirm}
+                                        handleRefresh={() => setReFresh(!reFresh)}
+                                        handleSelectService={handleSelectService}
+                                    />
+                                </SwipeableListItem>
+                            </SwipeableList>
                         </div>
                     ))}
             </div>
+
         </div>
     );
 }
+
+

@@ -3,14 +3,21 @@ import { useNavigate } from "react-router-dom";
 
 interface IProps {
     context: string;
+    handleClose?: () => void;
 }
 
 export default function Header(props: IProps) {
     const navigate = useNavigate();
-
+    const handleClick = () => {
+        if (props.handleClose) {
+            props.handleClose();
+        } else {
+            navigate(-1);
+        }
+    };
     return (
         <div className="flex items-center justify-between">
-            <div onClick={() => navigate(-1)}>
+            <div onClick={handleClick}>
                 <ArrowBackIosNewOutlinedIcon
                     sx={{
                         width: "20px",
@@ -25,6 +32,7 @@ export default function Header(props: IProps) {
             </div>
 
             <div>
+                <div style={{ width: "20px", height: "20px" }} />
             </div>
         </div>
     );
