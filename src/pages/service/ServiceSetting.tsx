@@ -11,19 +11,17 @@ import Drawer from "@mui/material/Drawer";
 import React from "react";
 import ServiceInfo from "../business/ServiceInfo";
 import ServiceDetail from "./ServiceDetail";
-import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
+import { SwipeableList, SwipeableListItem, Type } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
-import { trailingActions, leadingActions } from "./components/swipeable-list";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import Loading from "../../components/dialog/Loading";
-
 export type Anchor = "top" | "left" | "bottom" | "right";
+import { trailingActions } from "./components/swipeable-list";
 
 export default function ServiceSetting() {
     const { businessId } = useParams();
     const { t } = useTranslation();
-    const [reFresh, setReFresh] = useState(false);
     // const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [state, setState] = useState({
@@ -87,55 +85,6 @@ export default function ServiceSetting() {
         />
     );
 
-    // const handleDrawerOpen = (index: number) => {
-    //     setOpenIndex(index);
-    // };
-
-    // const handleDrawerClose = () => {
-    //     setOpenIndex(null);
-    // };
-
-    // const handleSlide = (index: number) => (e: any) => {
-    //     e.stopPropagation(); // Prevent event propagation to parent elements
-    //     const threshold = 50;
-    //     const startX = e.touches ? e.touches[0].clientX : e.clientX;
-    //     let isSliding = false;
-
-    //     const handleMove = (moveEvent: any) => {
-    //         const currentX = moveEvent.touches
-    //             ? moveEvent.touches[0].clientX
-    //             : moveEvent.clientX;
-    //         const deltaX = currentX - startX;
-
-    //         if (deltaX > threshold) {
-    //             isSliding = true;
-    //             handleDrawerClose();
-    //             document.removeEventListener("mousemove", handleMove);
-    //             document.removeEventListener("touchmove", handleMove);
-    //         } else if (deltaX < -threshold) {
-    //             isSliding = true;
-    //             handleDrawerOpen(index);
-    //             document.removeEventListener("mousemove", handleMove);
-    //             document.removeEventListener("touchmove", handleMove);
-    //         }
-    //     };
-
-    //     const handleEnd = () => {
-    //         document.removeEventListener("mousemove", handleMove);
-    //         document.removeEventListener("touchmove", handleMove);
-    //         document.removeEventListener("mouseup", handleEnd);
-    //         document.removeEventListener("touchend", handleEnd);
-    //         if (!isSliding) {
-    //             handleDrawerOpen(index);
-    //         }
-    //     };
-
-    //     document.addEventListener("mousemove", handleMove);
-    //     document.addEventListener("touchmove", handleMove);
-    //     document.addEventListener("mouseup", handleEnd);
-    //     document.addEventListener("touchend", handleEnd);
-    // };
-
     const handleSelectService = (serviceId: number) => {
         setSelectedId(serviceId);
         setState({ ...state, ["right"]: true });
@@ -189,12 +138,12 @@ export default function ServiceSetting() {
                         .filter((item) => item.isDeleted == false)
                         .map((service, index) => (
                             <div key={index} className="mb-2">
-                                <SwipeableList fullSwipe={false}>
+                                <SwipeableList
+                                    type={Type.IOS}
+                                    fullSwipe={false}>
                                     <SwipeableListItem
                                         trailingActions={trailingActions(
-                                            handleOpenConfirm
-                                        )}
-                                        leadingActions={leadingActions(
+                                            handleOpenConfirm,
                                             handleSelectService,
                                             service.id
                                         )}>
@@ -207,13 +156,10 @@ export default function ServiceSetting() {
                                             openTime={service.openTime}
                                             closeTime={service.closeTime}
                                             daysOpen={service.daysOpen}
-                                            // open={openIndex === index}
                                             openConfirm={open}
                                             handleOpen={handleOpenConfirm}
                                             handleClose={handleCloseConfirm}
-                                            handleRefresh={() =>
-                                                setReFresh(!reFresh)
-                                            }
+                                            handleRefresh={serviceMutate}
                                             handleSelectService={
                                                 handleSelectService
                                             }
