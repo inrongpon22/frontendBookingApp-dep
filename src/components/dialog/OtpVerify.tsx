@@ -7,7 +7,7 @@ import { app_api } from "../../helper/url";
 const OtpVerify = () => {
   const { formik, setIsLoading } = useContext(DialogContext);
 
-  const { t } = useTranslation();
+  const { t, i18n: {language} } = useTranslation();
 
   return (
     <section>
@@ -40,7 +40,7 @@ const OtpVerify = () => {
         className="bg-gray-200 rounded-lg text-[14px] px-2 py-1 mt-5"
         onClick={async () => {
           await axios
-            .post(`${app_api}/requestOTP/${formik.values.phoneNumbers}`)
+            .post(`${app_api}/requestOTP/${formik.values.phoneNumbers}/${language}`)
             .catch((err) => {
               if (err.response.status === 429) {
                 formik.setFieldError(

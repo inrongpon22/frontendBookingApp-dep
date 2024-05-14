@@ -42,6 +42,8 @@ const ShopDetailsPageWrapper = () => {
   const { businessId } = useParams(); // businessId from params
   const { t } = useTranslation();
 
+  const token = localStorage.getItem("token");
+
   const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by businessId connected api
 
   const [quantities, setQuantities] = useState<quantityTypes>({
@@ -231,7 +233,12 @@ const ShopDetailsPageWrapper = () => {
                 if (
                   slotArrays?.slotsTime.find((item: any) => item.isSelected)
                 ) {
-                  setIsShowDialog(true);
+                  if(token){
+                    setModalState("booking-detail-preview");
+                    setIsShowDialog(true);
+                  }else{
+                    setIsShowDialog(true);
+                  }
                 }
               }}
             >

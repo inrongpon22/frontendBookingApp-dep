@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import toast from "react-hot-toast";
+import { CircularProgress } from "@mui/material";
 
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
@@ -184,7 +185,7 @@ const BookingSummaryWrapper = () => {
         },
         {
           label: t("who"),
-          text: `${bookingDatas?.userName} (${bookingDatas?.guestNumber} person)`,
+          text: `${bookingDatas ? bookingDatas?.userName : ""} (${bookingDatas ? bookingDatas?.guestNumber : 0} person)`,
         },
         {
           label: t("price"),
@@ -201,7 +202,7 @@ const BookingSummaryWrapper = () => {
   return (
     <div className="p-5">
       <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
-        <span>{switchStatus(bookingDatas?.status)?.icon}</span>
+        <span>{bookingDatas ? switchStatus(bookingDatas?.status)?.icon : <CircularProgress />}</span>
         <span>{switchStatus(bookingDatas?.status)?.title}</span>
       </p>
       <p className="my-3 text-center">
@@ -262,6 +263,7 @@ const BookingSummaryWrapper = () => {
         >
           {t("button:goToMyBookingButton")}
         </button>
+        {/* re-book button */}
         <button
           type="button"
           className={`bg-[#020873] w-full text-white p-2 mt-5 rounded-lg ${
@@ -274,9 +276,12 @@ const BookingSummaryWrapper = () => {
         >
           {t("button:rebook")}
         </button>
+        {/* re-book button */}
       </div>
+      {/* cancel reservation by customer */}
       <div
         className={
+          bookingDatas?.status === "approval" ||
           bookingDatas?.status === "cancel" ||
           bookingDatas?.status === "declinded"
             ? "hidden"
@@ -291,6 +296,7 @@ const BookingSummaryWrapper = () => {
           {t("fragment:aBooking")}?
         </span>
       </div>
+      {/* cancel reservation by customer */}
     </div>
   );
 };
