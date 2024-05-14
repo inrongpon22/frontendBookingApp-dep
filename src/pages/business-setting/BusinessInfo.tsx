@@ -242,7 +242,9 @@ export default function BusinessInfo(props: IParams) {
 
                 const insertData = {
                     title: values.title,
-                    imagesURL: imagesURL.concat(props.businessData?.imagesURL || []),
+                    imagesURL: imagesURL.concat(
+                        props.businessData?.imagesURL || []
+                    ),
                     description: values.description,
                     phoneNumber: values.phoneNumber,
                     address: locationData.address,
@@ -302,15 +304,14 @@ export default function BusinessInfo(props: IParams) {
 
     useEffect(() => {
         // Check if the form values have changed
-        const formValuesChanged = JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues);
+        const formValuesChanged =
+            JSON.stringify(formik.values) !==
+            JSON.stringify(formik.initialValues);
+        const imagesChanged =
+            JSON.stringify(previewImages) !==
+            JSON.stringify(props.businessData?.imagesURL);
 
-        setIsFormModified(formValuesChanged || props.isEdit);
-        // const daysOpenModified = JSON.stringify(props.businessData?.daysOpen) !== JSON.stringify(daysOpen);
-        // if (daysOpenModified) {
-        //     props.handleIsEdit && props.handleIsEdit();
-        // } else {
-        //     props.handleIsEdit && props.handleIsEdit();
-        // }
+        setIsFormModified(formValuesChanged || props.isEdit || imagesChanged);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formik.values, formik.initialValues]);
 
@@ -342,10 +343,11 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -372,7 +374,9 @@ export default function BusinessInfo(props: IParams) {
                                 onClick={() => toggleDay(day.value)}
                                 key={index}
                                 style={{
-                                    cursor: props.isEdit ? "pointer" : "default",
+                                    cursor: props.isEdit
+                                        ? "pointer"
+                                        : "default",
                                     width: "45px",
                                     height: "47px",
                                     borderColor: isDaySelected(day.value)
@@ -383,10 +387,11 @@ export default function BusinessInfo(props: IParams) {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -458,10 +463,11 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">

@@ -1,14 +1,9 @@
 import { alpha } from "@mui/material";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import {
-    getServiceByServiceId,
-    updateServiceShowHide,
-    updateServiceTime,
-} from "../../api/service";
+import { updateServiceShowHide, updateServiceTime } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
@@ -19,18 +14,20 @@ import EditServiceTime from "./EditServiceTime";
 import TimeCard from "./components/TimeCard";
 import AddServiceTime from "./AddServiceTime";
 import { IServiceEditTime } from "../business/interfaces/service";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
+import Loading from "../../components/dialog/Loading";
 
 interface IParams {
     serviceId: number;
     handleClose?: () => void;
+    serviceMutate: () => void;
 }
 
 export default function ServiceDetail(props: IParams) {
-    const navigate = useNavigate();
-    const { businessId } = useParams();
     const token = localStorage.getItem("token");
     const { t } = useTranslation();
-    const [serviceInfo, setServiceInfo] = useState<any>();
+    // const [serviceInfo, setServiceInfo] = useState<any>();
 
     // service Info
     const [isHideEndTime, setIsHideEndTime] = useState(false);
@@ -40,25 +37,15 @@ export default function ServiceDetail(props: IParams) {
     const [isEditTime, setIsEditTime] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
-
-    useEffect(() => {
-        const fetchService = async () => {
-            try {
-                if (token === null) throw new Error("Token is not found");
-                const service = await getServiceByServiceId(
-                    Number(props.serviceId),
-                    token
-                );
-                setServiceInfo(service);
-                setIsAutoApprove(service.isAutoApprove);
-                setIsHideEndTime(service.isHideEndTime);
-                setIsHidePrice(service.isHidePrice);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchService();
-    }, [props.serviceId, token]);
+    const {
+        data: serviceInfo,
+        isLoading: serviceLoading,
+        // error: serviceError,
+        mutate: serviceMutate,
+    } = useSWR<any>(
+        `${app_api}/getServiceByServiceId/${props.serviceId}`,
+        fetcher
+    );
 
     const handleSetEditInfo = () => {
         setIsEditInfo(!isEditInfo);
@@ -78,7 +65,8 @@ export default function ServiceDetail(props: IParams) {
             isAutoApprove: isAutoApprove,
         };
         await updateServiceShowHide(insertData, token || "", serviceInfo.id);
-        navigate(`/service-setting/${businessId}`);
+        props.serviceMutate();
+        props.handleClose && props.handleClose();
     };
 
     const handleDeleteServiceTime = async () => {
@@ -90,14 +78,16 @@ export default function ServiceDetail(props: IParams) {
             token || "",
             serviceInfo.id
         );
-        setServiceInfo({
-            ...serviceInfo,
-            bookingSlots: updatedTimeDetails,
-        });
+        serviceMutate();
+        // setServiceInfo({
+        //     ...serviceInfo,
+        //     bookingSlots: updatedTimeDetails,
+        // });
     };
 
     return (
         <>
+            <Loading openLoading={serviceLoading} />
             {serviceInfo &&
                 (isEditInfo ? (
                     <EditServiceInfo
@@ -107,6 +97,7 @@ export default function ServiceDetail(props: IParams) {
                         currency={serviceInfo.currency}
                         serviceId={serviceInfo.id}
                         handleSetEditInfo={handleSetEditInfo}
+                        serviceMutate={serviceMutate}
                     />
                 ) : isEditTime ? (
                     <EditServiceTime
@@ -118,6 +109,7 @@ export default function ServiceDetail(props: IParams) {
                         serviceId={serviceInfo.id}
                         isAddTime={isAddTime}
                         handleSetEditTime={handleSetEditTime}
+                        serviceMutate={serviceMutate}
                     />
                 ) : isAddTime ? (
                     <AddServiceTime
@@ -129,7 +121,8 @@ export default function ServiceDetail(props: IParams) {
                         handleAddTime={handleAddTime}
                     />
                 ) : (
-                    <div className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+                    <div
+                        className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
                         style={{ width: "100vw" }}>
                         <div className="pr-4 pl-4 pt-6">
                             <Header
@@ -139,8 +132,7 @@ export default function ServiceDetail(props: IParams) {
                         </div>
                         <Divider sx={{ marginTop: "16px", width: "100%" }} />
                         <div className="flex flex-col pr-4 pl-4">
-                            <div
-                                className="mt-4 flex flex-col gap-3">
+                            <div className="mt-4 flex flex-col gap-3">
                                 <ServiceCard
                                     serviceId={serviceInfo.id}
                                     serviceName={serviceInfo.title}
