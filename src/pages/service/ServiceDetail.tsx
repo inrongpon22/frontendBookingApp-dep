@@ -21,13 +21,12 @@ import Loading from "../../components/dialog/Loading";
 interface IParams {
     serviceId: number;
     handleClose?: () => void;
-    serviceMutate: () => void;
+    serviceMutate?: () => void;
 }
 
 export default function ServiceDetail(props: IParams) {
     const token = localStorage.getItem("token");
     const { t } = useTranslation();
-    // const [serviceInfo, setServiceInfo] = useState<any>();
 
     // service Info
     const [isHideEndTime, setIsHideEndTime] = useState(false);
@@ -65,7 +64,7 @@ export default function ServiceDetail(props: IParams) {
             isAutoApprove: isAutoApprove,
         };
         await updateServiceShowHide(insertData, token || "", serviceInfo.id);
-        props.serviceMutate();
+        props.serviceMutate && props.serviceMutate();
         props.handleClose && props.handleClose();
     };
 
