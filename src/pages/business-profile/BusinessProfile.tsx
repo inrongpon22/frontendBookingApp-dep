@@ -38,7 +38,7 @@ const BusinessProfile = () => {
   );
 
   const { data: serviceByBusinessId } = useSWR(
-    businessId && `${app_api}/serviceByBusinessId/${businessId}?page=1&limit=100`,
+    businessId && `${app_api}/serviceByBusinessId/${businessId}`,
     (url: string) =>
       axios
         .get(url, {
