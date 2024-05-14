@@ -15,10 +15,13 @@ interface IParams {
     price: number;
     currency: string;
     handleSetEditInfo: () => void;
+    serviceMutate: () => void;
 }
 
 const validationSchema = Yup.object().shape({
-    serviceName: Yup.string().required(t("formValidation:service:create:serviceName:serviceNameReq")),
+    serviceName: Yup.string().required(
+        t("formValidation:service:create:serviceName:serviceNameReq")
+    ),
     serviceDescription: Yup.string().required(
         t("formValidation:service:create:serviceDesc:serviceDescReq")
     ),
@@ -50,14 +53,15 @@ export default function EditServiceInfo(props: IParams) {
                 localStorage.getItem("token") || "",
                 props.serviceId
             );
+            props.serviceMutate();
             props.handleSetEditInfo();
         },
     });
 
     return (
-        <div className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
-            style={{ width: "100vw" }}
-        >
+        <div
+            className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+            style={{ width: "100vw" }}>
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
                     <div onClick={props.handleSetEditInfo}>
@@ -93,11 +97,13 @@ export default function EditServiceInfo(props: IParams) {
                             type="text"
                             name="serviceName"
                             style={{ color: "#8B8B8B" }}
-                            placeholder={t("formValidation:service:create:serviceName:serviceNameFill")}
+                            placeholder={t(
+                                "formValidation:service:create:serviceName:serviceNameFill"
+                            )}
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
                         {formik.touched.serviceName &&
-                            formik.errors.serviceName ? (
+                        formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
@@ -112,18 +118,21 @@ export default function EditServiceInfo(props: IParams) {
                             type="text"
                             name="serviceDescription"
                             style={{ color: "#8B8B8B" }}
-                            placeholder={t("formValidation:service:create:serviceDesc:serviceDescFill")}
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
+                            placeholder={t(
+                                "formValidation:service:create:serviceDesc:serviceDescFill"
+                            )}
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                                formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                ? "border-red-500"
-                                : ""
-                                }`}
+                                    ? "border-red-500"
+                                    : ""
+                            }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                            formik.errors.serviceDescription ? (
+                        formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
@@ -151,10 +160,11 @@ export default function EditServiceInfo(props: IParams) {
                                 style={{ textAlign: "right" }}
                                 name="price"
                                 type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                                    ? "border-red-500"
-                                    : ""
-                                    }`}
+                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
+                                    formik.touched.price && formik.errors.price
+                                        ? "border-red-500"
+                                        : ""
+                                }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
