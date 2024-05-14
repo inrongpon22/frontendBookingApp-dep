@@ -14,7 +14,7 @@ import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
-import CreateService from "./pages/business/CreateService.tsx";
+// import CreateService from "./pages/business/CreateService.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
@@ -57,19 +57,20 @@ function App() {
           />
 
           {/* service */}
-          <Route path="/service-info/:businessId" element={<ServiceInfo />} />
+          <Route path="/service-info/:businessId" element={<ServiceInfo isClose={false} isEdit={false} />} />
           <Route path="/service-time/:businessId" element={<ServiceTime />} />
-          <Route
+          {/* <Route
             path="/create-service/:businessId"
             element={<CreateService />}
-          />
+          /> */}
           <Route
             path="/service-setting/:businessId"
             element={<ServiceSetting />}
           />
           <Route
             path="/service-detail/:businessId/:serviceId"
-            element={<ServiceDetail />}
+            element={<ServiceDetail
+              serviceId={0} />}
           />
         </Routes>
         {/* {!token && <Navigate to="/" replace={true} />} */}

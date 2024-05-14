@@ -20,6 +20,7 @@ import SearchMap from "../business/SearchMap";
 interface IParams {
     businessData?: IgetBusiness;
     isEdit: boolean;
+    handleIsEdit?: () => void;
 }
 
 export default function BusinessInfo(props: IParams) {
@@ -56,6 +57,7 @@ export default function BusinessInfo(props: IParams) {
         location: props.businessData?.address || "",
         description: props.businessData?.description || "",
     });
+    const [isFormModified, setIsFormModified] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchImageUrls = async () => {
@@ -206,6 +208,7 @@ export default function BusinessInfo(props: IParams) {
         } else {
             setDaysOpen([...daysOpen, dayValue]);
         }
+        props.handleIsEdit && props.handleIsEdit();
     };
 
     const formik = useFormik({
@@ -297,6 +300,29 @@ export default function BusinessInfo(props: IParams) {
         },
     });
 
+    useEffect(() => {
+        // Check if the form values have changed
+        const formValuesChanged = JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues);
+
+        setIsFormModified(formValuesChanged || props.isEdit);
+        // const daysOpenModified = JSON.stringify(props.businessData?.daysOpen) !== JSON.stringify(daysOpen);
+        // if (daysOpenModified) {
+        //     props.handleIsEdit && props.handleIsEdit();
+        // } else {
+        //     props.handleIsEdit && props.handleIsEdit();
+        // }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formik.values, formik.initialValues]);
+
+    const handleOpenTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setOpenTime(e.target.value);
+        props.handleIsEdit && props.handleIsEdit();
+    };
+    const handleCloseTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setCloseTime(e.target.value);
+        props.handleIsEdit && props.handleIsEdit();
+    };
+
     return (
         <>
             <div className="flex flex-col">
@@ -307,7 +333,7 @@ export default function BusinessInfo(props: IParams) {
                         {t("form:business:create:shopName")}
                     </p>
                     <input
-                        disabled={!props.isEdit}
+                        // disabled={!props.isEdit}
                         {...formik.getFieldProps("title")}
                         onBlur={formik.handleBlur}
                         type="text"
@@ -334,7 +360,6 @@ export default function BusinessInfo(props: IParams) {
                     <SearchMap
                         handleChangeLocation={handleChangeLocation}
                         oldAddress={locationData.address}
-                        isEdit={props.isEdit}
                     />
                     <p
                         style={{ fontSize: "14px" }}
@@ -344,7 +369,7 @@ export default function BusinessInfo(props: IParams) {
                     <div className="flex justify-between mt-1">
                         {dayOfWeek()?.map((day, index) => (
                             <div
-                                onClick={() => props.isEdit && toggleDay(day.value)}
+                                onClick={() => toggleDay(day.value)}
                                 key={index}
                                 style={{
                                     cursor: props.isEdit ? "pointer" : "default",
@@ -384,12 +409,10 @@ export default function BusinessInfo(props: IParams) {
                             </div>
                             <div className="flex">
                                 <input
-                                    disabled={!props.isEdit}
+                                    // disabled={!props.isEdit}
                                     className="font-black-500 focus:outline-none"
                                     value={openTime}
-                                    onChange={(e) =>
-                                        setOpenTime(e.target.value)
-                                    }
+                                    onChange={handleOpenTimeChange}
                                     type="time"
                                     style={{
                                         border: "none",
@@ -412,12 +435,10 @@ export default function BusinessInfo(props: IParams) {
                                 <input
                                     className="focus:outline-none"
                                     value={closeTime}
-                                    onChange={(e) =>
-                                        setCloseTime(e.target.value)
-                                    }
+                                    onChange={handleCloseTimeChange}
                                     type="time"
                                     style={{ border: "none" }}
-                                    disabled={openTime === "" || !props.isEdit}
+                                    disabled={openTime === ""}
                                 />
                             </div>
                         </div>
@@ -464,7 +485,7 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}>
                         <textarea
-                            disabled={!props.isEdit}
+                            // disabled={!props.isEdit}
                             name="description"
                             value={formik.values.description}
                             onChange={formik.handleChange}
@@ -486,10 +507,10 @@ export default function BusinessInfo(props: IParams) {
                         {previewImages.map((image, index) => (
                             <div key={index} className="mt-3">
                                 <Badge
-                                    onClick={props.isEdit ? () => handleClearImages(index) : () => { }}
+                                    onClick={() => handleClearImages(index)}
                                     badgeContent={
                                         <IconButton
-                                            disabled={!props.isEdit}
+                                            // disabled={!props.isEdit}
                                             size="small"
                                             sx={{
                                                 background: "black",
@@ -525,7 +546,7 @@ export default function BusinessInfo(props: IParams) {
                                 htmlFor={`fileInput`}
                                 style={{ cursor: "pointer" }}>
                                 <input
-                                    disabled={!props.isEdit}
+                                    // disabled={!props.isEdit}
                                     id={`fileInput`}
                                     type="file"
                                     style={{ display: "none" }}
@@ -540,8 +561,9 @@ export default function BusinessInfo(props: IParams) {
                         <button
                             type="button"
                             className="w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold"
+                            disabled={!isFormModified}
                             onClick={() => formik.handleSubmit()}>
-                            {t("button:next")}
+                            {t("edit")}
                         </button>
                     </div>
                 </form>

@@ -11,7 +11,7 @@ import {
 } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import Header from "../business/components/Header";
+import Header from "./components/Header";
 import SettingServiceBtn from "./components/SettingServiceBtn";
 import EditServiceInfo from "./EditServiceInfo";
 import ServiceCard from "./components/ServiceCard";
@@ -20,9 +20,14 @@ import TimeCard from "./components/TimeCard";
 import AddServiceTime from "./AddServiceTime";
 import { IServiceEditTime } from "../business/interfaces/service";
 
-export default function ServiceDetail() {
+interface IParams {
+    serviceId: number;
+    handleClose?: () => void;
+}
+
+export default function ServiceDetail(props: IParams) {
     const navigate = useNavigate();
-    const { serviceId, businessId } = useParams();
+    const { businessId } = useParams();
     const token = localStorage.getItem("token");
     const { t } = useTranslation();
     const [serviceInfo, setServiceInfo] = useState<any>();
@@ -41,7 +46,7 @@ export default function ServiceDetail() {
             try {
                 if (token === null) throw new Error("Token is not found");
                 const service = await getServiceByServiceId(
-                    Number(serviceId),
+                    Number(props.serviceId),
                     token
                 );
                 setServiceInfo(service);
@@ -53,7 +58,7 @@ export default function ServiceDetail() {
             }
         };
         fetchService();
-    }, [serviceId, token, isEditInfo]);
+    }, [props.serviceId, token]);
 
     const handleSetEditInfo = () => {
         setIsEditInfo(!isEditInfo);
@@ -124,14 +129,17 @@ export default function ServiceDetail() {
                         handleAddTime={handleAddTime}
                     />
                 ) : (
-                    <div>
+                    <div className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+                        style={{ width: "100vw" }}>
                         <div className="pr-4 pl-4 pt-6">
-                            <Header context={t("title:serviceInformation")} />
+                            <Header
+                                context={t("title:serviceInformation")}
+                                handleClose={props.handleClose}
+                            />
                         </div>
                         <Divider sx={{ marginTop: "16px", width: "100%" }} />
                         <div className="flex flex-col pr-4 pl-4">
                             <div
-                                style={{ marginBottom: "100px" }}
                                 className="mt-4 flex flex-col gap-3">
                                 <ServiceCard
                                     serviceId={serviceInfo.id}
@@ -211,9 +219,9 @@ export default function ServiceDetail() {
                                     }
                                 />
 
-                                <div className="w-full flex justify-center fixed bottom-0 inset-x-0 gap-2">
+                                <div className="w-full flex justify-center bottom-0 inset-x-0 gap-2">
                                     <button
-                                        className="border text-white mt-4 rounded-lg font-semibold mb-6"
+                                        className="border text-white mt-4 rounded-lg font-semibold"
                                         style={{
                                             borderColor: `${alpha(
                                                 "#000000",

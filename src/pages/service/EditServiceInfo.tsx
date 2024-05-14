@@ -55,7 +55,9 @@ export default function EditServiceInfo(props: IParams) {
     });
 
     return (
-        <div>
+        <div className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
+            style={{ width: "100vw" }}
+        >
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
                     <div onClick={props.handleSetEditInfo}>
@@ -164,7 +166,7 @@ export default function EditServiceInfo(props: IParams) {
                             </div>
                         ) : null}
 
-                        <div className="w-full flex justify-center fixed bottom-0 inset-x-0 mt-8">
+                        <div className="w-full flex justify-center bottom-0 inset-x-0 absolute">
                             <button
                                 type="submit"
                                 className="text-white mt-4 rounded-lg font-semibold mb-6"

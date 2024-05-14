@@ -1,11 +1,12 @@
 import { alpha, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { IServiceInfo } from "../interfaces/service";
-import { useNavigate, useParams } from "react-router-dom";
 
-export default function ServiceCard() {
-    const { businessId } = useParams();
-    const navigate = useNavigate();
+interface IParams {
+    handleEdit: () => void;
+}
+
+export default function ServiceCard(props: IParams) {
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
     ) as IServiceInfo;
@@ -15,7 +16,7 @@ export default function ServiceCard() {
             style={{ borderColor: `${alpha("#000000", 0.2)}` }}
             className="flex flex-col p-3 text-sm border rounded-lg focus:outline-none">
             <div className="flex justify-between">
-                <div className=" font-bold " style={{ fontSize: "14px" }}>
+                <div className=" font-bold mb-2" style={{ fontSize: "14px" }}>
                     {serviceInfo?.serviceName}
                 </div>
                 <Box
@@ -29,7 +30,7 @@ export default function ServiceCard() {
                         alignItems: "center",
                     }}>
                     <EditOutlinedIcon
-                        onClick={() => navigate(`/service-info/${businessId}?edit=true`)}
+                        onClick={props.handleEdit}
                         sx={{
                             cursor: "pointer",
                             color: "#020873",

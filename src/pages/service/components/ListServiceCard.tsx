@@ -1,10 +1,6 @@
 import { deleteService } from "../../../api/service";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { truncateContext } from "../../../helper/limitedText";
-import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
-import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
 import { t } from "i18next";
 
@@ -17,8 +13,12 @@ interface IProps {
     openTime: string;
     closeTime: string;
     daysOpen: string[];
-    open: boolean;
+    // open: boolean;
+    openConfirm: boolean;
+    handleOpen: () => void;
+    handleClose: () => void;
     handleRefresh: () => void;
+    handleSelectService?: (serviceId: number) => void;
 }
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -39,20 +39,17 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     position: "relative",
 }));
 
+
+
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
-    const navigate = useNavigate();
-    const { businessId } = useParams();
-    const [open, setOpen] = useState(false);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const handleDeleteService = async () => {
         try {
             if (token) {
                 await deleteService(props.serviceId, token);
                 props.handleRefresh();
+                props.handleClose();
             }
         } catch (error) {
             console.error(error);
@@ -61,31 +58,30 @@ export default function ListServiceCard(props: IProps) {
 
     return (
         <div
-            className="flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative"
-            style={{ height: "104px", marginLeft: props.open ? "-120px" : "" }}>
+            className="w-full flex flex-col pr-4 pl-4 bg-white pt-2 pb-2 relative"
+            style={{ height: "104px" }}>
             <ConfirmCard
-                open={open}
+                open={props.openConfirm}
                 title={t("askForDelete")}
                 description={t("serviceDeleted")}
                 bntConfirm={t("button:yesDelete")}
                 bntBack={t("button:back")}
-                handleClose={handleClose}
+                handleClose={props.handleClose}
                 handleConfirm={handleDeleteService}
             />
 
-            <div
+            {/* <div
                 style={{
                     width: "65px",
                     height: "104px",
                     background: "#FA6056",
                 }}
                 className={`absolute top-0 right-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={handleOpen}>
+                    onClick={props.handleOpen}>
                     <DeleteOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
@@ -99,22 +95,17 @@ export default function ListServiceCard(props: IProps) {
                     right: "65px",
                 }}
                 className={`absolute top-0 
-                    transition-opacity duration-500 ease-in-out ${
-                        props.open ? "opacity-100" : "opacity-0"
+                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
                     } shadow-md flex justify-center items-center`}>
                 <div
                     className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={() =>
-                        navigate(
-                            `/service-detail/${businessId}/${props.serviceId}`
-                        )
-                    }>
+                    onClick={() => props.handleSelectService && props.handleSelectService(props.serviceId)}>
                     <ModeEditOutlinedIcon
                         sx={{ color: "white", fontSize: "18.5px" }}
                     />
                 </div>
-            </div>
-            <Main open={props.open}>
+            </div> */}
+            <Main>
                 <div>
                     <div className="flex justify-between">
                         <div
@@ -125,7 +116,6 @@ export default function ListServiceCard(props: IProps) {
                         <div
                             style={{
                                 fontSize: "14px",
-                                marginRight: props.open ? "15px" : "",
                             }}
                             className="font-semibold transition-opacity duration-700 ease-in-out">
                             {props.currency} {props.price}

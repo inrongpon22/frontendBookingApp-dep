@@ -1,30 +1,48 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { useNavigate } from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IProps {
     context: string;
+    isClose: boolean;
+    isTyping?: boolean;
+    // handleClose?: (event: React.KeyboardEvent | React.MouseEvent) => void;
+    handleClose?: () => void;
 }
 
 export default function Header(props: IProps) {
-    const navigate = useNavigate();
 
     return (
         <div className="flex items-center justify-between">
-            <div onClick={() => navigate(-1)}>
-                <ArrowBackIosNewOutlinedIcon
-                    sx={{
-                        width: "20px",
-                        height: "20px",
-                        cursor: "pointer",
-                    }}
-                />
+            <div
+                onClick={props.handleClose}
+            >
+                {props.isClose ? (
+                    <CloseIcon
+                        sx={{
+                            width: "20px",
+                            height: "20px",
+                            cursor: "pointer",
+                        }}
+                    />
+                ) : (
+                    <ArrowBackIosNewOutlinedIcon
+                        sx={{
+                            width: "20px",
+                            height: "20px",
+                            cursor: "pointer",
+                        }}
+                    />
+                )}
+
             </div>
 
             <div className="font-bold" style={{ fontSize: "14px" }}>
                 {props.context}
             </div>
 
-            <div></div>
+            <div>
+                <div style={{ width: "20px", height: "20px" }} />
+            </div>
         </div>
     );
 }

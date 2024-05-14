@@ -1,10 +1,10 @@
-import AddIcon from "@mui/icons-material/Add";
+// import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
 import { IBusinessInfo, ILocation } from "./interfaces/business";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
-import { alpha, Badge, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { alpha } from "@mui/material";
+// import CloseIcon from "@mui/icons-material/Close";
 
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../helper/createSupabase";
@@ -24,9 +24,7 @@ export default function BusinessInfo() {
   } = useTranslation();
 
   const [file, setFile] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  //   const [openTime, setOpenTime] = useState("");
-  //   const [closeTime, setCloseTime] = useState("");
+  // const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [locationData, setLocationData] = useState<ILocation>({
     lat: 0,
     lng: 0,
@@ -101,30 +99,30 @@ export default function BusinessInfo() {
     return randomNumber;
   }
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const fileReader = new FileReader();
-      const newFile = e.target.files ? e.target.files[0] : null;
-      if (newFile) {
-        fileReader.onload = () => {
-          const previewURL = fileReader.result as string;
-          setPreviewImages((pre) => {
-            return [...pre, previewURL];
-          });
-        };
+  // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const fileReader = new FileReader();
+  //     const newFile = e.target.files ? e.target.files[0] : null;
+  //     if (newFile) {
+  //       fileReader.onload = () => {
+  //         const previewURL = fileReader.result as string;
+  //         setPreviewImages((pre) => {
+  //           return [...pre, previewURL];
+  //         });
+  //       };
 
-        fileReader.readAsDataURL(newFile);
-      }
+  //       fileReader.readAsDataURL(newFile);
+  //     }
 
-      setFile((prevFiles) => {
-        if (newFile) {
-          return [...prevFiles, newFile];
-        } else {
-          return prevFiles;
-        }
-      });
-    }
-  };
+  //     setFile((prevFiles) => {
+  //       if (newFile) {
+  //         return [...prevFiles, newFile];
+  //       } else {
+  //         return prevFiles;
+  //       }
+  //     });
+  //   }
+  // };
 
   const formik = useFormik({
     initialValues: {
@@ -207,18 +205,18 @@ export default function BusinessInfo() {
     },
   });
 
-  const handleClearImages = (index: number) => {
-    setPreviewImages((prevImages) => {
-      const newImages = [...prevImages];
-      newImages.splice(index, 1);
-      return newImages;
-    });
-    setFile((prevFiles) => {
-      const newImages = [...prevFiles];
-      newImages.splice(index, 1);
-      return newImages;
-    });
-  };
+  // const handleClearImages = (index: number) => {
+  //   setPreviewImages((prevImages) => {
+  //     const newImages = [...prevImages];
+  //     newImages.splice(index, 1);
+  //     return newImages;
+  //   });
+  //   setFile((prevFiles) => {
+  //     const newImages = [...prevFiles];
+  //     newImages.splice(index, 1);
+  //     return newImages;
+  //   });
+  // };
 
   const isDaySelected = (dayValue: string) => {
     return daysOpen.includes(dayValue);
@@ -253,11 +251,10 @@ export default function BusinessInfo() {
               borderColor: `${alpha("#000000", 0.2)}`,
             }}
             placeholder={t("placeholder:shopName")}
-            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-              formik.errors?.title
-                ? "border-2 border-rose-500"
-                : "border border-black-50"
-            }`}
+            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+              ? "border-2 border-rose-500"
+              : "border border-black-50"
+              }`}
           />
           {formik.touched.title && formik.errors.title ? (
             <div className="text-red-500 mt-1">{formik.errors.title}</div>
@@ -288,11 +285,10 @@ export default function BusinessInfo() {
                     : "white",
                 }}
                 className={`
-                            ${
-                              isDaySelected(day.value)
-                                ? "border-custom-color border-2"
-                                : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                    ? "border-custom-color border-2"
+                    : "border-black-50 border"
+                  }
                             flex items-center justify-center rounded-lg`}
               >
                 {day.name}
@@ -323,8 +319,6 @@ export default function BusinessInfo() {
                 <input
                   className="font-black-500 focus:outline-none"
                   {...formik.getFieldProps("openTime")}
-                  //   value={openTime}
-                  //   onChange={(e) => setOpenTime(e.target.value)}
                   type="time"
                   style={{
                     border: "none",
@@ -346,11 +340,8 @@ export default function BusinessInfo() {
                 <input
                   className="focus:outline-none"
                   {...formik.getFieldProps("closeTime")}
-                  //   value={closeTime}
-                  //   onChange={(e) => setCloseTime(e.target.value)}
                   type="time"
                   style={{ border: "none" }}
-                  //   disabled={openTime === ""}
                 />
               </div>
             </div>
@@ -371,11 +362,10 @@ export default function BusinessInfo() {
               borderColor: `${alpha("#000000", 0.2)}`,
             }}
             placeholder={t("placeholder:businessNumber")}
-            className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-              formik.errors?.phoneNumber
-                ? "border-2 border-rose-500"
-                : "border border-black-50"
-            }`}
+            className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+              ? "border-2 border-rose-500"
+              : "border border-black-50"
+              }`}
           />
           {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
             <div className="text-red-500 mt-1">{formik.errors.phoneNumber}</div>
@@ -403,7 +393,7 @@ export default function BusinessInfo() {
               maxLength={150}
             />
           </div>
-          <div className="mt-4 flex">
+          {/* <div className="mt-4 flex">
             <div className="font-semibold mr-1">
               {t("form:business:create:images")}
             </div>
@@ -460,15 +450,14 @@ export default function BusinessInfo() {
                 <AddIcon />
               </label>
             </div>
-          </div>
+          </div> */}
 
           <div className="w-full flex justify-center  inset-x-0 gap-2">
             <button
               type="button"
               disabled={!!Object.keys(formik.errors).length}
-              className={`w-full p-3 my-5 text-white text-[14px] ${
-                !Object.keys(formik.errors).length ? "bg-deep-blue" : "bg-gray-300"
-              } rounded-lg font-semibold`}
+              className={`w-full p-3 my-5 text-white text-[14px] ${!Object.keys(formik.errors).length ? "bg-deep-blue" : "bg-gray-300"
+                } rounded-lg font-semibold`}
               onClick={() => {
                 if (!Object.keys(formik.errors).length) {
                   formik.handleSubmit();
