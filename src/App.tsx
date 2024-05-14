@@ -18,6 +18,7 @@ import ServiceTime from "./pages/business/ServiceTime.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
+import BusinessPreview from "./pages/business-preview/BusinessPreview.tsx";
 
 function App() {
 
@@ -54,6 +55,10 @@ function App() {
           <Route
             path="/business-setting/:businessId"
             element={<BusinessSetting />}
+          />
+          <Route
+            path="/business-preview"
+            element={<BusinessPreview />}
           />
 
           {/* service */}

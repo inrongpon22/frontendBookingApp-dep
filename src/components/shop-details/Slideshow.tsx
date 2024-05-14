@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { supabase } from "../../helper/createSupabase";
 
 interface slideTypes {
@@ -8,19 +8,19 @@ interface slideTypes {
   fixedHeight?: number;
 }
 
-const languageLists: {
-  code: string;
-  name: string;
-}[] = [
-  {
-    code: "en",
-    name: "English",
-  },
-  {
-    code: "th",
-    name: "Thai",
-  },
-];
+// const languageLists: {
+//   code: string;
+//   name: string;
+// }[] = [
+//   {
+//     code: "en",
+//     name: "English",
+//   },
+//   {
+//     code: "th",
+//     name: "Thai",
+//   },
+// ];
 
 export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
   const [images, setImages] = useState<
@@ -29,9 +29,9 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
     }[]
   >([]);
 
-  const {
-    i18n: { changeLanguage, language },
-  } = useTranslation();
+  // const {
+  //   i18n: { changeLanguage, language },
+  // } = useTranslation();
 
   const settings = {
     dots: true,
@@ -68,7 +68,7 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
 
   return (
     <main className="relative mb-5">
-      <div className="absolute right-3 top-3 z-50">
+      {/* <div className="absolute right-3 top-3 z-50">
         <select
           value={language}
           className="bg-white rounded border"
@@ -85,7 +85,7 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
             );
           })}
         </select>
-      </div>
+      </div> */}
       <Slider {...settings}>
         {images?.map((item: any, index: number) => (
           <div className="slide" key={index}>
