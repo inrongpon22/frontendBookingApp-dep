@@ -73,7 +73,8 @@
     "businessSetting": "Business Setting",
     "busineessApprovedSuccessful": "Approved successfully",
     "busineessRejectedSuccessful": "Rejected successfully",
-    "dayOff": "Day-off"
+    "dayOff": "Day-off",
+    "addDayOff": "Add Day-off"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -118,6 +119,12 @@
     "addNewDayOff": "Add New Day-off"
   },
   "noti": {
+    "business": {
+      "logout": {
+        "confirmation": "Are you sure you want to log out",
+        "confirmationDesc": "You will be redirected to the login page."
+      }
+    },
     "booking": {
       "create": {
         "success": "Booking created successfully",

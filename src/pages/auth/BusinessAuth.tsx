@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
+// api
+import { getBusinessByUserId } from "../../api/business";
+import { useNavigate } from "react-router";
 
 const BusinessAuth = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const token = localStorage.getItem("token") ?? "";
+  const userId = localStorage.getItem("userId") ?? "";
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<string | undefined>(
@@ -12,7 +19,11 @@ const BusinessAuth = () => {
 
   useEffect(() => {
     document.title = t("title:bussRootTitle");
-    // localStorage.clear();
+    if (token) {
+      getBusinessByUserId(userId, token).then((res) =>
+      navigate(`/business-profile/${res[0].id}`)
+      );
+    }
   }, []);
 
   return (

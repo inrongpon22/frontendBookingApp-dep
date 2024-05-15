@@ -30,8 +30,6 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-
-
           {/* customer */}
           <Route
             path="/details/:businessId"
@@ -102,7 +100,6 @@ function App() {
             element={<AddNewDayOff />}
           />
         </Routes>
-        {/* {!token && <Navigate to="/" replace={true} />} */}
       </BrowserRouter>
       <Toaster />
     </>

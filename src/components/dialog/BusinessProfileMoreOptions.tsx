@@ -9,14 +9,27 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import EventBusyIcon from '@mui/icons-material/EventBusy';
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
+import ConfirmCard from "./ConfirmCard";
+import { useState } from "react";
+import Loading from "./Loading";
 
 const BusinessProfileMoreOptions = () => {
   const navigate = useNavigate();
   const { businessId } = useParams();
   const { t } = useTranslation();
+
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleLogout = async () => {
+   setIsLoading(true);
+   localStorage.removeItem("token");
+   localStorage.removeItem("userId");
+   navigate("/");
+  };
 
   const moreOptions = {
     share: [
@@ -24,7 +37,7 @@ const BusinessProfileMoreOptions = () => {
         icon: <LinkIcon />,
         label: t("button:shareBookingLink"),
         url: undefined,
-        function: () => shareBookingLink(businessId)
+        function: () => shareBookingLink(businessId),
       },
     ],
     setting: [
@@ -58,13 +71,23 @@ const BusinessProfileMoreOptions = () => {
       {
         icon: <LogoutIcon />,
         label: t("button:logout"),
-        url: undefined,
+        function: () => setShowConfirmation(true),
       },
     ],
   };
 
   return (
     <div className="flex flex-col gap-5">
+      <Loading openLoading={isLoading} />
+      <ConfirmCard
+        open={showConfirmation}
+        title={t("noti:business:logout:confirmation")}
+        description={t("noti:business:logout:confirmationDesc")}
+        bntConfirm={t("button:confirm")}
+        bntBack={t("button:cancel")}
+        handleClose={() => setShowConfirmation(false)}
+        handleConfirm={handleLogout}
+      />
       {Object.values(moreOptions).map((options: any, index: number) => (
         <div key={index} className="rounded-lg bg-white">
           {options.map((item: any, index: number) => (
@@ -75,14 +98,12 @@ const BusinessProfileMoreOptions = () => {
               onClick={() => {
                 if (item.url) {
                   navigate(item.url);
-                } else if(item.function){
+                } else if (item.function) {
                   item.function();
-                  
-                } 
-                else {
+                } else {
                   toast("Coming Soon", {
-                    icon: (<PriorityHighIcon />)
-                  })
+                    icon: <PriorityHighIcon />,
+                  });
                 }
               }}
             >
