@@ -62,10 +62,10 @@ export default function ListServiceCard(props: IProps) {
             style={{ height: "104px" }}>
             <ConfirmCard
                 open={props.openConfirm}
-                title={t("askForDelete")}
-                description={t("serviceDeleted")}
-                bntConfirm={t("button:yesDelete")}
-                bntBack={t("button:back")}
+                title={t("noti:service:delete:confirmation")}
+                description={t("noti:service:delete:confirmationDesc")}
+                bntConfirm={t("button:confirm")}
+                bntBack={t("button:cancel")}
                 handleClose={props.handleClose}
                 handleConfirm={handleDeleteService}
             />

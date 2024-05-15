@@ -61,3 +61,21 @@ export const getBusinessId = async (businessId: number, token: string) => {
         throw error;
     }
 };
+
+export const getBusinessByUserId = async (userId: string, token: string) => {
+    token = token.replace(/"/g, "");
+    try {
+        const business = await axios.get(
+            `${import.meta.env.VITE_APP_API}/getBusinessByUserId/${userId}`,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+        return business.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
