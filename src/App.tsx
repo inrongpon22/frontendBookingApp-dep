@@ -18,6 +18,8 @@ import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import BusinessPreview from "./pages/business-preview/BusinessPreview.tsx";
+import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
+import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
 
 function App() {
   useEffect(() => {
@@ -28,8 +30,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          {/* customer */}
 
+
+          {/* customer */}
           <Route
             path="/details/:businessId"
             element={<ShopDetailsPageWrapper />}
@@ -41,6 +44,8 @@ function App() {
             path="/booking/:bookingId"
             element={<BookingSummaryWrapper />}
           />
+
+
 
           {/* business */}
           <Route path="/" element={<BusinessAuth />} />
@@ -59,6 +64,8 @@ function App() {
             element={<BusinessSetting />}
           />
           <Route path="/business-preview" element={<BusinessPreview />} />
+
+
 
           {/* service */}
           <Route
@@ -81,6 +88,18 @@ function App() {
           <Route
             path="/service-detail/:businessId/:serviceId"
             element={<ServiceDetail serviceId={0} />}
+          />
+
+
+
+          {/* day off */}
+          <Route
+            path="/dayoff-setting/:businessId"
+            element={<DayOffSetting />}
+          />
+          <Route
+            path="/dayoff-setting/:businessId/add-new"
+            element={<AddNewDayOff />}
           />
         </Routes>
         {/* {!token && <Navigate to="/" replace={true} />} */}

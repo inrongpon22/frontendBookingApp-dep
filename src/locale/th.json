@@ -73,7 +73,8 @@
     "serviceTime": "เวลาในการบริการ",
     "businessSetting": "ตั้งค่าธุรกิจ",
     "busineessApprovedSuccessful": "ยืนยันการจองสำเร็จ",
-    "busineessRejectedSuccessful": "ปฏิเสธการจองสำเร็จ"
+    "busineessRejectedSuccessful": "ปฏิเสธการจองสำเร็จ",
+    "dayOff": "วันหยุด"
   },
   "desc": {
     "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
@@ -113,7 +114,8 @@
     "logout": "ออกจากระบบ",
     "createNewService": "สร้างบริการใหม่",
     "switchBusiness": "สลับบัญชีธุรกิจ",
-    "backToMain": "กลับหน้าแรก"
+    "backToMain": "กลับหน้าแรก",
+    "addNewDayOff": "เพิ่มวันหยุด"
   },
   "noti": {
     "booking": {
@@ -138,6 +140,12 @@
         "fail": "การยะเลิกการจองล้มเหลว",
         "confirmation": "แน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้",
         "confirmationDesc": "การจองจะถูกยกเลิกและผู้ใช้บริการจะได้รับการแจ้งเตือน"
+      }
+    },
+    "service":{
+      "delete": {
+        "confirmation": "แน่ใจหรือไม่ว่าต้องการลบบริการนี้",
+        "confirmationDesc": "การลบบริการจะทำให้บริการนี้หายไปจากรายการบริการของคุณ"
       }
     }
   },

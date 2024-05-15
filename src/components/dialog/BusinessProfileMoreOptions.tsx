@@ -36,7 +36,7 @@ const BusinessProfileMoreOptions = () => {
       {
         icon: <EventBusyIcon />,
         label: t("button:setDayoff"),
-        url: undefined,
+        url: `/dayoff-setting/${businessId}`,
       },
       {
         icon: <StoreIcon />,

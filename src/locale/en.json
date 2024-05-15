@@ -72,7 +72,8 @@
     "waitingForApproval": "Waiting for Confirmation",
     "businessSetting": "Business Setting",
     "busineessApprovedSuccessful": "Approved successfully",
-    "busineessRejectedSuccessful": "Rejected successfully"
+    "busineessRejectedSuccessful": "Rejected successfully",
+    "dayOff": "Day-off"
   },
   "desc": {
     "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -113,7 +114,8 @@
     "addMoreTime": "Add More Time",
     "createNewService": "Create New Service",
     "switchBusiness": "Switch to another business",
-    "backToMain": "Back to main page"
+    "backToMain": "Back to main page",
+    "addNewDayOff": "Add New Day-off"
   },
   "noti": {
     "booking": {
@@ -138,6 +140,12 @@
         "fail": "Booking rejected fail",
         "confirmation": "Are you sure you want to reject this booking",
         "confirmationDesc": "Once rejected, the customer will be notified, and the booking will be finalized."
+      }
+    },
+    "service":{
+      "delete": {
+        "confirmation": "Are you sure you want to delete this service",
+        "confirmationDesc": "Once deleted, the service will be removed from the system."
       }
     }
   },
