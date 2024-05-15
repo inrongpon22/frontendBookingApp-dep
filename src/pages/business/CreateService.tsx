@@ -51,21 +51,21 @@ export default function CreateService(props: IProps) {
     useEffect(() => {
         const serviceTime = JSON.parse(
             localStorage.getItem("serviceTime") ||
-                JSON.stringify([
-                    {
-                        daysOpen: [],
-                        selectedSlots: [],
-                        duration: 1,
-                        openTime: "",
-                        closeTime: "",
-                        guestNumber: 1,
-                        manualCapacity: [],
-                        availableFromDate: new Date()
-                            .toISOString()
-                            .split("T")[0],
-                        availableToDate: "",
-                    },
-                ])
+            JSON.stringify([
+                {
+                    daysOpen: [],
+                    selectedSlots: [],
+                    duration: 1,
+                    openTime: "",
+                    closeTime: "",
+                    guestNumber: 1,
+                    manualCapacity: [],
+                    availableFromDate: new Date()
+                        .toISOString()
+                        .split("T")[0],
+                    availableToDate: "",
+                },
+            ])
         ) as IServiceTime[];
         setServiceTime(serviceTime);
     }, [refresh]);
@@ -74,7 +74,7 @@ export default function CreateService(props: IProps) {
         const insertData = {
             businessId: Number(businessId ?? ""),
             title: serviceInfo.serviceName,
-            duration: serviceTime[0].duration,
+            // duration: serviceTime[0].duration,
             description: serviceInfo.serviceDescription,
             price: serviceInfo.price,
             isAutoApprove: isAutoApprove,
@@ -90,6 +90,7 @@ export default function CreateService(props: IProps) {
                             ? null
                             : serviceTime[0].availableToDate,
                     slotsTime: serviceTime[0].manualCapacity,
+                    duration: serviceTime[0].duration,
                 },
             ],
             availableFromDate: serviceTime[0].availableFromDate,
@@ -131,16 +132,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -258,11 +259,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -309,11 +309,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -363,11 +362,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (

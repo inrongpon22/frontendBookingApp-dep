@@ -1,9 +1,9 @@
 import { alpha } from "@mui/material";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { updateServiceShowHide, updateServiceTime } from "../../api/service";
+import { updateService } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
@@ -17,6 +17,9 @@ import { IServiceEditTime } from "../business/interfaces/service";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import Loading from "../../components/dialog/Loading";
+import { IServiceInfo } from "../business/interfaces/service";
+import { useParams } from "react-router-dom";
+import ConfirmCard from "../../components/dialog/ConfirmCard";
 
 interface IParams {
     serviceId: number;
@@ -26,6 +29,7 @@ interface IParams {
 
 export default function ServiceDetail(props: IParams) {
     const token = localStorage.getItem("token");
+    const { businessId } = useParams();
     const { t } = useTranslation();
 
     // service Info
@@ -36,15 +40,34 @@ export default function ServiceDetail(props: IParams) {
     const [isEditTime, setIsEditTime] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
+    const [modifyServiceInfo, setModifyServiceInfo] = useState<IServiceInfo>(); // for update service info
+    const [modifyServiceTime, setModifyServiceTime] = useState<IServiceEditTime[]>(); // for update service time
+    const [openConfirm, setOpenConfirm] = useState(false);
     const {
         data: serviceInfo,
         isLoading: serviceLoading,
-        // error: serviceError,
         mutate: serviceMutate,
     } = useSWR<any>(
         `${app_api}/getServiceByServiceId/${props.serviceId}`,
         fetcher
     );
+
+    useEffect(() => {
+        if (serviceInfo) {
+            setModifyServiceInfo({
+                serviceName: serviceInfo.title,
+                serviceDescription: serviceInfo.description,
+                price: serviceInfo.price,
+                currency: serviceInfo.currency,
+            });
+            setModifyServiceTime(serviceInfo.bookingSlots);
+            setIsHideEndTime(serviceInfo.isHideEndTime);
+            setIsAutoApprove(serviceInfo.isAutoApprove);
+            setIsHidePrice(serviceInfo.isHidePrice);
+        }
+    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        , [serviceLoading]);
 
     const handleSetEditInfo = () => {
         setIsEditInfo(!isEditInfo);
@@ -59,12 +82,19 @@ export default function ServiceDetail(props: IParams) {
 
     const handleUpdateService = async () => {
         const insertData = {
+            title: modifyServiceInfo?.serviceName,
+            description: modifyServiceInfo?.serviceDescription,
+            price: modifyServiceInfo?.price,
+            currency: modifyServiceInfo?.currency,
+            bookingSlots: modifyServiceTime,
+            isAutoApprove: isAutoApprove,
             isHidePrice: isHidePrice,
             isHideEndTime: isHideEndTime,
-            isAutoApprove: isAutoApprove,
+            businessId: Number(businessId),
         };
-        await updateServiceShowHide(insertData, token || "", serviceInfo.id);
+        await updateService(serviceInfo.id, insertData, token || "");
         props.serviceMutate && props.serviceMutate();
+        serviceMutate();
         props.handleClose && props.handleClose();
     };
 
@@ -72,43 +102,95 @@ export default function ServiceDetail(props: IParams) {
         const updatedTimeDetails = serviceInfo.bookingSlots.filter(
             (_item: IServiceEditTime, i: number) => i !== selectedIndex
         );
-        await updateServiceTime(
-            updatedTimeDetails,
-            token || "",
-            serviceInfo.id
-        );
+        // await updateServiceTime(
+        //     updatedTimeDetails,
+        //     token || "",
+        //     serviceInfo.id
+        // );
+        setModifyServiceTime(updatedTimeDetails);
         serviceMutate();
-        // setServiceInfo({
-        //     ...serviceInfo,
-        //     bookingSlots: updatedTimeDetails,
-        // });
     };
+
+    const handleSetServiceInfo = (serviceInFo: IServiceInfo) => {
+        setModifyServiceInfo(serviceInFo);
+    };
+    const handleSetServiceTime = (serviceTime: IServiceEditTime[]) => {
+        setModifyServiceTime(serviceTime);
+    };
+
+    const handleIsModifiedData = () => {
+        return (
+            JSON.stringify({
+                title: serviceInfo.title,
+                description: serviceInfo.description,
+                price: serviceInfo.price,
+                currency: serviceInfo.currency,
+                bookingSlots: serviceInfo.bookingSlots,
+                isAutoApprove: serviceInfo.isAutoApprove,
+                isHidePrice: serviceInfo.isHidePrice,
+                isHideEndTime: serviceInfo.isHideEndTime,
+            }) !==
+            JSON.stringify({
+                title: modifyServiceInfo?.serviceName,
+                description: modifyServiceInfo?.serviceDescription,
+                price: modifyServiceInfo?.price,
+                currency: modifyServiceInfo?.currency,
+                bookingSlots: modifyServiceTime,
+                isAutoApprove: isAutoApprove,
+                isHidePrice: isHidePrice,
+                isHideEndTime: isHideEndTime,
+            })
+        );
+    };
+
+    const handleCloseCardDetail = () => {
+        if (handleIsModifiedData()) {
+            setOpenConfirm(true);
+        } else {
+            props.handleClose && props.handleClose();
+        }
+    };
+
+    const handleConfirmClose = () => {
+        setOpenConfirm(false);
+        props.handleClose && props.handleClose();
+    };
+
 
     return (
         <>
+            <ConfirmCard
+                open={openConfirm}
+                handleClose={() => setOpenConfirm(false)}
+                handleConfirm={handleConfirmClose}
+                title={"Discard changes?"}
+                description={"You have unsaved changes. Are you sure you want to discard them?"}
+                bntConfirm={"Discard"}
+                bntBack={"Cancel"}
+            />
             <Loading openLoading={serviceLoading} />
-            {serviceInfo &&
+            {modifyServiceInfo &&
                 (isEditInfo ? (
                     <EditServiceInfo
-                        serviceName={serviceInfo.title}
-                        serviceDescription={serviceInfo.description}
-                        price={serviceInfo.price}
-                        currency={serviceInfo.currency}
+                        serviceName={modifyServiceInfo.serviceName}
+                        serviceDescription={modifyServiceInfo.serviceDescription}
+                        price={modifyServiceInfo.price}
+                        currency={modifyServiceInfo.currency}
                         serviceId={serviceInfo.id}
                         handleSetEditInfo={handleSetEditInfo}
                         serviceMutate={serviceMutate}
+                        handleSetServiceInfo={handleSetServiceInfo}
                     />
                 ) : isEditTime ? (
                     <EditServiceTime
-                        serviceTime={serviceInfo.bookingSlots}
-                        duration={serviceInfo.duration}
+                        serviceTime={modifyServiceTime ?? []}
                         openTime={serviceInfo.openTime}
                         closeTime={serviceInfo.closeTime}
                         editIndex={selectedIndex}
                         serviceId={serviceInfo.id}
                         isAddTime={isAddTime}
                         handleSetEditTime={handleSetEditTime}
-                        serviceMutate={serviceMutate}
+                        handleSetServiceTime={handleSetServiceTime}
                     />
                 ) : isAddTime ? (
                     <AddServiceTime
@@ -126,7 +208,7 @@ export default function ServiceDetail(props: IParams) {
                         <div className="pr-4 pl-4 pt-6">
                             <Header
                                 context={t("title:serviceInformation")}
-                                handleClose={props.handleClose}
+                                handleClose={handleCloseCardDetail}
                             />
                         </div>
                         <Divider sx={{ marginTop: "16px", width: "100%" }} />
@@ -134,14 +216,14 @@ export default function ServiceDetail(props: IParams) {
                             <div className="mt-4 flex flex-col gap-3">
                                 <ServiceCard
                                     serviceId={serviceInfo.id}
-                                    serviceName={serviceInfo.title}
-                                    serviceDescription={serviceInfo.description}
-                                    price={serviceInfo.price}
-                                    currency={serviceInfo.currency}
+                                    serviceName={modifyServiceInfo.serviceName}
+                                    serviceDescription={modifyServiceInfo.serviceDescription}
+                                    price={modifyServiceInfo.price}
+                                    currency={modifyServiceInfo.currency}
                                     handleSetEditInfo={handleSetEditInfo}
                                 />
 
-                                {serviceInfo.bookingSlots.map(
+                                {modifyServiceTime && modifyServiceTime.map(
                                     (item: IServiceEditTime, index: number) => (
                                         <div key={index}>
                                             <TimeCard
