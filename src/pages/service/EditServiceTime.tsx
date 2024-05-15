@@ -18,6 +18,7 @@ interface IParams {
     serviceId: number;
     isAddTime: boolean;
     handleSetEditTime: () => void;
+    serviceMutate: () => void;
 }
 
 export default function EditServiceTime(props: IParams) {
@@ -251,6 +252,7 @@ export default function EditServiceTime(props: IParams) {
             localStorage.getItem("token") ?? "",
             props.serviceId
         );
+        props.serviceMutate();
         props.handleSetEditTime();
     };
 
