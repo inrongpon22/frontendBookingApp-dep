@@ -13,6 +13,8 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
 
 const BusinessPreview = () => {
   const location = useLocation();
@@ -21,7 +23,7 @@ const BusinessPreview = () => {
 
   const props = location.state.data;
 
-  const services: any = [];
+  // const services: any = [];
 
   const [calendar] = useState({
     // handle calendar date
@@ -36,6 +38,11 @@ const BusinessPreview = () => {
       item.daysOpen?.includes(moment().format("dddd")) &&
       moment().isAfter(item.availableFromDate)
   );
+
+  const { data } = useSWR(props.businessId && `${app_api}/business/${props.businessId}`, fetcher, {
+    revalidateOnFocus: false,
+  });
+
 
   useEffect(() => {
     let newArr = [];
@@ -61,67 +68,61 @@ const BusinessPreview = () => {
       </div>
       {/* header */}
 
-      
-      <Slideshow data={[]} />
+      <Slideshow data={data.imagesURL} />
       {/* shop detail */}
       <div className="relative my-auto p-5">
-        <h1 className="text-[25px] font-semibold">{props.title}</h1>
-        <span className="text-[14px] font-normal">{props.description}</span>
+        <h1 className="text-[25px] font-semibold">{data.title}</h1>
+        <span className="text-[14px] font-normal">{data.description}</span>
         <div className="mt-2">
           <Chip
             className="mt-1 custom-chip-label"
             icon={<LocationOnIcon fontSize="small" />}
-            label={"address"}
+            label={data.address}
             color="info"
           />
           <Chip
             className="mt-1 custom-chip-label"
             icon={<LocalPhoneIcon fontSize="small" />}
-            label={"phoneNumber"}
+            label={data.phoneNumber}
             color="info"
           />
         </div>
       </div>
       {/* shop detail */}
 
-
       {/* shop service */}
       <div className="p-5">
         <h2 className="text-[20px] font-semibold">{t("serviceOptions")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          {services?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`border-2 rounded-lg p-5 ${
-                  item.isSelected
-                    ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
-                    : ""
-                }`}
-              >
-                <div className="">
-                  <p className="flex justify-between">
-                    <span className="font-bold text-[14px]">{item.title}</span>
-                    <span>
-                      <span className="font-bold text-[14px]">
-                        {item.price}
-                      </span>
-                      <span className="font-normal"> / person</span>
-                    </span>
-                  </p>
-                  <div className="">
-                    <p className="font-normal text-[14px]">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
+          {/* {services?.map((item: any, index: number) => {
+            return ( */}
+          <div
+            // key={index}
+            className={`border-2 rounded-lg p-5 border-[#003B95] bg-[#006CE31A] text-[#003B95]`}
+            // ${
+            //   item.isSelected
+            //     ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
+            //     : ""
+            // }
+          >
+            <div className="">
+              <p className="flex justify-between">
+                <span className="font-bold text-[14px]">{props.title}</span>
+                <span>
+                  <span className="font-bold text-[14px]">{props.price}</span>
+                  <span className="font-normal"> / person</span>
+                </span>
+              </p>
+              <div className="">
+                <p className="font-normal text-[14px]">{props.description}</p>
               </div>
-            );
-          })}
+            </div>
+          </div>
+          {/* );
+          })} */}
         </div>
       </div>
       {/* shop service */}
-
 
       {/* quantities */}
       <div id="quantity" className="flex justify-between items-center px-5">
@@ -139,7 +140,6 @@ const BusinessPreview = () => {
         </div>
       </div>
       {/* quantities */}
-
 
       {/* calendar */}
       <div id="calendar" className="relative mt-5 p-5 col-span-2">
@@ -191,7 +191,6 @@ const BusinessPreview = () => {
         </div>
       </div>
       {/* calendar */}
-
 
       {/* time slots */}
       <div id="times" className="mt-5 p-5 col-span-2">
@@ -249,8 +248,6 @@ const BusinessPreview = () => {
         </div>
       </div>
       {/* time slots */}
-      
-
     </div>
   );
 };
