@@ -6,8 +6,7 @@ import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { IBookingSlot, IServiceEditTime } from "../business/interfaces/service";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { updateServiceTime } from "../../api/service";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -57,8 +56,8 @@ export default function AddServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -213,23 +212,18 @@ export default function AddServiceTime(props: IParams) {
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
+            duration: duration,
         };
         props.serviceTime.push(insertData);
-        console.log(props.serviceTime);
-        await updateServiceTime(
-            props.serviceTime,
-            localStorage.getItem("token") ?? "",
-            props.serviceId
-        );
         props.handleAddTime();
     };
 
     return (
-        <div className="mb-10">
+        <div style={{ width: "100vw" }}>
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
                     <div onClick={props.handleAddTime}>
-                        <ArrowBackIosNewOutlinedIcon
+                        <CloseIcon
                             sx={{
                                 width: "20px",
                                 height: "20px",
@@ -248,7 +242,6 @@ export default function AddServiceTime(props: IParams) {
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
                 <div
-                    style={{ marginBottom: "70px" }}
                     className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
@@ -465,11 +458,10 @@ export default function AddServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -532,11 +524,11 @@ export default function AddServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -616,7 +608,7 @@ export default function AddServiceTime(props: IParams) {
                         </div>
                     )}
 
-                    <div className="w-full flex justify-center fixed bottom-0 inset-x-0">
+                    <div className="w-full flex justify-center bottom-0 inset-x-0 mb-4">
                         <button
                             disabled={
                                 daysOpen.length == 0 ||
@@ -628,7 +620,7 @@ export default function AddServiceTime(props: IParams) {
                             }
                             onClick={handleSubmit}
                             type="submit"
-                            className="text-white mt-4 rounded-lg font-semibold mb-6"
+                            className="text-white mt-4 rounded-lg font-semibold"
                             style={{
                                 width: "343px",
                                 height: "51px",

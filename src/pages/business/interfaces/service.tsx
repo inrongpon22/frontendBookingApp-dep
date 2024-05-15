@@ -14,7 +14,7 @@ export interface ISpecialOpenDate {
 export interface InsertService {
     businessId: number;
     title: string;
-    duration: number;
+    // duration: number;
     description: string;
     price: number;
     isAutoApprove: boolean;
@@ -83,6 +83,7 @@ export interface IServiceEditTime {
     availableFromDate: string;
     availableToDate: string;
     slotsTime: IBookingSlot[];
+    duration: number;
 }
 
 export interface IServiceShowHide {

@@ -32,36 +32,37 @@ export const dataOfWeekThai = [
   {
     name: "จ",
     value: "Monday",
-        thaiName: "จันทร์",
+    thaiName: "จันทร์",
   },
   {
     name: "อ",
     value: "Tuesday",
-        thaiName: "อังคาร",
+    thaiName: "อังคาร",
   },
   {
     name: "พ",
     value: "Wednesday",
-        thaiName: "พุธ",
+    thaiName: "พุธ",
   },
   {
     name: "พฤ",
     value: "Thursday",
-        thaiName: "พฤหัสบดี",
+    thaiName: "พฤหัสบดี",
   },
   {
     name: "ศ",
     value: "Friday",
-        thaiName: "ศุกร์",
+    thaiName: "ศุกร์",
   },
   {
     name: "ส",
     value: "Saturday",
-        thaiName: "เสาร์",
+    thaiName: "เสาร์",
   },
   {
     name: "อา",
     value: "Sunday",
+    thaiName: "อาทิตย์",
   },
 ];
 
@@ -105,7 +106,7 @@ const dataOfWeekEngFullDayName = [
   },
   {
     name: "Sunday",
-        thaiName: "อาทิตย์",
+    thaiName: "อาทิตย์",
     value: "Sunday",
   },
 ];

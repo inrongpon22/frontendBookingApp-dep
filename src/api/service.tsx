@@ -26,6 +26,25 @@ export const addService = async (serviceData: InsertService, token: string) => {
     }
 };
 
+export const updateService = async (serviceId: number, serviceData: any, token: string) => {
+    token = token.replace(/"/g, "");
+    try {
+        const business = await axios.post(
+            `${import.meta.env.VITE_APP_API}/service/${serviceId}`,
+            serviceData,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+        return business.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 export const getServiceByBusinessId = async (
     businessId: number,
     token: string
@@ -33,8 +52,7 @@ export const getServiceByBusinessId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/getListServiceByBusinessId/${businessId}?page=1&limit=10`,
             {
                 headers: {
@@ -54,8 +72,7 @@ export const deleteService = async (serviceId: number, token: string) => {
     token = token.replace(/"/g, "");
     try {
         const response = await axios.put(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/deleteServiceByHidden/${serviceId}`,
             {},
             {
@@ -79,8 +96,7 @@ export const getServiceByServiceId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/getServiceByServiceId/${serviceId}`,
             {
                 headers: {
@@ -151,8 +167,7 @@ export const updateServiceShowHide = async (
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/updateServiceShowHide/${serviceId}`,
             serviceData,
             {
