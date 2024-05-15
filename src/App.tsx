@@ -1,6 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { createContext, useEffect } from "react";
-export const TopLevelContext = createContext<any>(null); //create context to store all the data
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./i18n.ts";
 // components
@@ -21,85 +20,73 @@ import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import BusinessPreview from "./pages/business-preview/BusinessPreview.tsx";
 
 function App() {
-    useEffect(() => {
-        localStorage.setItem("lang", "th");
-    }, []);
+  useEffect(() => {
+    localStorage.setItem("lang", "th");
+  }, []);
 
-    return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<BusinessAuth />} />
-                    <Route
-                        path="/business-overview"
-                        element={<BusinessOverview />}
-                    />
-                    <Route
-                        path="/business-profile/:businessId"
-                        element={<BusinessProfile />}
-                    />
-                    <Route
-                        path="/details/:businessId"
-                        element={<ShopDetailsPageWrapper />}
-                    />
-                    <Route
-                        path="/booking-approval/:businessId/:serviceId"
-                        element={<BookingApproval />}
-                    />
-                    <Route
-                        path="/booking-success"
-                        element={<BookingSummaryWrapper />}
-                    />
-                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
-                    <Route
-                        path="/booking/:bookingId"
-                        element={<BookingSummaryWrapper />}
-                    />
-                    
-          {/* business */}
-                    <Route
-                        path="/create-business"
-                        element={<CreateBusiness />}
-                    />
-                    <Route
-                        path="/business-setting/:businessId"
-                        element={<BusinessSetting />}
-                    />
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          {/* customer */}
+
           <Route
-            path="/business-preview"
-            element={<BusinessPreview />}
+            path="/details/:businessId"
+            element={<ShopDetailsPageWrapper />}
           />
 
-                    {/* service */}
-                    <Route
-                        path="/service-info/:businessId"
-                        element={<ServiceInfo isClose={false} isEdit={false} />}
-                    />
-                    <Route
-                        path="/service-time/:businessId"
-                        element={<ServiceTime />}
-                    />
-                    {/* <Route
+          <Route path="/booking-success" element={<BookingSummaryWrapper />} />
+          <Route path="/my-bookings" element={<MyBookingWrapper />} />
+          <Route
+            path="/booking/:bookingId"
+            element={<BookingSummaryWrapper />}
+          />
+
+          {/* business */}
+          <Route path="/" element={<BusinessAuth />} />
+          <Route
+            path="/business-profile/:businessId"
+            element={<BusinessProfile />}
+          />
+          <Route
+            path="/booking-approval/:businessId/:serviceId"
+            element={<BookingApproval />}
+          />
+          <Route path="/business-overview" element={<BusinessOverview />} />
+          <Route path="/create-business" element={<CreateBusiness />} />
+          <Route
+            path="/business-setting/:businessId"
+            element={<BusinessSetting />}
+          />
+          <Route path="/business-preview" element={<BusinessPreview />} />
+
+          {/* service */}
+          <Route
+            path="/service-info/:businessId"
+            element={<ServiceInfo isClose={false} isEdit={false} />}
+          />
+          <Route path="/service-time/:businessId" element={<ServiceTime />} />
+          {/* <Route
             path="/create-service/:businessId"
             element={<CreateService />}
           /> */}
-                    <Route
-                        path="/service-setting/:businessId"
-                        element={<ServiceSetting />}
-                    />
-                    <Route
-                        path="/service-detail/:businessId/:serviceId"
-                        element={<ServiceDetail serviceId={0} />}
-                    />
-                    <Route
-                        path="/service-detail/:businessId/:serviceId"
-                        element={<ServiceDetail serviceId={0} />}
-                    />
-                </Routes>
-                {/* {!token && <Navigate to="/" replace={true} />} */}
-            </BrowserRouter>
-            <Toaster />
-        </>
-    );
+          <Route
+            path="/service-setting/:businessId"
+            element={<ServiceSetting />}
+          />
+          <Route
+            path="/service-detail/:businessId/:serviceId"
+            element={<ServiceDetail serviceId={0} />}
+          />
+          <Route
+            path="/service-detail/:businessId/:serviceId"
+            element={<ServiceDetail serviceId={0} />}
+          />
+        </Routes>
+        {/* {!token && <Navigate to="/" replace={true} />} */}
+      </BrowserRouter>
+      <Toaster />
+    </>
+  );
 }
 export default App;
