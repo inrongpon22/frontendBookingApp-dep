@@ -41,7 +41,9 @@ const BookingApprovalSummary = () => {
       label: `${t("date")}:`,
       text: bookingDetailFromSMS
         ? moment(bookingDetailFromSMS?.bookingDate).format("dddd, DD MMMM YYYY")
-        : moment(bookingDatas?.bookingDate).format("dddd, DD MMMM YYYY"),
+        : bookingDatas
+        ? moment(bookingDatas?.bookingDate).format("dddd, DD MMMM YYYY")
+        : "",
     },
     {
       label: `${t("time")}:`,
@@ -50,16 +52,15 @@ const BookingApprovalSummary = () => {
             0,
             -3
           )} - ${bookingDetailFromSMS?.endTime.slice(0, -3)}`
-        : `${bookingDatas?.startTime.slice(
-            0,
-            -3
-          )} - ${bookingDatas?.endTime.slice(0, -3)}`,
+        : `${bookingDatas ? bookingDatas?.startTime.slice(0, -3) : ""} - ${
+            bookingDatas ? bookingDatas?.endTime.slice(0, -3) : ""
+          }`,
     },
     {
       label: `${t("price")}:`,
       text: bookingDetailFromSMS
         ? `${bookingDetailFromSMS.price} ฿`
-        : `${bookingDatas?.price} ฿`,
+        : `${bookingDatas ? bookingDatas?.price : ""} ฿`,
     },
   ];
 

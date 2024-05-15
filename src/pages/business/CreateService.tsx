@@ -392,7 +392,41 @@ export default function CreateService(props: IProps) {
                                 cursor: "pointer",
                                 backgroundColor: "white",
                                 fontSize: "14px",
-                            }}>
+                            }}
+                            onClick={() => navigate(`/business-preview`, {
+                                state: {
+                                  data: {
+                                    businessId: Number(businessId ?? ""),
+                                    title: serviceInfo.serviceName,
+                                    duration: serviceTime[0].duration,
+                                    description: serviceInfo.serviceDescription,
+                                    price: serviceInfo.price,
+                                    isAutoApprove: isAutoApprove,
+                                    currency: serviceInfo.currency,
+                                    openTime: serviceTime[0].openTime,
+                                    closeTime: serviceTime[0].closeTime,
+                                    bookingSlots: [
+                                        {
+                                            daysOpen: serviceTime[0].daysOpen,
+                                            availableFromDate: serviceTime[0].availableFromDate,
+                                            availableToDate:
+                                                serviceTime[0].availableToDate === ""
+                                                    ? null
+                                                    : serviceTime[0].availableToDate,
+                                            slotsTime: serviceTime[0].manualCapacity,
+                                        },
+                                    ],
+                                    availableFromDate: serviceTime[0].availableFromDate,
+                                    availableToDate:
+                                        serviceTime[0].availableToDate === ""
+                                            ? null
+                                            : serviceTime[0].availableToDate,
+                                    isHidePrice: isHidePrice,
+                                    isHideEndTime: isHideEndTime,
+                                },
+                                },
+                              })}
+                            >
                             Preview
                         </button>
                         <button

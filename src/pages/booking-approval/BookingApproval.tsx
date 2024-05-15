@@ -292,6 +292,11 @@ const BookingApproval = (): React.ReactElement => {
           <span className="mx-auto">
             {location.state && location.state.title}
           </span>
+          {/* invisible button for balance */}
+          <button type="button" className="invisible">
+            <ArrowBackIosIcon fontSize="small" />
+          </button>
+          {/* invisible button for balance */}
         </div>
         <Box sx={{ bgcolor: "#fff" }}>
           <AntTabs
@@ -301,30 +306,42 @@ const BookingApproval = (): React.ReactElement => {
             <AntTab
               label={`${t("pending")} ${
                 tabStatus == 0
-                  ? `| ${getReservByBusiId?.reduce(
-                      (prev, curr) => prev + curr.children.length,
-                      0
-                    )}`
+                  ? `| ${
+                      getReservByBusiId
+                        ? getReservByBusiId?.reduce(
+                            (prev, curr) => prev + curr.children.length,
+                            0
+                          )
+                        : 0
+                    }`
                   : ""
               }`}
             />
             <AntTab
               label={`${t("approved")} ${
                 tabStatus == 1
-                  ? `| ${getReservByBusiId?.reduce(
-                      (prev, curr) => prev + curr.children.length,
-                      0
-                    )}`
+                  ? `| ${
+                      getReservByBusiId
+                        ? getReservByBusiId?.reduce(
+                            (prev, curr) => prev + curr.children.length,
+                            0
+                          )
+                        : 0
+                    }`
                   : ""
               }`}
             />
             <AntTab
               label={`${t("cancelled")} ${
                 tabStatus == 2
-                  ? `| ${getReservByBusiId?.reduce(
-                      (prev, curr) => prev + curr.children.length,
-                      0
-                    )}`
+                  ? `| ${
+                      getReservByBusiId
+                        ? getReservByBusiId?.reduce(
+                            (prev, curr) => prev + curr.children.length,
+                            0
+                          )
+                        : 0
+                    }`
                   : ""
               }`}
             />
@@ -368,7 +385,7 @@ const BookingApproval = (): React.ReactElement => {
                             }
                           })()}`}
                         >
-                          {item.children?.length}{" "}
+                          {item.children?.length}
                           {tabStatus == 0
                             ? t("pending")
                             : tabStatus == 1

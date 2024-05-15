@@ -18,6 +18,7 @@ import ServiceTime from "./pages/business/ServiceTime.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
+import BusinessPreview from "./pages/business-preview/BusinessPreview.tsx";
 
 function App() {
     useEffect(() => {
@@ -54,7 +55,8 @@ function App() {
                         path="/booking/:bookingId"
                         element={<BookingSummaryWrapper />}
                     />
-                    {/* business */}
+                    
+          {/* business */}
                     <Route
                         path="/create-business"
                         element={<CreateBusiness />}
@@ -63,6 +65,10 @@ function App() {
                         path="/business-setting/:businessId"
                         element={<BusinessSetting />}
                     />
+          <Route
+            path="/business-preview"
+            element={<BusinessPreview />}
+          />
 
                     {/* service */}
                     <Route

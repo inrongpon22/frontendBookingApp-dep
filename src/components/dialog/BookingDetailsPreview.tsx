@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
@@ -12,11 +12,12 @@ const BookingDetailsPreview = () => {
   const { shopDetail, services, selectedDate, serviceById, quantities } =
     useContext<any>(ShopContext);
 
-  const { formik } = useContext<any>(DialogContext);
+  const { formik, setIsLoading } = useContext<any>(DialogContext);
 
   const { t } = useTranslation();
 
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
   const slotArrays = serviceById?.bookingSlots.find(
     (item: any) =>
@@ -24,7 +25,28 @@ const BookingDetailsPreview = () => {
       selectedDate.date.isAfter(item.availableFromDate)
   );
 
+  useEffect(() => {
+    if (token && formik.values.userId === 0) {
+      axios
+        .get(`${app_api}/user/${userId}`, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        })
+        .then((res) => {
+          formik.setValues({
+            userId: res.data.id,
+            username: res.data.name,
+            phoneNumbers: res.data.phoneNumber,
+            otp: "",
+            additionalNotes: "",
+          });
+        });
+    }
+  }, []);
+
   const createReservation = async () => {
+    await setIsLoading(true)
     const body = {
       userId: formik.values.userId,
       serviceId: Number(services.find((item: any) => item.isSelected)?.id),
@@ -41,7 +63,7 @@ const BookingDetailsPreview = () => {
       guestNumber: quantities.quantities,
     };
 
-    axios
+    await axios
       .post(`${app_api}/reservation/th`, body, {
         headers: {
           Authorization: token,

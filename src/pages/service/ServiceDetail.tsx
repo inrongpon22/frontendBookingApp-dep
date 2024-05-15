@@ -28,6 +28,8 @@ export default function ServiceDetail(props: IParams) {
     const token = localStorage.getItem("token");
     const { t } = useTranslation();
 
+    // console.log(serviceInfo)
+
     // service Info
     const [isHideEndTime, setIsHideEndTime] = useState(false);
     const [isAutoApprove, setIsAutoApprove] = useState(false);
@@ -210,34 +212,18 @@ export default function ServiceDetail(props: IParams) {
                                     }
                                 />
 
-                                <div className="w-full flex justify-center bottom-0 inset-x-0 gap-2">
+                                <div className="w-full flex justify-center gap-2 my-5">
                                     <button
-                                        className="border text-white mt-4 rounded-lg font-semibold"
-                                        style={{
-                                            borderColor: `${alpha(
-                                                "#000000",
-                                                0.2
-                                            )}`,
-                                            color: "black",
-                                            width: "166px",
-                                            height: "51px",
-                                            cursor: "pointer",
-                                            backgroundColor: "white",
-                                            fontSize: "14px",
-                                        }}>
+                                        className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
+                                        onClick={() => navigate("/business-preview")}
+                                        >
                                         Preview
                                     </button>
                                     <button
                                         onClick={handleUpdateService}
                                         type="submit"
-                                        className="text-white mt-4 rounded-lg font-semibold mb-6"
-                                        style={{
-                                            width: "166px",
-                                            height: "51px",
-                                            cursor: "pointer",
-                                            backgroundColor: "#020873",
-                                            fontSize: "14px",
-                                        }}>
+                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold"
+                                        >
                                         {t("button:confirm")}
                                     </button>
                                 </div>

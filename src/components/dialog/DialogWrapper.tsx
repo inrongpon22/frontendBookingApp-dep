@@ -49,7 +49,9 @@ const DialogWrapper = ({
 }: DialogTypes) => {
   const navigate = useNavigate();
   const query = useQuery();
-  const { t } = useTranslation();
+  const { t, i18n:{
+    language
+  } } = useTranslation();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -70,7 +72,7 @@ const DialogWrapper = ({
         case "phone-input":
           setIsLoading(true);
           await axios
-            .post(`${app_api}/requestOTP/${values.phoneNumbers}/th`)
+            .post(`${app_api}/requestOTP/${values.phoneNumbers}/${language}`)
             .then(async (res) => {
               if (res.status === 200) {
                 setIsLoading(false);
@@ -293,9 +295,11 @@ const DialogWrapper = ({
             <span className="w-full font-semibold col-span-3 text-center">
               {DialogHeader()}
             </span>
-            {/* <span className="w-[24px] h-[24px]" >
-              <ArrowBackIosIcon />
-            </span> */}
+            {/* empty space for balance title header */}
+            <span className="w-[24px] h-[24px] invisible">
+              <CloseIcon />
+            </span>
+            {/* empty space for balance title header */}
           </Toolbar>
         )}
         <DialogContent>{SwitchState()}</DialogContent>
