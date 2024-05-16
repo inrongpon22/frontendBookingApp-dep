@@ -12,18 +12,39 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 
-const BusinessPreview = () => {
-  const location = useLocation();
+interface BusinessPreviewProps {
+  businessId: number;
+  title: string;
+  duration: number;
+  description: string;
+  price: number;
+  isAutoApprove: boolean;
+  currency: string;
+  openTime: string;
+  closeTime: string;
+  bookingSlots: {
+    daysOpen: string[];
+    availableFromDate: string;
+    availableToDate: string;
+    slotsTime: {
+      startTime: string;
+      endTime: string;
+      capacity: number;
+    }[];
+  }[];
+  availableFromDate: string;
+  availableToDate: null;
+  isHidePrice: boolean;
+  isHideEndTime: boolean;
+}
+
+const BusinessPreview = (props: BusinessPreviewProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const props = location.state.data;
-
-  // const services: any = [];
 
   const [calendar] = useState({
     // handle calendar date
@@ -39,10 +60,13 @@ const BusinessPreview = () => {
       moment().isAfter(item.availableFromDate)
   );
 
-  const { data } = useSWR(props.businessId && `${app_api}/business/${props.businessId}`, fetcher, {
-    revalidateOnFocus: false,
-  });
-
+  const { data } = useSWR(
+    props.businessId && `${app_api}/business/${props.businessId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   useEffect(() => {
     let newArr = [];
@@ -68,22 +92,22 @@ const BusinessPreview = () => {
       </div>
       {/* header */}
 
-      <Slideshow data={data.imagesURL} />
+      <Slideshow data={data?.imagesURL} />
       {/* shop detail */}
       <div className="relative my-auto p-5">
-        <h1 className="text-[25px] font-semibold">{data.title}</h1>
-        <span className="text-[14px] font-normal">{data.description}</span>
+        <h1 className="text-[25px] font-semibold">{data?.title}</h1>
+        <span className="text-[14px] font-normal">{data?.description}</span>
         <div className="mt-2">
           <Chip
             className="mt-1 custom-chip-label"
             icon={<LocationOnIcon fontSize="small" />}
-            label={data.address}
+            label={data?.address}
             color="info"
           />
           <Chip
             className="mt-1 custom-chip-label"
             icon={<LocalPhoneIcon fontSize="small" />}
-            label={data.phoneNumber}
+            label={data?.phoneNumber}
             color="info"
           />
         </div>
