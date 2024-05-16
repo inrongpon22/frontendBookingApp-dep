@@ -14,6 +14,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import ServiceInfo from "./ServiceInfo";
 import { Anchor } from "../service/ServiceSetting";
+import BusinessPreview from "../service/BusinessPreview";
 
 interface IProps {
     handleClose?: () => void;
@@ -51,21 +52,21 @@ export default function CreateService(props: IProps) {
     useEffect(() => {
         const serviceTime = JSON.parse(
             localStorage.getItem("serviceTime") ||
-            JSON.stringify([
-                {
-                    daysOpen: [],
-                    selectedSlots: [],
-                    duration: 1,
-                    openTime: "",
-                    closeTime: "",
-                    guestNumber: 1,
-                    manualCapacity: [],
-                    availableFromDate: new Date()
-                        .toISOString()
-                        .split("T")[0],
-                    availableToDate: "",
-                },
-            ])
+                JSON.stringify([
+                    {
+                        daysOpen: [],
+                        selectedSlots: [],
+                        duration: 1,
+                        openTime: "",
+                        closeTime: "",
+                        guestNumber: 1,
+                        manualCapacity: [],
+                        availableFromDate: new Date()
+                            .toISOString()
+                            .split("T")[0],
+                        availableToDate: "",
+                    },
+                ])
         ) as IServiceTime[];
         setServiceTime(serviceTime);
     }, [refresh]);
@@ -132,16 +133,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -155,17 +156,63 @@ export default function CreateService(props: IProps) {
             />
         </Box>
     );
+    const previewService = () => (
+        <Box sx={{ height: "100vh" }}>
+            {serviceTime && (
+                <BusinessPreview
+                    businessId={Number(businessId)}
+                    title={serviceInfo.serviceName}
+                    description={serviceInfo.serviceDescription}
+                    price={serviceInfo.price}
+                    isAutoApprove={isAutoApprove}
+                    currency={serviceInfo.currency}
+                    bookingSlots={serviceTime.map((time) => ({
+                        daysOpen: time.daysOpen,
+                        availableFromDate: time.availableFromDate,
+                        availableToDate: time.availableToDate,
+                        slotsTime: time.manualCapacity,
+                    }))}
+                    availableFromDate={serviceTime[0].availableFromDate}
+                    availableToDate={null}
+                    isHidePrice={isHidePrice}
+                    isHideEndTime={isHideEndTime}
+                    handleClose={() => setState({ ...state, bottom: false })}
+                />
+            )}
+        </Box>
+    );
+
+    const [typeName, setTypeName] = useState("");
+
+    const handleEditService = () => {
+        setTypeName("service");
+        setState({ ...state, ["bottom"]: true });
+    };
+
+    const handlePreview = () => {
+        setTypeName("preview");
+        setState({ ...state, ["bottom"]: true });
+    };
 
     return (
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
-            <Drawer
-                anchor={"bottom"}
-                open={state["bottom"]}
-                onClose={toggleDrawer("bottom", false)}>
-                {editService()}
-            </Drawer>
+            {typeName == "service" ? (
+                <Drawer
+                    anchor={"bottom"}
+                    open={state["bottom"]}
+                    onClose={toggleDrawer("bottom", false)}>
+                    {editService()}
+                </Drawer>
+            ) : (
+                <Drawer
+                    anchor={"bottom"}
+                    open={state["bottom"]}
+                    onClose={toggleDrawer("bottom", false)}>
+                    {previewService()}
+                </Drawer>
+            )}
 
             <div className="pr-4 pl-4 pt-6">
                 <Header
@@ -179,11 +226,7 @@ export default function CreateService(props: IProps) {
                 <div
                     style={{ marginBottom: "20px" }}
                     className="mt-4 flex flex-col gap-3">
-                    <ServiceCard
-                        handleEdit={() =>
-                            setState({ ...state, ["bottom"]: true })
-                        }
-                    />
+                    <ServiceCard handleEdit={handleEditService} />
                     {serviceTime.map((time, index) => (
                         <div
                             onClick={() =>
@@ -259,10 +302,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -309,10 +353,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -362,10 +407,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -391,40 +437,7 @@ export default function CreateService(props: IProps) {
                                 backgroundColor: "white",
                                 fontSize: "14px",
                             }}
-                            onClick={() => navigate(`/business-preview`, {
-                                state: {
-                                  data: {
-                                    businessId: Number(businessId ?? ""),
-                                    title: serviceInfo.serviceName,
-                                    duration: serviceTime[0].duration,
-                                    description: serviceInfo.serviceDescription,
-                                    price: serviceInfo.price,
-                                    isAutoApprove: isAutoApprove,
-                                    currency: serviceInfo.currency,
-                                    openTime: serviceTime[0].openTime,
-                                    closeTime: serviceTime[0].closeTime,
-                                    bookingSlots: [
-                                        {
-                                            daysOpen: serviceTime[0].daysOpen,
-                                            availableFromDate: serviceTime[0].availableFromDate,
-                                            availableToDate:
-                                                serviceTime[0].availableToDate === ""
-                                                    ? null
-                                                    : serviceTime[0].availableToDate,
-                                            slotsTime: serviceTime[0].manualCapacity,
-                                        },
-                                    ],
-                                    availableFromDate: serviceTime[0].availableFromDate,
-                                    availableToDate:
-                                        serviceTime[0].availableToDate === ""
-                                            ? null
-                                            : serviceTime[0].availableToDate,
-                                    isHidePrice: isHidePrice,
-                                    isHideEndTime: isHideEndTime,
-                                },
-                                },
-                              })}
-                            >
+                            onClick={handlePreview}>
                             Preview
                         </button>
                         <button
