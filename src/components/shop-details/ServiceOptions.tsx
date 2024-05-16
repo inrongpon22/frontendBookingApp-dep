@@ -1,14 +1,18 @@
 // i18n
 import { useTranslation } from "react-i18next";
 // context
-import { useContext } from "react";
-import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
+// import { useContext } from "react";
+// import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
-const ServiceOptions = () => {
-  const { services, setServices } = useContext(ShopContext);
+interface ServiceOptionsProps {
+  services:any
+  setServices:Function
+}
 
-  // i18n
-  const { t } = useTranslation();
+const ServiceOptions = ({services, setServices}:ServiceOptionsProps) => {
+  // const { services, setServices } = useContext(ShopContext);
+
+  const {t}= useTranslation();
 
   return (
     <div id="service-option" className="p-5">

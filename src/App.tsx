@@ -19,6 +19,7 @@ import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
 import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
+import ManualBooking from "./pages/manual-booking/ManualBooking.tsx";
 
 function App() {
   useEffect(() => {
@@ -59,6 +60,10 @@ function App() {
           <Route
             path="/business-setting/:businessId"
             element={<BusinessSetting />}
+          />
+          <Route
+            path="/manual-booking/:businessId"
+            element={<ManualBooking />}
           />
 
 

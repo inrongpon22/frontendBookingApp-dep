@@ -5,12 +5,7 @@ export const ShopContext = createContext<any>(null); //create context to store a
 import moment from "moment";
 import "moment/locale/th";
 // styled
-import {
-  Backdrop,
-  CircularProgress,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 // fetcher
 import useSWR from "swr";
 import axios from "axios";
@@ -28,6 +23,7 @@ import Quantity from "../../components/shop-details/Quantity";
 import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
+import Loading from "../../components/dialog/Loading";
 
 const theme = createTheme({
   // create theme for custom color mui
@@ -145,25 +141,6 @@ const ShopDetailsPageWrapper = () => {
     }
   );
 
-  // useMemo(() => {
-  //   if (
-  //     // if today not includes days open, auto select next available date
-  //     services.length > 0 &&
-  //     !services
-  //       .find((item: any) => item.isSelected)
-  //       ?.daysOpen.includes(selectedDate.date.format("dddd"))
-  //   ) {
-  //     const nextavailable = dateArr.filter((item: any) =>
-  //       services
-  //         .find((item: any) => item.isSelected)
-  //         ?.daysOpen.includes(item.format("dddd"))
-  //     )[0];
-  //     setSelectedDate({ date: nextavailable });
-  //   } else {
-  //     setSelectedDate({ date: moment() });
-  //   }
-  // }, [services]);
-
   // browser tab title
   useEffect(() => {
     document.title = shopDetail?.title || "Shop Detail";
@@ -198,25 +175,36 @@ const ShopDetailsPageWrapper = () => {
         }}
       >
         {/* loading progress */}
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={servByIdLoading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        <Loading openLoading={servByIdLoading} />
         {/* loading progress */}
         <div className="relative lg:grid lg:grid-cols-2">
           <Slideshow data={shopDetail?.imagesURL || []} />
 
           <ShopInformation />
 
-          <ServiceOptions />
+          <ServiceOptions services={services} setServices={setServices} />
 
-          <Quantity />
+          <Quantity
+            quantities={quantities}
+            setQuantities={setQuantities}
+            serviceById={serviceById}
+          />
 
-          <Calendar />
+          <Calendar
+            calendar={calendar}
+            setCalendar={setCalendar}
+            dateArr={dateArr}
+            setDateArr={setDateArr}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
 
-          <TimeSlots />
+          <TimeSlots
+            selectedDate={selectedDate}
+            setServiceById={setServiceById}
+            serviceById={serviceById}
+            quantities={quantities}
+          />
 
           <div className="flex flex-col justify-center items-center my-5">
             <button
@@ -231,12 +219,12 @@ const ShopDetailsPageWrapper = () => {
               }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
               onClick={() => {
                 if (
-                  slotArrays?.slotsTime.find((item: any) => item.isSelected)
+                  slotArrays?.slotsTime.filter((item: any) => item.isSelected)
                 ) {
-                  if(token){
+                  if (token) {
                     setModalState("booking-detail-preview");
                     setIsShowDialog(true);
-                  }else{
+                  } else {
                     setIsShowDialog(true);
                   }
                 }

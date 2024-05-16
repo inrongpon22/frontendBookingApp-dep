@@ -1,0 +1,137 @@
+// components
+import { useParams } from "react-router";
+import Calendar from "../../components/shop-details/Calendar";
+import Quantity from "../../components/shop-details/Quantity";
+import ServiceOptions from "../../components/shop-details/ServiceOptions";
+import TimeSlots from "../../components/shop-details/TimeSlots";
+import useSWR from "swr";
+import { app_api } from "../../helper/url";
+import axios from "axios";
+import { useState } from "react";
+import {
+  quantityTypes,
+  serviceTypes,
+} from "../../components/shop-details/detailTypes";
+import moment from "moment";
+import Loading from "../../components/dialog/Loading";
+
+const ManualBooking = () => {
+  const { businessId } = useParams();
+
+  const [selectedDate, setSelectedDate] = useState<any>({
+    // handle select date on calendar
+    date: moment(),
+  });
+
+  const [calendar, setCalendar] = useState({
+    // handle calendar date
+    start: moment(),
+    end: moment().add(10, "day"),
+  });
+
+  const [dateArr, setDateArr] = useState<object[]>([]); // get calendar date for custom render
+
+  const [quantities, setQuantities] = useState<quantityTypes>({
+    title: "Guest",
+    desc: "Number of guest",
+    quantities: 1,
+    max: 10,
+    min: 1,
+  }); // handle quantities
+
+  // handle services state
+  const [services, setServices] = useState<serviceTypes[]>([]);
+  const [serviceById, setServiceById] = useState<any>();
+
+  // get services by business businessId
+  const { error: servicesDataError } = useSWR(
+    `${app_api}/serviceByBusinessId/${businessId}?page=1&limit=100`,
+    (url: string) =>
+      axios.get(url).then((res) =>
+        setServices(
+          res.data.map((item: any, index: number) => {
+            if (index === 0) {
+              return {
+                ...item,
+                isSelected: true,
+                bookingSlots: item.bookingSlots.map((ii: any) => {
+                  return { ...ii, isSelected: false };
+                }),
+              };
+            } else {
+              return {
+                ...item,
+                isSelected: false,
+                bookingSlots: item.bookingSlots.map((ii: any) => {
+                  return { ...ii, isSelected: false };
+                }),
+              };
+            }
+          })
+        )
+      ),
+    { revalidateOnFocus: false }
+  );
+
+  // get time slots by service businessId
+  const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
+    () =>
+      services.find((item: any) => item.isSelected) &&
+      `${app_api}/service/${
+        services.find((item: any) => item.isSelected)?.id
+      }/${selectedDate.date.format("YYYY-MM-DD")}`,
+    (url: string) =>
+      axios.get(url).then((res) =>
+        setServiceById({
+          ...res.data,
+          bookingSlots: res.data.bookingSlots.map((item: any) => {
+            return {
+              ...item,
+              slotsTime: item.slotsTime.map((ii: any) => {
+                return { ...ii, isSelected: false };
+              }),
+            };
+          }),
+        })
+      ),
+    {
+      revalidateOnFocus: false,
+      loadingTimeout: 0,
+    }
+  );
+
+  if (servicesDataError || serviceByIdError) return <>API error...</>;
+
+  return (
+    <>
+      <Loading openLoading={servByIdLoading} />
+      <ServiceOptions services={services} setServices={setServices} />
+
+      <Quantity
+        quantities={quantities}
+        setQuantities={setQuantities}
+        serviceById={serviceById}
+      />
+
+      <Calendar
+        calendar={calendar}
+        setCalendar={setCalendar}
+        dateArr={dateArr}
+        setDateArr={setDateArr}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+      />
+
+      <TimeSlots
+        selectedDate={selectedDate}
+        setServiceById={setServiceById}
+        serviceById={serviceById}
+        quantities={quantities}
+      />
+
+      
+    </>
+  );
+};
+
+export default ManualBooking;

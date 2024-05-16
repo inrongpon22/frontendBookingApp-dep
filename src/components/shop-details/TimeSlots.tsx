@@ -1,14 +1,22 @@
-import { useContext } from "react";
-import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
+// import { useContext } from "react";
+// import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
-const TimeSlots = () => {
-  const { selectedDate, setServiceById, serviceById, quantities } =
-    useContext(ShopContext);
+interface TimeSlotsProps {
+  selectedDate: any;
+  setServiceById:Function
+  serviceById:any
+  quantities:any
+}
+
+const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:TimeSlotsProps) => {
+  // const { selectedDate, setServiceById, serviceById, quantities } =
+  //   useContext(ShopContext);
 
   const { t } = useTranslation();
 
+  // find available time slots from daysOpen and availableFromDate
   const slotArrays = serviceById?.bookingSlots.find(
     (item: any) =>
       item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
@@ -56,9 +64,9 @@ const TimeSlots = () => {
                             ...kk,
                             slotsTime: kk.slotsTime?.map((mm: any) => {
                               if (mm.startTime === ii.startTime) {
-                                return { ...mm, isSelected: true };
+                                return { ...mm, isSelected: !mm.isSelected };
                               } else {
-                                return { ...mm, isSelected: false };
+                                return { ...mm, isSelected: mm.isSelected };
                               }
                             }),
                           };

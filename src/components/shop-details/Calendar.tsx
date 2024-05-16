@@ -1,36 +1,36 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 // import { useTranslation } from "react-i18next";
 import moment from "moment";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
+// import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
-// const thaiMonths: string[] = [
-//   "มกราคม",
-//   "กุมภาพันธ์",
-//   "มีนาคม",
-//   "เมษายน",
-//   "พฤษภาคม",
-//   "มิถุนายน",
-//   "กรกฎาคม",
-//   "สิงหาคม",
-//   "กันยายน",
-//   "ตุลาคม",
-//   "พฤศจิกายน",
-//   "ธันวาคม",
-// ];
+interface CalendarProps {
+  calendar: any;
+  setCalendar: Function;
+  dateArr: any;
+  setDateArr: Function;
+  selectedDate: any;
+  setSelectedDate: Function;
+}
 
-const Calendar = () => {
-  const {
-    calendar,
-    setCalendar,
-    // services,
-    dateArr,
-    setDateArr,
-    selectedDate,
-    setSelectedDate,
-  } = useContext(ShopContext);
+const Calendar = ({
+  calendar,
+  setCalendar,
+  dateArr,
+  setDateArr,
+  selectedDate,
+  setSelectedDate,
+}:CalendarProps) => {
+  // const {
+  //   calendar,
+  //   setCalendar,
+  //   dateArr,
+  //   setDateArr,
+  //   selectedDate,
+  //   setSelectedDate,
+  // } = useContext(ShopContext);
 
   const handleDateChange = (meth: string) => {
     switch (meth) {

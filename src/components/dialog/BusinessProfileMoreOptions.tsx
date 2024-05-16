@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { shareBookingLink } from "../../helper/alerts";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined';
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -42,8 +42,8 @@ const BusinessProfileMoreOptions = () => {
     ],
     setting: [
       {
-        icon: <CalendarMonthIcon />,
-        label: t("button:overviewSchedule"),
+        icon: <EditCalendarOutlinedIcon />,
+        label: t("button:manualBooking"),
         url: undefined,
       },
       {

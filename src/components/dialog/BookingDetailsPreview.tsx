@@ -61,7 +61,7 @@ const BookingDetailsPreview = () => {
       userName: formik.values.username,
       bookingDate: selectedDate.date.format("YYYY-MM-DD"),
       guestNumber: quantities.quantities,
-    };
+    }
 
     await axios
       .post(`${app_api}/reservation/th`, body, {
