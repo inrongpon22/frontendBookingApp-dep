@@ -7,18 +7,16 @@ import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { IBookingSlot, IServiceEditTime } from "../business/interfaces/service";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { updateServiceTime } from "../../api/service";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
-    duration: number;
     openTime: string;
     closeTime: string;
     editIndex: number;
     serviceId: number;
     isAddTime: boolean;
     handleSetEditTime: () => void;
-    serviceMutate: () => void;
+    handleSetServiceTime: (serviceTime: IServiceEditTime[]) => void;
 }
 
 export default function EditServiceTime(props: IParams) {
@@ -29,7 +27,7 @@ export default function EditServiceTime(props: IParams) {
     );
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
     const [duration, setDuration] = useState(
-        props.isAddTime ? 1 : props.duration
+        props.isAddTime ? 1 : props.serviceTime[props.editIndex].duration
     );
     const [openTime, setOpenTime] = useState(
         props.isAddTime ? "" : props.openTime.substring(0, 5)
@@ -78,8 +76,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -106,7 +104,24 @@ export default function EditServiceTime(props: IParams) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [availableFromDate, availableToDate]);
 
-    const toggleSlotSelection = (index: number) => {
+    const toggleSlotSelection = (index: number, startTime: string,
+        endTime: string) => {
+
+        const indexManual = manualCapacity.findIndex(
+            (slot) => slot.startTime === startTime && slot.endTime === endTime
+        );
+        if (indexManual !== -1) {
+            setManualCapacity((prevCapacity) =>
+                prevCapacity.filter((_, index) => index !== indexManual)
+            );
+        } else {
+            // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
+            setManualCapacity((prevCapacity) => [
+                ...prevCapacity,
+                { startTime, endTime, capacity: guestNumber },
+            ]);
+        }
+
         if (selectedSlots.includes(index)) {
             setSelectedSlots(
                 selectedSlots.filter((slotIndex) => slotIndex !== index)
@@ -245,15 +260,12 @@ export default function EditServiceTime(props: IParams) {
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
+            duration: duration,
         };
         props.serviceTime[props.editIndex] = insertData;
-        await updateServiceTime(
-            props.serviceTime,
-            localStorage.getItem("token") ?? "",
-            props.serviceId
-        );
-        props.serviceMutate();
+        props.handleSetServiceTime(props.serviceTime);
         props.handleSetEditTime();
+
     };
 
     return (
@@ -280,7 +292,6 @@ export default function EditServiceTime(props: IParams) {
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
                 <div
-                    style={{ marginBottom: "70px" }}
                     className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
@@ -497,11 +508,10 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -514,7 +524,8 @@ export default function EditServiceTime(props: IParams) {
                                         ? "rgb(2, 8, 115,0.2)"
                                         : "white",
                                 }}
-                                onClick={() => toggleSlotSelection(index)}>
+                                onClick={() => toggleSlotSelection(index, timeSlots[index].startTime,
+                                    timeSlots[index].endTime)}>
                                 {slot.startTime} - {slot.endTime}
                             </div>
                         ))}
@@ -564,11 +575,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -648,7 +659,7 @@ export default function EditServiceTime(props: IParams) {
                         </div>
                     )}
 
-                    <div className="w-full flex justify-center fixed bottom-0 inset-x-0">
+                    <div className="w-full flex justify-center bottom-0 inset-x-0">
                         <button
                             disabled={
                                 daysOpen.length == 0 ||
@@ -660,7 +671,7 @@ export default function EditServiceTime(props: IParams) {
                             }
                             onClick={handleSubmit}
                             type="submit"
-                            className="text-white mt-4 rounded-lg font-semibold mb-6"
+                            className="text-white mt-4 rounded-lg font-semibold"
                             style={{
                                 width: "343px",
                                 height: "51px",
