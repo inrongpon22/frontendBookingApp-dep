@@ -1,4 +1,4 @@
-import { alpha } from "@mui/material";
+import { alpha, Drawer } from "@mui/material";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useEffect, useState } from "react";
@@ -20,6 +20,8 @@ import Loading from "../../components/dialog/Loading";
 import { IServiceInfo } from "../business/interfaces/service";
 import { useParams } from "react-router-dom";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
+import { Anchor } from "./ServiceSetting";
+import BusinessPreview from "./BusinessPreview";
 
 interface IParams {
     serviceId: number;
@@ -43,7 +45,8 @@ export default function ServiceDetail(props: IParams) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
     const [modifyServiceInfo, setModifyServiceInfo] = useState<IServiceInfo>(); // for update service info
-    const [modifyServiceTime, setModifyServiceTime] = useState<IServiceEditTime[]>(); // for update service time
+    const [modifyServiceTime, setModifyServiceTime] =
+        useState<IServiceEditTime[]>(); // for update service time
     const [openConfirm, setOpenConfirm] = useState(false);
     const {
         data: serviceInfo,
@@ -53,23 +56,31 @@ export default function ServiceDetail(props: IParams) {
         `${app_api}/getServiceByServiceId/${props.serviceId}`,
         fetcher
     );
+    const [state, setState] = useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    });
 
-    useEffect(() => {
-        if (serviceInfo) {
-            setModifyServiceInfo({
-                serviceName: serviceInfo.title,
-                serviceDescription: serviceInfo.description,
-                price: serviceInfo.price,
-                currency: serviceInfo.currency,
-            });
-            setModifyServiceTime(serviceInfo.bookingSlots);
-            setIsHideEndTime(serviceInfo.isHideEndTime);
-            setIsAutoApprove(serviceInfo.isAutoApprove);
-            setIsHidePrice(serviceInfo.isHidePrice);
-        }
-    }
+    useEffect(
+        () => {
+            if (serviceInfo) {
+                setModifyServiceInfo({
+                    serviceName: serviceInfo.title,
+                    serviceDescription: serviceInfo.description,
+                    price: serviceInfo.price,
+                    currency: serviceInfo.currency,
+                });
+                setModifyServiceTime(serviceInfo.bookingSlots);
+                setIsHideEndTime(serviceInfo.isHideEndTime);
+                setIsAutoApprove(serviceInfo.isAutoApprove);
+                setIsHidePrice(serviceInfo.isHidePrice);
+            }
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        , [serviceLoading]);
+        [serviceLoading]
+    );
 
     const handleSetEditInfo = () => {
         setIsEditInfo(!isEditInfo);
@@ -104,11 +115,6 @@ export default function ServiceDetail(props: IParams) {
         const updatedTimeDetails = serviceInfo.bookingSlots.filter(
             (_item: IServiceEditTime, i: number) => i !== selectedIndex
         );
-        // await updateServiceTime(
-        //     updatedTimeDetails,
-        //     token || "",
-        //     serviceInfo.id
-        // );
         setModifyServiceTime(updatedTimeDetails);
         serviceMutate();
     };
@@ -119,6 +125,19 @@ export default function ServiceDetail(props: IParams) {
     const handleSetServiceTime = (serviceTime: IServiceEditTime[]) => {
         setModifyServiceTime(serviceTime);
     };
+
+    const toggleDrawer =
+        (anchor: Anchor, open: boolean) =>
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const handleIsModifiedData = () => {
         return (
@@ -158,15 +177,39 @@ export default function ServiceDetail(props: IParams) {
         props.handleClose && props.handleClose();
     };
 
+    const previewService = () => (
+        <BusinessPreview
+            businessId={Number(businessId)}
+            title={modifyServiceInfo?.serviceName ?? ""}
+            description={modifyServiceInfo?.serviceDescription ?? ""}
+            price={modifyServiceInfo?.price ?? 0}
+            isAutoApprove={isAutoApprove}
+            currency={modifyServiceInfo?.currency ?? ""}
+            bookingSlots={modifyServiceTime ?? []}
+            availableFromDate={serviceInfo.availableFromDate}
+            availableToDate={serviceInfo.availableToDate}
+            isHidePrice={isHidePrice}
+            isHideEndTime={isHideEndTime}
+            handleClose={() => setState({ ...state, bottom: false })}
+        />
+    );
 
     return (
         <>
+            <Drawer
+                anchor={"bottom"}
+                open={state["bottom"]}
+                onClose={toggleDrawer("bottom", false)}>
+                {previewService()}
+            </Drawer>
             <ConfirmCard
                 open={openConfirm}
                 handleClose={() => setOpenConfirm(false)}
                 handleConfirm={handleConfirmClose}
                 title={"Discard changes?"}
-                description={"You have unsaved changes. Are you sure you want to discard them?"}
+                description={
+                    "You have unsaved changes. Are you sure you want to discard them?"
+                }
                 bntConfirm={"Discard"}
                 bntBack={"Cancel"}
             />
@@ -175,7 +218,9 @@ export default function ServiceDetail(props: IParams) {
                 (isEditInfo ? (
                     <EditServiceInfo
                         serviceName={modifyServiceInfo.serviceName}
-                        serviceDescription={modifyServiceInfo.serviceDescription}
+                        serviceDescription={
+                            modifyServiceInfo.serviceDescription
+                        }
                         price={modifyServiceInfo.price}
                         currency={modifyServiceInfo.currency}
                         serviceId={serviceInfo.id}
@@ -219,38 +264,46 @@ export default function ServiceDetail(props: IParams) {
                                 <ServiceCard
                                     serviceId={serviceInfo.id}
                                     serviceName={modifyServiceInfo.serviceName}
-                                    serviceDescription={modifyServiceInfo.serviceDescription}
+                                    serviceDescription={
+                                        modifyServiceInfo.serviceDescription
+                                    }
                                     price={modifyServiceInfo.price}
                                     currency={modifyServiceInfo.currency}
                                     handleSetEditInfo={handleSetEditInfo}
                                 />
 
-                                {modifyServiceTime && modifyServiceTime.map(
-                                    (item: IServiceEditTime, index: number) => (
-                                        <div key={index}>
-                                            <TimeCard
-                                                daysOpen={item.daysOpen}
-                                                availableFromDate={
-                                                    item.availableFromDate
-                                                }
-                                                availableToDate={
-                                                    item.availableToDate
-                                                }
-                                                slotsTime={item.slotsTime}
-                                                selectedIndex={index}
-                                                handleSetEditTime={
-                                                    handleSetEditTime
-                                                }
-                                                handleSelectIndex={(
-                                                    index: number
-                                                ) => setSelectedIndex(index)}
-                                                handleDeleteServiceTime={
-                                                    handleDeleteServiceTime
-                                                }
-                                            />
-                                        </div>
-                                    )
-                                )}
+                                {modifyServiceTime &&
+                                    modifyServiceTime.map(
+                                        (
+                                            item: IServiceEditTime,
+                                            index: number
+                                        ) => (
+                                            <div key={index}>
+                                                <TimeCard
+                                                    daysOpen={item.daysOpen}
+                                                    availableFromDate={
+                                                        item.availableFromDate
+                                                    }
+                                                    availableToDate={
+                                                        item.availableToDate
+                                                    }
+                                                    slotsTime={item.slotsTime}
+                                                    selectedIndex={index}
+                                                    handleSetEditTime={
+                                                        handleSetEditTime
+                                                    }
+                                                    handleSelectIndex={(
+                                                        index: number
+                                                    ) =>
+                                                        setSelectedIndex(index)
+                                                    }
+                                                    handleDeleteServiceTime={
+                                                        handleDeleteServiceTime
+                                                    }
+                                                />
+                                            </div>
+                                        )
+                                    )}
 
                                 <button
                                     style={{
@@ -297,15 +350,13 @@ export default function ServiceDetail(props: IParams) {
                                 <div className="w-full flex justify-center gap-2 my-5">
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
-                                        onClick={() => navigate("/business-preview")}
-                                        >
+                                        onClick={toggleDrawer("bottom", true)}>
                                         Preview
                                     </button>
                                     <button
                                         onClick={handleUpdateService}
                                         type="submit"
-                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold"
-                                        >
+                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold">
                                         {t("button:confirm")}
                                     </button>
                                 </div>
