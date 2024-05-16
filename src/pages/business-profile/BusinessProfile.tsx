@@ -1,18 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
-import { Slideshow } from "../../components/shop-details/Slideshow";
 // icons
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LinkIcon from "@mui/icons-material/Link";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
+import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useState } from "react";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { shareBookingLink } from "../../helper/alerts";
+// import { shareBookingLink } from "../../helper/alerts";
 import { useTranslation } from "react-i18next";
-import { Divider } from "@mui/material";
-import toast from "react-hot-toast";
+import { Badge } from "@mui/material";
+// import toast from "react-hot-toast";
 import { dayOfWeek } from "../../helper/daysOfWeek";
 import axios from "axios";
 
@@ -54,58 +51,34 @@ const BusinessProfile = () => {
     }
   );
 
-  const { data: getTotalPendingByBusiness } = useSWR(
-    businessId &&
-      `${app_api}/getTotalNumPendingReservationByBusinessId/${businessId}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  // const { data: getTotalPendingByBusiness } = useSWR(
+  //   businessId &&
+  //     `${app_api}/getTotalNumPendingReservationByBusinessId/${businessId}`,
+  //   fetcher,
+  //   {
+  //     revalidateOnFocus: false,
+  //   }
+  // );
 
   return (
     <div className="flex flex-col h-dvh">
-      <Slideshow data={busiDatas?.imagesURL} fixedHeight={300} />
-
-      <div className="flex flex-col gap-2 p-5">
-        <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
-        <p className="flex gap-5">
-          <span>
-            {t("totalPending")}{" "}
-            <b className="text-deep-blue">
-              {getTotalPendingByBusiness?.pendingnumber}
-            </b>
-          </span>
-        </p>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            className="flex justify-center items-center text-[14px] text-white border bg-deep-blue bg-opacity-80 rounded-lg p-2"
-            onClick={() => {
-              toast("Coming Soon");
-            }}
-          >
-            <CalendarMonthIcon fontSize="small" />
-            {t("button:overview")}
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center text-[14px] border rounded-lg p-2"
-            onClick={() => shareBookingLink(businessId)}
-          >
-            <LinkIcon fontSize="small" />
-            {t("button:shareBookingLink")}
-          </button>
-          <button
+      {/* <Slideshow data={busiDatas?.imagesURL} fixedHeight={300} /> */}
+      {/* <button
             type="button"
             className="flex justify-center items-center border rounded-lg p-2"
             onClick={() => setShowDialog(true)}
           >
             <MoreHorizOutlinedIcon fontSize="small" />
-          </button>
+          </button> */}
+      <div className="flex flex-col gap-2 p-5">
+        <p className="text-[22px] font-semibold">{busiDatas?.title}</p>
+        <div className="flex">
+          <Badge color="secondary" variant="dot">
+            <NotificationsActiveOutlinedIcon fontSize="small" />
+          </Badge>
         </div>
       </div>
-      <Divider />
+      {/* <Divider /> */}
       <div className="px-5 mt-3">
         <span className="text-[14px] font-semibold">{t("services")}</span>
         <div className="flex flex-col gap-4 my-5">
