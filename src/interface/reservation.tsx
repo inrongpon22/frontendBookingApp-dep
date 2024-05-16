@@ -11,7 +11,7 @@ export interface Ireservation {
   status: string;
   by: "customer" | "business";
   userName: string;
-  bookingDate: string;
+  bookingDate: string | object;
   guestNumber:  number;
   userId: string | number;
   uuid: string | undefined;

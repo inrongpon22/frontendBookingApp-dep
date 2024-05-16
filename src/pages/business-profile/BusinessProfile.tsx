@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 // icons
@@ -40,30 +39,33 @@ const BusinessProfile = () => {
     Ireservation[]
   >(
     businessId && `${app_api}/getReservationByBusinessId/${businessId}/all`,
-    (url: string) =>
-      axios
-        .get(url, {
-          headers: {
-            authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => res.data),
+    fetcher,
     {
       revalidateOnFocus: false,
     }
   );
 
   const pendingBookings = getReservation?.filter(
-    (item: any) => item.status === "pending"
+    (item: Ireservation) => item.status === "pending"
   );
 
-  const todayBookings = getReservation?.filter(
-    (item: any) =>
-      (moment(item.bookingDate).isSame(moment(), "day") &&
-        item.status === "approval") ||
-      (moment(item.bookingDate).isSame(moment(), "day") &&
-        item.status === "cancel")
-  );
+  const todayBookings = getReservation
+    ?.filter(
+      (item: Ireservation) =>
+        (moment(item.bookingDate).isSame(moment(), "day") &&
+          item.status === "approval") ||
+        (moment(item.bookingDate).isSame(moment(), "day") &&
+          item.status === "cancel")
+    )
+    .map((item: any) => {
+      const [hours, minutes, seconds] = item.startTime.split(":");
+      const combinedBookingDate = moment(item.bookingDate)
+        .utc()
+        .set({ hour: hours, minute: minutes, second: seconds });
+
+      return { ...item, bookingDate: combinedBookingDate };
+    })
+    .sort((a, b) => moment(a.bookingDate).diff(moment(b.bookingDate)));
 
   return (
     <div className="flex flex-col h-dvh bg-[#F7F7F7]">
