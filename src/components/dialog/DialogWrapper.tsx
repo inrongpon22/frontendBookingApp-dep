@@ -9,8 +9,6 @@ import { useFormik } from "formik";
 // styled
 import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typescript types
 import {
-  Backdrop,
-  CircularProgress,
   Dialog,
   DialogContent,
   Slide,
@@ -30,6 +28,7 @@ import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import toast from "react-hot-toast";
 import BookingApproveResult from "./BookingApproveResult";
+import Loading from "./Loading";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -254,12 +253,7 @@ const DialogWrapper = ({
       }}
     >
       {/* loading progress */}
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <Loading openLoading={isLoading} />
       {/* loading progress */}
       <Dialog
         maxWidth="xl"
