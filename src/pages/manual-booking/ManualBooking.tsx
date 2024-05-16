@@ -14,9 +14,11 @@ import {
 } from "../../components/shop-details/detailTypes";
 import moment from "moment";
 import Loading from "../../components/dialog/Loading";
+import { useTranslation } from "react-i18next";
 
 const ManualBooking = () => {
   const { businessId } = useParams();
+  const { t } = useTranslation();
 
   const [selectedDate, setSelectedDate] = useState<any>({
     // handle select date on calendar
@@ -129,7 +131,34 @@ const ManualBooking = () => {
         quantities={quantities}
       />
 
-      
+      <div className="flex flex-col justify-center items-center my-5">
+        <button
+          type="button"
+          // disabled={
+          //   !slotArrays?.slotsTime.find((item: any) => item.isSelected)
+          // }
+          // className={`${
+          //   !slotArrays?.slotsTime.find((item: any) => item.isSelected)
+          //     ? "bg-gray-300"
+          //     : "bg-[#020873]"
+          // }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
+          // onClick={() => {
+          //   if (
+          //     slotArrays?.slotsTime.filter((item: any) => item.isSelected)
+          //   ) {
+          //     if (token) {
+          //       setModalState("booking-detail-preview");
+          //       setIsShowDialog(true);
+          //     } else {
+          //       setIsShowDialog(true);F
+          //     }
+          //   }
+          // }}
+        >
+          {t("button:confirmBookingButton")}
+        </button>
+        <span className="text-[12px] py-2">{t("reviewDetails")}</span>
+      </div>
     </>
   );
 };

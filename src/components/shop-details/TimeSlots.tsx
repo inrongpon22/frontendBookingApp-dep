@@ -5,12 +5,17 @@ import { useTranslation } from "react-i18next";
 
 interface TimeSlotsProps {
   selectedDate: any;
-  setServiceById:Function
-  serviceById:any
-  quantities:any
+  setServiceById: Function;
+  serviceById: any;
+  quantities: any;
 }
 
-const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:TimeSlotsProps) => {
+const TimeSlots = ({
+  selectedDate,
+  setServiceById,
+  serviceById,
+  quantities,
+}: TimeSlotsProps) => {
   // const { selectedDate, setServiceById, serviceById, quantities } =
   //   useContext(ShopContext);
 
@@ -22,6 +27,8 @@ const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:Tim
       item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
       selectedDate.date.isAfter(item.availableFromDate)
   );
+
+  console.log(slotArrays?.slotsTime.find((item: any) => item.isSelected));
 
   return (
     <div id="times" className="mt-5 p-5 col-span-2">
@@ -40,18 +47,24 @@ const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:Tim
       >
         {slotArrays?.slotsTime.length > 0 ? (
           slotArrays?.slotsTime.map((ii: any, jj: number) => {
+            const index = slotArrays?.slotsTime.findIndex(
+              (item: any) => item.isSelected
+            );
+            const isAbleExtend =
+              index === jj || index - 1 === jj || index + 1 === jj;
+              // && slotArrays?.slotsTime.find((item: any) => item.isSelected) &&
+              // isAbleExtend
             return (
               <div
                 key={jj}
                 className={`flex flex-col border-2 rounded-lg text-center p-3 ${
                   ii?.capacity >= quantities.quantities
-                    ? " cursor-pointer"
+                    ? "cursor-pointer"
                     : "text-[#8C8C8C] bg-[#8B8B8B33]"
                 } ${
-                  ii.isSelected
-                    ? "bg-[#006CE31A] border-[#003B95] text-[#003B95]"
-                    : ""
-                }`}
+                  ii.isSelected &&
+                  "bg-[#006CE31A] border-[#003B95] text-[#003B95]"
+                }}`}
                 onClick={() => {
                   if (ii?.capacity >= quantities.quantities) {
                     setServiceById({
@@ -64,9 +77,9 @@ const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:Tim
                             ...kk,
                             slotsTime: kk.slotsTime?.map((mm: any) => {
                               if (mm.startTime === ii.startTime) {
-                                return { ...mm, isSelected: !mm.isSelected };
+                                return { ...mm, isSelected: true };
                               } else {
-                                return { ...mm, isSelected: mm.isSelected };
+                                return { ...mm, isSelected: false };
                               }
                             }),
                           };
@@ -81,6 +94,7 @@ const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:Tim
                 <span>
                   {ii.startTime} - {ii.endTime}
                 </span>
+                {/* dot color:: status */}
                 <span className="flex justify-center items-center text-[12px]">
                   <div
                     className={`h-[9px] w-[9px] mx-1 rounded ${
@@ -95,6 +109,7 @@ const TimeSlots = ({ selectedDate, setServiceById, serviceById, quantities }:Tim
                     ? `${ii?.capacity} ${t("available")}`
                     : t("full")}
                 </span>
+                {/* dot color:: status */}
               </div>
             );
           })

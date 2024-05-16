@@ -8,12 +8,7 @@ import { app_api, useQuery } from "../../helper/url";
 import { useFormik } from "formik";
 // styled
 import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typescript types
-import {
-  Dialog,
-  DialogContent,
-  Slide,
-  Toolbar,
-} from "@mui/material";
+import { Dialog, DialogContent, Slide, Toolbar } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 // icons
 import CloseIcon from "@mui/icons-material/Close";
@@ -29,6 +24,7 @@ import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import toast from "react-hot-toast";
 import BookingApproveResult from "./BookingApproveResult";
 import Loading from "./Loading";
+import ManualBooking from "../../pages/manual-booking/ManualBooking";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -48,9 +44,10 @@ const DialogWrapper = ({
 }: DialogTypes) => {
   const navigate = useNavigate();
   const query = useQuery();
-  const { t, i18n:{
-    language
-  } } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -198,7 +195,10 @@ const DialogWrapper = ({
         return <BookingApproveResult dialogState={dialogState} />;
 
       case "business-more-options":
-        return <BusinessProfileMoreOptions />;
+        return <BusinessProfileMoreOptions setState={setDialogState} />;
+
+      case "manual-booking":
+        return <ManualBooking />;
 
       default:
         break;
@@ -232,6 +232,12 @@ const DialogWrapper = ({
         break;
 
       case "business-more-options":
+        formik.resetForm();
+        setShow(false);
+        setDialogState("business-more-options");
+        break;
+
+      case "manual-booking":
         formik.resetForm();
         setShow(false);
         setDialogState("business-more-options");

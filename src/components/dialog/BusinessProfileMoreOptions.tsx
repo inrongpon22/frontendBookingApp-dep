@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { shareBookingLink } from "../../helper/alerts";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
-import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined';
+import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -16,7 +16,13 @@ import ConfirmCard from "./ConfirmCard";
 import { useState } from "react";
 import Loading from "./Loading";
 
-const BusinessProfileMoreOptions = () => {
+interface BusinessProfileMoreOptionsProps {
+  setState: Function;
+}
+
+const BusinessProfileMoreOptions = ({
+  setState,
+}: BusinessProfileMoreOptionsProps) => {
   const navigate = useNavigate();
   const { businessId } = useParams();
   const { t } = useTranslation();
@@ -25,10 +31,10 @@ const BusinessProfileMoreOptions = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogout = async () => {
-   setIsLoading(true);
-   localStorage.removeItem("token");
-   localStorage.removeItem("userId");
-   navigate("/");
+    setIsLoading(true);
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/");
   };
 
   const moreOptions = {
@@ -45,6 +51,7 @@ const BusinessProfileMoreOptions = () => {
         icon: <EditCalendarOutlinedIcon />,
         label: t("button:manualBooking"),
         url: undefined,
+        function: () => setState("manual-booking")
       },
       {
         icon: <EventBusyIcon />,
