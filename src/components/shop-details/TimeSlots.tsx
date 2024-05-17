@@ -1,6 +1,7 @@
 // import { useContext } from "react";
 // import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import moment from "moment";
+// import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface TimeSlotsProps {
@@ -8,6 +9,8 @@ interface TimeSlotsProps {
   setServiceById: Function;
   serviceById: any;
   quantities: any;
+  selectedIndices:any
+  setSelectedIndices:Function
 }
 
 const TimeSlots = ({
@@ -15,10 +18,14 @@ const TimeSlots = ({
   setServiceById,
   serviceById,
   quantities,
+  selectedIndices,
+  setSelectedIndices
 }: TimeSlotsProps) => {
   // const { selectedDate, setServiceById, serviceById, quantities } =
   //   useContext(ShopContext);
-
+//   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
+//     new Set()
+//   );
   const { t } = useTranslation();
 
   // find available time slots from daysOpen and availableFromDate
@@ -28,13 +35,41 @@ const TimeSlots = ({
       selectedDate.date.isAfter(item.availableFromDate)
   );
 
-  console.log(slotArrays?.slotsTime.find((item: any) => item.isSelected));
+  const handleSelectTime = (item: any, index: number) => {
+    setSelectedIndices((prevSelectedIndices:any) => {
+      const newSelectedIndices = new Set(prevSelectedIndices);
+      if (newSelectedIndices.has(index)) {
+        newSelectedIndices.delete(index);
+      } else {
+        newSelectedIndices.add(index);
+      }
+      return newSelectedIndices;
+    });
+    setServiceById({
+      ...serviceById,
+      bookingSlots: serviceById?.bookingSlots.map((kk: any) => {
+        if (kk.daysOpen.includes(selectedDate.date.format("dddd"))) {
+          return {
+            ...kk,
+            slotsTime: kk.slotsTime?.map((mm: any) => {
+              if (mm.startTime === item.startTime) {
+                return { ...mm, isSelected: !mm.isSelected };
+              } else {
+                return { ...mm, isSelected: mm.isSelected };
+              }
+            }),
+          };
+        } else {
+          return kk;
+        }
+      }),
+    });
+  };
 
   return (
-    <div id="times" className="mt-5 p-5 col-span-2">
+    <div id="times" className="mt-5 col-span-2">
       <h2 className="text-[17px] font-semibold">
         {moment(selectedDate.date).format("ll")}
-        <p>{t("time")}</p>
       </h2>
       <div
         className={`grid gap-4 mt-2 ${
@@ -47,47 +82,39 @@ const TimeSlots = ({
       >
         {slotArrays?.slotsTime.length > 0 ? (
           slotArrays?.slotsTime.map((ii: any, jj: number) => {
-            const index = slotArrays?.slotsTime.findIndex(
-              (item: any) => item.isSelected
-            );
-            const isAbleExtend =
-              index === jj || index - 1 === jj || index + 1 === jj;
-              // && slotArrays?.slotsTime.find((item: any) => item.isSelected) &&
-              // isAbleExtend
+            // check if the time slot is available, not full
+            const isAvailiable = ii?.capacity >= quantities.quantities;
+            // get selected index
+            const isSelected = selectedIndices.has(jj);
+            const isPrevious = selectedIndices.has(jj + 1);
+            const isNext = selectedIndices.has(jj - 1);
+
+            let className = "";
+            if (isSelected) {
+              className = "bg-[#006CE31A] border-[#003B95] text-[#003B95]";
+            } else if (isPrevious && isAvailiable) {
+              className = "previous";
+            } else if (isNext && isAvailiable) {
+              className = "next";
+            } else if (!isAvailiable) {
+              className = "text-[#8C8C8C] bg-[#8B8B8B33]";
+            }else if(!isSelected && !isNext && !isPrevious && selectedIndices.size > 0){
+				className="text-[#8C8C8C] bg-[#8B8B8B33]"
+			}
+
             return (
               <div
                 key={jj}
-                className={`flex flex-col border-2 rounded-lg text-center p-3 ${
-                  ii?.capacity >= quantities.quantities
-                    ? "cursor-pointer"
-                    : "text-[#8C8C8C] bg-[#8B8B8B33]"
+                // className={`${className} border-2`}
+                className={`flex flex-col border-2 rounded-lg text-center p-3 cursor-pointer ${
+                  !isAvailiable && "text-[#8C8C8C] bg-[#8B8B8B33]"
                 } ${
-                  ii.isSelected &&
+                  isSelected &&
                   "bg-[#006CE31A] border-[#003B95] text-[#003B95]"
                 }}`}
                 onClick={() => {
-                  if (ii?.capacity >= quantities.quantities) {
-                    setServiceById({
-                      ...serviceById,
-                      bookingSlots: serviceById?.bookingSlots.map((kk: any) => {
-                        if (
-                          kk.daysOpen.includes(selectedDate.date.format("dddd"))
-                        ) {
-                          return {
-                            ...kk,
-                            slotsTime: kk.slotsTime?.map((mm: any) => {
-                              if (mm.startTime === ii.startTime) {
-                                return { ...mm, isSelected: true };
-                              } else {
-                                return { ...mm, isSelected: false };
-                              }
-                            }),
-                          };
-                        } else {
-                          return kk;
-                        }
-                      }),
-                    });
+                  if (isAvailiable) {
+                    handleSelectTime(ii, jj);
                   }
                 }}
               >

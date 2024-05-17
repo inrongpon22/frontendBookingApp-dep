@@ -15,7 +15,7 @@ const ServiceOptions = ({services, setServices}:ServiceOptionsProps) => {
   const {t}= useTranslation();
 
   return (
-    <div id="service-option" className="p-5">
+    <div id="service-option">
       <h2 className="text-[20px] font-semibold">{t("serviceOptions")}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
         {services?.map((item: any, index: number) => {
@@ -42,9 +42,9 @@ const ServiceOptions = ({services, setServices}:ServiceOptionsProps) => {
               <div className="">
                 <p className="flex justify-between">
                   <span className="font-bold text-[14px]">{item.title}</span>
-                  <span>
-                    <span className="font-bold text-[14px]">{item.price}</span>
-                    <span className="font-normal"> / person</span>
+                  <span className="text-end">
+                    <span className="font-bold text-[14px]">{item.price}฿</span>
+                    <span className="font-normal"> / คน</span>
                   </span>
                 </p>
                 <div className="">

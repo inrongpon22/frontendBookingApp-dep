@@ -107,29 +107,32 @@ const ManualBooking = () => {
   return (
     <>
       <Loading openLoading={servByIdLoading} />
-      <ServiceOptions services={services} setServices={setServices} />
 
-      <Quantity
-        quantities={quantities}
-        setQuantities={setQuantities}
-        serviceById={serviceById}
-      />
+      <div className={`flex flex-col gap-5`}>
+        <ServiceOptions services={services} setServices={setServices} />
 
-      <Calendar
-        calendar={calendar}
-        setCalendar={setCalendar}
-        dateArr={dateArr}
-        setDateArr={setDateArr}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-      />
+        <Quantity
+          quantities={quantities}
+          setQuantities={setQuantities}
+          serviceById={serviceById}
+        />
 
-      <TimeSlots
-        selectedDate={selectedDate}
-        setServiceById={setServiceById}
-        serviceById={serviceById}
-        quantities={quantities}
-      />
+        <Calendar
+          calendar={calendar}
+          setCalendar={setCalendar}
+          dateArr={dateArr}
+          setDateArr={setDateArr}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+
+        <TimeSlots
+          selectedDate={selectedDate}
+          setServiceById={setServiceById}
+          serviceById={serviceById}
+          quantities={quantities}
+        />
+      </div>
 
       <div className="flex flex-col justify-center items-center my-5">
         <button

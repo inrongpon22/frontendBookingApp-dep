@@ -64,7 +64,7 @@ const Calendar = ({
   }, [calendar]);
 
   return (
-    <div id="calendar" className="relative mt-5 p-5 col-span-2">
+    <div id="calendar" className="relative mt-5 col-span-2">
       {/* starts:: button */}
       <div className="flex justify-between">
         <button

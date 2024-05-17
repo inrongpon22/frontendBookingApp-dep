@@ -8,7 +8,7 @@ import { Chip } from "@mui/material";
 const ShopInformation = () => {
   const { shopDetail } = useContext(ShopContext);
   return (
-    <div className="relative my-auto p-5">
+    <div className="relative my-auto">
       <h1 className="text-[25px] font-semibold">{shopDetail?.title}</h1>
       <span className="text-[14px] font-normal">
         {shopDetail?.description || "No detail for this shop"}

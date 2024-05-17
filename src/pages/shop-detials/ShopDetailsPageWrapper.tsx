@@ -67,6 +67,10 @@ const ShopDetailsPageWrapper = () => {
   const [services, setServices] = useState<serviceTypes[]>([]);
   const [serviceById, setServiceById] = useState<any>();
 
+  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
+    new Set()
+  );
+
   const slotArrays = serviceById?.bookingSlots.find(
     (item: any) =>
       item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
@@ -122,7 +126,7 @@ const ShopDetailsPageWrapper = () => {
         services.find((item: any) => item.isSelected)?.id
       }/${selectedDate.date.format("YYYY-MM-DD")}`,
     (url: string) =>
-      axios.get(url).then((res) =>
+      axios.get(url).then((res) => {
         setServiceById({
           ...res.data,
           bookingSlots: res.data.bookingSlots.map((item: any) => {
@@ -133,13 +137,33 @@ const ShopDetailsPageWrapper = () => {
               }),
             };
           }),
-        })
-      ),
+        });
+        setSelectedIndices(new Set());
+      }),
     {
       revalidateOnFocus: false,
       loadingTimeout: 0,
     }
   );
+
+  // useMemo(() => {
+  //   if (
+  //     // if today not includes days open, auto select next available date
+  //     services.length > 0 &&
+  //     !services
+  //       .find((item: any) => item.isSelected)
+  //       ?.daysOpen?.includes(selectedDate.date.format("dddd"))
+  //   ) {
+  //     const nextavailable = dateArr.filter((item: any) =>
+  //       services
+  //         .find((item: any) => item.isSelected)
+  //         ?.daysOpen?.includes(item.format("dddd"))
+  //     )[0];
+  //     setSelectedDate({ date: nextavailable });
+  //   } else {
+  //     setSelectedDate({ date: moment() });
+  //   }
+  // }, [services]);
 
   // browser tab title
   useEffect(() => {
@@ -177,34 +201,40 @@ const ShopDetailsPageWrapper = () => {
         {/* loading progress */}
         <Loading openLoading={servByIdLoading} />
         {/* loading progress */}
-        <div className="relative lg:grid lg:grid-cols-2">
+        <div className="">
           <Slideshow data={shopDetail?.imagesURL || []} />
 
-          <ShopInformation />
+          <div className={`flex flex-col gap-5 p-5`}>
+            <ShopInformation />
 
-          <ServiceOptions services={services} setServices={setServices} />
+            <ServiceOptions services={services} setServices={setServices} />
 
-          <Quantity
-            quantities={quantities}
-            setQuantities={setQuantities}
-            serviceById={serviceById}
-          />
+            <Quantity
+              quantities={quantities}
+              setQuantities={setQuantities}
+              serviceById={serviceById}
+              selectedDate={selectedDate}
+              setServiceById={setServiceById}
+            />
 
-          <Calendar
-            calendar={calendar}
-            setCalendar={setCalendar}
-            dateArr={dateArr}
-            setDateArr={setDateArr}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
+            <Calendar
+              calendar={calendar}
+              setCalendar={setCalendar}
+              dateArr={dateArr}
+              setDateArr={setDateArr}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
 
-          <TimeSlots
-            selectedDate={selectedDate}
-            setServiceById={setServiceById}
-            serviceById={serviceById}
-            quantities={quantities}
-          />
+            <TimeSlots
+              selectedDate={selectedDate}
+              setServiceById={setServiceById}
+              serviceById={serviceById}
+              quantities={quantities}
+              selectedIndices={selectedIndices}
+              setSelectedIndices={setSelectedIndices}
+            />
+          </div>
 
           <div className="flex flex-col justify-center items-center my-5">
             <button
@@ -221,6 +251,7 @@ const ShopDetailsPageWrapper = () => {
                 if (
                   slotArrays?.slotsTime.filter((item: any) => item.isSelected)
                 ) {
+                  // console.log(serviceById)
                   if (token) {
                     setModalState("booking-detail-preview");
                     setIsShowDialog(true);

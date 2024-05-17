@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 // import { globalConfirmation } from "../../helper/alerts";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
@@ -19,7 +19,6 @@ import ConfirmCard from "../../components/dialog/ConfirmCard";
 
 const BookingSummaryWrapper = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const query = useQuery();
   const { bookingId } = useParams(); // bookingId click from my-bookings
 
@@ -104,7 +103,8 @@ const BookingSummaryWrapper = () => {
       axios
         .post(url, { accessCode: query.get("accessCode") })
         .then((res) => res.data[0])
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err)),
+    { revalidateOnFocus: false }
   );
 
   const bookingDatas = bookingFromAccessCode
@@ -124,68 +124,46 @@ const BookingSummaryWrapper = () => {
   };
 
   useEffect(() => {
-    if (location.state?.data.reservationId && location.state?.data.serviceId) {
-      document.title = t("title:bookingSuccess");
-      toast.success(t("noti:booking:create:success"));
-      setLists([
-        {
-          label: t("what"),
-          text: location.state?.lists.what,
-        },
-        {
-          label: t("when"),
-          text: location.state?.lists.when,
-        },
-        {
-          label: t("where"),
-          text: location.state?.lists.where,
-        },
-        {
-          label: t("who"),
-          text: location.state?.lists.who,
-        },
-        {
-          label: t("price"),
-          text: location.state?.lists.price,
-        },
-        {
-          label: t("notes"),
-          text: location.state?.lists.note,
-        },
-      ]);
-    } else {
-      document.title = t("title:myBookings");
-      setLists([
-        {
-          label: t("what"),
-          text: bookingDatas?.title,
-        },
-        {
-          label: t("when"),
-          text: `${moment(bookingDatas?.bookingDate).format(
-            "dddd, MMMM D, YYYY"
-          )}`,
-        },
-        {
-          label: t("where"),
-          text: bookingDatas?.address,
-        },
-        {
-          label: t("who"),
-          text: `${bookingDatas ? bookingDatas?.userName : ""} (${
-            bookingDatas ? bookingDatas?.guestNumber : 0
-          } person)`,
-        },
-        {
-          label: t("price"),
-          text: bookingDatas?.price,
-        },
-        {
-          label: t("notes"),
-          text: bookingDatas?.remark ? bookingDatas?.remark : "-",
-        },
-      ]);
-    }
+    document.title = t("title:myBookings");
+    setLists([
+      {
+        label: t("store"),
+        text: bookingDatas?.businessName,
+      },
+      {
+        label: t("services"),
+        text: bookingDatas?.title,
+      },
+      {
+        label: t("date"),
+        text: `${moment(bookingDatas?.bookingDate).format(
+          "dddd, MMMM D, YYYY"
+        )}`,
+      },
+      {
+        label: t("time"),
+        text: `${bookingDatas?.startTime.slice(
+          0,
+          -3
+        )} - ${bookingDatas?.endTime.slice(0, -3)}`,
+      },
+      {
+        label: t("guests"),
+        text: bookingDatas?.guestNumber,
+      },
+      {
+        label: t("who"),
+        text: bookingDatas ? bookingDatas?.userName : "",
+      },
+      {
+        label: t("phoneNumbers"),
+        text: bookingDatas?.phoneNumber ? bookingDatas?.phoneNumber : "-",
+      },
+      {
+        label: t("notes"),
+        text: bookingDatas?.remark ? bookingDatas?.remark : "-",
+      },
+    ]);
   }, [bookingById, bookingFromAccessCode]);
 
   return (
