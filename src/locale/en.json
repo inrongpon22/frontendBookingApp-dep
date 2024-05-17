@@ -3,8 +3,8 @@
         "loading": "Loading",
         "numberOfGuests": "Number of guest (s)",
         "serviceOptions": "Service Options",
-        "store":"Store",
-    "time": "Time",
+        "store": "Store",
+        "time": "Time",
         "available": "Available",
         "full": "Full",
         "reviewDetails": "Please review details carefully",
@@ -79,7 +79,8 @@
         "busineessRejectedSuccessful": "Rejected successfully",
         "dayOff": "Day-off",
         "addDayOff": "Add Day-off",
-        "discardChanges": "Discard Changes?"
+        "discardChanges": "Discard Changes?",
+        "conceptWord": "Make bookings easy"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -94,7 +95,8 @@
         "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
         "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection.",
         "discardChanges": "Are you sure you want to discard the changes?",
-        "desDeleteServiceF": "Once deleted, the service time will be removed from the system."
+        "desDeleteServiceF": "Once deleted, the service time will be removed from the system.",
+        "desConceptWord": "Easily plan appointments, manage customer bookings, track availability, and issue reminders all-in-one app."
     },
     "button": {
         "cancel": "Cancel",
