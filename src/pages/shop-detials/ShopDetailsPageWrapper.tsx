@@ -26,7 +26,6 @@ import ShopInformation from "../../components/shop-details/ShopInformation";
 import Loading from "../../components/dialog/Loading";
 
 const theme = createTheme({
-  // create theme for custom color mui
   palette: {
     info: {
       main: "#E6F1FD",
@@ -115,7 +114,6 @@ const ShopDetailsPageWrapper = () => {
           })
         )
       ),
-    { revalidateOnFocus: false }
   );
 
   // get time slots by service businessId
@@ -140,30 +138,7 @@ const ShopDetailsPageWrapper = () => {
         });
         setSelectedIndices(new Set());
       }),
-    {
-      revalidateOnFocus: false,
-      loadingTimeout: 0,
-    }
   );
-
-  // useMemo(() => {
-  //   if (
-  //     // if today not includes days open, auto select next available date
-  //     services.length > 0 &&
-  //     !services
-  //       .find((item: any) => item.isSelected)
-  //       ?.daysOpen?.includes(selectedDate.date.format("dddd"))
-  //   ) {
-  //     const nextavailable = dateArr.filter((item: any) =>
-  //       services
-  //         .find((item: any) => item.isSelected)
-  //         ?.daysOpen?.includes(item.format("dddd"))
-  //     )[0];
-  //     setSelectedDate({ date: nextavailable });
-  //   } else {
-  //     setSelectedDate({ date: moment() });
-  //   }
-  // }, [services]);
 
   // browser tab title
   useEffect(() => {

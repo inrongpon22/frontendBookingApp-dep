@@ -42,8 +42,6 @@ function App() {
             element={<BookingSummaryWrapper />}
           />
 
-
-
           {/* business */}
           <Route path="/" element={<BusinessAuth />} />
           <Route

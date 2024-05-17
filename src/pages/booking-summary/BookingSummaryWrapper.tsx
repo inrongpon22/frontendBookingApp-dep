@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import { globalConfirmation } from "../../helper/alerts";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
@@ -19,7 +19,6 @@ import ConfirmCard from "../../components/dialog/ConfirmCard";
 
 const BookingSummaryWrapper = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const query = useQuery();
     const { bookingId } = useParams(); // bookingId click from my-bookings
 
@@ -113,17 +112,17 @@ const BookingSummaryWrapper = () => {
                 .catch((err) => console.log(err))
     );
 
-  const { data: bookingFromAccessCode } = useSWR(
-    bookingId &&
-      query.get("accessCode") &&
-      `${app_api}/getReservationByIdFromMessage/${bookingId}`,
-    (url: string) =>
-      axios
-        .post(url, { accessCode: query.get("accessCode") })
-        .then((res) => res.data[0])
-        .catch((err) => console.log(err)),
-    { revalidateOnFocus: false }
-  );
+    const { data: bookingFromAccessCode } = useSWR(
+        bookingId &&
+            query.get("accessCode") &&
+            `${app_api}/getReservationByIdFromMessage/${bookingId}`,
+        (url: string) =>
+            axios
+                .post(url, { accessCode: query.get("accessCode") })
+                .then((res) => res.data[0])
+                .catch((err) => console.log(err)),
+        { revalidateOnFocus: false }
+    );
 
     const bookingDatas = bookingFromAccessCode
         ? bookingFromAccessCode
@@ -141,48 +140,50 @@ const BookingSummaryWrapper = () => {
             });
     };
 
-  useEffect(() => {
-    document.title = t("title:myBookings");
-    setLists([
-      {
-        label: t("store"),
-        text: bookingDatas?.businessName,
-      },
-      {
-        label: t("services"),
-        text: bookingDatas?.title,
-      },
-      {
-        label: t("date"),
-        text: `${moment(bookingDatas?.bookingDate).format(
-          "dddd, MMMM D, YYYY"
-        )}`,
-      },
-      {
-        label: t("time"),
-        text: `${bookingDatas?.startTime.slice(
-          0,
-          -3
-        )} - ${bookingDatas?.endTime.slice(0, -3)}`,
-      },
-      {
-        label: t("guests"),
-        text: bookingDatas?.guestNumber,
-      },
-      {
-        label: t("who"),
-        text: bookingDatas ? bookingDatas?.userName : "",
-      },
-      {
-        label: t("phoneNumbers"),
-        text: bookingDatas?.phoneNumber ? bookingDatas?.phoneNumber : "-",
-      },
-      {
-        label: t("notes"),
-        text: bookingDatas?.remark ? bookingDatas?.remark : "-",
-      },
-    ]);
-  }, [bookingById, bookingFromAccessCode]);
+    useEffect(() => {
+        document.title = t("title:myBookings");
+        setLists([
+            {
+                label: t("store"),
+                text: bookingDatas?.businessName,
+            },
+            {
+                label: t("services"),
+                text: bookingDatas?.title,
+            },
+            {
+                label: t("date"),
+                text: `${moment(bookingDatas?.bookingDate).format(
+                    "dddd, MMMM D, YYYY"
+                )}`,
+            },
+            {
+                label: t("time"),
+                text: `${bookingDatas?.startTime.slice(
+                    0,
+                    -3
+                )} - ${bookingDatas?.endTime.slice(0, -3)}`,
+            },
+            {
+                label: t("guests"),
+                text: bookingDatas?.guestNumber,
+            },
+            {
+                label: t("who"),
+                text: bookingDatas ? bookingDatas?.userName : "",
+            },
+            {
+                label: t("phoneNumbers"),
+                text: bookingDatas?.phoneNumber
+                    ? bookingDatas?.phoneNumber
+                    : "-",
+            },
+            {
+                label: t("notes"),
+                text: bookingDatas?.remark ? bookingDatas?.remark : "-",
+            },
+        ]);
+    }, [bookingById, bookingFromAccessCode]);
 
     return (
         <>
@@ -220,7 +221,8 @@ const BookingSummaryWrapper = () => {
                                     bookingDatas?.status === "declinded"
                                         ? "text-gray-500"
                                         : ""
-                                }`}>
+                                }`}
+                            >
                                 <div className="col-span-2 font-semibold">
                                     {item.label}:
                                 </div>
@@ -238,7 +240,8 @@ const BookingSummaryWrapper = () => {
                         bookingDatas?.status === "declinded"
                             ? "flex gap-3"
                             : ""
-                    }>
+                    }
+                >
                     <button
                         type="button"
                         className={`w-full p-2 mt-5 rounded-lg ${
@@ -262,7 +265,8 @@ const BookingSummaryWrapper = () => {
                                     },
                                 }
                             )
-                        }>
+                        }
+                    >
                         {t("button:goToMyBookingButton")}
                     </button>
                     {/* re-book button */}
@@ -276,7 +280,8 @@ const BookingSummaryWrapper = () => {
                         }`}
                         onClick={() =>
                             navigate(`/details/${bookingDatas?.businessId}`)
-                        }>
+                        }
+                    >
                         {t("button:rebook")}
                     </button>
                     {/* re-book button */}
@@ -289,13 +294,15 @@ const BookingSummaryWrapper = () => {
                         bookingDatas?.status === "declinded"
                             ? "hidden"
                             : "flex justify-center"
-                    }>
+                    }
+                >
                     <span className="py-5 w-2/3 text-center">
                         {t("fragment:needTo")}{" "}
                         <button
                             type="button"
                             className="underline"
-                            onClick={() => setShowConfirmation(true)}>
+                            onClick={() => setShowConfirmation(true)}
+                        >
                             {t("fragment:cancel")}
                         </button>{" "}
                         {t("fragment:aBooking")}?

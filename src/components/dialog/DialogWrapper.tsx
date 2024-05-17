@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import BookingApproveResult from "./BookingApproveResult";
 import Loading from "./Loading";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
+import ManualBookingPreview from "./ManualBookingPreview";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -198,7 +199,10 @@ const DialogWrapper = ({
         return <BusinessProfileMoreOptions setState={setDialogState} />;
 
       case "manual-booking":
-        return <ManualBooking />;
+        return <ManualBooking setModalState={setDialogState} />;
+
+      // case "manual-booking-preview":
+      //   return <ManualBookingPreview />;
 
       default:
         break;

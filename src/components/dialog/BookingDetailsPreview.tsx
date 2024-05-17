@@ -98,8 +98,6 @@ const BookingDetailsPreview = () => {
   const getFirst = filterSelected[0];
   const getLast = filterSelected[filterSelected?.length - 1];
 
-  console.log(getFirst, getLast);
-
   return (
     <section>
       <div className="">

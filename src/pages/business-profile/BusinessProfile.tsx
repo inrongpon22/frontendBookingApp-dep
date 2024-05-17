@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
@@ -16,11 +16,16 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import Loading from "../../components/dialog/Loading";
 import { Ireservation } from "../../interface/reservation";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const BusinessProfile = () => {
   const { businessId } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const {number} = useContext(GlobalContext)
+
+  console.log(number)
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [dialogState, setDialogState] = useState<string | undefined>(
