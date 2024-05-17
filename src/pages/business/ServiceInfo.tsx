@@ -132,10 +132,10 @@ export default function ServiceInfo(props: IProps) {
         <div>
             <ConfirmCard
                 open={open}
-                title={"Discard changes?"}
-                description={"Are you sure you want to discard the changes?"}
-                bntConfirm={"Discard"}
-                bntBack={"Cancel"}
+                title={"ยกเลิกการเปลี่ยนแปลงใช่ไหม"}
+                description={"ข้อมูลที่คุณเพิ่มจะถูกลบอย่างถาวร"}
+                bntConfirm={"เปลี่ยนแปลง"}
+                bntBack={t("button:cancel")}
                 handleClose={handleCloseConfirm}
                 handleConfirm={handleCloseFrom}
             />
@@ -147,7 +147,7 @@ export default function ServiceInfo(props: IProps) {
             </Drawer>
             <div className="pr-4 pl-4 pt-6">
                 <Header
-                    context={"Add new service"}
+                    context={"เพิ่มบริการใหม่"}
                     isClose={props.isClose}
                     handleClose={handleOnClose}
                     isTyping={isTyping}
@@ -202,6 +202,7 @@ export default function ServiceInfo(props: IProps) {
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            maxLength={100}
                         />
                         {formik.touched.serviceDescription &&
                         formik.errors.serviceDescription ? (
