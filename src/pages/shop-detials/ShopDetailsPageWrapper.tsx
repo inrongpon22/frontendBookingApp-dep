@@ -24,6 +24,7 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
 import Loading from "../../components/dialog/Loading";
+import { getServices } from "../../api/service";
 
 const theme = createTheme({
   palette: {
@@ -139,6 +140,10 @@ const ShopDetailsPageWrapper = () => {
         setSelectedIndices(new Set());
       }),
   );
+
+  const {servicesss} = getServices();
+
+  console.log(servicesss)
 
   // browser tab title
   useEffect(() => {

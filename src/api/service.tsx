@@ -6,6 +6,8 @@ import {
     IServiceEditTime,
     IServiceShowHide,
 } from "../pages/business/interfaces/service";
+import useSWR from "swr";
+import { app_api } from "../helper/url";
 
 export const addService = async (serviceData: InsertService, token: string) => {
     token = token.replace(/"/g, "");
@@ -26,7 +28,11 @@ export const addService = async (serviceData: InsertService, token: string) => {
     }
 };
 
-export const updateService = async (serviceId: number, serviceData: any, token: string) => {
+export const updateService = async (
+    serviceId: number,
+    serviceData: any,
+    token: string
+) => {
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(
@@ -52,7 +58,8 @@ export const getServiceByBusinessId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/getListServiceByBusinessId/${businessId}?page=1&limit=10`,
             {
                 headers: {
@@ -72,7 +79,8 @@ export const deleteService = async (serviceId: number, token: string) => {
     token = token.replace(/"/g, "");
     try {
         const response = await axios.put(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/deleteServiceByHidden/${serviceId}`,
             {},
             {
@@ -96,7 +104,8 @@ export const getServiceByServiceId = async (
     token = token.replace(/"/g, "");
     try {
         const services = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/getServiceByServiceId/${serviceId}`,
             {
                 headers: {
@@ -167,7 +176,8 @@ export const updateServiceShowHide = async (
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/updateServiceShowHide/${serviceId}`,
             serviceData,
             {
@@ -181,4 +191,24 @@ export const updateServiceShowHide = async (
         console.error(error);
         throw error;
     }
+};
+
+export const getServices = () => {
+    const { data, error, isLoading } = useSWR(
+        `${app_api}/services`,
+        (url: string) =>
+            axios
+                .get(url, {
+                    headers: {
+                        authorization: localStorage.getItem("token"),
+                    },
+                })
+                .then((res) => res.data)
+    );
+
+    return {
+        servicesss: data,
+        servicesError: error,
+        servicesLoading: isLoading,
+    };
 };
