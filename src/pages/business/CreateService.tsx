@@ -51,22 +51,23 @@ export default function CreateService(props: IProps) {
 
     useEffect(() => {
         const serviceTime = JSON.parse(
-            localStorage.getItem("serviceTime") ||
-                JSON.stringify([
-                    {
-                        daysOpen: [],
-                        selectedSlots: [],
-                        duration: 1,
-                        openTime: "",
-                        closeTime: "",
-                        guestNumber: 1,
-                        manualCapacity: [],
-                        availableFromDate: new Date()
-                            .toISOString()
-                            .split("T")[0],
-                        availableToDate: "",
-                    },
-                ])
+            localStorage.getItem("serviceTime") || "[]"
+            // ||
+            //     JSON.stringify([
+            //         {
+            //             daysOpen: [],
+            //             selectedSlots: [],
+            //             duration: 1,
+            //             openTime: "",
+            //             closeTime: "",
+            //             guestNumber: 1,
+            //             manualCapacity: [],
+            //             availableFromDate: new Date()
+            //                 .toISOString()
+            //                 .split("T")[0],
+            //             availableToDate: "",
+            //         },
+            //     ])
         ) as IServiceTime[];
         setServiceTime(serviceTime);
     }, [refresh]);
@@ -128,6 +129,9 @@ export default function CreateService(props: IProps) {
         const newServiceTime = [...serviceTime];
         newServiceTime.splice(index, 1);
         localStorage.setItem("serviceTime", JSON.stringify(newServiceTime));
+        if (newServiceTime.length === 0) {
+            localStorage.removeItem("serviceTime");
+        }
         setRefresh(!refresh);
     };
 
@@ -227,20 +231,21 @@ export default function CreateService(props: IProps) {
                     style={{ marginBottom: "20px" }}
                     className="mt-4 flex flex-col gap-3">
                     <ServiceCard handleEdit={handleEditService} />
-                    {serviceTime.map((time, index) => (
-                        <div
-                            onClick={() =>
-                                props.handleEdit && props.handleEdit(index)
-                            }
-                            key={index}>
-                            <TimeCard
-                                index={index}
-                                serviceTime={time}
-                                handleClose={handleAddTime}
-                                handleDelete={handleDelete}
-                            />
-                        </div>
-                    ))}
+                    {serviceTime &&
+                        serviceTime.map((time, index) => (
+                            <div
+                                onClick={() =>
+                                    props.handleEdit && props.handleEdit(index)
+                                }
+                                key={index}>
+                                <TimeCard
+                                    index={index}
+                                    serviceTime={time}
+                                    handleClose={handleAddTime}
+                                    handleDelete={handleDelete}
+                                />
+                            </div>
+                        ))}
 
                     <button
                         style={{
@@ -254,7 +259,7 @@ export default function CreateService(props: IProps) {
                         className=" items-center gap-1 p-1 ">
                         <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
                         <div className=" font-medium " onClick={handleAddTime}>
-                            เพิ่มเวลาบริการ
+                            {t("button:addServiceTime")}
                         </div>
                     </button>
 

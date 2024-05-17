@@ -1,285 +1,295 @@
 {
-  "translation": {
-    "loading": "Loading",
-    "numberOfGuests": "Number of guest (s)",
-    "serviceOptions": "Service Options",
-    "time": "Time",
-    "available": "Available",
-    "full": "Full",
-    "reviewDetails": "Please review details carefully",
-    "verifyPhoneNumber": "Verify Phone Number",
-    "verifyPhoneNumberDesc": "We will send a code - it help us keep yours account secure.",
-    "otpVerification": "Enter the 6-digit security code we send to you at ******",
-    "dontReceiveCode": "I didn’t receive a code",
-    "bookingDetails": "Booking Details",
-    "services": "Service",
-    "date": "Date",
-    "guests": "Guests",
-    "price": "Price",
-    "what": "What",
-    "where": "Where",
-    "when": "When",
-    "who": "Who",
-    "from": "From",
-    "to": "To",
-    "duration": "Duration",
-    "present": "Present",
-    "bookingName": "Booking Name",
-    "serviceName": "Service name",
-    "serviceDesc": "Service Describe",
-    "serviceSetting": "Service Setting",
-    "isAutoApprove": "Auto-approve reservations",
-    "isHideServPrice": "Hide the service price",
-    "isHideEndDate": "Hide the end time of slot",
-    "phoneNumbers": "Phone Numbers",
-    "numberOfGuest": "Number of Guest",
-    "bookingNumbers": "Booking Numbers",
-    "note": "Note",
-    "notes": "Notes (Optional)",
-    "availableDate": "Available Date",
-    "activeDays": "Active Days",
-    "availableTime": "Available Time",
-    "openSlot": "Open Slot",
-    "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies.",
-    "reset": "Reset",
-    "totalPending": "Total Pending",
-    "pending": "Pending",
-    "approved": "Approved",
-    "cancelled": "Cancelled",
-    "hr": "hr",
-    "Availableguests": "Available guests",
-    "edit": "Edit",
-    "delete": "Delete"
-  },
-  "title": {
-    "bookingIsconfirmed": "The Booking is confirmed",
-    "confirmBookingDialogHeader": "Confirm Booking",
-    "myBookings": "My Bookings",
-    "bookingSuccess": "Booking Success",
-    "bussRootTitle": "Book. Build. Thrive.",
-    "bookingRequests": "Booking Requests",
-    "bookingApproved": "Booking Approved",
-    "bookingCancelled": "Booking Cancelled",
-    "bookingAll": "All Bookings",
-    "bookingApproval": "Booking Approval",
-    "bookingReject": "Booking Reject",
-    "serviceInformation": "Service Information",
-    "createBusiness": "Create Business",
-    "bookingHasApproved": "Booking Confirmed",
-    "bookingHasCancelled": "Booking Canceled",
-    "bookingHasDeclined": "Booking Declined",
-    "bookingHasExpired": "Booking Expired",
-    "waitingForApproval": "Waiting for Confirmation",
-    "businessSetting": "Business Setting",
-    "busineessApprovedSuccessful": "Approved successfully",
-    "busineessRejectedSuccessful": "Rejected successfully",
-    "dayOff": "Day-off",
-    "addDayOff": "Add Day-off"
-  },
-  "desc": {
-    "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
-    "bussRootDesc": "Elevate your booking experience quickly and conveniently.",
-    "viewMoreDetails": "view more details",
-    "bookingRejectDesc": "Tell the customer why they were rejected.",
-    "bookingHasApproved": "Your booking has been automatically confirmed. We will send you the details via SMS.",
-    "bookingHasCancelled": "This appointment has been canceled. You can make a new appointment.",
-    "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
-    "bookingHasExpired": "The available time has already passed. This appointment has expired.",
-    "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
-    "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
-    "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection."
-  },
-  "button": {
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "approve": "Approve",
-    "reject": "Reject",
-    "next": "Next",
-    "backToMyBooking": "Back to My Booking",
-    "rebook": "Rebook",
-    "goToMyBookingButton": "Go to My Booking",
-    "confirmBookingButton": "Confirm & Booking",
-    "continueButton": "Continue",
-    "cancelBookingButton": "Cancel",
-    "bookingFailedBackButton": "Back to main",
-    "bookingFailedTryAgainButton": "Try again",
-    "bookingFailedCloseButton": "Close",
-    "getStartedButton": "Get Started",
-    "overview": "Overview",
-    "overviewSchedule": "Overview Schedule",
-    "setDayoff": "Set Day-off",
-    "shareBookingLink": "Share Booking Link",
-    "businessSetting": "Business Setting",
-    "serviceSetting": "Service Setting",
-    "logout": "Logout",
-    "addMoreTime": "Add More Time",
-    "createNewService": "Create New Service",
-    "switchBusiness": "Switch to another business",
-    "backToMain": "Back to main page",
-    "addNewDayOff": "Add New Day-off"
-  },
-  "noti": {
-    "business": {
-      "logout": {
-        "confirmation": "Are you sure you want to log out",
-        "confirmationDesc": "You will be redirected to the login page."
-      }
+    "translation": {
+        "loading": "Loading",
+        "numberOfGuests": "Number of guest (s)",
+        "serviceOptions": "Service Options",
+        "time": "Time",
+        "available": "Available",
+        "full": "Full",
+        "reviewDetails": "Please review details carefully",
+        "verifyPhoneNumber": "Verify Phone Number",
+        "verifyPhoneNumberDesc": "We will send a code - it help us keep yours account secure.",
+        "otpVerification": "Enter the 6-digit security code we send to you at ******",
+        "dontReceiveCode": "I didn’t receive a code",
+        "bookingDetails": "Booking Details",
+        "services": "Service",
+        "date": "Date",
+        "guests": "Guests",
+        "price": "Price",
+        "what": "What",
+        "where": "Where",
+        "when": "When",
+        "who": "Who",
+        "from": "From",
+        "to": "To",
+        "duration": "Duration",
+        "present": "Present",
+        "bookingName": "Booking Name",
+        "serviceName": "Service name",
+        "serviceDesc": "Service Describe",
+        "serviceSetting": "Service Setting",
+        "isAutoApprove": "Auto-approve reservations",
+        "isHideServPrice": "Hide the service price",
+        "isHideEndDate": "Hide the end time of slot",
+        "phoneNumbers": "Phone Numbers",
+        "numberOfGuest": "Number of Guest",
+        "bookingNumbers": "Booking Numbers",
+        "note": "Note",
+        "notes": "Notes (Optional)",
+        "availableDate": "Available Date",
+        "activeDays": "Active Days",
+        "availableTime": "Available Time",
+        "openSlot": "Open Slot",
+        "termsAndprivacy": "By clicking 'Confirm booking,' you agree to our Terms of Service and Privacy Policy, granting us permission to use your personal information in accordance with our policies.",
+        "reset": "Reset",
+        "totalPending": "Total Pending",
+        "pending": "Pending",
+        "approved": "Approved",
+        "cancelled": "Cancelled",
+        "hr": "hr",
+        "Availableguests": "Available guests",
+        "edit": "Edit",
+        "delete": "Delete",
+        "previewTitle": "Preview as a guest",
+        "person": "person",
+        "askForDelete": "Are you sure you want to delete this service time?"
     },
-    "booking": {
-      "create": {
-        "success": "Booking created successfully",
-        "fail": "Booking created fail"
-      },
-      "cancel": {
-        "success": "Booking cancelled successfully",
-        "fail": "Booking cancelled fail",
-        "confirmation": "Are you sure to cancel booking",
-        "confirmationDesc": "Booking slot will be available to others."
-      },
-      "approve": {
-        "success": "Booking approved successfully",
-        "fail": "Booking approved fail",
-        "confirmation": "Are you sure you want to approve this booking",
-        "confirmationDesc": "Once approved, the customer will be notified, and the booking will be finalized."
-      },
-      "reject": {
-        "success": "Booking has been reject successfully",
-        "fail": "Booking rejected fail",
-        "confirmation": "Are you sure you want to reject this booking",
-        "confirmationDesc": "Once rejected, the customer will be notified, and the booking will be finalized."
-      }
+    "title": {
+        "bookingIsconfirmed": "The Booking is confirmed",
+        "confirmBookingDialogHeader": "Confirm Booking",
+        "myBookings": "My Bookings",
+        "bookingSuccess": "Booking Success",
+        "bussRootTitle": "Book. Build. Thrive.",
+        "bookingRequests": "Booking Requests",
+        "bookingApproved": "Booking Approved",
+        "bookingCancelled": "Booking Cancelled",
+        "bookingAll": "All Bookings",
+        "bookingApproval": "Booking Approval",
+        "bookingReject": "Booking Reject",
+        "serviceInformation": "Service Information",
+        "createBusiness": "Create Business",
+        "bookingHasApproved": "Booking Confirmed",
+        "bookingHasCancelled": "Booking Canceled",
+        "bookingHasDeclined": "Booking Declined",
+        "bookingHasExpired": "Booking Expired",
+        "waitingForApproval": "Waiting for Confirmation",
+        "businessSetting": "Business Setting",
+        "busineessApprovedSuccessful": "Approved successfully",
+        "busineessRejectedSuccessful": "Rejected successfully",
+        "dayOff": "Day-off",
+        "addDayOff": "Add Day-off",
+        "discardChanges": "Discard Changes?"
     },
-    "service":{
-      "delete": {
-        "confirmation": "Are you sure you want to delete this service",
-        "confirmationDesc": "Once deleted, the service will be removed from the system."
-      }
-    }
-  },
-  "form": {
-    "business": {
-      "auth": {
-        "login": "Login to continue"
-      },
-      "create": {
-        "shopName": "Shop Name",
-        "location": "Location",
-        "openTime": "Open Time",
-        "businessNumber": "Business Numbers",
-        "shortDescribe": "Short Describe",
-        "images": "Images"
-      }
-    }
-  },
-  "formValidation": {
-    "business": {
-      "create": {
-        "shopName": {
-          "shopNameReq": "Shop name is required",
-          "shopNameMin": "Shop name must be at least 3 characters",
-          "shopNameMax": "Shop name must be less than 50 characters"
+    "desc": {
+        "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
+        "bussRootDesc": "Elevate your booking experience quickly and conveniently.",
+        "viewMoreDetails": "view more details",
+        "bookingRejectDesc": "Tell the customer why they were rejected.",
+        "bookingHasApproved": "Your booking has been automatically confirmed. We will send you the details via SMS.",
+        "bookingHasCancelled": "This appointment has been canceled. You can make a new appointment.",
+        "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
+        "bookingHasExpired": "The available time has already passed. This appointment has expired.",
+        "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
+        "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
+        "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection.",
+        "discardChanges": "Are you sure you want to discard the changes?",
+        "desDeleteServiceF": "Once deleted, the service time will be removed from the system."
+    },
+    "button": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "approve": "Approve",
+        "reject": "Reject",
+        "next": "Next",
+        "backToMyBooking": "Back to My Booking",
+        "rebook": "Rebook",
+        "goToMyBookingButton": "Go to My Booking",
+        "confirmBookingButton": "Confirm & Booking",
+        "continueButton": "Continue",
+        "cancelBookingButton": "Cancel",
+        "bookingFailedBackButton": "Back to main",
+        "bookingFailedTryAgainButton": "Try again",
+        "bookingFailedCloseButton": "Close",
+        "getStartedButton": "Get Started",
+        "overview": "Overview",
+        "overviewSchedule": "Overview Schedule",
+        "setDayoff": "Set Day-off",
+        "shareBookingLink": "Share Booking Link",
+        "businessSetting": "Business Setting",
+        "serviceSetting": "Service Setting",
+        "logout": "Logout",
+        "addMoreTime": "Add More Time",
+        "createNewService": "Create New Service",
+        "switchBusiness": "Switch to another business",
+        "backToMain": "Back to main page",
+        "addNewDayOff": "Add New Day-off",
+        "leavePreview": "Leave Preview",
+        "back": "Back",
+        "discard": "Discard",
+        "addServiceTime": "Add Service Time"
+    },
+    "noti": {
+        "business": {
+            "logout": {
+                "confirmation": "Are you sure you want to log out",
+                "confirmationDesc": "You will be redirected to the login page."
+            }
         },
-        "phoneNumber": {
-          "phoneNumberReq": "Business phone number is required",
-          "phoneNumberMatch": "Phone number must contain only digits",
-          "phoneNumberMin": "Business phone number must be at least 9 digits",
-          "phoneNumberMax": "Business phone number must be less than 15 digits"
+        "booking": {
+            "create": {
+                "success": "Booking created successfully",
+                "fail": "Booking created fail"
+            },
+            "cancel": {
+                "success": "Booking cancelled successfully",
+                "fail": "Booking cancelled fail",
+                "confirmation": "Are you sure to cancel booking",
+                "confirmationDesc": "Booking slot will be available to others."
+            },
+            "approve": {
+                "success": "Booking approved successfully",
+                "fail": "Booking approved fail",
+                "confirmation": "Are you sure you want to approve this booking",
+                "confirmationDesc": "Once approved, the customer will be notified, and the booking will be finalized."
+            },
+            "reject": {
+                "success": "Booking has been reject successfully",
+                "fail": "Booking rejected fail",
+                "confirmation": "Are you sure you want to reject this booking",
+                "confirmationDesc": "Once rejected, the customer will be notified, and the booking will be finalized."
+            }
         },
-        "location": {
-          "locationReq": "Location is required"
-        },
-        "daysOpen": {
-          "req": "Days open is required"
-        },
-        "openTime": {
-          "req": "Open time is required"
-        },
-        "closeTime": {
-          "req": "Close time is required",
-          "moreThanOpenTime": "Close time must be more than open time"
-        },
+        "service": {
+            "delete": {
+                "confirmation": "Are you sure you want to delete this service",
+                "confirmationDesc": "Once deleted, the service will be removed from the system."
+            }
+        }
+    },
+    "form": {
+        "business": {
+            "auth": {
+                "login": "Login to continue"
+            },
+            "create": {
+                "shopName": "Shop Name",
+                "location": "Location",
+                "openTime": "Open Time",
+                "businessNumber": "Business Numbers",
+                "shortDescribe": "Short Describe",
+                "images": "Images"
+            }
+        }
+    },
+    "formValidation": {
+        "business": {
+            "create": {
+                "shopName": {
+                    "shopNameReq": "Shop name is required",
+                    "shopNameMin": "Shop name must be at least 3 characters",
+                    "shopNameMax": "Shop name must be less than 50 characters"
+                },
+                "phoneNumber": {
+                    "phoneNumberReq": "Business phone number is required",
+                    "phoneNumberMatch": "Phone number must contain only digits",
+                    "phoneNumberMin": "Business phone number must be at least 9 digits",
+                    "phoneNumberMax": "Business phone number must be less than 15 digits"
+                },
+                "location": {
+                    "locationReq": "Location is required"
+                },
+                "daysOpen": {
+                    "req": "Days open is required"
+                },
+                "openTime": {
+                    "req": "Open time is required"
+                },
+                "closeTime": {
+                    "req": "Close time is required",
+                    "moreThanOpenTime": "Close time must be more than open time"
+                },
 
-        "description": {
-          "descriptionMax": "Description must be less than 500 characters"
-        }
-      },
-      "auth": {
-        "phoneNumber": {
-          "phoneNumberReq": "Phone number is required",
-          "phoneNumberMatch": "Phone number must contain only digits",
-          "phoneNumberMin": "Phone number must be at least 10 digits",
-          "phoneNumberMax": "Phone number must be less than 10 digits"
+                "description": {
+                    "descriptionMax": "Description must be less than 500 characters"
+                }
+            },
+            "auth": {
+                "phoneNumber": {
+                    "phoneNumberReq": "Phone number is required",
+                    "phoneNumberMatch": "Phone number must contain only digits",
+                    "phoneNumberMin": "Phone number must be at least 10 digits",
+                    "phoneNumberMax": "Phone number must be less than 10 digits"
+                },
+                "otp": {
+                    "otpReq": "OTP is required",
+                    "otpMatch": "OTP must contain only digits",
+                    "otpMin": "OTP must be 6 digits",
+                    "otpLength": "OTP must be 6 digits"
+                }
+            }
         },
-        "otp": {
-          "otpReq": "OTP is required",
-          "otpMatch": "OTP must contain only digits",
-          "otpMin": "OTP must be 6 digits",
-          "otpLength": "OTP must be 6 digits"
+        "service": {
+            "create": {
+                "serviceName": {
+                    "serviceNameReq": "Service name is required",
+                    "serviceNameMin": "Service name must be at least 2 characters",
+                    "serviceNameMax": "Service name must be less than 50 characters",
+                    "serviceNameFill": "Fill the name of the service"
+                },
+                "serviceDesc": {
+                    "serviceDescReq": "Service description is required",
+                    "serviceDescMin": "Service description must be at least 10 characters",
+                    "serviceDescMax": "Service description must be less than 500 characters",
+                    "serviceDescFill": "Introduce this service to the customer"
+                },
+                "price": {
+                    "priceReq": "Price is required",
+                    "priceMin": "Price must be at least 1"
+                }
+            }
+        },
+        "booking": {
+            "create": {
+                "username": {
+                    "usernameReq": "Username is required",
+                    "usernamesMin": "Username must be at least 2 characters",
+                    "usernameMax": "Username must be less than 50 characters"
+                },
+                "phoneNumbers": {
+                    "phoneNumberMin": "Phone number must be at least 10 digits",
+                    "phoneNumberMax": "Phone number must be less than 10 digits"
+                }
+            }
         }
-      }
     },
-    "service": {
-      "create": {
-        "serviceName": {
-          "serviceNameReq": "Service name is required",
-          "serviceNameMin": "Service name must be at least 2 characters",
-          "serviceNameMax": "Service name must be less than 50 characters",
-          "serviceNameFill": "Fill the name of the service"
-        },
-        "serviceDesc": {
-          "serviceDescReq": "Service description is required",
-          "serviceDescMin": "Service description must be at least 10 characters",
-          "serviceDescMax": "Service description must be less than 500 characters",
-          "serviceDescFill": "Introduce this service to the customer"
-        },
-        "price": {
-          "priceReq": "Price is required",
-          "priceMin": "Price must be at least 1"
-        }
-      }
+    "error": {
+        "required": "required",
+        "invalidPhoneNumber": "invalid phone number",
+        "invalidOTP": "invalid OTP",
+        "bookingFailed": "Booking failed",
+        "bookingFailedMessage": "booking",
+        "noBookingReq": "No booking request",
+        "noTimeSlots": "No time slots available",
+        "noServicesYet": "Your business doesn't have any service, create service frist",
+        "tooManyRequest": "Too many requests. Please try again after 60 seconds."
     },
-    "booking": {
-      "create": {
-        "username": {
-          "usernameReq": "Username is required",
-          "usernamesMin": "Username must be at least 2 characters",
-          "usernameMax": "Username must be less than 50 characters"
-        },
-        "phoneNumbers": {
-          "phoneNumberMin": "Phone number must be at least 10 digits",
-          "phoneNumberMax": "Phone number must be less than 10 digits"
-        }
-      }
+    "fragment": {
+        "needTo": "Need to",
+        "cancel": "Cancelled",
+        "aBooking": "a Booking",
+        "avaiGuest": "Available guest(s) per slot",
+        "manualAdjust": "Manually adjust",
+        "optional": "optional",
+        "amount": "amount",
+        "people": "people"
+    },
+    "placeholder": {
+        "bookingReject": "Ex. The service is not available at the requested time.",
+        "shopName": "Enter your shop name",
+        "location": "Enter your location",
+        "businessNumber": "Enter your business phone numbers",
+        "shortDescribe": "Enter a short description",
+        "serviceName": "Enter your service name",
+        "serviceDesc": "Enter your service description"
     }
-  },
-  "error": {
-    "required": "required",
-    "invalidPhoneNumber": "invalid phone number",
-    "invalidOTP": "invalid OTP",
-    "bookingFailed": "Booking failed",
-    "bookingFailedMessage": "booking",
-    "noBookingReq": "No booking request",
-    "noTimeSlots": "No time slots available",
-    "noServicesYet": "Your business doesn't have any service, create service frist",
-    "tooManyRequest": "Too many requests. Please try again after 60 seconds."
-  },
-  "fragment": {
-    "needTo": "Need to",
-    "cancel": "Cancelled",
-    "aBooking": "a Booking",
-    "avaiGuest": "Available guest(s) per slot",
-    "manualAdjust": "Manually adjust",
-    "optional": "optional",
-    "amount": "amount",
-    "people": "people"
-  },
-  "placeholder": {
-    "bookingReject": "Ex. The service is not available at the requested time.",
-    "shopName": "Enter your shop name",
-    "location": "Enter your location",
-    "businessNumber": "Enter your business phone numbers",
-    "shortDescribe": "Enter a short description",
-    "serviceName": "Enter your service name",
-    "serviceDesc": "Enter your service description"
-  }
 }

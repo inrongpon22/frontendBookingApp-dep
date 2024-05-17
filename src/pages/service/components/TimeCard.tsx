@@ -60,14 +60,15 @@ export default function TimeCard(props: IParams) {
                 <ConfirmCard
                     open={openConfirm}
                     title={t("askForDelete")}
-                    description={`${t("desDeleteServiceF")} ${
-                        props.availableFromDate
-                    } - ${
-                        props.availableToDate == "" ||
-                        props.availableToDate == null
-                            ? t("present")
-                            : props.availableToDate
-                    } ${t("desDeleteServiceL")}`}
+                    // description={`${t("desDeleteServiceF")} ${
+                    //     props.availableFromDate
+                    // } - ${
+                    //     props.availableToDate == "" ||
+                    //     props.availableToDate == null
+                    //         ? t("present")
+                    //         : props.availableToDate
+                    // } ${t("desDeleteServiceL")}`}
+                    description={t("desc:desDeleteServiceF")}
                     bntConfirm={t("delete")}
                     bntBack={t("button:back")}
                     handleClose={handleCloseConfirm}
@@ -165,7 +166,7 @@ export default function TimeCard(props: IParams) {
                             <div
                                 style={{ color: alpha("#000000", 0.5) }}
                                 className="flex justify-between gap-3 items-center p-3">
-                                {`(${element.capacity} คน)`}
+                                {`(${element.capacity} ${t("person")})`}
                             </div>
                         </div>
                     </div>

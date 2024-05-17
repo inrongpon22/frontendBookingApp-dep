@@ -77,12 +77,12 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
         <div className="relative lg:grid lg:grid-cols-2">
             {/* header */}
             <div className="flex justify-between items-center text-white h-[60px] bg-deep-blue px-5">
-                <span className="text-[14px]">ดูตัวอย่างในฐานะแขก</span>
+                <span className="text-[14px]">{t("previewTitle")}</span>
                 <button
                     type="button"
                     className="text-[14px] text-deep-blue bg-white rounded py-1 px-2"
                     onClick={props.handleClose}>
-                    ออกจากการแสดงตัวอย่าง
+                    {t("button:leavePreview")}
                 </button>
             </div>
             {/* header */}
@@ -139,7 +139,7 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                                     </span>
                                     <span className="font-normal">
                                         {" "}
-                                        / person
+                                        / {t("person")}
                                     </span>
                                 </span>
                             </p>

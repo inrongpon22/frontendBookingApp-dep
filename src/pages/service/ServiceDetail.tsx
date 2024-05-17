@@ -206,12 +206,10 @@ export default function ServiceDetail(props: IParams) {
                 open={openConfirm}
                 handleClose={() => setOpenConfirm(false)}
                 handleConfirm={handleConfirmClose}
-                title={"Discard changes?"}
-                description={
-                    "You have unsaved changes. Are you sure you want to discard them?"
-                }
-                bntConfirm={"Discard"}
-                bntBack={"Cancel"}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
             />
             <Loading openLoading={serviceLoading} />
             {modifyServiceInfo &&
