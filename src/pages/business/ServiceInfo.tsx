@@ -125,6 +125,8 @@ export default function ServiceInfo(props: IProps) {
         if (props.handleCloseFromEdit) {
             props.handleCloseFromEdit();
             handleCloseConfirm();
+            localStorage.removeItem("serviceInfo");
+            localStorage.removeItem("serviceTime");
         }
     };
 
@@ -132,10 +134,10 @@ export default function ServiceInfo(props: IProps) {
         <div>
             <ConfirmCard
                 open={open}
-                title={"ยกเลิกการเปลี่ยนแปลงใช่ไหม"}
-                description={"ข้อมูลที่คุณเพิ่มจะถูกลบอย่างถาวร"}
-                bntConfirm={"เปลี่ยนแปลง"}
-                bntBack={t("button:cancel")}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
                 handleClose={handleCloseConfirm}
                 handleConfirm={handleCloseFrom}
             />
