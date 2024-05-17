@@ -29,36 +29,33 @@ const BusinessAuth = () => {
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center h-dvh">
-            <div className="h-screen w-5/6 flex flex-col justify-between items-center">
-                <div className="flex flex-col">
+        <div className="flex flex-col justify-center items-center h-screen">
+            <div className="flex flex-col justify-between items-center h-full w-5/6">
+                <div className="flex flex-col flex-grow justify-center">
                     <div className="flex justify-center my-12">
                         <img
                             src={"./smallLogo.svg"}
                             alt="logo"
-                            style={{
-                                width: "40vw",
-                            }}
+                            className="w-[50vw]"
                         />
                     </div>
-                    <div className="flex flex-col gap-4 items-center">
-                        <div className="text-[32px] font-bold text-center ">
-                            {t("title:conceptWord")}
-                        </div>
-                        <div className="text-center">
-                            {t("desc:desConceptWord")}
-                        </div>
+                </div>
+                <div className="flex flex-col items-center mb-[10vw]">
+                    <div className="text-[32px] font-bold text-center">
+                        {t("title:conceptWord")}
+                    </div>
+                    <div className="text-center">
+                        {t("desc:desConceptWord")}
                     </div>
                 </div>
-
-                <button
-                    type="button"
-                    style={{ marginBottom: "56px" }}
-                    className="py-3 px-10 bg-[#020873] text-white rounded-lg"
-                    onClick={() => setShowDialog(true)}>
-                    {t("button:getStartedButton")}
-                </button>
             </div>
+            <button
+                type="button"
+                style={{ marginBottom: "56px" }}
+                className="py-3 px-10 bg-[#020873] text-white rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
+                onClick={() => setShowDialog(true)}>
+                {t("button:getStartedButton")}
+            </button>
 
             <DialogWrapper
                 show={showDialog}
@@ -72,3 +69,4 @@ const BusinessAuth = () => {
 };
 
 export default BusinessAuth;
+
