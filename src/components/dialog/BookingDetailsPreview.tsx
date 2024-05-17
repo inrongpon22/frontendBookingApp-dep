@@ -2,19 +2,23 @@ import { useContext, useEffect } from "react";
 import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { app_api } from "../../helper/url";
 import toast from "react-hot-toast";
 
 const BookingDetailsPreview = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { shopDetail, services, selectedDate, serviceById, quantities } =
     useContext<any>(ShopContext);
 
   const { formik, setIsLoading } = useContext<any>(DialogContext);
 
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -23,6 +27,10 @@ const BookingDetailsPreview = () => {
     (item: any) =>
       item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
       selectedDate.date.isAfter(item.availableFromDate)
+  );
+
+  const filterSelected = slotArrays?.slotsTime.filter(
+    (item: any) => item.isSelected
   );
 
   useEffect(() => {
@@ -46,29 +54,39 @@ const BookingDetailsPreview = () => {
   }, []);
 
   const createReservation = async () => {
-    await setIsLoading(true)
+    await setIsLoading(true);
+    const selectedArr = slotArrays?.slotsTime.filter(
+      (item: any) => item.isSelected
+    );
     const body = {
       userId: formik.values.userId,
       serviceId: Number(services.find((item: any) => item.isSelected)?.id),
       phoneNumber: formik.values.phoneNumbers,
       remark: formik.values.additionalNotes,
-      startTime: slotArrays?.slotsTime.find((item: any) => item.isSelected)
-        ?.startTime,
-      endTime: slotArrays?.slotsTime.find((item: any) => item.isSelected)
-        ?.endTime,
+      slotTimes: selectedArr.map((item: any) => {
+        return { startTime: item.startTime, endTime: item.endTime };
+      }),
       status: "pending",
-      by: "customer",
+      by: pathname.includes("business") ? "business" : "customer",
       userName: formik.values.username,
       bookingDate: selectedDate.date.format("YYYY-MM-DD"),
       guestNumber: quantities.quantities,
     };
 
     await axios
-      .post(`${app_api}/reservation/th`, body, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .post(
+        `${app_api}/${
+          pathname.includes("business")
+            ? "makeMutiReservationByBus"
+            : "makeMutiReservation"
+        }/${language}`,
+        body,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res) => {
         navigate(`/booking/${res.data.reservationId}`);
       })
@@ -76,6 +94,11 @@ const BookingDetailsPreview = () => {
         toast.error(err.response.data.message);
       });
   };
+
+  const getFirst = filterSelected[0];
+  const getLast = filterSelected[filterSelected?.length - 1];
+
+  console.log(getFirst, getLast);
 
   return (
     <section>
@@ -98,15 +121,7 @@ const BookingDetailsPreview = () => {
           <p className="flex justify-between p-3">
             <span>{t("time")}:</span>
             <span className="text-[14px] font-bold">
-              {
-                slotArrays?.slotsTime.find((item: any) => item.isSelected)
-                  ?.startTime
-              }{" "}
-              -{" "}
-              {
-                slotArrays?.slotsTime.find((item: any) => item.isSelected)
-                  ?.endTime
-              }
+              {`${getFirst?.startTime} - ${getLast?.endTime}`}
             </span>
           </p>
           <p className="flex justify-between p-3">

@@ -5,12 +5,7 @@ export const ShopContext = createContext<any>(null); //create context to store a
 import moment from "moment";
 import "moment/locale/th";
 // styled
-import {
-  Backdrop,
-  CircularProgress,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 // fetcher
 import useSWR from "swr";
 import axios from "axios";
@@ -28,6 +23,7 @@ import Quantity from "../../components/shop-details/Quantity";
 import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
+import Loading from "../../components/dialog/Loading";
 
 const theme = createTheme({
   // create theme for custom color mui
@@ -70,6 +66,10 @@ const ShopDetailsPageWrapper = () => {
   // handle services state
   const [services, setServices] = useState<serviceTypes[]>([]);
   const [serviceById, setServiceById] = useState<any>();
+
+  const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
+    new Set()
+  );
 
   const slotArrays = serviceById?.bookingSlots.find(
     (item: any) =>
@@ -126,7 +126,7 @@ const ShopDetailsPageWrapper = () => {
         services.find((item: any) => item.isSelected)?.id
       }/${selectedDate.date.format("YYYY-MM-DD")}`,
     (url: string) =>
-      axios.get(url).then((res) =>
+      axios.get(url).then((res) => {
         setServiceById({
           ...res.data,
           bookingSlots: res.data.bookingSlots.map((item: any) => {
@@ -137,8 +137,9 @@ const ShopDetailsPageWrapper = () => {
               }),
             };
           }),
-        })
-      ),
+        });
+        setSelectedIndices(new Set());
+      }),
     {
       revalidateOnFocus: false,
       loadingTimeout: 0,
@@ -151,12 +152,12 @@ const ShopDetailsPageWrapper = () => {
   //     services.length > 0 &&
   //     !services
   //       .find((item: any) => item.isSelected)
-  //       ?.daysOpen.includes(selectedDate.date.format("dddd"))
+  //       ?.daysOpen?.includes(selectedDate.date.format("dddd"))
   //   ) {
   //     const nextavailable = dateArr.filter((item: any) =>
   //       services
   //         .find((item: any) => item.isSelected)
-  //         ?.daysOpen.includes(item.format("dddd"))
+  //         ?.daysOpen?.includes(item.format("dddd"))
   //     )[0];
   //     setSelectedDate({ date: nextavailable });
   //   } else {
@@ -198,25 +199,42 @@ const ShopDetailsPageWrapper = () => {
         }}
       >
         {/* loading progress */}
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={servByIdLoading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        <Loading openLoading={servByIdLoading} />
         {/* loading progress */}
-        <div className="relative lg:grid lg:grid-cols-2">
+        <div className="">
           <Slideshow data={shopDetail?.imagesURL || []} />
 
-          <ShopInformation />
+          <div className={`flex flex-col gap-5 p-5`}>
+            <ShopInformation />
 
-          <ServiceOptions />
+            <ServiceOptions services={services} setServices={setServices} />
 
-          <Quantity />
+            <Quantity
+              quantities={quantities}
+              setQuantities={setQuantities}
+              serviceById={serviceById}
+              selectedDate={selectedDate}
+              setServiceById={setServiceById}
+            />
 
-          <Calendar />
+            <Calendar
+              calendar={calendar}
+              setCalendar={setCalendar}
+              dateArr={dateArr}
+              setDateArr={setDateArr}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
 
-          <TimeSlots />
+            <TimeSlots
+              selectedDate={selectedDate}
+              setServiceById={setServiceById}
+              serviceById={serviceById}
+              quantities={quantities}
+              selectedIndices={selectedIndices}
+              setSelectedIndices={setSelectedIndices}
+            />
+          </div>
 
           <div className="flex flex-col justify-center items-center my-5">
             <button
@@ -231,12 +249,13 @@ const ShopDetailsPageWrapper = () => {
               }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
               onClick={() => {
                 if (
-                  slotArrays?.slotsTime.find((item: any) => item.isSelected)
+                  slotArrays?.slotsTime.filter((item: any) => item.isSelected)
                 ) {
-                  if(token){
+                  // console.log(serviceById)
+                  if (token) {
                     setModalState("booking-detail-preview");
                     setIsShowDialog(true);
-                  }else{
+                  } else {
                     setIsShowDialog(true);
                   }
                 }

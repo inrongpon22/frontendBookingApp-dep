@@ -67,7 +67,7 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
   }, [data]);
 
   return (
-    <main className="relative mb-5">
+    <main className="relative">
       {/* <div className="absolute right-3 top-3 z-50">
         <select
           value={language}

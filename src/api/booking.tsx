@@ -5,7 +5,7 @@ export const cancelBooking = async (
   token: string,
   bookingId: number | string | undefined,
   serviceId: string | number,
-  lang:string
+  lang: string
 ) => {
   token = token.replace(/"/g, "");
   try {

@@ -253,6 +253,9 @@ const BookingApproval = (): React.ReactElement => {
     document.title = t("title:bookingApproval");
     if (query.get("accessCode")) {
       setShow(true);
+    }else if(location.state){
+      setShow(true);
+      setBookingDatas(location.state)
     }
   }, []);
 
@@ -407,17 +410,6 @@ const BookingApproval = (): React.ReactElement => {
             )}
           </div>
         </div>
-        {/* <div className="my-3 mx-auto">
-          <Pagination
-            defaultPage={1}
-            count={10}
-            variant="outlined"
-            shape="rounded"
-            onChange={(event: React.ChangeEvent<unknown>, value: number) =>
-              console.log(event, value)
-            }
-          />
-        </div> */}
         <DialogWrapper
           show={show}
           setShow={setShow}
