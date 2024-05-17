@@ -125,6 +125,8 @@ export default function ServiceInfo(props: IProps) {
         if (props.handleCloseFromEdit) {
             props.handleCloseFromEdit();
             handleCloseConfirm();
+            localStorage.removeItem("serviceInfo");
+            localStorage.removeItem("serviceTime");
         }
     };
 
@@ -132,10 +134,10 @@ export default function ServiceInfo(props: IProps) {
         <div>
             <ConfirmCard
                 open={open}
-                title={"Discard changes?"}
-                description={"Are you sure you want to discard the changes?"}
-                bntConfirm={"Discard"}
-                bntBack={"Cancel"}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
                 handleClose={handleCloseConfirm}
                 handleConfirm={handleCloseFrom}
             />
@@ -147,7 +149,7 @@ export default function ServiceInfo(props: IProps) {
             </Drawer>
             <div className="pr-4 pl-4 pt-6">
                 <Header
-                    context={"Add new service"}
+                    context={"เพิ่มบริการใหม่"}
                     isClose={props.isClose}
                     handleClose={handleOnClose}
                     isTyping={isTyping}
@@ -202,6 +204,7 @@ export default function ServiceInfo(props: IProps) {
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            maxLength={100}
                         />
                         {formik.touched.serviceDescription &&
                         formik.errors.serviceDescription ? (

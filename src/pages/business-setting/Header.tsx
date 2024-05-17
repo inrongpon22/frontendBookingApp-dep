@@ -32,10 +32,10 @@ export default function Header(props: IProps) {
         <div className="flex items-center justify-between">
             <ConfirmCard
                 open={open}
-                title={"Discard Changes"}
-                description={"Are you sure you want to discard the changes?"}
-                bntConfirm={"Discard"}
-                bntBack={t("button:cancel")}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
                 handleClose={handleClose}
                 handleConfirm={() => navigate(-1)}
             />

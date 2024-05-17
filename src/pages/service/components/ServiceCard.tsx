@@ -61,8 +61,10 @@ export default function ServiceCard(props: IParams) {
             <ConfirmCard
                 open={openConfirm}
                 title={t("askForDelete")}
-                description={`${t("desDeleteServiceF")} ${props.serviceName
-                    } “ ${t("desDeleteServiceL")}`}
+                // description={`${"การดำเนินการนี้จะลบข้อมูล"} ${
+                //     props.serviceName
+                // } “ ${t("อย่างถาวร")}`}
+                description={t("desc:desDeleteServiceF")}
                 bntConfirm={t("delete")}
                 bntBack={t("button:back")}
                 handleClose={handleCloseConfirm}

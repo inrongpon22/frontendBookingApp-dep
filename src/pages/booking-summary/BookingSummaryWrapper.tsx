@@ -18,82 +18,100 @@ import { cancelBooking } from "../../api/booking";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
 
 const BookingSummaryWrapper = () => {
-  const navigate = useNavigate();
-  const query = useQuery();
-  const { bookingId } = useParams(); // bookingId click from my-bookings
+    const navigate = useNavigate();
+    const location = useLocation();
+    const query = useQuery();
+    const { bookingId } = useParams(); // bookingId click from my-bookings
 
-  const token: string = localStorage.getItem("token") ?? "";
+    const token: string = localStorage.getItem("token") ?? "";
 
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+    const {
+        t,
+        i18n: { language },
+    } = useTranslation();
 
-  const switchStatus = (status: string) => {
-    switch (status) {
-      case "pending":
-        return {
-          title: t("title:waitingForApproval"),
-          desc: t("desc:waitingForApproval"),
-          icon: <HourglassTopIcon style={{ fontSize: 50 }} color="warning" />,
-        };
+    const switchStatus = (status: string) => {
+        switch (status) {
+            case "pending":
+                return {
+                    title: t("title:waitingForApproval"),
+                    desc: t("desc:waitingForApproval"),
+                    icon: (
+                        <HourglassTopIcon
+                            style={{ fontSize: 50 }}
+                            color="warning"
+                        />
+                    ),
+                };
 
-      case "approval":
-        return {
-          title: t("title:bookingHasApproved"),
-          desc: t("desc:bookingHasApproved"),
-          icon: <CheckIcon style={{ fontSize: 50 }} color="success" />,
-        };
+            case "approval":
+                return {
+                    title: t("title:bookingHasApproved"),
+                    desc: t("desc:bookingHasApproved"),
+                    icon: (
+                        <CheckIcon style={{ fontSize: 50 }} color="success" />
+                    ),
+                };
 
-      case "cancel":
-        return {
-          title: t("title:bookingHasCancelled"),
-          desc: t("desc:bookingHasCancelled"),
-          icon: <CloseIcon style={{ fontSize: 50 }} color="error" />,
-        };
+            case "cancel":
+                return {
+                    title: t("title:bookingHasCancelled"),
+                    desc: t("desc:bookingHasCancelled"),
+                    icon: <CloseIcon style={{ fontSize: 50 }} color="error" />,
+                };
 
-      case "expired":
-        return {
-          title: t("title:waitingForApproval"),
-          desc: t("desc:waitingForApproval"),
-          icon: <QueryBuilderIcon style={{ fontSize: 50 }} color="secondary" />,
-        };
+            case "expired":
+                return {
+                    title: t("title:waitingForApproval"),
+                    desc: t("desc:waitingForApproval"),
+                    icon: (
+                        <QueryBuilderIcon
+                            style={{ fontSize: 50 }}
+                            color="secondary"
+                        />
+                    ),
+                };
 
-      case "declinded":
-        return {
-          title: t("title:bookingHasDeclined"),
-          desc: t("desc:bookingHasDeclined"),
-          icon: <SentimentNeutralIcon style={{ fontSize: 50 }} color="info" />,
-        };
+            case "declinded":
+                return {
+                    title: t("title:bookingHasDeclined"),
+                    desc: t("desc:bookingHasDeclined"),
+                    icon: (
+                        <SentimentNeutralIcon
+                            style={{ fontSize: 50 }}
+                            color="info"
+                        />
+                    ),
+                };
 
-      default:
-        break;
-    }
-  };
+            default:
+                break;
+        }
+    };
 
-  const [lists, setLists] = useState<
-    {
-      label: string;
-      text: string;
-    }[]
-  >([]);
+    const [lists, setLists] = useState<
+        {
+            label: string;
+            text: string;
+        }[]
+    >([]);
 
-  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
-  const { data: bookingById } = useSWR(
-    bookingId &&
-      !query.get("accessCode") &&
-      `${app_api}/reservation/${bookingId}`,
-    (url: string) =>
-      axios
-        .get(url, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => console.log(err))
-  );
+    const { data: bookingById } = useSWR(
+        bookingId &&
+            !query.get("accessCode") &&
+            `${app_api}/reservation/${bookingId}`,
+        (url: string) =>
+            axios
+                .get(url, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((res) => res.data)
+                .catch((err) => console.log(err))
+    );
 
   const { data: bookingFromAccessCode } = useSWR(
     bookingId &&
@@ -107,21 +125,21 @@ const BookingSummaryWrapper = () => {
     { revalidateOnFocus: false }
   );
 
-  const bookingDatas = bookingFromAccessCode
-    ? bookingFromAccessCode
-    : bookingById;
+    const bookingDatas = bookingFromAccessCode
+        ? bookingFromAccessCode
+        : bookingById;
 
-  const handleCancelBooking = async () => {
-    await cancelBooking(token, bookingId, bookingById.serviceId, language)
-      .then(() => {
-        toast.success(t("noti:booking:cancel:success"));
-        navigate("/my-bookings");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error(t("noti:booking:cancel:fail"));
-      });
-  };
+    const handleCancelBooking = async () => {
+        await cancelBooking(token, bookingId, bookingById.serviceId, language)
+            .then(() => {
+                toast.success(t("noti:booking:cancel:success"));
+                navigate("/my-bookings");
+            })
+            .catch((error) => {
+                console.log(error);
+                toast.error(t("noti:booking:cancel:fail"));
+            });
+    };
 
   useEffect(() => {
     document.title = t("title:myBookings");
@@ -166,127 +184,127 @@ const BookingSummaryWrapper = () => {
     ]);
   }, [bookingById, bookingFromAccessCode]);
 
-  return (
-    <>
-      <ConfirmCard
-        open={showConfirmation}
-        title={t("noti:booking:cancel:confirmation")}
-        description={t("noti:booking:cancel:confirmationDesc")}
-        bntConfirm={t("button:confirm")}
-        bntBack={t("button:cancel")}
-        handleClose={() => setShowConfirmation(false)}
-        handleConfirm={handleCancelBooking}
-      />
-      <div className="p-5">
-        <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
-          <span>
-            {bookingDatas ? (
-              switchStatus(bookingDatas?.status)?.icon
-            ) : (
-              <CircularProgress />
-            )}
-          </span>
-          <span>{switchStatus(bookingDatas?.status)?.title}</span>
-        </p>
-        <p className="my-3 text-center">
-          {switchStatus(bookingDatas?.status)?.desc}
-        </p>
+    return (
+        <>
+            <ConfirmCard
+                open={showConfirmation}
+                title={t("noti:booking:cancel:confirmation")}
+                description={t("noti:booking:cancel:confirmationDesc")}
+                bntConfirm={t("button:confirm")}
+                bntBack={t("button:cancel")}
+                handleClose={() => setShowConfirmation(false)}
+                handleConfirm={handleCancelBooking}
+            />
+            <div className="p-5">
+                <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
+                    <span>
+                        {bookingDatas ? (
+                            switchStatus(bookingDatas?.status)?.icon
+                        ) : (
+                            <CircularProgress />
+                        )}
+                    </span>
+                    <span>{switchStatus(bookingDatas?.status)?.title}</span>
+                </p>
+                <p className="my-3 text-center">
+                    {switchStatus(bookingDatas?.status)?.desc}
+                </p>
 
-        <div className="p-4 border rounded-lg">
-          {lists?.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`text-[14px] grid grid-cols-6 py-1 ${
-                  bookingDatas?.status === "cancel" ||
-                  bookingDatas?.status === "declinded"
-                    ? "text-gray-500"
-                    : ""
-                }`}
-              >
-                <div className="col-span-2 font-semibold">{item.label}:</div>
-                <span className="col-span-4 font-medium text-end">
-                  {item.text}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+                <div className="p-4 border rounded-lg">
+                    {lists?.map((item: any, index: number) => {
+                        return (
+                            <div
+                                key={index}
+                                className={`text-[14px] grid grid-cols-6 py-1 ${
+                                    bookingDatas?.status === "cancel" ||
+                                    bookingDatas?.status === "declinded"
+                                        ? "text-gray-500"
+                                        : ""
+                                }`}>
+                                <div className="col-span-2 font-semibold">
+                                    {item.label}:
+                                </div>
+                                <span className="col-span-4 font-medium text-end">
+                                    {item.text}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
 
-        <div
-          className={
-            bookingDatas?.status === "cancel" ||
-            bookingDatas?.status === "declinded"
-              ? "flex gap-3"
-              : ""
-          }
-        >
-          <button
-            type="button"
-            className={`w-full p-2 mt-5 rounded-lg ${
-              bookingDatas?.status === "cancel" ||
-              bookingDatas?.status === "declinded"
-                ? "border-2 border-deep-blue text-deep-blue"
-                : "bg-deep-blue text-white"
-            }`}
-            onClick={() =>
-              navigate(
-                `/my-bookings${
-                  query.get("accessCode")
-                    ? `?accessCode=${query.get("accessCode")}`
-                    : ""
-                }`,
-                {
-                  state: {
-                    userId: bookingDatas?.userId,
-                  },
-                }
-              )
-            }
-          >
-            {t("button:goToMyBookingButton")}
-          </button>
-          {/* re-book button */}
-          <button
-            type="button"
-            className={`bg-[#020873] w-full text-white p-2 mt-5 rounded-lg ${
-              bookingDatas?.status === "cancel" ||
-              bookingDatas?.status === "declinded"
-                ? "block"
-                : "hidden"
-            }`}
-            onClick={() => navigate(`/details/${bookingDatas?.businessId}`)}
-          >
-            {t("button:rebook")}
-          </button>
-          {/* re-book button */}
-        </div>
-        {/* cancel reservation by customer */}
-        <div
-          className={
-            bookingDatas?.status === "approval" ||
-            bookingDatas?.status === "cancel" ||
-            bookingDatas?.status === "declinded"
-              ? "hidden"
-              : "flex justify-center"
-          }
-        >
-          <span className="py-5 w-2/3 text-center">
-            {t("fragment:needTo")}{" "}
-            <button
-              type="button"
-              className="underline"
-              onClick={() => setShowConfirmation(true)}
-            >
-              {t("fragment:cancel")}
-            </button>{" "}
-            {t("fragment:aBooking")}?
-          </span>
-        </div>
-        {/* cancel reservation by customer */}
-      </div>
-    </>
-  );
+                <div
+                    className={
+                        bookingDatas?.status === "cancel" ||
+                        bookingDatas?.status === "declinded"
+                            ? "flex gap-3"
+                            : ""
+                    }>
+                    <button
+                        type="button"
+                        className={`w-full p-2 mt-5 rounded-lg ${
+                            bookingDatas?.status === "cancel" ||
+                            bookingDatas?.status === "declinded"
+                                ? "border-2 border-deep-blue text-deep-blue"
+                                : "bg-deep-blue text-white"
+                        }`}
+                        onClick={() =>
+                            navigate(
+                                `/my-bookings${
+                                    query.get("accessCode")
+                                        ? `?accessCode=${query.get(
+                                              "accessCode"
+                                          )}`
+                                        : ""
+                                }`,
+                                {
+                                    state: {
+                                        userId: bookingDatas?.userId,
+                                    },
+                                }
+                            )
+                        }>
+                        {t("button:goToMyBookingButton")}
+                    </button>
+                    {/* re-book button */}
+                    <button
+                        type="button"
+                        className={`bg-[#020873] w-full text-white p-2 mt-5 rounded-lg ${
+                            bookingDatas?.status === "cancel" ||
+                            bookingDatas?.status === "declinded"
+                                ? "block"
+                                : "hidden"
+                        }`}
+                        onClick={() =>
+                            navigate(`/details/${bookingDatas?.businessId}`)
+                        }>
+                        {t("button:rebook")}
+                    </button>
+                    {/* re-book button */}
+                </div>
+                {/* cancel reservation by customer */}
+                <div
+                    className={
+                        bookingDatas?.status === "approval" ||
+                        bookingDatas?.status === "cancel" ||
+                        bookingDatas?.status === "declinded"
+                            ? "hidden"
+                            : "flex justify-center"
+                    }>
+                    <span className="py-5 w-2/3 text-center">
+                        {t("fragment:needTo")}{" "}
+                        <button
+                            type="button"
+                            className="underline"
+                            onClick={() => setShowConfirmation(true)}>
+                            {t("fragment:cancel")}
+                        </button>{" "}
+                        {t("fragment:aBooking")}?
+                    </span>
+                </div>
+                {/* cancel reservation by customer */}
+            </div>
+        </>
+    );
 };
 
 export default BookingSummaryWrapper;

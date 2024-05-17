@@ -186,8 +186,8 @@ export default function ServiceDetail(props: IParams) {
             isAutoApprove={isAutoApprove}
             currency={modifyServiceInfo?.currency ?? ""}
             bookingSlots={modifyServiceTime ?? []}
-            availableFromDate={serviceInfo.availableFromDate}
-            availableToDate={serviceInfo.availableToDate}
+            availableFromDate={""}
+            availableToDate={""}
             isHidePrice={isHidePrice}
             isHideEndTime={isHideEndTime}
             handleClose={() => setState({ ...state, bottom: false })}
@@ -206,12 +206,10 @@ export default function ServiceDetail(props: IParams) {
                 open={openConfirm}
                 handleClose={() => setOpenConfirm(false)}
                 handleConfirm={handleConfirmClose}
-                title={"Discard changes?"}
-                description={
-                    "You have unsaved changes. Are you sure you want to discard them?"
-                }
-                bntConfirm={"Discard"}
-                bntBack={"Cancel"}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
             />
             <Loading openLoading={serviceLoading} />
             {modifyServiceInfo &&
@@ -322,7 +320,7 @@ export default function ServiceDetail(props: IParams) {
                                     <div
                                         className=" font-medium "
                                         onClick={handleAddTime}>
-                                        {t("button:addMoreTime")}
+                                        เพิ่มเวลาบริการ
                                     </div>
                                 </button>
 
@@ -351,7 +349,7 @@ export default function ServiceDetail(props: IParams) {
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
                                         onClick={toggleDrawer("bottom", true)}>
-                                        Preview
+                                        ดูตัวอย่าง
                                     </button>
                                     <button
                                         onClick={handleUpdateService}

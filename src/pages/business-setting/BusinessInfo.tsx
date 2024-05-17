@@ -313,7 +313,7 @@ export default function BusinessInfo(props: IParams) {
 
         setIsFormModified(formValuesChanged || props.isEdit || imagesChanged);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formik.values, formik.initialValues]);
+    }, [formik.values, formik.initialValues, previewImages]);
 
     const handleOpenTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOpenTime(e.target.value);
