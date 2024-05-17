@@ -172,8 +172,8 @@ export default function CreateService(props: IProps) {
                         availableToDate: time.availableToDate,
                         slotsTime: time.manualCapacity,
                     }))}
-                    availableFromDate={serviceTime[0].availableFromDate}
-                    availableToDate={null}
+                    availableFromDate={""}
+                    availableToDate={""}
                     isHidePrice={isHidePrice}
                     isHideEndTime={isHideEndTime}
                     handleClose={() => setState({ ...state, bottom: false })}
@@ -254,7 +254,7 @@ export default function CreateService(props: IProps) {
                         className=" items-center gap-1 p-1 ">
                         <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
                         <div className=" font-medium " onClick={handleAddTime}>
-                            Add more time
+                            เพิ่มเวลาบริการ
                         </div>
                     </button>
 

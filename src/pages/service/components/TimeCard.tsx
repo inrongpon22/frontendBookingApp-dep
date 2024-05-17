@@ -60,12 +60,14 @@ export default function TimeCard(props: IParams) {
                 <ConfirmCard
                     open={openConfirm}
                     title={t("askForDelete")}
-                    description={`${t("desDeleteServiceF")} ${props.availableFromDate
-                        } - ${props.availableToDate == "" ||
-                            props.availableToDate == null
+                    description={`${t("desDeleteServiceF")} ${
+                        props.availableFromDate
+                    } - ${
+                        props.availableToDate == "" ||
+                        props.availableToDate == null
                             ? t("present")
                             : props.availableToDate
-                        } ${t("desDeleteServiceL")}`}
+                    } ${t("desDeleteServiceL")}`}
                     bntConfirm={t("delete")}
                     bntBack={t("button:back")}
                     handleClose={handleCloseConfirm}
@@ -75,7 +77,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                            props.availableToDate == null
+                        props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -129,22 +131,27 @@ export default function TimeCard(props: IParams) {
                     </Menu>
                 </div>
 
-                <div style={{ fontSize: "14px", marginTop: "-10px" }}>
+                <div
+                    style={{
+                        fontSize: "14px",
+                        marginTop: "-10px",
+                        width: "70%",
+                    }}>
                     {props.daysOpen.map((item, index) => (
                         <span key={item}>
                             {lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === item)
-                                    ?.thaiName
+                                      ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === item)
-                                    ?.name}
+                                      ?.name}
                             {Array.isArray(item) && index === item.length - 2
                                 ? lan === "th"
                                     ? " และ "
                                     : " and "
                                 : Array.isArray(item) &&
-                                    index === item.length - 1
-                                    ? " "
-                                    : ", "}
+                                  index === item.length - 1
+                                ? " "
+                                : ", "}
                         </span>
                     ))}
                 </div>
@@ -158,7 +165,7 @@ export default function TimeCard(props: IParams) {
                             <div
                                 style={{ color: alpha("#000000", 0.5) }}
                                 className="flex justify-between gap-3 items-center p-3">
-                                {`(${element.capacity} guest)`}
+                                {`(${element.capacity} คน)`}
                             </div>
                         </div>
                     </div>

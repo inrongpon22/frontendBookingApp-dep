@@ -186,8 +186,8 @@ export default function ServiceDetail(props: IParams) {
             isAutoApprove={isAutoApprove}
             currency={modifyServiceInfo?.currency ?? ""}
             bookingSlots={modifyServiceTime ?? []}
-            availableFromDate={serviceInfo.availableFromDate}
-            availableToDate={serviceInfo.availableToDate}
+            availableFromDate={""}
+            availableToDate={""}
             isHidePrice={isHidePrice}
             isHideEndTime={isHideEndTime}
             handleClose={() => setState({ ...state, bottom: false })}
@@ -322,7 +322,7 @@ export default function ServiceDetail(props: IParams) {
                                     <div
                                         className=" font-medium "
                                         onClick={handleAddTime}>
-                                        {t("button:addMoreTime")}
+                                        เพิ่มเวลาบริการ
                                     </div>
                                 </button>
 
@@ -351,7 +351,7 @@ export default function ServiceDetail(props: IParams) {
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
                                         onClick={toggleDrawer("bottom", true)}>
-                                        Preview
+                                        ดูตัวอย่าง
                                     </button>
                                     <button
                                         onClick={handleUpdateService}

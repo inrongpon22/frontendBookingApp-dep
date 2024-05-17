@@ -32,9 +32,9 @@ export default function Header(props: IProps) {
         <div className="flex items-center justify-between">
             <ConfirmCard
                 open={open}
-                title={"Discard Changes"}
-                description={"Are you sure you want to discard the changes?"}
-                bntConfirm={"Discard"}
+                title={"ยกเลิกการเปลี่ยนแปลงใช่ไหม"}
+                description={"ข้อมูลที่คุณเพิ่มจะถูกลบอย่างถาวร"}
+                bntConfirm={"เปลี่ยนแปลง"}
                 bntBack={t("button:cancel")}
                 handleClose={handleClose}
                 handleConfirm={() => navigate(-1)}
