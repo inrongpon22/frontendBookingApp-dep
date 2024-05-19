@@ -4,7 +4,6 @@ import { alpha } from "@mui/material";
 import ListServiceCard from "./components/ListServiceCard";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { IService } from "../business/interfaces/service";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -18,6 +17,7 @@ import { app_api, fetcher } from "../../helper/url";
 import Loading from "../../components/dialog/Loading";
 export type Anchor = "top" | "left" | "bottom" | "right";
 import { trailingActions } from "./components/swipeable-list";
+import { IService } from "../../interfaces/services/Iservice";
 
 export default function ServiceSetting() {
     const { businessId } = useParams();
@@ -47,17 +47,17 @@ export default function ServiceSetting() {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
 
-            setState({ ...state, [anchor]: open });
-        };
+                setState({ ...state, [anchor]: open });
+            };
 
     const addService = (anchor: Anchor) => (
         <Box
@@ -127,11 +127,10 @@ export default function ServiceSetting() {
             <div style={{ background: "#F7F7F7" }}>
                 <p className="pr-4 pl-4 pt-3 pb-3">
                     {t("services")}{" "}
-                    {`(${
-                        serviceData &&
+                    {`(${serviceData &&
                         serviceData.filter((item) => item.isDeleted == false)
                             .length
-                    })`}{" "}
+                        })`}{" "}
                 </p>
                 {serviceData &&
                     serviceData

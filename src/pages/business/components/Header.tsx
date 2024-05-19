@@ -5,6 +5,7 @@ interface IProps {
     context: string;
     isClose: boolean;
     isTyping?: boolean;
+    isEdit?: boolean;
     // handleClose?: (event: React.KeyboardEvent | React.MouseEvent) => void;
     handleClose?: () => void;
 }
@@ -41,7 +42,12 @@ export default function Header(props: IProps) {
             </div>
 
             <div>
-                <div style={{ width: "20px", height: "20px" }} />
+                {props.isEdit && props.isEdit ? (
+                    <div style={{ width: "20px", height: "20px" }} />
+                ) : (
+                    <div style={{ width: "20px", height: "20px" }} />
+                )}
+
             </div>
         </div>
     );

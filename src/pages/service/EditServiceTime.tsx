@@ -5,8 +5,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { IBookingSlot, IServiceEditTime } from "../business/interfaces/service";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import { IServiceEditTime, IBookingSlot } from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceTime: IServiceEditTime[];

@@ -3,10 +3,10 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { currencyList } from "../../helper/currency";
-import { IServiceInfo } from "../business/interfaces/service";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 // import { updateServiceInfo } from "../../api/service";
 import { t } from "i18next";
+import { IServiceInfo } from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceId: number;

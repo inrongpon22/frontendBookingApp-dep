@@ -1,7 +1,6 @@
 import { alpha, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useTranslation } from "react-i18next";
-import { IBookingSlot } from "../../business/interfaces/service";
 import { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Menu from "@mui/material/Menu";
@@ -11,6 +10,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dataOfWeekEng, dataOfWeekThai } from "../../../helper/daysOfWeek";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
+import { IBookingSlot } from "../../../interfaces/services/Iservice";
 
 interface IParams {
     daysOpen: string[];
@@ -78,7 +78,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                        props.availableToDate == null
+                            props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -142,17 +142,17 @@ export default function TimeCard(props: IParams) {
                         <span key={item}>
                             {lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === item)
-                                      ?.thaiName
+                                    ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === item)
-                                      ?.name}
+                                    ?.name}
                             {Array.isArray(item) && index === item.length - 2
                                 ? lan === "th"
                                     ? " และ "
                                     : " and "
                                 : Array.isArray(item) &&
-                                  index === item.length - 1
-                                ? " "
-                                : ", "}
+                                    index === item.length - 1
+                                    ? " "
+                                    : ", "}
                         </span>
                     ))}
                 </div>

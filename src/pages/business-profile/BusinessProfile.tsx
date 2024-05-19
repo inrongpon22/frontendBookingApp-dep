@@ -15,7 +15,7 @@ import { Badge } from "@mui/material";
 import toast from "react-hot-toast";
 import moment from "moment";
 import Loading from "../../components/dialog/Loading";
-import { Ireservation } from "../../interface/reservation";
+import { Ireservation } from "../../interfaces/reservation";
 
 const BusinessProfile = () => {
   const { businessId } = useParams();
@@ -169,18 +169,16 @@ const BusinessProfile = () => {
               <div key={index} className="flex justify-between">
                 <div className="flex gap-2">
                   <p
-                    className={`${
-                      item.status === "approval"
+                    className={`${item.status === "approval"
                         ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                         : "bg-zinc-200 text-zinc-400"
-                    } px-1 rounded`}
+                      } px-1 rounded`}
                   >
                     {item.startTime.slice(0, -3)}
                   </p>
                   <p
-                    className={`${
-                      item.status === "approval" ? "" : "text-zinc-400"
-                    } font-semibold`}
+                    className={`${item.status === "approval" ? "" : "text-zinc-400"
+                      } font-semibold`}
                   >
                     {item.title}
                   </p>

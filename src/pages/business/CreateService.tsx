@@ -4,7 +4,6 @@ import TimeCard from "./components/TimeCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { IServiceInfo, IServiceTime } from "./interfaces/service";
 import { addService } from "../../api/service";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
@@ -15,6 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ServiceInfo from "./ServiceInfo";
 import { Anchor } from "../service/ServiceSetting";
 import BusinessPreview from "../service/BusinessPreview";
+import { IServiceInfo, IServiceTime } from "../../interfaces/services/Iservice";
 
 interface IProps {
     handleClose?: () => void;
@@ -137,16 +137,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -307,11 +307,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -358,11 +357,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -412,11 +410,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (

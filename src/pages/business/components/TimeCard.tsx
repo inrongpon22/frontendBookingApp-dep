@@ -10,7 +10,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dataOfWeekEng, dataOfWeekThai } from "../../../helper/daysOfWeek";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
-import { IServiceTime } from "../interfaces/service";
+import { IServiceTime } from "../../../interfaces/services/Iservice";
 
 interface IParams {
     serviceTime: IServiceTime;
@@ -77,7 +77,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.serviceTime.availableFromDate} -{" "}
                         {props.serviceTime.availableToDate == "" ||
-                        props.serviceTime.availableToDate == null
+                            props.serviceTime.availableToDate == null
                             ? t("present")
                             : props.serviceTime.availableToDate}
                     </div>
@@ -144,17 +144,17 @@ export default function TimeCard(props: IParams) {
                         <span key={item}>
                             {lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === item)
-                                      ?.thaiName
+                                    ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === item)
-                                      ?.name}
+                                    ?.name}
                             {Array.isArray(item) && index === item.length - 2
                                 ? lan === "th"
                                     ? " และ "
                                     : " and "
                                 : Array.isArray(item) &&
-                                  index === item.length - 1
-                                ? " "
-                                : ", "}
+                                    index === item.length - 1
+                                    ? " "
+                                    : ", "}
                         </span>
                     ))}
                 </div>
