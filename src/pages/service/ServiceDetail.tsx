@@ -85,7 +85,6 @@ export default function ServiceDetail(props: IParams) {
     const handleSetEditTime = () => {
         setIsEditTime(!isEditTime);
     };
-
     const handleAddTime = () => {
         setIsAddTime(!isAddTime);
     };
@@ -218,7 +217,6 @@ export default function ServiceDetail(props: IParams) {
                         }
                         price={modifyServiceInfo.price}
                         currency={modifyServiceInfo.currency}
-                        serviceId={serviceInfo.id}
                         handleSetEditInfo={handleSetEditInfo}
                         serviceMutate={serviceMutate}
                         handleSetServiceInfo={handleSetServiceInfo}
@@ -229,7 +227,6 @@ export default function ServiceDetail(props: IParams) {
                         openTime={serviceInfo.openTime}
                         closeTime={serviceInfo.closeTime}
                         editIndex={selectedIndex}
-                        serviceId={serviceInfo.id}
                         isAddTime={isAddTime}
                         handleSetEditTime={handleSetEditTime}
                         handleSetServiceTime={handleSetServiceTime}
@@ -237,10 +234,6 @@ export default function ServiceDetail(props: IParams) {
                 ) : isAddTime ? (
                     <AddServiceTime
                         serviceTime={serviceInfo.bookingSlots}
-                        duration={serviceInfo.duration}
-                        openTime={serviceInfo.openTime}
-                        closeTime={serviceInfo.closeTime}
-                        serviceId={serviceInfo.id}
                         handleAddTime={handleAddTime}
                     />
                 ) : (
@@ -317,7 +310,7 @@ export default function ServiceDetail(props: IParams) {
                                     <div
                                         className=" font-medium "
                                         onClick={handleAddTime}>
-                                        เพิ่มเวลาบริการ
+                                        {t("button:addServiceTime")}
                                     </div>
                                 </button>
 
@@ -346,7 +339,7 @@ export default function ServiceDetail(props: IParams) {
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
                                         onClick={toggleDrawer("bottom", true)}>
-                                        ดูตัวอย่าง
+                                        {t("button:preview")}
                                     </button>
                                     <button
                                         onClick={handleUpdateService}

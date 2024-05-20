@@ -107,9 +107,9 @@ export default function ServiceInfo(props: IProps) {
 
     const handleOnClose = () => {
         if (
-            !isTyping &&
-            formik.values.serviceName === "" &&
-            formik.values.serviceDescription === ""
+            (!isTyping &&
+                formik.values.serviceName === "" &&
+                formik.values.serviceDescription === "")
         ) {
             if (props.isClose) {
                 if (props.handleCloseFromEdit) props.handleCloseFromEdit();

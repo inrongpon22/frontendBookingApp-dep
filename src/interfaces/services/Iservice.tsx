@@ -59,7 +59,7 @@ export interface IServiceTime {
     guestNumber: number;
     TimeSlots: string[];
     selectedSlots: number[];
-    manualCapacity: IBookingSlot[];
+    slotsTime: IBookingSlot[];
     availableFromDate: string;
     availableToDate: string;
 }
@@ -84,6 +84,9 @@ export interface IServiceEditTime {
     availableToDate: string;
     slotsTime: IBookingSlot[];
     duration: number;
+    manualCapacity?: IBookingSlot[];
+    openTime: string;
+    closeTime: string;
 }
 
 export interface IServiceShowHide {

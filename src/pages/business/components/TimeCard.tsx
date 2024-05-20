@@ -16,7 +16,7 @@ interface IParams {
     serviceTime: IServiceTime;
     index: number;
     handleDelete: (index: number) => void;
-    handleClose?: (event: React.KeyboardEvent | React.MouseEvent) => void;
+    handleEditServiceTime: (index: number) => void;
 }
 
 export default function TimeCard(props: IParams) {
@@ -36,10 +36,8 @@ export default function TimeCard(props: IParams) {
         setAnchorEl(null);
     };
 
-    const handleEdit = (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (props.handleClose) {
-            props.handleClose(event);
-        }
+    const handleEdit = () => {
+        props.handleEditServiceTime(props.index);
         handleClose();
     };
 
@@ -117,9 +115,7 @@ export default function TimeCard(props: IParams) {
                         }}
                         sx={{ borderRadius: "10px" }}>
                         <MenuItem
-                            onClick={(
-                                event: React.KeyboardEvent | React.MouseEvent
-                            ) => handleEdit(event)}>
+                            onClick={handleEdit}>
                             <ListItemIcon>
                                 <EditOutlinedIcon fontSize="small" />
                             </ListItemIcon>
@@ -159,7 +155,7 @@ export default function TimeCard(props: IParams) {
                     ))}
                 </div>
 
-                {props.serviceTime.manualCapacity.map((element, index) => (
+                {props.serviceTime.slotsTime.map((element, index) => (
                     <div key={index}>
                         <div className="flex justify-between">
                             <li className="p-2 list-disc">

@@ -10,11 +10,8 @@ import { IServiceEditTime, IBookingSlot } from "../../interfaces/services/Iservi
 
 interface IParams {
     serviceTime: IServiceEditTime[];
-    duration: number;
-    openTime: string;
-    closeTime: string;
-    serviceId: number;
-    handleAddTime: () => void;
+    handleAddTime?: () => void;
+    handleCloseCard?: () => void;
 }
 
 export default function AddServiceTime(props: IParams) {
@@ -213,16 +210,25 @@ export default function AddServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
+            openTime: openTime,
+            closeTime: closeTime,
         };
         props.serviceTime.push(insertData);
-        props.handleAddTime();
+        if (props.handleAddTime) {
+            props.handleAddTime();
+        } else {
+            localStorage.setItem("serviceTime", JSON.stringify(props.serviceTime));
+            if (props.handleCloseCard) {
+                props.handleCloseCard();
+            }
+        }
     };
 
     return (
         <div style={{ width: "100vw" }}>
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
-                    <div onClick={props.handleAddTime}>
+                    <div onClick={props.handleAddTime == undefined ? props.handleCloseCard : props.handleAddTime}>
                         <CloseIcon
                             sx={{
                                 width: "20px",

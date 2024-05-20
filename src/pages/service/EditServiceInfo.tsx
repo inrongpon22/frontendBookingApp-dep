@@ -3,20 +3,21 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { currencyList } from "../../helper/currency";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import CloseIcon from '@mui/icons-material/Close';
 // import { updateServiceInfo } from "../../api/service";
 import { t } from "i18next";
 import { IServiceInfo } from "../../interfaces/services/Iservice";
+import { useState } from "react";
+import ConfirmCard from "../../components/dialog/ConfirmCard";
 
 interface IParams {
-    serviceId: number;
     serviceName: string;
     serviceDescription: string;
     price: number;
     currency: string;
     handleSetEditInfo: () => void;
     serviceMutate: () => void;
-    handleSetServiceInfo: (serviceInFo: IServiceInfo) => void;
+    handleSetServiceInfo?: (serviceInFo: IServiceInfo) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -33,6 +34,7 @@ const validationSchema = Yup.object().shape({
 
 export default function EditServiceInfo(props: IParams) {
     const { t } = useTranslation();
+    const [openConfirm, setOpenConfirm] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -54,20 +56,50 @@ export default function EditServiceInfo(props: IParams) {
             //     localStorage.getItem("token") || "",
             //     props.serviceId
             // );
-            props.handleSetServiceInfo(values);
+            if (props.handleSetServiceInfo) {
+                props.handleSetServiceInfo(values);
+            } else {
+                const valueInString = JSON.stringify(values);
+                localStorage.setItem("serviceInfo", valueInString);
+            }
             props.serviceMutate();
             props.handleSetEditInfo();
         },
     });
 
+    const handleIsModifiedData = () => {
+        return (
+            props.serviceName !== formik.values.serviceName ||
+            props.serviceDescription !== formik.values.serviceDescription ||
+            props.price !== formik.values.price
+        );
+    };
+
+    const handleCloseFromEdit = () => {
+        if (!handleIsModifiedData()) {
+            props.handleSetEditInfo();
+        } else {
+            setOpenConfirm(true);
+        }
+    };
+
     return (
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
+            <ConfirmCard
+                open={openConfirm}
+                title={t("title:discardChanges")}
+                description={t("desc:discardChanges")}
+                bntConfirm={t("button:discard")}
+                bntBack={t("button:back")}
+                handleClose={() => setOpenConfirm(false)}
+                handleConfirm={props.handleSetEditInfo}
+            />
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
-                    <div onClick={props.handleSetEditInfo}>
-                        <ArrowBackIosNewOutlinedIcon
+                    <div onClick={handleCloseFromEdit}>
+                        <CloseIcon
                             sx={{
                                 width: "20px",
                                 height: "20px",
@@ -80,7 +112,9 @@ export default function EditServiceInfo(props: IParams) {
                         {t("title:serviceInformation")}
                     </div>
 
-                    <div></div>
+                    <div>
+                        <div style={{ width: "20px", height: "20px" }} />
+                    </div>
                 </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />

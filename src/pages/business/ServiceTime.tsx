@@ -29,7 +29,7 @@ export default function ServiceTime(props: IProps) {
             openTime: "",
             closeTime: "",
             guestNumber: 1,
-            manualCapacity: [],
+            slotsTime: [],
             availableFromDate: new Date().toISOString().split("T")[0],
             availableToDate: "",
         },
@@ -215,7 +215,7 @@ export default function ServiceTime(props: IProps) {
             guestNumber: guestNumber,
             selectedSlots: selectedSlots,
             TimeSlots: TimeSlots,
-            manualCapacity: manualCapacity,
+            slotsTime: manualCapacity,
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
         };
@@ -309,7 +309,7 @@ export default function ServiceTime(props: IProps) {
         setIsManually(false);
         setAvailableFromDate(serviceTime[index].availableFromDate);
         setAvailableToDate(serviceTime[index].availableToDate);
-        setManualCapacity(serviceTime[index].manualCapacity);
+        setManualCapacity(serviceTime[index].slotsTime);
         addDisbleDays();
     };
 
