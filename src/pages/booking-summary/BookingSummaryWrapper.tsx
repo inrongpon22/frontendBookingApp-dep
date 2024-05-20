@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-// import { globalConfirmation } from "../../helper/alerts";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
 import useSWR from "swr";

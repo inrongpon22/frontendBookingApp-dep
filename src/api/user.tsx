@@ -1,6 +1,9 @@
 import axios from "axios";
+import { app_api } from "../helper/url";
 
-export const getUserById = async (userId: string, token:string) => {
+const language = localStorage.getItem("lang");
+
+export const getUserById = async (userId: string, token: string) => {
     try {
         return await axios.get(
             `${import.meta.env.VITE_APP_API}/user/${userId}`,
@@ -14,7 +17,7 @@ export const getUserById = async (userId: string, token:string) => {
         console.error(error);
         throw error;
     }
-}
+};
 
 export const insertUser = async (userData: { phoneNumber: string }) => {
     try {
@@ -22,6 +25,33 @@ export const insertUser = async (userData: { phoneNumber: string }) => {
             `${import.meta.env.VITE_APP_API}/user`,
             userData
         );
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const ReqOtp = async (phoneNumber: string) => {
+    try {
+        const reqotp = await axios.post(
+            `${app_api}/requestOTP/${phoneNumber}/${language}`
+        );
+        return reqotp;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const CheckOTP = async (phoneNumber: string, otp:string) => {
+    try {
+        const checkotp = await axios.post(
+            `${app_api}/checkOTP`, {
+                phoneNumber: phoneNumber,
+                otpCode: otp,
+            }
+        );
+        return checkotp;
     } catch (error) {
         console.error(error);
         throw error;

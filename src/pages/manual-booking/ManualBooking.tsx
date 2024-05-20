@@ -7,7 +7,7 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import useSWR from "swr";
 import { app_api } from "../../helper/url";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
     quantityTypes,
     serviceTypes,
@@ -15,16 +15,15 @@ import {
 import moment from "moment";
 import Loading from "../../components/dialog/Loading";
 import { useTranslation } from "react-i18next";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
-interface ManualBookingProps {
-    setModalState: Function;
-}
-
-const ManualBooking = ({ setModalState }: ManualBookingProps) => {
+const ManualBooking = () => {
     const { businessId } = useParams();
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
+
+    const {setDialogState} = useContext(GlobalContext);
 
     const [selectedDate, setSelectedDate] = useState<any>({
         // handle select date on calendar
@@ -181,9 +180,9 @@ const ManualBooking = ({ setModalState }: ManualBookingProps) => {
                             )
                         ) {
                             if (token) {
-                                setModalState("booking-detail-preview");
+                                setDialogState("booking-detail-preview");
                             } else {
-                                setModalState("phone-input");
+                                setDialogState("phone-input");
                             }
                         }
                     }}
