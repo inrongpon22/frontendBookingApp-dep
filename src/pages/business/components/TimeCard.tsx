@@ -76,7 +76,7 @@ export default function TimeCard(props: IParams) {
                         <div style={{ fontSize: "14px" }}>
                             {props.serviceTime.availableFromDate} -{" "}
                             {props.serviceTime.availableToDate == "" ||
-                            props.serviceTime.availableToDate == null
+                                props.serviceTime.availableToDate == null
                                 ? t("present")
                                 : props.serviceTime.availableToDate}
                         </div>
@@ -136,26 +136,27 @@ export default function TimeCard(props: IParams) {
                             marginTop: "-10px",
                             width: "70%",
                         }}>
-                        {props.serviceTime.daysOpen.map((item, index) => (
-                            <span key={item}>
-                                {lan === "th"
-                                    ? dataOfWeekThai.find(
-                                          (x) => x.value === item
-                                      )?.thaiName
-                                    : dataOfWeekEng.find(
-                                          (x) => x.value === item
-                                      )?.name}
-                                {Array.isArray(item) &&
-                                index === item.length - 2
-                                    ? lan === "th"
-                                        ? " และ "
-                                        : " and "
-                                    : Array.isArray(item) &&
-                                      index === item.length - 1
-                                    ? " "
-                                    : ", "}
-                            </span>
-                        ))}
+
+                        {props.serviceTime.daysOpen.map((day: string, index) => {
+                            const dayName = lan === "th"
+                                ? dataOfWeekThai.find((x) => x.value === day)?.thaiName
+                                : dataOfWeekEng.find((x) => x.value === day)?.name;
+                            const isSecondLast = index === props.serviceTime.daysOpen.length - 2;
+                            const isLast = index === props.serviceTime.daysOpen.length - 1;
+                            let separator = "";
+                            if (isSecondLast) {
+                                separator = lan === "th" ? " และ " : " and ";
+                            } else if (!isLast) {
+                                separator = ", ";
+                            }
+
+                            return (
+                                <span key={index}>
+                                    {dayName}
+                                    {separator}
+                                </span>
+                            );
+                        })}
                     </div>
 
                     {props.serviceTime.slotsTime.map((element, index) => (

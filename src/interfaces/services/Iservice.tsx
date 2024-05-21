@@ -49,6 +49,12 @@ export interface IService {
     isHidePrice: boolean;
     isHideEndTime: boolean;
     isDeleted: boolean;
+    bookingSlots?: {
+        daysOpen: string[];
+        availableFromDate: string;
+        availableToDate: string | null;
+        slotsTime: IBookingSlot[];
+    }[];
 }
 
 export interface IServiceTime {

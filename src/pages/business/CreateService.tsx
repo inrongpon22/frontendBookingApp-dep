@@ -17,6 +17,7 @@ import { IServiceInfo, IServiceTime } from "../../interfaces/services/Iservice";
 import EditServiceInfo from "../service/EditServiceInfo";
 import EditServiceTime from "../service/EditServiceTime";
 import AddServiceTime from "../service/AddServiceTime";
+import Loading from "../../components/dialog/Loading";
 
 interface IProps {
     handleClose?: () => void;
@@ -46,6 +47,7 @@ export default function CreateService(props: IProps) {
     const [refresh, setRefresh] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [state, setState] = useState({
         top: false,
@@ -95,13 +97,15 @@ export default function CreateService(props: IProps) {
 
         try {
             if (token === null) throw new Error("Token is not found");
+            setIsLoading(true);
             await addService(insertData, token).then(() => {
                 props.serviceMutate && props.serviceMutate();
                 localStorage.removeItem("serviceInfo");
                 localStorage.removeItem("serviceTime");
                 props.handleCloseServiceInFo && props.handleCloseServiceInFo();
                 props.handleCloseServiceTime && props.handleCloseServiceTime();
-                navigate(`/service-setting/${businessId}`);
+                setIsLoading(false);
+                navigate(`/create-successful/${businessId}`);
             });
         } catch (error) {
             console.log(error);
@@ -127,16 +131,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -148,7 +152,7 @@ export default function CreateService(props: IProps) {
                 handleSetEditInfo={() =>
                     setState({ ...state, ["bottom"]: false })
                 }
-                serviceMutate={props.serviceMutate || (() => {})}
+                serviceMutate={props.serviceMutate || (() => { })}
             />
         </Box>
     );
@@ -241,6 +245,7 @@ export default function CreateService(props: IProps) {
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
+            <Loading openLoading={isLoading} />
             {typeName == "service" ? (
                 <Drawer
                     anchor={"bottom"}
@@ -358,11 +363,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -409,11 +413,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -463,11 +466,10 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                }`}>
+                                    }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (

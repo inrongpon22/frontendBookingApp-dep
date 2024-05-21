@@ -43,6 +43,19 @@ export default function ServiceSetting() {
         fetcher
     );
 
+    const mergeDayOpen = () => {
+        const dayOpen: string[] = []; // Initialize dayOpen as an empty array
+        serviceData &&
+            serviceData.map((item) => {
+                item.bookingSlots?.map((slot) => {
+                    slot.daysOpen.map((day: string) => {
+                        dayOpen.push(day);
+                    });
+                });
+            });
+        return dayOpen;
+    };
+
     const handleOpenConfirm = (serviceId: number) => {
         setSelectedId(serviceId);
         setOpen(true);
@@ -158,7 +171,7 @@ export default function ServiceSetting() {
                                                     closeTime={
                                                         service.closeTime
                                                     }
-                                                    daysOpen={service.daysOpen}
+                                                    daysOpen={mergeDayOpen()}
                                                     openConfirm={open}
                                                     handleOpen={
                                                         handleOpenConfirm
