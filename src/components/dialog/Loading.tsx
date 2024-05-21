@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Modal, Typography } from "@mui/material";
+import { Box, CircularProgress, Modal } from "@mui/material";
 
 interface ILoading {
     openLoading: boolean;
@@ -29,7 +29,7 @@ export default function Loading(props: ILoading) {
                         color="inherit"
                         sx={{ color: "#ECD0FF" }}
                     />
-                    <Typography variant="h5">Please wait...</Typography>
+                    {/* <Typography variant="h5">Please wait...</Typography> */}
                 </Box>
             </Modal>
         </>

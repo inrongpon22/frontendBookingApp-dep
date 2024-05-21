@@ -18,6 +18,8 @@ import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { Badge } from "@mui/material";
 import toast from "react-hot-toast";
 import moment from "moment";
+import Loading from "../../components/dialog/Loading";
+import { Ireservation } from "../../interfaces/reservation";
 
 const BusinessProfile = () => {
     const { businessId } = useParams();

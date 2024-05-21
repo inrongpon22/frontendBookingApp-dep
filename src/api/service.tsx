@@ -1,11 +1,5 @@
 import axios from "axios";
-import {
-    IService,
-    InsertService,
-    IEditServiceInfo,
-    IServiceEditTime,
-    IServiceShowHide,
-} from "../pages/business/interfaces/service";
+import { InsertService, IService, IEditServiceInfo, IServiceEditTime, IServiceShowHide } from "../interfaces/services/Iservice";
 import useSWR from "swr";
 import { app_api } from "../helper/url";
 

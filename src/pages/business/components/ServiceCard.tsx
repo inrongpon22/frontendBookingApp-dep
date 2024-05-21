@@ -1,6 +1,6 @@
 import { alpha, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IServiceInfo } from "../interfaces/service";
+import { IServiceInfo } from "../../../interfaces/services/Iservice";
 
 interface IParams {
     handleEdit: () => void;

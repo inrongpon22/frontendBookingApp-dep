@@ -5,18 +5,17 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { IBookingSlot, IServiceEditTime } from "../business/interfaces/service";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import CloseIcon from '@mui/icons-material/Close';
+import { IServiceEditTime, IBookingSlot } from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
     openTime: string;
     closeTime: string;
     editIndex: number;
-    serviceId: number;
     isAddTime: boolean;
     handleSetEditTime: () => void;
-    handleSetServiceTime: (serviceTime: IServiceEditTime[]) => void;
+    handleSetServiceTime?: (serviceTime: IServiceEditTime[]) => void;
 }
 
 export default function EditServiceTime(props: IParams) {
@@ -237,7 +236,7 @@ export default function EditServiceTime(props: IParams) {
     generateTimeSlots(openTime, closeTime, duration);
 
     useEffect(() => {
-        if (props.serviceTime[props.editIndex].slotsTime !== undefined) {
+        if (props.serviceTime[props.editIndex].slotsTime !== undefined && props.serviceTime[props.editIndex].slotsTime.length > 0) {
             const selectedSlots: number[] = [];
             props.serviceTime[props.editIndex].slotsTime.forEach((slot) => {
                 const index = timeSlots.findIndex(
@@ -261,9 +260,15 @@ export default function EditServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
+            openTime: openTime,
+            closeTime: closeTime,
         };
         props.serviceTime[props.editIndex] = insertData;
-        props.handleSetServiceTime(props.serviceTime);
+        if (props.handleSetServiceTime) {
+            props.handleSetServiceTime(props.serviceTime);
+        } else {
+            localStorage.setItem("serviceTime", JSON.stringify(props.serviceTime));
+        }
         props.handleSetEditTime();
 
     };
@@ -273,7 +278,7 @@ export default function EditServiceTime(props: IParams) {
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
                     <div onClick={props.handleSetEditTime}>
-                        <ArrowBackIosNewOutlinedIcon
+                        <CloseIcon
                             sx={{
                                 width: "20px",
                                 height: "20px",
@@ -286,7 +291,9 @@ export default function EditServiceTime(props: IParams) {
                         {t("title:serviceTime")}
                     </div>
 
-                    <div></div>
+                    <div>
+                        <div style={{ width: "20px", height: "20px" }} />
+                    </div>
                 </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
@@ -659,7 +666,11 @@ export default function EditServiceTime(props: IParams) {
                         </div>
                     )}
 
-                    <div className="w-full flex justify-center bottom-0 inset-x-0">
+                    <div
+                        style={{
+                            marginBottom: openTime && closeTime ? "20px" : "",
+                        }}
+                        className="w-full flex justify-center bottom-0 inset-x-0">
                         <button
                             disabled={
                                 daysOpen.length == 0 ||
