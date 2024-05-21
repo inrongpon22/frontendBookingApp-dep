@@ -5,8 +5,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from '@mui/icons-material/Close';
-import { IServiceEditTime, IBookingSlot } from "../../interfaces/services/Iservice";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+    IServiceEditTime,
+    IBookingSlot,
+} from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -49,7 +52,7 @@ export default function EditServiceTime(props: IParams) {
     const [availableToDate, setAvailableToDate] = useState(
         props.isAddTime
             ? ""
-            : props.serviceTime[props.editIndex].availableToDate
+            : props.serviceTime[props.editIndex].availableToDate ?? ""
     );
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
     const timeSlots: {
@@ -75,8 +78,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -88,24 +91,30 @@ export default function EditServiceTime(props: IParams) {
     };
 
     useEffect(() => {
+        const uniqueDays = new Set();
         if (props.serviceTime[0].daysOpen !== undefined) {
-            props.serviceTime.forEach((element) => {
-                if (
-                    element.availableFromDate == availableFromDate &&
-                    element.availableToDate == availableToDate
-                ) {
-                    setDisibleDays(element.daysOpen);
-                } else {
-                    setDisibleDays([]);
-                }
-            });
+            props.serviceTime
+                .filter((item, index) => index !== props.editIndex)
+                .forEach((element) => {
+                    if (
+                        element.availableFromDate == availableFromDate &&
+                        element.availableToDate == availableToDate
+                    ) {
+                        element.daysOpen.forEach((day) => uniqueDays.add(day));
+                        setDisibleDays(Array.from(uniqueDays) as string[]);
+                    } else {
+                        setDisibleDays([]);
+                    }
+                });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [availableFromDate, availableToDate]);
 
-    const toggleSlotSelection = (index: number, startTime: string,
-        endTime: string) => {
-
+    const toggleSlotSelection = (
+        index: number,
+        startTime: string,
+        endTime: string
+    ) => {
         const indexManual = manualCapacity.findIndex(
             (slot) => slot.startTime === startTime && slot.endTime === endTime
         );
@@ -236,7 +245,10 @@ export default function EditServiceTime(props: IParams) {
     generateTimeSlots(openTime, closeTime, duration);
 
     useEffect(() => {
-        if (props.serviceTime[props.editIndex].slotsTime !== undefined && props.serviceTime[props.editIndex].slotsTime.length > 0) {
+        if (
+            props.serviceTime[props.editIndex].slotsTime !== undefined &&
+            props.serviceTime[props.editIndex].slotsTime.length > 0
+        ) {
             const selectedSlots: number[] = [];
             props.serviceTime[props.editIndex].slotsTime.forEach((slot) => {
                 const index = timeSlots.findIndex(
@@ -260,17 +272,19 @@ export default function EditServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
-            openTime: openTime,
-            closeTime: closeTime,
+            // openTime: openTime,
+            // closeTime: closeTime,
         };
         props.serviceTime[props.editIndex] = insertData;
         if (props.handleSetServiceTime) {
             props.handleSetServiceTime(props.serviceTime);
         } else {
-            localStorage.setItem("serviceTime", JSON.stringify(props.serviceTime));
+            localStorage.setItem(
+                "serviceTime",
+                JSON.stringify(props.serviceTime)
+            );
         }
         props.handleSetEditTime();
-
     };
 
     return (
@@ -298,8 +312,7 @@ export default function EditServiceTime(props: IParams) {
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
-                <div
-                    className="mt-4 flex flex-col">
+                <div className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
                     </p>
@@ -380,19 +393,23 @@ export default function EditServiceTime(props: IParams) {
                                         ? "2px solid #020873"
                                         : `1px solid ${alpha("#000000", 0.2)}`,
                                     borderRadius: "8px",
-                                    backgroundColor: isDaySelected(day.value)
-                                        ? "rgb(2, 8, 115,0.2)"
+                                    backgroundColor: disibleDays.some(
+                                        (item) => item == day.value
+                                    )
+                                        ? "#dddddd" // Background color for disabled button
+                                        : isDaySelected(day.value)
+                                        ? "rgba(2, 8, 115, 0.2)"
                                         : "white",
                                 }}>
                                 {day.name}
                             </button>
                         ))}
                     </div>
-                    {daysOpen.length < 0 ? (
+                    {/* {daysOpen.length < 0 ? (
                         <div className="text-red-500 text-sm mt-1">
                             At least one day must be selected
                         </div>
-                    ) : null}
+                    ) : null} */}
 
                     <p
                         className="font-semibold mt-3"
@@ -515,10 +532,11 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
+                                ${
+                                    selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                    }`}
+                                }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -531,8 +549,13 @@ export default function EditServiceTime(props: IParams) {
                                         ? "rgb(2, 8, 115,0.2)"
                                         : "white",
                                 }}
-                                onClick={() => toggleSlotSelection(index, timeSlots[index].startTime,
-                                    timeSlots[index].endTime)}>
+                                onClick={() =>
+                                    toggleSlotSelection(
+                                        index,
+                                        timeSlots[index].startTime,
+                                        timeSlots[index].endTime
+                                    )
+                                }>
                                 {slot.startTime} - {slot.endTime}
                             </div>
                         ))}
@@ -582,11 +605,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                        timeSlots[element]
-                                                            .startTime &&
+                                                            timeSlots[element]
+                                                                .startTime &&
                                                         item.endTime ==
-                                                        timeSlots[element]
-                                                            .endTime
+                                                            timeSlots[element]
+                                                                .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -678,7 +701,8 @@ export default function EditServiceTime(props: IParams) {
                                 !closeTime ||
                                 !duration ||
                                 !guestNumber ||
-                                !availableFromDate
+                                !availableFromDate ||
+                                selectedSlots.length == 0
                             }
                             onClick={handleSubmit}
                             type="submit"
