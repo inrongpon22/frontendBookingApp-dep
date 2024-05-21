@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 // icon
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { Chip } from "@mui/material";
 
-const ShopInformation = () => {
-  const { shopDetail } = useContext(ShopContext);
+const ShopInformation = ({shopDetail}:any) => {
+  
   return (
     <div className="relative my-auto">
       <h1 className="text-[25px] font-semibold">{shopDetail?.title}</h1>

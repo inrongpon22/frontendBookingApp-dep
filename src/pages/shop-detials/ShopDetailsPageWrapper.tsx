@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 export const ShopContext = createContext<any>(null); //create context to store all the data
@@ -23,8 +23,8 @@ import Quantity from "../../components/shop-details/Quantity";
 import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
-import Loading from "../../components/dialog/Loading";
-import { getServices } from "../../api/service";
+// import { getServices } from "../../api/service";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const theme = createTheme({
     palette: {
@@ -39,6 +39,9 @@ const ShopDetailsPageWrapper = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
+
+    const { setShowDialog, setDialogState, setIsGlobalLoading } =
+        useContext(GlobalContext);
 
     const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by businessId connected api
 
@@ -76,10 +79,6 @@ const ShopDetailsPageWrapper = () => {
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
             selectedDate.date.isAfter(item.availableFromDate)
     );
-
-    // handle dialog
-    const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
-    const [modalState, setModalState] = useState<string>("phone-input"); //phone-input
 
     // get business by businessId from params
     const { error: bussDataError } = useSWR(
@@ -145,13 +144,18 @@ const ShopDetailsPageWrapper = () => {
             })
     );
 
-    const { servicesss } = getServices();
+    // const { servicesss } = getServices();
 
-    console.log(servicesss);
+    // console.log(servicesss);
+
+    useEffect(() => {
+        setIsGlobalLoading(servByIdLoading);
+    }, [servByIdLoading]);
 
     // browser tab title
     useEffect(() => {
         document.title = shopDetail?.title || "Shop Detail";
+        localStorage.removeItem("bookingDetail")
     }, [shopDetail]);
 
     // catch errors api
@@ -160,112 +164,100 @@ const ShopDetailsPageWrapper = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <ShopContext.Provider
-                value={{
-                    shopDetail,
-                    setShopDetail,
-                    calendar,
-                    setCalendar,
-                    dateArr,
-                    setDateArr,
-                    selectedDate,
-                    setSelectedDate,
-                    services,
-                    setServices,
-                    serviceById,
-                    setServiceById,
-                    quantities,
-                    setQuantities,
-                    isShowDialog,
-                    setIsShowDialog,
-                    modalState,
-                    setModalState,
-                }}
-            >
-                {/* loading progress */}
-                <Loading openLoading={servByIdLoading} />
-                {/* loading progress */}
-                <div className="">
-                    <Slideshow data={shopDetail?.imagesURL || []} />
+            <div className="">
+                <Slideshow data={shopDetail?.imagesURL || []} />
 
-                    <div className={`flex flex-col gap-5 p-5`}>
-                        <ShopInformation />
+                <div className={`flex flex-col gap-5 p-5`}>
+                    <ShopInformation shopDetail={shopDetail} />
 
-                        <ServiceOptions
-                            services={services}
-                            setServices={setServices}
-                        />
+                    <ServiceOptions
+                        services={services}
+                        setServices={setServices}
+                    />
 
-                        <Quantity
-                            quantities={quantities}
-                            setQuantities={setQuantities}
-                            serviceById={serviceById}
-                            selectedDate={selectedDate}
-                            setServiceById={setServiceById}
-                        />
+                    <Quantity
+                        quantities={quantities}
+                        setQuantities={setQuantities}
+                        serviceById={serviceById}
+                        selectedDate={selectedDate}
+                        setServiceById={setServiceById}
+                    />
 
-                        <Calendar
-                            calendar={calendar}
-                            setCalendar={setCalendar}
-                            dateArr={dateArr}
-                            setDateArr={setDateArr}
-                            selectedDate={selectedDate}
-                            setSelectedDate={setSelectedDate}
-                        />
+                    <Calendar
+                        calendar={calendar}
+                        setCalendar={setCalendar}
+                        dateArr={dateArr}
+                        setDateArr={setDateArr}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                    />
 
-                        <TimeSlots
-                            selectedDate={selectedDate}
-                            setServiceById={setServiceById}
-                            serviceById={serviceById}
-                            quantities={quantities}
-                            selectedIndices={selectedIndices}
-                            setSelectedIndices={setSelectedIndices}
-                        />
-                    </div>
-
-                    <div className="flex flex-col justify-center items-center my-5">
-                        <button
-                            type="button"
-                            disabled={
-                                !slotArrays?.slotsTime.find(
-                                    (item: any) => item.isSelected
-                                )
-                            }
-                            className={`${
-                                !slotArrays?.slotsTime.find(
-                                    (item: any) => item.isSelected
-                                )
-                                    ? "bg-gray-300"
-                                    : "bg-[#020873]"
-                            }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
-                            onClick={() => {
-                                if (
-                                    slotArrays?.slotsTime.filter(
-                                        (item: any) => item.isSelected
-                                    )
-                                ) {
-                                    // console.log(serviceById)
-                                    if (token) {
-                                        setModalState("booking-detail-preview");
-                                        setIsShowDialog(true);
-                                    } else {
-                                        setIsShowDialog(true);
-                                    }
-                                }
-                            }}
-                        >
-                            {t("button:confirmBookingButton")}
-                        </button>
-                        <span className="text-[12px] py-2">
-                            {t("reviewDetails")}
-                        </span>
-                    </div>
-
-                    {/* Starts:: dialog */}
-                    <DialogWrapper userSide="user" />
-                    {/* Ends:: dialog */}
+                    <TimeSlots
+                        selectedDate={selectedDate}
+                        setServiceById={setServiceById}
+                        serviceById={serviceById}
+                        quantities={quantities}
+                        selectedIndices={selectedIndices}
+                        setSelectedIndices={setSelectedIndices}
+                    />
                 </div>
-            </ShopContext.Provider>
+
+                <div className="flex flex-col justify-center items-center my-5">
+                    <button
+                        type="button"
+                        disabled={
+                            !slotArrays?.slotsTime.find(
+                                (item: any) => item.isSelected
+                            )
+                        }
+                        className={`${
+                            !slotArrays?.slotsTime.find(
+                                (item: any) => item.isSelected
+                            )
+                                ? "bg-gray-300"
+                                : "bg-[#020873]"
+                        }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
+                        onClick={() => {
+                            localStorage.setItem(
+                                "bookingDetail",
+                                JSON.stringify({
+                                    serviceId: Number(
+                                        services.find(
+                                            (item: any) => item.isSelected
+                                        )?.id
+                                    ),
+                                    serviceById: serviceById,
+                                    selectedDate:selectedDate,
+                                    bookingDate:
+                                        selectedDate.date.format("YYYY-MM-DD"),
+                                    guestNumber: quantities.quantities,
+                                })
+                            );
+                            if (
+                                slotArrays?.slotsTime.filter(
+                                    (item: any) => item.isSelected
+                                )
+                            ) {
+                                if (token) {
+                                    setShowDialog(true);
+                                    setDialogState("booking-detail-preview");
+                                } else {
+                                    setShowDialog(true);
+                                }
+                            }
+                        }}
+                    >
+                        {t("button:confirmBookingButton")}
+                    </button>
+                    <span className="text-[12px] py-2">
+                        {t("reviewDetails")}
+                    </span>
+                </div>
+
+                {/* Starts:: dialog */}
+                <DialogWrapper userSide="user" />
+                {/* Ends:: dialog */}
+            </div>
         </ThemeProvider>
     );
 };

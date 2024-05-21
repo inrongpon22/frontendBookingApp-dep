@@ -2,7 +2,6 @@
 import { useTranslation } from "react-i18next";
 // context
 // import { useContext } from "react";
-// import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
 interface ServiceOptionsProps {
   services:any
@@ -10,7 +9,6 @@ interface ServiceOptionsProps {
 }
 
 const ServiceOptions = ({services, setServices}:ServiceOptionsProps) => {
-  // const { services, setServices } = useContext(ShopContext);
 
   const {t}= useTranslation();
 

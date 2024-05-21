@@ -4,7 +4,6 @@ import moment from "moment";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-// import { ShopContext } from "../../pages/shop-detials/ShopDetailsPageWrapper";
 
 interface CalendarProps {
   calendar: any;
@@ -23,14 +22,6 @@ const Calendar = ({
   selectedDate,
   setSelectedDate,
 }:CalendarProps) => {
-  // const {
-  //   calendar,
-  //   setCalendar,
-  //   dateArr,
-  //   setDateArr,
-  //   selectedDate,
-  //   setSelectedDate,
-  // } = useContext(ShopContext);
 
   const handleDateChange = (meth: string) => {
     switch (meth) {

@@ -3,12 +3,12 @@ import { GlobalContext } from "../../contexts/BusinessContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 // interface
-import { Ireservation } from "../../interface/reservation";
+import { Ireservation } from "../../interfaces/reservation";
 // api
 import { getBusinessId } from "../../api/business";
 import { getReservationByBusinessId } from "../../api/booking";
 // icons
-import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
+// import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
@@ -16,10 +16,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 // styled
 import { Badge } from "@mui/material";
-import toast from "react-hot-toast";
 import moment from "moment";
-import Loading from "../../components/dialog/Loading";
-import { Ireservation } from "../../interfaces/reservation";
 
 const BusinessProfile = () => {
     const { businessId } = useParams();
@@ -72,14 +69,14 @@ const BusinessProfile = () => {
                     {businessData?.title}
                 </p>
                 <div className="flex items-center gap-3">
-                    <Badge
+                    {/* <Badge
                         color="warning"
                         variant="dot"
                         className="cursor-pointer"
                         onClick={() => toast("coming soon")}
                     >
                         <NotificationsActiveOutlinedIcon fontSize="small" />
-                    </Badge>
+                    </Badge> */}
                     <Badge
                         color="secondary"
                         variant="standard"
