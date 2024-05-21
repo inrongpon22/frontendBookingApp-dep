@@ -1,21 +1,25 @@
 // import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
 import { IBusinessInfo, ILocation } from "./interfaces/business";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha } from "@mui/material";
 // import CloseIcon from "@mui/icons-material/Close";
 
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../helper/createSupabase";
+// import { supabase } from "../../helper/createSupabase";
 import SearchMap from "./SearchMap";
 import { dayOfWeek } from "../../helper/daysOfWeek"; // dataOfWeekEng, dataOfWeekThai,
-import { insertBusiness } from "../../api/business";
+import { insertBusiness, updateBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
+    const queryParams = new URLSearchParams(location.search);
+    const businessId = queryParams.get("businessId");
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
     const {
@@ -25,22 +29,40 @@ export default function BusinessInfo() {
 
     const [file, setFile] = useState<File[]>([]);
     // const [previewImages, setPreviewImages] = useState<string[]>([]);
+    // const { data: businessData } = useSWR<any>(
+    //     businessId && `${app_api}/business/${businessId ?? ""}`,
+    //     fetcher
+    // );
+    // const businessInfo: IBusinessInfo = {
+    //     title: businessData.title || "",
+    //     daysOpen: businessData.daysOpen || [],
+    //     openTime: businessData.openTime || "",
+    //     closeTime: businessData.closeTime || "",
+    //     location: businessData.address || "",
+    //     description: businessData.description || "",
+    //     phoneNumber: businessData.phoneNumber || "",
+    // };
+    // const [locationData, setLocationData] = useState<ILocation>({
+    //     lat: businessData.latitude || 0,
+    //     lng: businessData.longitude || 0,
+    //     address: businessData.address || "",
+    // });
+    // const [daysOpen, setDaysOpen] = useState<string[]>(
+    //     businessData.daysOpen || []
+    // );
+
+    const { data: businessData } = useSWR(
+        businessId && `${app_api}/business/${businessId ?? ""}`,
+        fetcher
+    );
+
     const [locationData, setLocationData] = useState<ILocation>({
         lat: 0,
         lng: 0,
         address: "",
     });
-    const [daysOpen, setDaysOpen] = useState<string[]>([]);
-    const businessInfo: IBusinessInfo = {
-        title: "",
-        daysOpen: [],
-        openTime: "",
-        closeTime: "",
-        location: "",
-        description: "",
-        phoneNumber: "",
-    };
 
+    const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const schema = Yup.object().shape({
         title: Yup.string()
             .min(2, t("formValidation:business:create:shopName:shopNameMin"))
@@ -94,22 +116,173 @@ export default function BusinessInfo() {
         ),
     });
 
+    useEffect(() => {
+        if (businessData) {
+            setLocationData({
+                lat: businessData.latitude || 0,
+                lng: businessData.longitude || 0,
+                address: businessData.address || "",
+            });
+
+            setDaysOpen(businessData.daysOpen || []);
+            formik.setFieldValue("title", businessData.title);
+            formik.setFieldValue("openTime", businessData.openTime);
+            formik.setFieldValue("closeTime", businessData.closeTime);
+            formik.setFieldValue("phoneNumber", businessData.phoneNumber);
+            formik.setFieldValue("description", businessData.description);
+            formik.setFieldValue("location", businessData.address);
+            formik.setFieldValue("daysOpen", businessData.daysOpen);
+            handleChangeLocation({
+                lat: businessData.latitude,
+                lng: businessData.longitude,
+                address: businessData.address,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [businessData]);
+
     const handleChangeLocation = (inputData: ILocation) => {
         formik.setFieldValue("location", inputData.address);
         setLocationData(inputData);
     };
 
-    function generateUniqueRandomNumber() {
-        let randomNumber;
-        const generatedNumbers = new Set();
+    const formik = useFormik({
+        initialValues: {
+            title: "",
+            daysOpen: [],
+            openTime: "",
+            closeTime: "",
+            phoneNumber: "",
+            location: "",
+            description: "",
+        },
+        validationSchema: schema,
+        onSubmit: async (values) => {
+            const imagesURL: string[] = [];
+            // const uniqueRandomNumber = generateUniqueRandomNumber();
+            // if (file.length > 0) {
+            //     for (const element of file) {
+            //         const { data, error } = await supabase.storage
+            //             .from("BookingSystem/images")
+            //             .upload(
+            //                 file !== null
+            //                     ? element.name + `${uniqueRandomNumber}`
+            //                     : "",
+            //                 element
+            //             );
+            //         if (error) {
+            //             console.error(error);
+            //         } else {
+            //             console.log(data.path);
+            //             imagesURL.push(data.path);
+            //         }
+            //     }
 
-        do {
-            randomNumber = Math.floor(10000 + Math.random() * 90000); // Generate a random 5-digit number
-        } while (generatedNumbers.has(randomNumber)); // Check if the number has been generated before
+            //     const insertData = {
+            //         title: values.title,
+            //         imagesURL: imagesURL,
+            //         description: values.description,
+            //         phoneNumber: values.phoneNumber,
+            //         address: locationData.address,
+            //         latitude: locationData.lat,
+            //         longitude: locationData.lng,
+            //         daysOpen: daysOpen,
+            //         openTime: values.openTime,
+            //         closeTime: values.closeTime,
+            //         userId: userId ? Number(userId) : 0,
+            //     };
 
-        generatedNumbers.add(randomNumber); // Add the generated number to the set of generated numbers
-        return randomNumber;
-    }
+            //     if (token === null) {
+            //         throw new Error("Token is not found");
+            //     }
+
+            //     const business = await insertBusiness(insertData, token);
+
+            //     localStorage.setItem(
+            //         "businessId",
+            //         String(business.data.businessId)
+            //     );
+            //     navigate(`/service-info/${business.data.businessId}?step=1`);
+            // } else {
+            //     const insertData = {
+            //         title: values.title,
+            //         imagesURL: imagesURL,
+            //         description: values.description,
+            //         phoneNumber: values.phoneNumber,
+            //         address: locationData.address,
+            //         latitude: locationData.lat,
+            //         longitude: locationData.lng,
+            //         daysOpen: daysOpen,
+            //         openTime: values.openTime,
+            //         closeTime: values.closeTime,
+            //         userId: userId ? Number(userId) : 0,
+            //     };
+            //     console.log(insertData);
+
+            //     if (token === null) {
+            //         throw new Error("Token is not found");
+            //     }
+
+            //     const business = await insertBusiness(insertData, token);
+
+            //     localStorage.setItem(
+            //         "businessId",
+            //         String(business.data.businessId)
+            //     );
+            //     navigate(`/service-info/${business.data.businessId}?step=1`);
+            // }
+            const insertData = {
+                title: values.title,
+                imagesURL: imagesURL,
+                description: values.description,
+                phoneNumber: values.phoneNumber,
+                address: locationData.address,
+                latitude: locationData.lat,
+                longitude: locationData.lng,
+                daysOpen: daysOpen,
+                openTime: values.openTime,
+                closeTime: values.closeTime,
+                userId: userId ? Number(userId) : 0,
+            };
+
+            if (token === null) {
+                throw new Error("Token is not found");
+            }
+
+            if (businessId) {
+                console.log("update");
+                const business = await updateBusiness(
+                    insertData,
+                    Number(businessId),
+                    token
+                );
+                localStorage.setItem(
+                    "businessId",
+                    String(business.data.businessId)
+                );
+                navigate(`/service-info/${business.data.businessId}?step=1`);
+            } else {
+                const business = await insertBusiness(insertData, token);
+                localStorage.setItem(
+                    "businessId",
+                    String(business.data.businessId)
+                );
+                navigate(`/service-info/${business.data.businessId}?step=1`);
+            }
+        },
+    });
+
+    // function generateUniqueRandomNumber() {
+    //     let randomNumber;
+    //     const generatedNumbers = new Set();
+
+    //     do {
+    //         randomNumber = Math.floor(10000 + Math.random() * 90000); // Generate a random 5-digit number
+    //     } while (generatedNumbers.has(randomNumber)); // Check if the number has been generated before
+
+    //     generatedNumbers.add(randomNumber); // Add the generated number to the set of generated numbers
+    //     return randomNumber;
+    // }
 
     // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     //   if (e.target.files && e.target.files.length > 0) {
@@ -135,95 +308,6 @@ export default function BusinessInfo() {
     //     });
     //   }
     // };
-
-    const formik = useFormik({
-        initialValues: {
-            title: businessInfo.title || "",
-            daysOpen: [],
-            openTime: businessInfo.openTime || "",
-            closeTime: businessInfo.closeTime || "",
-            phoneNumber: businessInfo.phoneNumber || "",
-            location: businessInfo.location || "",
-            description: businessInfo.description || "",
-        },
-        validationSchema: schema,
-        onSubmit: async (values) => {
-            const imagesURL: string[] = [];
-            const uniqueRandomNumber = generateUniqueRandomNumber();
-            if (file.length > 0) {
-                for (const element of file) {
-                    const { data, error } = await supabase.storage
-                        .from("BookingSystem/images")
-                        .upload(
-                            file !== null
-                                ? element.name + `${uniqueRandomNumber}`
-                                : "",
-                            element
-                        );
-                    if (error) {
-                        console.error(error);
-                    } else {
-                        console.log(data.path);
-                        imagesURL.push(data.path);
-                    }
-                }
-
-                const insertData = {
-                    title: values.title,
-                    imagesURL: imagesURL,
-                    description: values.description,
-                    phoneNumber: values.phoneNumber,
-                    address: locationData.address,
-                    latitude: locationData.lat,
-                    longitude: locationData.lng,
-                    daysOpen: daysOpen,
-                    openTime: values.openTime,
-                    closeTime: values.closeTime,
-                    userId: userId ? Number(userId) : 0,
-                };
-                console.log(insertData);
-
-                if (token === null) {
-                    throw new Error("Token is not found");
-                }
-
-                const business = await insertBusiness(insertData, token);
-
-                localStorage.setItem(
-                    "businessId",
-                    String(business.data.businessId)
-                );
-                navigate(`/service-info/${business.data.businessId}`);
-            } else {
-                const insertData = {
-                    title: values.title,
-                    imagesURL: imagesURL,
-                    description: values.description,
-                    phoneNumber: values.phoneNumber,
-                    address: locationData.address,
-                    latitude: locationData.lat,
-                    longitude: locationData.lng,
-                    daysOpen: daysOpen,
-                    openTime: values.openTime,
-                    closeTime: values.closeTime,
-                    userId: userId ? Number(userId) : 0,
-                };
-                console.log(insertData);
-
-                if (token === null) {
-                    throw new Error("Token is not found");
-                }
-
-                const business = await insertBusiness(insertData, token);
-
-                localStorage.setItem(
-                    "businessId",
-                    String(business.data.businessId)
-                );
-                navigate(`/service-info/${business.data.businessId}`);
-            }
-        },
-    });
 
     // const handleClearImages = (index: number) => {
     //   setPreviewImages((prevImages) => {
@@ -292,7 +376,10 @@ export default function BusinessInfo() {
                         className="mt-4 font-semibold">
                         {t("form:business:create:location")}
                     </p>
-                    <SearchMap handleChangeLocation={handleChangeLocation} />
+                    <SearchMap
+                        handleChangeLocation={handleChangeLocation}
+                        oldAddress={locationData.address}
+                    />
                     {formik.touched.location && formik.errors.location ? (
                         <div className="text-red-500 mt-1">
                             {formik.errors.location}
@@ -357,6 +444,7 @@ export default function BusinessInfo() {
                                     style={{
                                         border: "none",
                                     }}
+                                    value={formik.values.openTime}
                                 />
                             </div>
                         </div>
@@ -377,6 +465,7 @@ export default function BusinessInfo() {
                                     {...formik.getFieldProps("closeTime")}
                                     type="time"
                                     style={{ border: "none" }}
+                                    value={formik.values.closeTime}
                                 />
                             </div>
                         </div>
@@ -500,16 +589,10 @@ export default function BusinessInfo() {
                     <div className="w-full flex justify-center  inset-x-0 gap-2">
                         <button
                             type="button"
-                            disabled={!!Object.keys(formik.errors).length}
-                            className={`w-full p-3 my-5 text-white text-[14px] ${
-                                !Object.keys(formik.errors).length
-                                    ? "bg-deep-blue"
-                                    : "bg-gray-300"
-                            } rounded-lg font-semibold`}
+                            // disabled={!!Object.keys(formik.errors).length}
+                            className={`w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold`}
                             onClick={() => {
-                                if (!Object.keys(formik.errors).length) {
-                                    formik.handleSubmit();
-                                }
+                                formik.handleSubmit();
                             }}>
                             {t("button:next")}
                         </button>

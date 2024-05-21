@@ -18,7 +18,10 @@ import { useParams } from "react-router-dom";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { Anchor } from "./ServiceSetting";
 import BusinessPreview from "./BusinessPreview";
-import { IServiceInfo, IServiceEditTime } from "../../interfaces/services/Iservice";
+import {
+    IServiceInfo,
+    IServiceEditTime,
+} from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceId: number;
@@ -101,6 +104,7 @@ export default function ServiceDetail(props: IParams) {
             isHideEndTime: isHideEndTime,
             businessId: Number(businessId),
         };
+
         await updateService(serviceInfo.id, insertData, token || "");
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
@@ -124,16 +128,16 @@ export default function ServiceDetail(props: IParams) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const handleIsModifiedData = () => {
         return (

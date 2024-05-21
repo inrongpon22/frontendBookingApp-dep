@@ -52,7 +52,7 @@ export default function EditServiceTime(props: IParams) {
     const [availableToDate, setAvailableToDate] = useState(
         props.isAddTime
             ? ""
-            : props.serviceTime[props.editIndex].availableToDate
+            : props.serviceTime[props.editIndex].availableToDate ?? ""
     );
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
     const timeSlots: {
@@ -91,17 +91,21 @@ export default function EditServiceTime(props: IParams) {
     };
 
     useEffect(() => {
+        const uniqueDays = new Set();
         if (props.serviceTime[0].daysOpen !== undefined) {
-            props.serviceTime.forEach((element) => {
-                if (
-                    element.availableFromDate == availableFromDate &&
-                    element.availableToDate == availableToDate
-                ) {
-                    setDisibleDays(element.daysOpen);
-                } else {
-                    setDisibleDays([]);
-                }
-            });
+            props.serviceTime
+                .filter((item, index) => index !== props.editIndex)
+                .forEach((element) => {
+                    if (
+                        element.availableFromDate == availableFromDate &&
+                        element.availableToDate == availableToDate
+                    ) {
+                        element.daysOpen.forEach((day) => uniqueDays.add(day));
+                        setDisibleDays(Array.from(uniqueDays) as string[]);
+                    } else {
+                        setDisibleDays([]);
+                    }
+                });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [availableFromDate, availableToDate]);
@@ -268,8 +272,8 @@ export default function EditServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
-            openTime: openTime,
-            closeTime: closeTime,
+            // openTime: openTime,
+            // closeTime: closeTime,
         };
         props.serviceTime[props.editIndex] = insertData;
         if (props.handleSetServiceTime) {
@@ -389,8 +393,12 @@ export default function EditServiceTime(props: IParams) {
                                         ? "2px solid #020873"
                                         : `1px solid ${alpha("#000000", 0.2)}`,
                                     borderRadius: "8px",
-                                    backgroundColor: isDaySelected(day.value)
-                                        ? "rgb(2, 8, 115,0.2)"
+                                    backgroundColor: disibleDays.some(
+                                        (item) => item == day.value
+                                    )
+                                        ? "#dddddd" // Background color for disabled button
+                                        : isDaySelected(day.value)
+                                        ? "rgba(2, 8, 115, 0.2)"
                                         : "white",
                                 }}>
                                 {day.name}
@@ -693,7 +701,8 @@ export default function EditServiceTime(props: IParams) {
                                 !closeTime ||
                                 !duration ||
                                 !guestNumber ||
-                                !availableFromDate
+                                !availableFromDate ||
+                                selectedSlots.length == 0
                             }
                             onClick={handleSubmit}
                             type="submit"

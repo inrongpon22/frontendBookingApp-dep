@@ -95,13 +95,14 @@ export default function CreateService(props: IProps) {
 
         try {
             if (token === null) throw new Error("Token is not found");
-            await addService(insertData, token);
-            props.serviceMutate && props.serviceMutate();
-            localStorage.removeItem("serviceInfo");
-            localStorage.removeItem("serviceTime");
-            props.handleCloseServiceInFo && props.handleCloseServiceInFo();
-            props.handleCloseServiceTime && props.handleCloseServiceTime();
-            navigate(`/service-setting/${businessId}`);
+            await addService(insertData, token).then(() => {
+                props.serviceMutate && props.serviceMutate();
+                localStorage.removeItem("serviceInfo");
+                localStorage.removeItem("serviceTime");
+                props.handleCloseServiceInFo && props.handleCloseServiceInFo();
+                props.handleCloseServiceTime && props.handleCloseServiceTime();
+                navigate(`/service-setting/${businessId}`);
+            });
         } catch (error) {
             console.log(error);
         }
@@ -126,28 +127,28 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
             <EditServiceInfo
                 serviceName={serviceInfo.serviceName}
-                serviceDescription={
-                    serviceInfo.serviceDescription
-                }
+                serviceDescription={serviceInfo.serviceDescription}
                 price={serviceInfo.price}
                 currency={serviceInfo.currency}
-                handleSetEditInfo={() => setState({ ...state, ["bottom"]: false })}
-                serviceMutate={props.serviceMutate || (() => { })}
+                handleSetEditInfo={() =>
+                    setState({ ...state, ["bottom"]: false })
+                }
+                serviceMutate={props.serviceMutate || (() => {})}
             />
         </Box>
     );
@@ -180,23 +181,34 @@ export default function CreateService(props: IProps) {
 
     const editServiceTime = () => (
         <Box sx={{ height: "100vh" }}>
-            {serviceTime.length > 0 && (
-                isAddTime ? (
+            {serviceTime.length > 0 &&
+                (isAddTime ? (
                     <AddServiceTime
                         serviceTime={serviceTime}
-                        handleCloseCard={() => setState({ ...state, ["bottom"]: false })}
+                        handleCloseCard={() =>
+                            setState({ ...state, ["bottom"]: false })
+                        }
                     />
                 ) : (
                     <EditServiceTime
                         serviceTime={serviceTime}
-                        openTime={serviceTime[selectedIndex].openTime == undefined ? "" : serviceTime[selectedIndex].openTime}
-                        closeTime={serviceTime[selectedIndex].closeTime == undefined ? "" : serviceTime[selectedIndex].closeTime}
+                        openTime={
+                            serviceTime[selectedIndex].openTime == undefined
+                                ? ""
+                                : serviceTime[selectedIndex].openTime
+                        }
+                        closeTime={
+                            serviceTime[selectedIndex].closeTime == undefined
+                                ? ""
+                                : serviceTime[selectedIndex].closeTime
+                        }
                         editIndex={selectedIndex}
                         isAddTime={isAddTime}
-                        handleSetEditTime={() => setState({ ...state, ["bottom"]: false })}
+                        handleSetEditTime={() =>
+                            setState({ ...state, ["bottom"]: false })
+                        }
                     />
-                )
-            )}
+                ))}
         </Box>
     );
 
@@ -222,6 +234,7 @@ export default function CreateService(props: IProps) {
         setTypeName("serviceTime");
         setState({ ...state, ["bottom"]: true });
         setIsAddTime(true);
+        props.handleAddData && props.handleAddData();
     };
 
     return (
@@ -249,7 +262,6 @@ export default function CreateService(props: IProps) {
                     onClose={toggleDrawer("bottom", false)}>
                     {editServiceTime()}
                 </Drawer>
-
             )}
 
             <div className="pr-4 pl-4 pt-6">
@@ -277,7 +289,9 @@ export default function CreateService(props: IProps) {
                                     index={index}
                                     serviceTime={time}
                                     handleDelete={handleDelete}
-                                    handleEditServiceTime={handleEditServiceTime}
+                                    handleEditServiceTime={
+                                        handleEditServiceTime
+                                    }
                                 />
                             </div>
                         ))}
@@ -293,7 +307,9 @@ export default function CreateService(props: IProps) {
                         }}
                         className=" items-center gap-1 p-1 ">
                         <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
-                        <div className=" font-medium " onClick={handleAddServiceTime}>
+                        <div
+                            className=" font-medium "
+                            onClick={handleAddServiceTime}>
                             {t("button:addServiceTime")}
                         </div>
                     </button>
@@ -342,10 +358,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -392,10 +409,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -445,10 +463,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (

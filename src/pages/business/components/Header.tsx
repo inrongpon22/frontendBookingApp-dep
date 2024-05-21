@@ -1,5 +1,5 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 interface IProps {
     context: string;
@@ -11,12 +11,9 @@ interface IProps {
 }
 
 export default function Header(props: IProps) {
-
     return (
         <div className="flex items-center justify-between">
-            <div
-                onClick={props.handleClose}
-            >
+            <div onClick={props.handleClose}>
                 {props.isClose ? (
                     <CloseIcon
                         sx={{
@@ -34,7 +31,6 @@ export default function Header(props: IProps) {
                         }}
                     />
                 )}
-
             </div>
 
             <div className="font-bold" style={{ fontSize: "14px" }}>
@@ -47,7 +43,6 @@ export default function Header(props: IProps) {
                 ) : (
                     <div style={{ width: "20px", height: "20px" }} />
                 )}
-
             </div>
         </div>
     );

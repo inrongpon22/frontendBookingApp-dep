@@ -15,7 +15,7 @@ interface IProps {
     daysOpen: string[];
     // open: boolean;
     openConfirm: boolean;
-    handleOpen: () => void;
+    handleOpen: (serviceId: number) => void;
     handleClose: () => void;
     handleRefresh: () => void;
     handleSelectService?: (serviceId: number) => void;
@@ -39,12 +39,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     position: "relative",
 }));
 
-
-
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
 
     const handleDeleteService = async () => {
+        console.log(props.serviceId);
         try {
             if (token) {
                 await deleteService(props.serviceId, token);
@@ -125,7 +124,8 @@ export default function ListServiceCard(props: IProps) {
                         {truncateContext(props.description, 90)}
                     </p>
                     <p style={{ fontSize: "12px" }}>
-                        {props.openTime} - {props.closeTime}
+                        {props.openTime.substring(0, 5)} -{" "}
+                        {props.closeTime.substring(0, 5)}{" "}
                     </p>
                 </div>
             </Main>

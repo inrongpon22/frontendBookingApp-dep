@@ -85,8 +85,8 @@ export interface IServiceEditTime {
     slotsTime: IBookingSlot[];
     duration: number;
     manualCapacity?: IBookingSlot[];
-    openTime: string;
-    closeTime: string;
+    // openTime: string;
+    // closeTime: string;
 }
 
 export interface IServiceShowHide {
