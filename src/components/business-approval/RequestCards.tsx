@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ApproveContext } from "../../pages/booking-approval/BookingApproval";
 import { useTranslation } from "react-i18next";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 interface cardTypes {
   data: {
@@ -27,7 +28,9 @@ interface cardTypes {
 }
 
 const RequestCards = ({ data }: cardTypes): React.ReactElement => {
-  const { setShow, setBookingDatas } = useContext(ApproveContext);
+  const { setBookingDatas } = useContext(ApproveContext);
+
+  const {setShowDialog} = useContext(GlobalContext);
 
   const { t } = useTranslation();
 
@@ -56,7 +59,7 @@ const RequestCards = ({ data }: cardTypes): React.ReactElement => {
           type="button"
           className="px-6 py-2 text-[14px] font-semibold text-white rounded-lg bg-deep-blue bg-opacity-80"
           onClick={() => {
-            setShow(true);
+            setShowDialog(true);
             setBookingDatas(data);
           }}
         >

@@ -2,11 +2,7 @@ import * as Yup from "yup";
 import { t } from "i18next";
 
 export interface DialogTypes {
-  show: boolean;
-  setShow: Function;
   userSide: "user" | "business";
-  dialogState: string | undefined;
-  setDialogState: Function;
 }
 
 // Define your validation schemas
