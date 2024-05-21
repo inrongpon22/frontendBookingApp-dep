@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 // api
 import { getBusinessByUserId } from "../../api/business";
 import { useNavigate } from "react-router";
-// import logo from "../../../public/images/logo.png";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const BusinessAuth = () => {
     const navigate = useNavigate();
@@ -12,11 +12,7 @@ const BusinessAuth = () => {
 
     const token = localStorage.getItem("token") ?? "";
     const userId = localStorage.getItem("userId") ?? "";
-
-    const [showDialog, setShowDialog] = useState<boolean>(false);
-    const [dialogState, setDialogState] = useState<string | undefined>(
-        "phone-input"
-    );
+    const { setShowDialog } = useContext(GlobalContext);
 
     useEffect(() => {
         document.title = t("title:bussRootTitle");
@@ -57,16 +53,9 @@ const BusinessAuth = () => {
                 {t("button:getStartedButton")}
             </button>
 
-            <DialogWrapper
-                show={showDialog}
-                setShow={setShowDialog}
-                userSide="business"
-                dialogState={dialogState}
-                setDialogState={setDialogState}
-            />
+            <DialogWrapper userSide="business" />
         </div>
     );
 };
 
 export default BusinessAuth;
-

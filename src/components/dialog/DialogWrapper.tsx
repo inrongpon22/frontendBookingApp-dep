@@ -1,12 +1,16 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 export const DialogContext = createContext<any>(null); //create context to store all the data
+import { GlobalContext } from "../../contexts/BusinessContext";
 import { useTranslation } from "react-i18next";
 // api & fetching data
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
+import { CheckOTP, ReqOtp } from "../../api/user";
 // form validateion
 import { useFormik } from "formik";
 // styled
+import toast from "react-hot-toast";
 import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typescript types
 import { Dialog, DialogContent, Slide, Toolbar } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
@@ -17,295 +21,302 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PhoneInput from "./PhoneInput";
 import OtpVerify from "./OtpVerify";
 import BookingDetailsPreview from "./BookingDetailsPreview";
-import { useNavigate } from "react-router-dom";
 import BookingApprovalSummary from "./BookingApprovalSummary";
 import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
-import toast from "react-hot-toast";
 import BookingApproveResult from "./BookingApproveResult";
-import Loading from "./Loading";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
 
 const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
+    props: TransitionProps & {
+        children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogWrapper = ({
-  show,
-  setShow,
-  userSide,
-  dialogState,
-  setDialogState,
-}: DialogTypes) => {
-  const navigate = useNavigate();
-  const query = useQuery();
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+const DialogWrapper = ({ userSide }: DialogTypes) => {
+    const navigate = useNavigate();
+    const query = useQuery();
+    const { t } = useTranslation();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const formik = useFormik({
-    initialValues: {
-      userId: 0,
-      username: "",
-      phoneNumbers: "",
-      otp: "",
-      additionalNotes: "",
-    },
-    validationSchema:
-      confirmationDialogSchemas[
-        dialogState as keyof typeof confirmationDialogSchemas
-      ],
-    onSubmit: async (values) => {
-      switch (dialogState) {
-        case "phone-input":
-          setIsLoading(true);
-          await axios
-            .post(`${app_api}/requestOTP/${values.phoneNumbers}/${language}`)
-            .then(async (res) => {
-              if (res.status === 200) {
-                setIsLoading(false);
-                setDialogState("otp-verify");
-              }
-            })
-            .catch((err) => {
-              if (err.response.status === 429) {
-                formik.setFieldError("phoneNumbers", t("error:tooManyRequest"));
-              }
-              setIsLoading(false);
-            });
-          break;
-
-        case "otp-verify":
-          setIsLoading(true);
-          await axios
-            .post(`${app_api}/checkOTP`, {
-              phoneNumber: values.phoneNumbers,
-              otpCode: values.otp,
-            })
-            .then(async (res) => {
-              if (res.status === 200) {
-                localStorage.setItem("token", res.data.token);
-                localStorage.setItem("userId", res.data.userId);
-                formik.setFieldValue("userId", res.data.userId);
-                formik.setFieldValue("username", res.data.userName);
-                setIsLoading(false);
-
-                switch (userSide) {
-                  case "user":
-                    if (query.get("accessCode")) {
-                      setShow(false);
-                    } else {
-                      setDialogState("booking-detail-preview");
-                    }
-                    break;
-
-                  case "business":
-                    if (query.get("accessCode")) {
-                      setDialogState("booking-approval-summary");
-                    } else {
-                      axios
-                        .get(
-                          `${app_api}/getBusinessByUserId/${res.data.userId}`,
-                          {
-                            headers: {
-                              Authorization: res.data.token,
-                            },
-                          }
-                        )
-                        .then((resp) => {
-                          if (resp.status === 200) {
-                            navigate(`/business-profile/${resp.data[0].id}`);
-                          }
-                        })
-                        .catch((err) => {
-                          if (err.response.status === 404) {
-                            navigate("/create-business");
-                          } else {
-                            toast.error(err.message);
-                          }
-                        });
-                    }
-                    break;
-
-                  default:
-                    break;
-                }
-              }
-            })
-            .catch((err) => {
-              formik.setFieldError(
-                "otp",
-                `${err.response.data.message} ${err.message}`
-              );
-              setIsLoading(false);
-            });
-          break;
-
-        default:
-          break;
-      }
-    },
-  });
-
-  const DialogHeader = (): string => {
-    switch (dialogState) {
-      case "booking-detail-preview":
-        return t("title:confirmBookingDialogHeader");
-
-      case "booking-approval-summary":
-        return t("title:bookingApproval");
-
-      case "booking-approval-reject":
-        return t("title:bookingReject");
-
-      default:
-        return "";
-    }
-  };
-
-  const SwitchState = () => {
-    switch (dialogState) {
-      case "phone-input":
-        return <PhoneInput />;
-
-      case "otp-verify":
-        return <OtpVerify />;
-
-      case "booking-detail-preview":
-        return <BookingDetailsPreview />;
-
-      case "booking-approval-summary":
-        return <BookingApprovalSummary />;
-
-      case "booking-approval-reject":
-        return <BookingApprovalReject />;
-
-      case "booking-approval-result-success":
-        return <BookingApproveResult dialogState={dialogState} />;
-
-      case "booking-approval-result-rejected":
-        return <BookingApproveResult dialogState={dialogState} />;
-
-      case "business-more-options":
-        return <BusinessProfileMoreOptions setState={setDialogState} />;
-
-      case "manual-booking":
-        return <ManualBooking />;
-
-      default:
-        break;
-    }
-  };
-
-  const handleBackButton = () => {
-    switch (dialogState) {
-      case "phone-input":
-        setShow(false);
-        break;
-
-      case "otp-verify":
-        setDialogState("phone-input");
-        break;
-
-      case "booking-detail-preview":
-        formik.resetForm();
-        setDialogState("phone-input");
-        setShow(false);
-        break;
-
-      case "booking-approval-summary":
-        formik.resetForm();
-        setShow(false);
-        break;
-
-      case "booking-approval-reject":
-        formik.resetForm();
-        setDialogState("booking-approval-summary");
-        break;
-
-      case "business-more-options":
-        formik.resetForm();
-        setShow(false);
-        setDialogState("business-more-options");
-        break;
-
-      case "manual-booking":
-        formik.resetForm();
-        setShow(false);
-        setDialogState("business-more-options");
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  return (
-    <DialogContext.Provider
-      value={{
-        formik,
+    const {
+        setIsGlobalLoading,
+        showDialog,
+        setShowDialog,
         dialogState,
         setDialogState,
-        isLoading,
-        setIsLoading,
-      }}
-    >
-      {/* loading progress */}
-      <Loading openLoading={isLoading} />
-      {/* loading progress */}
-      <Dialog
-        maxWidth="xl"
-        fullWidth
-        fullScreen
-        open={show}
-        style={{ zIndex: 1000 }}
-        classes={{
-          paper: dialogState === "business-more-options" ? "custom-dialog" : "",
-        }}
-        TransitionComponent={Transition}
-        onClose={() => setShow(false)}
-      >
-        {dialogState !== "business-more-options" && (
-          <Toolbar className="grid grid-cols-4">
-            <span
-              className={`w-[24px] h-[24px] cursor-pointer ${
-                query.get("accessCode") &&
-                dialogState !== "booking-approval-reject"
-                  ? "hidden"
-                  : ""
-              }`}
-              onClick={handleBackButton}
+    } = useContext(GlobalContext);
+
+    const formik = useFormik({
+        initialValues: {
+            userId: 0,
+            username: "",
+            phoneNumbers: "",
+            otp: "",
+            additionalNotes: "",
+        },
+        validationSchema:
+            confirmationDialogSchemas[
+                dialogState as keyof typeof confirmationDialogSchemas
+            ],
+        onSubmit: async (values) => {
+            switch (dialogState) {
+                case "phone-input":
+                    setIsGlobalLoading(true);
+                    await ReqOtp(values.phoneNumbers)
+                        .then((res: any) => {
+                            if (res.status === 200) {
+                                setIsGlobalLoading(false);
+                                setDialogState("otp-verify");
+                            }
+                        })
+                        .catch((err) => {
+                            if (err.response.status === 429) {
+                                formik.setFieldError(
+                                    "phoneNumbers",
+                                    t("error:tooManyRequest")
+                                );
+                            }
+                            setIsGlobalLoading(false);
+                        });
+                    break;
+
+                case "otp-verify":
+                    setIsGlobalLoading(true);
+                    await CheckOTP(values.phoneNumbers, values.otp)
+                        .then(async (res) => {
+                            console.log(res, userSide, query.get("accessCode"));
+                            if (res.status === 200) {
+                                localStorage.setItem("token", res.data.token);
+                                localStorage.setItem("userId", res.data.userId);
+                                formik.setFieldValue("userId", res.data.userId);
+                                formik.setFieldValue(
+                                    "username",
+                                    res.data.userName
+                                );
+                                setIsGlobalLoading(false);
+
+                                switch (userSide) {
+                                    case "user":
+                                        query.get("accessCode")
+                                            ? setShowDialog(false)
+                                            : setDialogState(
+                                                  "booking-detail-preview"
+                                              );
+                                        break;
+
+                                    case "business":
+                                        if (query.get("accessCode")) {
+                                            setDialogState(
+                                                "booking-approval-summary"
+                                            );
+                                        } else {
+                                            axios
+                                                .get(
+                                                    `${app_api}/getBusinessByUserId/${res.data.userId}`,
+                                                    {
+                                                        headers: {
+                                                            Authorization:
+                                                                res.data.token,
+                                                        },
+                                                    }
+                                                )
+                                                .then((resp) => {
+                                                    console.log("first", resp);
+                                                    if (resp.status === 200) {
+                                                        setShowDialog(false);
+                                                        navigate(
+                                                            `/business-profile/${resp.data[0].id}`
+                                                        );
+                                                    }
+                                                })
+                                                .catch((err) => {
+                                                    if (
+                                                        err.response.status ===
+                                                        404
+                                                    ) {
+                                                        navigate(
+                                                            "/create-business"
+                                                        );
+                                                    } else {
+                                                        toast.error(
+                                                            err.message
+                                                        );
+                                                    }
+                                                });
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            formik.setFieldError(
+                                "otp",
+                                `${err.response.data.message} ${err.message}`
+                            );
+                            setIsGlobalLoading(false);
+                        });
+                    break;
+
+                default:
+                    break;
+            }
+        },
+    });
+
+    const DialogHeader = (): string => {
+        switch (dialogState) {
+            case "booking-detail-preview":
+                return t("title:confirmBookingDialogHeader");
+
+            case "booking-approval-summary":
+                return t("title:bookingApproval");
+
+            case "booking-approval-reject":
+                return t("title:bookingReject");
+
+            default:
+                return "";
+        }
+    };
+
+    console.log(dialogState);
+
+    const SwitchState = () => {
+        switch (dialogState) {
+            case "phone-input":
+                return <PhoneInput />;
+
+            case "otp-verify":
+                return <OtpVerify />;
+
+            case "booking-detail-preview":
+                return <BookingDetailsPreview />;
+
+            case "booking-approval-summary":
+                return <BookingApprovalSummary />;
+
+            case "booking-approval-reject":
+                return <BookingApprovalReject />;
+
+            case "booking-approval-result-success":
+                return <BookingApproveResult />;
+
+            case "booking-approval-result-rejected":
+                return <BookingApproveResult />;
+
+            case "business-more-options":
+                return <BusinessProfileMoreOptions />;
+
+            case "manual-booking":
+                return <ManualBooking />;
+
+            default:
+                break;
+        }
+    };
+
+    const handleBackButton = () => {
+        switch (dialogState) {
+            case "phone-input":
+                setShowDialog(false);
+                break;
+
+            case "otp-verify":
+                setDialogState("phone-input");
+                break;
+
+            case "booking-detail-preview":
+                formik.resetForm();
+                setDialogState("phone-input");
+                setShowDialog(false);
+                break;
+
+            case "booking-approval-summary":
+                formik.resetForm();
+                setShowDialog(false);
+                break;
+
+            case "booking-approval-reject":
+                formik.resetForm();
+                setDialogState("booking-approval-summary");
+                break;
+
+            case "business-more-options":
+                setShowDialog(false);
+                setDialogState("business-more-options");
+                break;
+
+            case "manual-booking":
+                setDialogState("business-more-options");
+                break;
+
+            default:
+                break;
+        }
+    };
+
+    return (
+        <DialogContext.Provider
+            value={{
+                formik,
+            }}
+        >
+            <Dialog
+                maxWidth="xl"
+                fullWidth
+                fullScreen
+                open={showDialog}
+                style={{ zIndex: 1000 }}
+                classes={{
+                    paper:
+                        dialogState === "business-more-options"
+                            ? "custom-dialog"
+                            : "",
+                }}
+                TransitionComponent={Transition}
+                onClose={() => setShowDialog(false)}
             >
-              {dialogState === "phone-input" ||
-              dialogState === "booking-approval-summary" ||
-              dialogState === "business-more-options" ? (
-                <CloseIcon />
-              ) : (
-                <ArrowBackIosIcon />
-              )}
-            </span>
-            <span className="w-full font-semibold col-span-3 text-center">
-              {DialogHeader()}
-            </span>
-            {/* empty space for balance title header */}
-            <span className="w-[24px] h-[24px] invisible">
-              <CloseIcon />
-            </span>
-            {/* empty space for balance title header */}
-          </Toolbar>
-        )}
-        <DialogContent>{SwitchState()}</DialogContent>
-      </Dialog>
-    </DialogContext.Provider>
-  );
+                {dialogState !== "business-more-options" && (
+                    <Toolbar className="grid grid-cols-4">
+                        <span
+                            className={`w-[24px] h-[24px] cursor-pointer ${
+                                query.get("accessCode") &&
+                                dialogState !== "booking-approval-reject"
+                                    ? "hidden"
+                                    : ""
+                            }`}
+                            onClick={handleBackButton}
+                        >
+                            {[
+                                "phone-input",
+                                "booking-approval-summary",
+                                "business-more-options",
+                            ].includes(dialogState) ? (
+                                <CloseIcon />
+                            ) : (
+                                <ArrowBackIosIcon />
+                            )}
+                        </span>
+                        <span className="w-full font-semibold col-span-3 text-center">
+                            {DialogHeader()}
+                        </span>
+                        {/* empty space for balance title header */}
+                        <span className="w-[24px] h-[24px] invisible">
+                            <CloseIcon />
+                        </span>
+                        {/* empty space for balance title header */}
+                    </Toolbar>
+                )}
+                <DialogContent>{SwitchState()}</DialogContent>
+            </Dialog>
+        </DialogContext.Provider>
+    );
 };
 
 export default DialogWrapper;
