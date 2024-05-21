@@ -9,6 +9,10 @@ import { useTranslation } from "react-i18next";
 import { Anchor } from "../service/ServiceSetting";
 import CreateService from "./CreateService";
 import { IBookingSlot, IServiceTime } from "../../interfaces/services/Iservice";
+import { useParams } from "react-router-dom";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
+import Loading from "../../components/dialog/Loading";
 
 interface IProps {
     handleClose?: () => void;
@@ -18,6 +22,7 @@ interface IProps {
 
 export default function ServiceTime(props: IProps) {
     const lan = localStorage.getItem("lang");
+    const { businessId } = useParams();
     // const urlParams = new URLSearchParams(window.location.search);
     // const editValue = Number(urlParams.get("edit"));
     const { t } = useTranslation();
@@ -44,11 +49,21 @@ export default function ServiceTime(props: IProps) {
         right: false,
     });
 
-    const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
     const [duration, setDuration] = useState(1);
-    const [openTime, setOpenTime] = useState("");
-    const [closeTime, setCloseTime] = useState("");
+    const { data: businessData, isLoading: businessLoading } = useSWR<any>(
+        businessId && `${app_api}/business/${businessId}`,
+        fetcher
+    );
+    const [daysOpen, setDaysOpen] = useState<string[]>(
+        businessData?.daysOpen ?? []
+    );
+    const [openTime, setOpenTime] = useState(
+        businessData?.openTime.substring(0, 5) ?? ""
+    );
+    const [closeTime, setCloseTime] = useState(
+        businessData?.closeTime.substring(0, 5) ?? ""
+    );
     const [guestNumber, setGuestNumber] = useState(1);
     const [isManually, setIsManually] = useState(false);
     const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
@@ -61,14 +76,12 @@ export default function ServiceTime(props: IProps) {
     const TimeSlots: string[] = [];
 
     useEffect(() => {
-        if (
-            localStorage.getItem("editValue") == null ||
-            localStorage.getItem("editValue") == undefined
-        ) {
-            resetData();
+        if (businessData) {
+            setDaysOpen(businessData.daysOpen);
+            setOpenTime(businessData.openTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [businessData]);
 
     const resetData = () => {
         setDaysOpen([]);
@@ -263,16 +276,16 @@ export default function ServiceTime(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const addDisbleDays = () => {
         if (serviceTime[0].daysOpen !== undefined) {
@@ -328,6 +341,7 @@ export default function ServiceTime(props: IProps) {
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
+            <Loading openLoading={businessLoading} />
             <Drawer
                 anchor={"right"}
                 open={state["right"]}
@@ -424,14 +438,16 @@ export default function ServiceTime(props: IProps) {
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
                                             : `1px solid ${alpha(
-                                                "#000000",
-                                                0.2
-                                            )}`,
+                                                  "#000000",
+                                                  0.2
+                                              )}`,
                                         borderRadius: "8px",
-                                        backgroundColor: isDaySelected(
-                                            day.value
+                                        backgroundColor: disibleDays.some(
+                                            (item) => item == day.value
                                         )
-                                            ? "rgb(2, 8, 115,0.2)"
+                                            ? "gray" // Background color for disabled button
+                                            : isDaySelected(day.value)
+                                            ? "rgba(2, 8, 115, 0.2)"
                                             : "white",
                                     }}>
                                     {day.name}
@@ -439,11 +455,11 @@ export default function ServiceTime(props: IProps) {
                             )
                         )}
                     </div>
-                    {daysOpen.length < 0 ? (
+                    {/* {daysOpen.length < 0 ? (
                         <div className="text-red-500 text-sm mt-1">
                             At least one day must be selected
                         </div>
-                    ) : null}
+                    ) : null} */}
 
                     <p
                         className="font-semibold mt-3"
@@ -503,7 +519,7 @@ export default function ServiceTime(props: IProps) {
                                     style={{ border: "none" }}
                                     className="focus:outline-none"
                                     name="closeTime"
-                                    disabled={openTime == ""}
+                                    // disabled={openTime == ""}
                                     required
                                 />
                             </div>
@@ -566,10 +582,11 @@ export default function ServiceTime(props: IProps) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                				${selectedSlots.includes(index)
+                				${
+                                    selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                    }`}
+                                }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -625,7 +642,7 @@ export default function ServiceTime(props: IProps) {
                                                         handleDecreaseCapacityManual(
                                                             TimeSlots[element],
                                                             TimeSlots[
-                                                            element + 1
+                                                                element + 1
                                                             ]
                                                         )
                                                     }
@@ -635,20 +652,20 @@ export default function ServiceTime(props: IProps) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                        TimeSlots[
-                                                        element
-                                                        ] &&
+                                                            TimeSlots[
+                                                                element
+                                                            ] &&
                                                         item.endTime ==
-                                                        TimeSlots[
-                                                        element + 1
-                                                        ]
+                                                            TimeSlots[
+                                                                element + 1
+                                                            ]
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
                                                         handleIncreaseCapacityManual(
                                                             TimeSlots[element],
                                                             TimeSlots[
-                                                            element + 1
+                                                                element + 1
                                                             ],
                                                             guestNumber
                                                         )
