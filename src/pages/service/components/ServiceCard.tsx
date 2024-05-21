@@ -61,9 +61,6 @@ export default function ServiceCard(props: IParams) {
             <ConfirmCard
                 open={openConfirm}
                 title={t("askForDelete")}
-                // description={`${"การดำเนินการนี้จะลบข้อมูล"} ${
-                //     props.serviceName
-                // } “ ${t("อย่างถาวร")}`}
                 description={t("desc:desDeleteServiceF")}
                 bntConfirm={t("delete")}
                 bntBack={t("button:back")}
@@ -99,7 +96,7 @@ export default function ServiceCard(props: IParams) {
                         horizontal: "right",
                         vertical: "bottom",
                     }}>
-                    <MenuItem sx={{ borderRadius: "8px" }} onClick={handleEdit}>
+                    <MenuItem onClick={handleEdit}>
                         <ListItemIcon>
                             <EditOutlinedIcon fontSize="small" />
                         </ListItemIcon>

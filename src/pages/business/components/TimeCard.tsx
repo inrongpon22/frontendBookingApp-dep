@@ -10,13 +10,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { dataOfWeekEng, dataOfWeekThai } from "../../../helper/daysOfWeek";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
-import { IServiceTime } from "../interfaces/service";
+import { IServiceTime } from "../../../interfaces/services/Iservice";
 
 interface IParams {
     serviceTime: IServiceTime;
     index: number;
     handleDelete: (index: number) => void;
-    handleClose?: (event: React.KeyboardEvent | React.MouseEvent) => void;
+    handleEditServiceTime: (index: number) => void;
 }
 
 export default function TimeCard(props: IParams) {
@@ -36,10 +36,8 @@ export default function TimeCard(props: IParams) {
         setAnchorEl(null);
     };
 
-    const handleEdit = (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (props.handleClose) {
-            props.handleClose(event);
-        }
+    const handleEdit = () => {
+        props.handleEditServiceTime(props.index);
         handleClose();
     };
 
@@ -77,7 +75,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.serviceTime.availableFromDate} -{" "}
                         {props.serviceTime.availableToDate == "" ||
-                        props.serviceTime.availableToDate == null
+                            props.serviceTime.availableToDate == null
                             ? t("present")
                             : props.serviceTime.availableToDate}
                     </div>
@@ -117,9 +115,7 @@ export default function TimeCard(props: IParams) {
                         }}
                         sx={{ borderRadius: "10px" }}>
                         <MenuItem
-                            onClick={(
-                                event: React.KeyboardEvent | React.MouseEvent
-                            ) => handleEdit(event)}>
+                            onClick={handleEdit}>
                             <ListItemIcon>
                                 <EditOutlinedIcon fontSize="small" />
                             </ListItemIcon>
@@ -144,22 +140,22 @@ export default function TimeCard(props: IParams) {
                         <span key={item}>
                             {lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === item)
-                                      ?.thaiName
+                                    ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === item)
-                                      ?.name}
+                                    ?.name}
                             {Array.isArray(item) && index === item.length - 2
                                 ? lan === "th"
                                     ? " และ "
                                     : " and "
                                 : Array.isArray(item) &&
-                                  index === item.length - 1
-                                ? " "
-                                : ", "}
+                                    index === item.length - 1
+                                    ? " "
+                                    : ", "}
                         </span>
                     ))}
                 </div>
 
-                {props.serviceTime.manualCapacity.map((element, index) => (
+                {props.serviceTime.slotsTime.map((element, index) => (
                     <div key={index}>
                         <div className="flex justify-between">
                             <li className="p-2 list-disc">
