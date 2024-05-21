@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { IBookingSlot, IServiceTime } from "./interfaces/service";
 import { Drawer, alpha } from "@mui/material";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Anchor } from "../service/ServiceSetting";
 import CreateService from "./CreateService";
+import { IBookingSlot, IServiceTime } from "../../interfaces/services/Iservice";
 
 interface IProps {
     handleClose?: () => void;
@@ -29,7 +29,7 @@ export default function ServiceTime(props: IProps) {
             openTime: "",
             closeTime: "",
             guestNumber: 1,
-            manualCapacity: [],
+            slotsTime: [],
             availableFromDate: new Date().toISOString().split("T")[0],
             availableToDate: "",
         },
@@ -215,7 +215,7 @@ export default function ServiceTime(props: IProps) {
             guestNumber: guestNumber,
             selectedSlots: selectedSlots,
             TimeSlots: TimeSlots,
-            manualCapacity: manualCapacity,
+            slotsTime: manualCapacity,
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
         };
@@ -263,16 +263,16 @@ export default function ServiceTime(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const addDisbleDays = () => {
         if (serviceTime[0].daysOpen !== undefined) {
@@ -309,7 +309,7 @@ export default function ServiceTime(props: IProps) {
         setIsManually(false);
         setAvailableFromDate(serviceTime[index].availableFromDate);
         setAvailableToDate(serviceTime[index].availableToDate);
-        setManualCapacity(serviceTime[index].manualCapacity);
+        setManualCapacity(serviceTime[index].slotsTime);
         addDisbleDays();
     };
 
@@ -424,9 +424,9 @@ export default function ServiceTime(props: IProps) {
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
                                             : `1px solid ${alpha(
-                                                  "#000000",
-                                                  0.2
-                                              )}`,
+                                                "#000000",
+                                                0.2
+                                            )}`,
                                         borderRadius: "8px",
                                         backgroundColor: isDaySelected(
                                             day.value
@@ -566,11 +566,10 @@ export default function ServiceTime(props: IProps) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                				${
-                                    selectedSlots.includes(index)
+                				${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -626,7 +625,7 @@ export default function ServiceTime(props: IProps) {
                                                         handleDecreaseCapacityManual(
                                                             TimeSlots[element],
                                                             TimeSlots[
-                                                                element + 1
+                                                            element + 1
                                                             ]
                                                         )
                                                     }
@@ -636,20 +635,20 @@ export default function ServiceTime(props: IProps) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            TimeSlots[
-                                                                element
-                                                            ] &&
+                                                        TimeSlots[
+                                                        element
+                                                        ] &&
                                                         item.endTime ==
-                                                            TimeSlots[
-                                                                element + 1
-                                                            ]
+                                                        TimeSlots[
+                                                        element + 1
+                                                        ]
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
                                                         handleIncreaseCapacityManual(
                                                             TimeSlots[element],
                                                             TimeSlots[
-                                                                element + 1
+                                                            element + 1
                                                             ],
                                                             guestNumber
                                                         )

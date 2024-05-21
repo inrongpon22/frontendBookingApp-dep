@@ -1,11 +1,5 @@
 import axios from "axios";
-import {
-    IService,
-    InsertService,
-    IEditServiceInfo,
-    IServiceEditTime,
-    IServiceShowHide,
-} from "../pages/business/interfaces/service";
+import { InsertService, IService, IEditServiceInfo, IServiceEditTime, IServiceShowHide } from "../interfaces/services/Iservice";
 
 export const addService = async (serviceData: InsertService, token: string) => {
     token = token.replace(/"/g, "");

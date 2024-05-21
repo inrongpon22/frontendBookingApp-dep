@@ -1,8 +1,6 @@
 import { alpha, Drawer } from "@mui/material";
-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useEffect, useState } from "react";
-
 import { updateService } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -13,15 +11,14 @@ import ServiceCard from "./components/ServiceCard";
 import EditServiceTime from "./EditServiceTime";
 import TimeCard from "./components/TimeCard";
 import AddServiceTime from "./AddServiceTime";
-import { IServiceEditTime } from "../business/interfaces/service";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import Loading from "../../components/dialog/Loading";
-import { IServiceInfo } from "../business/interfaces/service";
 import { useParams } from "react-router-dom";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { Anchor } from "./ServiceSetting";
 import BusinessPreview from "./BusinessPreview";
+import { IServiceInfo, IServiceEditTime } from "../../interfaces/services/Iservice";
 
 interface IParams {
     serviceId: number;
@@ -88,7 +85,6 @@ export default function ServiceDetail(props: IParams) {
     const handleSetEditTime = () => {
         setIsEditTime(!isEditTime);
     };
-
     const handleAddTime = () => {
         setIsAddTime(!isAddTime);
     };
@@ -128,16 +124,16 @@ export default function ServiceDetail(props: IParams) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const handleIsModifiedData = () => {
         return (
@@ -221,7 +217,6 @@ export default function ServiceDetail(props: IParams) {
                         }
                         price={modifyServiceInfo.price}
                         currency={modifyServiceInfo.currency}
-                        serviceId={serviceInfo.id}
                         handleSetEditInfo={handleSetEditInfo}
                         serviceMutate={serviceMutate}
                         handleSetServiceInfo={handleSetServiceInfo}
@@ -232,7 +227,6 @@ export default function ServiceDetail(props: IParams) {
                         openTime={serviceInfo.openTime}
                         closeTime={serviceInfo.closeTime}
                         editIndex={selectedIndex}
-                        serviceId={serviceInfo.id}
                         isAddTime={isAddTime}
                         handleSetEditTime={handleSetEditTime}
                         handleSetServiceTime={handleSetServiceTime}
@@ -240,10 +234,6 @@ export default function ServiceDetail(props: IParams) {
                 ) : isAddTime ? (
                     <AddServiceTime
                         serviceTime={serviceInfo.bookingSlots}
-                        duration={serviceInfo.duration}
-                        openTime={serviceInfo.openTime}
-                        closeTime={serviceInfo.closeTime}
-                        serviceId={serviceInfo.id}
                         handleAddTime={handleAddTime}
                     />
                 ) : (
@@ -320,7 +310,7 @@ export default function ServiceDetail(props: IParams) {
                                     <div
                                         className=" font-medium "
                                         onClick={handleAddTime}>
-                                        เพิ่มเวลาบริการ
+                                        {t("button:addServiceTime")}
                                     </div>
                                 </button>
 
@@ -349,7 +339,7 @@ export default function ServiceDetail(props: IParams) {
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
                                         onClick={toggleDrawer("bottom", true)}>
-                                        ดูตัวอย่าง
+                                        {t("button:preview")}
                                     </button>
                                     <button
                                         onClick={handleUpdateService}
