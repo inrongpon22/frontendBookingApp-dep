@@ -26,7 +26,7 @@ export default function SettingServiceBtn(props: IParams) {
                     onClick={props.handleAutoApprove}
                     sx={{
                         width: 49, height: 28, borderRadius: 16, backgroundColor: props.isAutoApprove ? '#020873' : '#ffffff',
-                        border: props.isAutoApprove ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                        border: props.isAutoApprove ? '1px solid #020873' : '1px solid  #9E9E9E', ":focus"
                             : { outline: "none" }, ":hover": { backgroundColor: props.isAutoApprove ? '#020873' : '#ffffff' }
                     }}
                 >
@@ -53,7 +53,7 @@ export default function SettingServiceBtn(props: IParams) {
                     onClick={props.handleHidePrice}
                     sx={{
                         width: 49, height: 28, borderRadius: 16, backgroundColor: props.isHidePrice ? '#020873' : '#ffffff',
-                        border: props.isHidePrice ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                        border: props.isHidePrice ? '1px solid #020873' : '1px solid  #9E9E9E', ":focus"
                             : { outline: "none" }, ":hover": { backgroundColor: props.isHidePrice ? '#020873' : '#ffffff' }
                     }}
                 >
@@ -80,7 +80,7 @@ export default function SettingServiceBtn(props: IParams) {
                     onChange={props.handleHideEndTime}
                     sx={{
                         width: 49, height: 28, borderRadius: 16, backgroundColor: props.isHideEndTime ? '#020873' : '#ffffff',
-                        border: props.isHideEndTime ? '2px solid #020873' : '2px solid  #9E9E9E', ":focus"
+                        border: props.isHideEndTime ? '1px solid #020873' : '1px solid  #9E9E9E', ":focus"
                             : { outline: "none" }, ":hover": { backgroundColor: props.isHideEndTime ? '#020873' : '#ffffff' }
                     }}
                 >

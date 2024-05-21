@@ -78,8 +78,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -94,7 +94,7 @@ export default function EditServiceTime(props: IParams) {
         const uniqueDays = new Set();
         if (props.serviceTime[0].daysOpen !== undefined) {
             props.serviceTime
-                .filter((item, index) => index !== props.editIndex)
+                .filter((_item, index) => index !== props.editIndex)
                 .forEach((element) => {
                     if (
                         element.availableFromDate == availableFromDate &&
@@ -398,8 +398,8 @@ export default function EditServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                        ? "rgba(2, 8, 115, 0.2)"
-                                        : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -532,11 +532,10 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -605,11 +604,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>

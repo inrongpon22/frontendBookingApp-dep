@@ -19,6 +19,7 @@ import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
 import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
 import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
+import CreateSuccessful from "./pages/service/CreateSuccessful.tsx";
 
 function App() {
     useEffect(() => {
@@ -89,6 +90,10 @@ function App() {
                     <Route
                         path="/service-detail/:businessId/:serviceId"
                         element={<ServiceDetail serviceId={0} />}
+                    />
+                    <Route
+                        path="/create-successful/:businessId"
+                        element={<CreateSuccessful />}
                     />
 
                     {/* day off */}

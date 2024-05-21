@@ -70,7 +70,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                        props.availableToDate == null
+                            props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -130,23 +130,26 @@ export default function TimeCard(props: IParams) {
                         marginTop: "-10px",
                         width: "70%",
                     }}>
-                    {props.daysOpen.map((item, index) => (
-                        <span key={item}>
-                            {lan === "th"
-                                ? dataOfWeekThai.find((x) => x.value === item)
-                                      ?.thaiName
-                                : dataOfWeekEng.find((x) => x.value === item)
-                                      ?.name}
-                            {Array.isArray(item) && index === item.length - 2
-                                ? lan === "th"
-                                    ? " และ "
-                                    : " and "
-                                : Array.isArray(item) &&
-                                  index === item.length - 1
-                                ? " "
-                                : ", "}
-                        </span>
-                    ))}
+                    {props.daysOpen.map((day: string, index) => {
+                        const dayName = lan === "th"
+                            ? dataOfWeekThai.find((x) => x.value === day)?.thaiName
+                            : dataOfWeekEng.find((x) => x.value === day)?.name;
+                        const isSecondLast = index === props.daysOpen.length - 2;
+                        const isLast = index === props.daysOpen.length - 1;
+                        let separator = "";
+                        if (isSecondLast) {
+                            separator = lan === "th" ? " และ " : " and ";
+                        } else if (!isLast) {
+                            separator = ", ";
+                        }
+
+                        return (
+                            <span key={index}>
+                                {dayName}
+                                {separator}
+                            </span>
+                        );
+                    })}
                 </div>
 
                 {props?.slotsTime.map((element, index) => (
