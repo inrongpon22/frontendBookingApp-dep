@@ -4,8 +4,8 @@ import Slider from "react-slick";
 import { supabase } from "../../helper/createSupabase";
 
 interface slideTypes {
-  data: string[];
-  fixedHeight?: number;
+    data: string[];
+    fixedHeight?: number;
 }
 
 // const languageLists: {
@@ -23,52 +23,54 @@ interface slideTypes {
 // ];
 
 export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
-  const [images, setImages] = useState<
-    {
-      publicUrl: string;
-    }[]
-  >([]);
+    const [images, setImages] = useState<
+        {
+            publicUrl: string;
+        }[]
+    >([]);
 
-  // const {
-  //   i18n: { changeLanguage, language },
-  // } = useTranslation();
+    // const {
+    //   i18n: { changeLanguage, language },
+    // } = useTranslation();
 
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 800,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    adaptiveHeight: true,
-  };
-
-  useEffect(() => {
-    const fetchImageUrls = async () => {
-      try {
-        const imageUrls = await Promise.all(
-          data.map(async (element) => {
-            const { data } = await supabase.storage
-              .from("BookingSystem/images/")
-              .getPublicUrl(element);
-            return data;
-          })
-        );
-        setImages(imageUrls);
-      } catch (error) {
-        console.error("Error fetching image URLs:", error);
-      }
+    const settings = {
+        dots: true,
+        dotsClass:
+            "slick-dots absolute transform -translate-x-1/2 bottom-2 left-1/2 z-50",
+        arrows: false,
+        infinite: true,
+        speed: 800,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        adaptiveHeight: true,
     };
 
-    if (data !== undefined) {
-      fetchImageUrls();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+    useEffect(() => {
+        const fetchImageUrls = async () => {
+            try {
+                const imageUrls = await Promise.all(
+                    data.map(async (element) => {
+                        const { data } = await supabase.storage
+                            .from("BookingSystem/images/")
+                            .getPublicUrl(element);
+                        return data;
+                    })
+                );
+                setImages(imageUrls);
+            } catch (error) {
+                console.error("Error fetching image URLs:", error);
+            }
+        };
 
-  return (
-    <main className="relative">
-      {/* <div className="absolute right-3 top-3 z-50">
+        if (data !== undefined) {
+            fetchImageUrls();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
+
+    return (
+        <div className="relative">
+            {/* <div className="absolute right-3 top-3 z-50">
         <select
           value={language}
           className="bg-white rounded border"
@@ -86,17 +88,17 @@ export const Slideshow = ({ data, fixedHeight }: slideTypes) => {
           })}
         </select>
       </div> */}
-      <Slider {...settings}>
-        {images?.map((item: any, index: number) => (
-          <div className="slide" key={index}>
-            <img
-              className={`w-full object-cover`}
-              src={item.publicUrl}
-              style={{ height: `${fixedHeight}px` }}
-            />
-          </div>
-        ))}
-      </Slider>
-    </main>
-  );
+            <Slider {...settings}>
+                {images?.map((item: any, index: number) => (
+                    <div className="slide" key={index}>
+                        <img
+                            className="w-full object-cover"
+                            src={item.publicUrl}
+                            style={{ height: `${fixedHeight}px` }}
+                        />
+                    </div>
+                ))}
+            </Slider>
+        </div>
+    );
 };

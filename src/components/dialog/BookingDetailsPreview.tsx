@@ -120,19 +120,19 @@ const BookingDetailsPreview = () => {
     const getLast = filterSelected[filterSelected?.length - 1];
 
     return (
-        <div>
+        <div className="flex flex-col gap-3">
             <div className="">
                 <p className="text-[14px] font-semibold">
                     {t("bookingDetails")}
                 </p>
-                <div className="border rounded-md mt-1">
-                    <p className="flex justify-between p-3">
+                <div className="flex flex-col gap-3 border rounded-md p-3">
+                    <p className="flex justify-between">
                         <span>{t("services")}:</span>
                         <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById.title}
                         </span>
                     </p>
-                    <p className="flex justify-between p-3">
+                    <p className="flex justify-between">
                         <span>{t("date")}:</span>
                         <span className="text-[14px] font-bold">
                             {moment(
@@ -140,19 +140,19 @@ const BookingDetailsPreview = () => {
                             ).format("MMMM DD, YYYY")}
                         </span>
                     </p>
-                    <p className="flex justify-between p-3">
+                    <p className="flex justify-between">
                         <span>{t("time")}:</span>
                         <span className="text-[14px] font-bold">
                             {`${getFirst?.startTime} - ${getLast?.endTime}`}
                         </span>
                     </p>
-                    <p className="flex justify-between p-3">
+                    <p className="flex justify-between">
                         <span>{t("guests")}:</span>
                         <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail).guestNumber}
                         </span>
                     </p>
-                    <p className="flex justify-between p-3">
+                    <p className="flex justify-between">
                         <span>{t("price")}:</span>
                         <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById?.price}{" "}
@@ -161,17 +161,17 @@ const BookingDetailsPreview = () => {
                     </p>
                 </div>
             </div>
-            <div className="mt-3">
+            <div className="">
                 <p className="text-[14px] font-semibold">{t("bookingName")}</p>
                 <input
                     type="text"
                     {...formik.getFieldProps("username")}
-                    className={`w-full py-2 px-3 mt-1 border rounded-lg ${
+                    className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
                         formik.errors?.username
                             ? "border-2 border-rose-500"
                             : "border"
                     }`}
-                    placeholder="meetsoftware123"
+                    placeholder="สมชาย"
                 />
                 {formik.touched.username && formik.errors.username && (
                     <span className="text-[14px] text-rose-500">
@@ -179,19 +179,19 @@ const BookingDetailsPreview = () => {
                     </span>
                 )}
             </div>
-            <div className="mt-3">
+            <div className="">
                 <p className="text-[14px] font-semibold">
                     {t("bookingNumbers")}
                 </p>
                 <input
                     type="text"
                     {...formik.getFieldProps("phoneNumbers")}
-                    className={`w-full py-2 px-3 mt-1 border rounded-lg ${
+                    className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
                         formik.errors?.phoneNumbers
                             ? "border-2 border-rose-500"
                             : "border"
                     }`}
-                    placeholder="+66 12 345 6789"
+                    placeholder="012 345 6789"
                 />
                 {formik.touched.phoneNumbers && formik.errors.phoneNumbers && (
                     <span className="text-[14px] text-rose-500">
@@ -199,13 +199,13 @@ const BookingDetailsPreview = () => {
                     </span>
                 )}
             </div>
-            <div className="mt-3">
+            <div className="">
                 <p className="text-[14px] font-semibold">{t("notes")}</p>
                 <textarea
                     rows={3}
                     {...formik.getFieldProps("additionalNotes")}
-                    className="w-full py-2 px-3 mt-1 border rounded-lg"
-                    placeholder="ex. Hair cut with spa and treatment"
+                    className="w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal"
+                    placeholder="ตัวอย่าง ตัดผมโดยสปาและทรีทเมนท์"
                 />
             </div>
             <div className="flex flex-col py-2">

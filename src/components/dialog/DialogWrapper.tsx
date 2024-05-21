@@ -15,8 +15,8 @@ import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typesc
 import { Dialog, DialogContent, Slide, Toolbar } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 // icons
-import CloseIcon from "@mui/icons-material/Close";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 // components
 import PhoneInput from "./PhoneInput";
 import OtpVerify from "./OtpVerify";
@@ -298,17 +298,17 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                 "booking-approval-summary",
                                 "business-more-options",
                             ].includes(dialogState) ? (
-                                <CloseIcon />
+                                <CloseRoundedIcon />
                             ) : (
-                                <ArrowBackIosIcon />
+                                <ArrowBackIosNewRoundedIcon />
                             )}
                         </span>
-                        <span className="w-full font-semibold col-span-3 text-center">
+                        <span className="w-full text-[14px] font-semibold col-span-3 text-center">
                             {DialogHeader()}
                         </span>
                         {/* empty space for balance title header */}
                         <span className="w-[24px] h-[24px] invisible">
-                            <CloseIcon />
+                            <ArrowBackIosNewRoundedIcon />
                         </span>
                         {/* empty space for balance title header */}
                     </Toolbar>

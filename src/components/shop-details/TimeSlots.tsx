@@ -3,6 +3,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 // import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 
 interface TimeSlotsProps {
     selectedDate: any;
@@ -21,7 +22,7 @@ const TimeSlots = ({
     selectedIndices,
     setSelectedIndices,
 }: TimeSlotsProps) => {
-    const { t } = useTranslation();
+    const { t, i18n:{language} } = useTranslation();
 
     const [minIndex, setMinIndex] = useState<number | null>(null);
     const [maxIndex, setMaxIndex] = useState<number | null>(null);
@@ -79,7 +80,10 @@ const TimeSlots = ({
         <div id="times" className="mt-5 col-span-2">
             <p className="flex justify-between items-center">
                 <span className="text-[17px] font-semibold">
-                    {moment(selectedDate.date).format("ll")}
+                    {`${moment(selectedDate.date).format("D")} ${monthsOfYearFullName(language)?.find(
+                        (ii) => ii.value === moment(selectedDate.date)?.format("MMMM")
+                    )?.name ?? ""}, ${moment(selectedDate.date).format("YYYY")}`}
+                    {/* {moment(selectedDate.date).format("ll")} */}
                 </span>
                 <span
                     className="text-[12px] underline cursor-pointer"

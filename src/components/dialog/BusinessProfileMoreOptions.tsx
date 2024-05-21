@@ -10,8 +10,8 @@ import StoreIcon from "@mui/icons-material/Store";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import RepeatIcon from "@mui/icons-material/Repeat";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
+// import RepeatIcon from "@mui/icons-material/Repeat";
+// import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ConfirmCard from "./ConfirmCard";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
@@ -48,11 +48,11 @@ const BusinessProfileMoreOptions = () => {
                 url: undefined,
                 function: () => setDialogState("manual-booking"),
             },
-            {
-                icon: <EventBusyIcon />,
-                label: t("button:setDayoff"),
-                url: `/dayoff-setting/${businessId}`,
-            },
+            // {
+            //     icon: <EventBusyIcon />,
+            //     label: t("button:setDayoff"),
+            //     url: `/dayoff-setting/${businessId}`,
+            // },
             {
                 icon: <StoreIcon />,
                 label: t("button:businessSetting"),
@@ -65,11 +65,11 @@ const BusinessProfileMoreOptions = () => {
             },
         ],
         account: [
-            {
-                icon: <RepeatIcon />,
-                label: t("button:switchBusiness"),
-                url: undefined,
-            },
+            // {
+            //     icon: <RepeatIcon />,
+            //     label: t("button:switchBusiness"),
+            //     url: undefined,
+            // },
             {
                 icon: <LogoutIcon />,
                 label: t("button:logout"),

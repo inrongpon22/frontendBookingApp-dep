@@ -165,7 +165,7 @@ const ShopDetailsPageWrapper = () => {
     return (
         <ThemeProvider theme={theme}>
             <div className="">
-                <Slideshow data={shopDetail?.imagesURL || []} />
+                <Slideshow data={shopDetail?.imagesURL || []} fixedHeight={300} />
 
                 <div className={`flex flex-col gap-5 p-5`}>
                     <ShopInformation shopDetail={shopDetail} />
