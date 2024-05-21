@@ -51,17 +51,17 @@ export default function ServiceSetting() {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
 
-            setState({ ...state, [anchor]: open });
-        };
+                setState({ ...state, [anchor]: open });
+            };
 
     const addService = (anchor: Anchor) => (
         <Box
@@ -96,7 +96,7 @@ export default function ServiceSetting() {
                     serviceMutate={serviceMutate}
                 />
             ) : (
-                <div className=" overflow-y-hidden">
+                <div className=" overflow-y-hidden bg-[#F7F7F7] h-[100vh]">
                     <Loading openLoading={serviceLoading} />
                     <Drawer
                         anchor={"bottom"}
@@ -123,15 +123,14 @@ export default function ServiceSetting() {
                             {t("button:createNewService")}
                         </button>
                     </div>
-                    <div style={{ background: "#F7F7F7" }}>
+                    <div>
                         <p className="pr-4 pl-4 pt-3 pb-3">
                             {t("services")}{" "}
-                            {`(${
-                                serviceData &&
+                            {`(${serviceData &&
                                 serviceData.filter(
                                     (item) => item.isDeleted == false
                                 ).length
-                            })`}{" "}
+                                })`}{" "}
                         </p>
                         {serviceData &&
                             serviceData
