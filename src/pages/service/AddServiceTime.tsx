@@ -68,8 +68,8 @@ export default function AddServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -92,7 +92,7 @@ export default function AddServiceTime(props: IParams) {
             const uniqueDays = new Set(); // Create a Set to store unique days
             props.serviceTime.forEach((element) => {
                 if (
-                    element.availableFromDate == availableFromDate &&
+                    element.availableFromDate <= availableFromDate &&
                     (element.availableToDate ?? "") == availableToDate
                 ) {
                     element.daysOpen.forEach((day) => uniqueDays.add(day));
@@ -369,8 +369,8 @@ export default function AddServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                        ? "rgba(2, 8, 115, 0.2)"
-                                        : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -503,11 +503,10 @@ export default function AddServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -570,11 +569,11 @@ export default function AddServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dataOfWeekThai } from "../../helper/daysOfWeek";
+import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
@@ -97,7 +97,7 @@ export default function EditServiceTime(props: IParams) {
                 .filter((_item, index) => index !== props.editIndex)
                 .forEach((element) => {
                     if (
-                        element.availableFromDate == availableFromDate &&
+                        element.availableFromDate <= availableFromDate &&
                         element.availableToDate == availableToDate
                     ) {
                         element.daysOpen.forEach((day) => uniqueDays.add(day));
@@ -115,19 +115,30 @@ export default function EditServiceTime(props: IParams) {
         startTime: string,
         endTime: string
     ) => {
-        const indexManual = manualCapacity.findIndex(
+        const sortedCapacity = [...manualCapacity].sort((a, b) => {
+            if (a.startTime < b.startTime) return -1;
+            if (a.startTime > b.startTime) return 1;
+            return 0;
+        });
+
+        const indexManual = sortedCapacity.findIndex(
             (slot) => slot.startTime === startTime && slot.endTime === endTime
         );
+
         if (indexManual !== -1) {
             setManualCapacity((prevCapacity) =>
                 prevCapacity.filter((_, index) => index !== indexManual)
             );
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
-            setManualCapacity((prevCapacity) => [
-                ...prevCapacity,
-                { startTime, endTime, capacity: guestNumber },
-            ]);
+            setManualCapacity((prevCapacity) => {
+                const newCapacity = [...prevCapacity, { startTime, endTime, capacity: guestNumber }];
+                return newCapacity.sort((a, b) => {
+                    if (a.startTime < b.startTime) return -1;
+                    if (a.startTime > b.startTime) return 1;
+                    return 0;
+                });
+            });
         }
 
         if (selectedSlots.includes(index)) {
@@ -139,15 +150,25 @@ export default function EditServiceTime(props: IParams) {
         }
     };
 
+
     const isDaySelected = (dayValue: string) => {
         return daysOpen.includes(dayValue);
     };
 
+    const dayOrder = dataOfWeekEng.map(day => day.value);
     const toggleDay = (dayValue: string) => {
         if (isDaySelected(dayValue)) {
-            setDaysOpen(daysOpen.filter((day) => day !== dayValue));
+            setDaysOpen((prevDays) =>
+                prevDays.filter((day) => day !== dayValue).sort((a, b) =>
+                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
+                )
+            );
         } else {
-            setDaysOpen([...daysOpen, dayValue]);
+            setDaysOpen((prevDays) =>
+                [...prevDays, dayValue].sort((a, b) =>
+                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
+                )
+            );
         }
     };
 

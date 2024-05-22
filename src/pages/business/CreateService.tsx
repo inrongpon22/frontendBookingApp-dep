@@ -33,6 +33,8 @@ export default function CreateService(props: IProps) {
     const { businessId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
+    const queryParams = new URLSearchParams(location.search);
+    const step = queryParams.get("step");
     const { t } = useTranslation();
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
@@ -105,7 +107,11 @@ export default function CreateService(props: IProps) {
                 props.handleCloseServiceInFo && props.handleCloseServiceInFo();
                 props.handleCloseServiceTime && props.handleCloseServiceTime();
                 setIsLoading(false);
-                navigate(`/create-successful/${businessId}`);
+                if (step === "1" && step !== null) {
+                    navigate(`/create-successful/${businessId}`);
+                } else {
+                    navigate(`/service-setting/${businessId}`);
+                }
             });
         } catch (error) {
             console.log(error);
