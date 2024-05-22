@@ -22,6 +22,8 @@ import {
     IServiceInfo,
     IServiceEditTime,
 } from "../../interfaces/services/Iservice";
+import toast from "react-hot-toast";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 interface IParams {
     serviceId: number;
@@ -108,6 +110,9 @@ export default function ServiceDetail(props: IParams) {
         await updateService(serviceInfo.id, insertData, token || "");
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
+        toast(t("editSuccess"), {
+            icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+        });
         props.handleClose && props.handleClose();
     };
 
@@ -128,16 +133,16 @@ export default function ServiceDetail(props: IParams) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const handleIsModifiedData = () => {
         return (
