@@ -54,7 +54,8 @@
         "previewTitle": "ดูตัวอย่างในฐานะแขก",
         "person": "คน",
         "askForDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบบริการนี้",
-        "addService": "เพิ่มบริการใหม่"
+        "addService": "เพิ่มบริการใหม่",
+        "editSuccess": "แก้ไขสำเร็จ"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",

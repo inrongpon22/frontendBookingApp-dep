@@ -80,7 +80,7 @@ export default function ServiceSetting() {
         <Box
             sx={{
                 width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
-                height: "100vh",
+                height: "dvh",
             }}
             role="presentation">
             <ServiceInfo
