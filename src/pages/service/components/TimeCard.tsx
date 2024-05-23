@@ -70,7 +70,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                            props.availableToDate == null
+                        props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -131,10 +131,14 @@ export default function TimeCard(props: IParams) {
                         width: "70%",
                     }}>
                     {props.daysOpen.map((day: string, index) => {
-                        const dayName = lan === "th"
-                            ? dataOfWeekThai.find((x) => x.value === day)?.thaiName
-                            : dataOfWeekEng.find((x) => x.value === day)?.name;
-                        const isSecondLast = index === props.daysOpen.length - 2;
+                        const dayName =
+                            lan === "th"
+                                ? dataOfWeekThai.find((x) => x.value === day)
+                                      ?.thaiName
+                                : dataOfWeekEng.find((x) => x.value === day)
+                                      ?.name;
+                        const isSecondLast =
+                            index === props.daysOpen.length - 2;
                         const isLast = index === props.daysOpen.length - 1;
                         let separator = "";
                         if (isSecondLast) {
@@ -154,13 +158,15 @@ export default function TimeCard(props: IParams) {
 
                 {props?.slotsTime.map((element, index) => (
                     <div key={index}>
-                        <div className="flex justify-between">
-                            <li className="p-2 list-disc">
-                                {element.startTime} - {element.endTime}
-                            </li>
+                        <div className="flex justify-between pt-1">
+                            <div className="flex items-center gap-1">
+                                <div>{element.startTime}</div>
+                                <div>-</div>
+                                <div>{element.endTime}</div>
+                            </div>
                             <div
                                 style={{ color: alpha("#000000", 0.5) }}
-                                className="flex justify-between gap-3 items-center p-3">
+                                className="flex items-center gap-3">
                                 {`(${element.capacity} ${t("person")})`}
                             </div>
                         </div>

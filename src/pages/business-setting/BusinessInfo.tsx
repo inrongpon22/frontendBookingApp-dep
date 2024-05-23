@@ -58,7 +58,7 @@ export default function BusinessInfo(props: IParams) {
         location: props.businessData?.address || "",
         description: props.businessData?.description || "",
     });
-    const [isFormModified, setIsFormModified] = useState<boolean>(false);
+    // const [isFormModified, setIsFormModified] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchImageUrls = async () => {
@@ -313,18 +313,18 @@ export default function BusinessInfo(props: IParams) {
         },
     });
 
-    useEffect(() => {
-        // Check if the form values have changed
-        const formValuesChanged =
-            JSON.stringify(formik.values) !==
-            JSON.stringify(formik.initialValues);
-        const imagesChanged =
-            JSON.stringify(previewImages) !==
-            JSON.stringify(props.businessData?.imagesURL);
+    // useEffect(() => {
+    //     // Check if the form values have changed
+    //     const formValuesChanged =
+    //         JSON.stringify(formik.values) !==
+    //         JSON.stringify(formik.initialValues);
+    //     const imagesChanged =
+    //         JSON.stringify(previewImages) !==
+    //         JSON.stringify(props.businessData?.imagesURL);
 
-        setIsFormModified(formValuesChanged || props.isEdit || imagesChanged);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formik.values, formik.initialValues, previewImages]);
+    //     setIsFormModified(formValuesChanged || props.isEdit || imagesChanged);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [formik.values, formik.initialValues, previewImages]);
 
     const handleOpenTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setOpenTime(e.target.value);
@@ -354,11 +354,10 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.title
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -398,11 +397,10 @@ export default function BusinessInfo(props: IParams) {
                                         : "white",
                                 }}
                                 className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -474,11 +472,10 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.phoneNumber
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">
@@ -563,7 +560,6 @@ export default function BusinessInfo(props: IParams) {
                                 htmlFor={`fileInput`}
                                 style={{ cursor: "pointer" }}>
                                 <input
-                                    // disabled={!props.isEdit}
                                     id={`fileInput`}
                                     type="file"
                                     style={{ display: "none" }}
@@ -578,7 +574,7 @@ export default function BusinessInfo(props: IParams) {
                         <button
                             type="button"
                             className="w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold"
-                            disabled={!isFormModified}
+                            // disabled={!isFormModified}
                             onClick={() => formik.handleSubmit()}>
                             {t("edit")}
                         </button>

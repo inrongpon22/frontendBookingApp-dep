@@ -72,9 +72,6 @@ export default function ServiceInfo(props: IProps) {
         serviceName: Yup.string().required(
             t("formValidation:service:create:serviceName:serviceNameReq")
         ),
-        serviceDescription: Yup.string().required(
-            t("formValidation:service:create:serviceDesc:serviceDescReq")
-        ),
         price: Yup.number()
             .required(t("formValidation:service:create:price:priceReq"))
             .min(0, t("formValidation:service:create:price:priceReq")),
@@ -180,7 +177,7 @@ export default function ServiceInfo(props: IProps) {
                                 <p
                                     style={{ fontSize: "14px" }}
                                     className="mt-4 font-semibold">
-                                    {t("serviceDesc")}
+                                    {t("serviceName")}
                                 </p>
                                 <input
                                     value={formik.values.serviceName}
@@ -190,7 +187,7 @@ export default function ServiceInfo(props: IProps) {
                                     onKeyUp={() => setIsTyping(false)}
                                     type="text"
                                     name="serviceName"
-                                    style={{ color: "#8B8B8B" }}
+                                    style={{ color: "#000000" }}
                                     placeholder={t("placeholder:serviceName")}
                                     className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                                 />
@@ -211,25 +208,20 @@ export default function ServiceInfo(props: IProps) {
                                     name="serviceDescription"
                                     onKeyDown={() => setIsTyping(true)}
                                     onKeyUp={() => setIsTyping(false)}
-                                    style={{ color: "#8B8B8B" }}
+                                    style={{ color: "#000000" }}
                                     placeholder={t("placeholder:serviceDesc")}
-                                    className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                                        formik.touched.serviceDescription &&
-                                        formik.errors.serviceDescription
-                                            ? "border-red-500"
-                                            : ""
-                                    }`}
+                                    className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none `}
                                     value={formik.values.serviceDescription}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     maxLength={100}
                                 />
-                                {formik.touched.serviceDescription &&
+                                {/* {formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription ? (
                                     <div className="text-red-500 text-sm mt-1">
                                         {formik.errors.serviceDescription}
                                     </div>
-                                ) : null}
+                                ) : null} */}
 
                                 <p
                                     style={{ fontSize: "14px" }}
