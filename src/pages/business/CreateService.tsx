@@ -20,6 +20,7 @@ import AddServiceTime from "../service/AddServiceTime";
 import Loading from "../../components/dialog/Loading";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
+import SettingServiceBtn from "../service/components/SettingServiceBtn";
 // import CreateSuccessful from "../service/CreateSuccessful";
 
 interface IProps {
@@ -154,16 +155,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-            setState({ ...state, [anchor]: open });
-        };
+            (event: React.KeyboardEvent | React.MouseEvent) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Tab" ||
+                        (event as React.KeyboardEvent).key === "Shift")
+                ) {
+                    return;
+                }
+                setState({ ...state, [anchor]: open });
+            };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -173,9 +174,9 @@ export default function CreateService(props: IProps) {
                 price={serviceInfo.price}
                 currency={serviceInfo.currency}
                 handleSetEditInfo={() =>
-                    setState({ ...state, ["bottom"]: false })
+                    setTypeName("createService")
                 }
-                serviceMutate={props.serviceMutate || (() => {})}
+                serviceMutate={props.serviceMutate || (() => { })}
             />
         </Box>
     );
@@ -201,7 +202,7 @@ export default function CreateService(props: IProps) {
                     availableToDate={""}
                     isHidePrice={isHidePrice}
                     isHideEndTime={isHideEndTime}
-                    handleClose={() => setState({ ...state, bottom: false })}
+                    handleClose={() => setTypeName("createService")}
                 />
             )}
         </Box>
@@ -209,30 +210,30 @@ export default function CreateService(props: IProps) {
     const editServiceTime = () => (
         <Box sx={{ height: "100vh" }}>
             {serviceTime.length > 0 &&
-                (isAddTime ? (
-                    <AddServiceTime
-                        serviceTime={serviceTime}
-                        handleCloseCard={() => {
-                            setState({ ...state, ["bottom"]: false });
-                            setIsAddTime(false);
-                        }}
-                    />
-                ) : (
-                    <EditServiceTime
-                        serviceTime={serviceTime}
-                        openTime={businessData?.openTime}
-                        closeTime={businessData?.closeTime}
-                        editIndex={selectedIndex}
-                        isAddTime={isAddTime}
-                        handleSetEditTime={() =>
-                            setState({ ...state, ["bottom"]: false })
-                        }
-                    />
-                ))}
+                <EditServiceTime
+                    serviceTime={serviceTime}
+                    openTime={businessData?.openTime}
+                    closeTime={businessData?.closeTime}
+                    editIndex={selectedIndex}
+                    isAddTime={isAddTime}
+                    handleSetEditTime={() => setTypeName("createService")}
+                />}
         </Box>
     );
 
-    const [typeName, setTypeName] = useState("");
+    const addServiceTime = () => (
+        <Box sx={{ height: "100vh" }}>
+            <AddServiceTime
+                serviceTime={serviceTime == undefined ? [] : serviceTime}
+                handleCloseCard={() => {
+                    setTypeName("createService");
+                    setIsAddTime(false);
+                }}
+            />
+        </Box>
+    );
+
+    const [typeName, setTypeName] = useState("createService");
 
     const handleEditService = () => {
         setTypeName("service");
@@ -245,16 +246,16 @@ export default function CreateService(props: IProps) {
     };
 
     const handleEditServiceTime = (index: number) => {
-        setTypeName("serviceTime");
+        setTypeName("editServiceTime");
         setState({ ...state, ["bottom"]: true });
         setSelectedIndex(index);
         setRefresh(!refresh);
     };
 
     const handleAddServiceTime = () => {
-        setTypeName("serviceTime");
-        setState({ ...state, ["bottom"]: true });
         setIsAddTime(true);
+        setTypeName("addServiceTime");
+        setState({ ...state, ["bottom"]: true });
         props.handleAddData && props.handleAddData();
         setRefresh(!refresh);
     };
@@ -278,270 +279,124 @@ export default function CreateService(props: IProps) {
                     onClose={toggleDrawer("bottom", false)}>
                     {previewService()}
                 </Drawer>
-            ) : (
-                <Drawer
-                    anchor={"bottom"}
-                    open={state["bottom"]}
-                    onClose={toggleDrawer("bottom", false)}>
+            ) : typeName == "addServiceTime" ? (
+                <div>
+                    {addServiceTime()}
+                </div>
+            ) : typeName == "editServiceTime" ? (
+                <div>
                     {editServiceTime()}
-                </Drawer>
+                </div>
+            ) : (
+                <>
+                    <div className="pr-4 pl-4 pt-6">
+                        <Header
+                            context={t("title:serviceInformation")}
+                            isClose={false}
+                            handleClose={props.handleClose}
+                        />
+                    </div>
+                    <Divider sx={{ marginTop: "16px", width: "100%" }} />
+                    <div className="flex flex-col pr-4 pl-4 mb-[80px]">
+                        <div
+                            style={{ marginBottom: "20px" }}
+                            className="mt-4 flex flex-col gap-3">
+                            <ServiceCard handleEdit={handleEditService} />
+                            {serviceTime &&
+                                serviceTime.map((time, index) => (
+                                    <div
+                                        // onClick={() =>
+                                        //     props.handleEdit && props.handleEdit(index)
+                                        // }
+                                        // onClick={() => handleEditServiceTime(index)}
+                                        key={index}>
+                                        <TimeCard
+                                            index={index}
+                                            serviceTime={time}
+                                            handleDelete={handleDelete}
+                                            handleEditServiceTime={
+                                                handleEditServiceTime
+                                            }
+                                        />
+                                    </div>
+                                ))}
+
+                            <button
+                                onClick={handleAddServiceTime}
+                                style={{
+                                    display: "flex",
+                                    background: `${alpha("#020873", 0.1)}`,
+                                    width: "135px",
+                                    height: "27px",
+                                    fontSize: "14px",
+                                    borderRadius: "8px",
+                                    textAlign: "center",
+                                    justifyContent: "center",
+                                    color: "#020873",
+                                }}
+                                className=" items-center gap-1 p-1 ">
+                                <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
+                                {t("button:addServiceTime")}
+                            </button>
+
+                            <p className=" font-bold " style={{ fontSize: "14px" }}>
+                                {t("serviceSetting")}
+                            </p>
+
+                            <SettingServiceBtn
+                                isAutoApprove={isAutoApprove}
+                                isHidePrice={isHidePrice}
+                                isHideEndTime={isHideEndTime}
+                                handleAutoApprove={() =>
+                                    setIsAutoApprove(!isAutoApprove)
+                                }
+                                handleHidePrice={() =>
+                                    setIsHidePrice(!isHidePrice)
+                                }
+                                handleHideEndTime={() =>
+                                    setIsHideEndTime(!isHideEndTime)
+                                }
+                            />
+
+                            <div
+                                className={`w-full flex justify-center bottom-0 inset-x-0 gap-2 mb-3 fixed`}
+                                style={{
+                                    marginTop: serviceTime.length > 0 ? 0 : "100px",
+                                }}>
+                                <button
+                                    className="border text-white mt-4 rounded-lg font-semibold"
+                                    style={{
+                                        borderColor: `${alpha("#000000", 0.2)}`,
+                                        color: "black",
+                                        width: "45vw",
+                                        height: "51px",
+                                        cursor: "pointer",
+                                        backgroundColor: "white",
+                                        fontSize: "14px",
+                                    }}
+                                    onClick={handlePreview}>
+                                    {t("button:preview")}
+                                </button>
+                                <button
+                                    onClick={handleCreateService}
+                                    type="submit"
+                                    className="text-white mt-4 rounded-lg font-semibold"
+                                    style={{
+                                        width: "45vw",
+                                        height: "51px",
+                                        cursor: "pointer",
+                                        backgroundColor: "#020873",
+                                        fontSize: "14px",
+                                    }}>
+                                    {t("button:confirm")}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
 
-            <div className="pr-4 pl-4 pt-6">
-                <Header
-                    context={t("title:serviceInformation")}
-                    isClose={false}
-                    handleClose={props.handleClose}
-                />
-            </div>
-            <Divider sx={{ marginTop: "16px", width: "100%" }} />
-            <div className="flex flex-col pr-4 pl-4">
-                <div
-                    style={{ marginBottom: "20px" }}
-                    className="mt-4 flex flex-col gap-3">
-                    <ServiceCard handleEdit={handleEditService} />
-                    {serviceTime &&
-                        serviceTime.map((time, index) => (
-                            <div
-                                // onClick={() =>
-                                //     props.handleEdit && props.handleEdit(index)
-                                // }
-                                // onClick={() => handleEditServiceTime(index)}
-                                key={index}>
-                                <TimeCard
-                                    index={index}
-                                    serviceTime={time}
-                                    handleDelete={handleDelete}
-                                    handleEditServiceTime={
-                                        handleEditServiceTime
-                                    }
-                                />
-                            </div>
-                        ))}
 
-                    <button
-                        onClick={handleAddServiceTime}
-                        style={{
-                            display: "flex",
-                            background: `${alpha("#020873", 0.1)}`,
-                            width: "135px",
-                            height: "27px",
-                            fontSize: "14px",
-                            borderRadius: "8px",
-                            textAlign: "center",
-                            justifyContent: "center",
-                            color: "#020873",
-                        }}
-                        className=" items-center gap-1 p-1 ">
-                        <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
-                        {t("button:addServiceTime")}
-                    </button>
-
-                    <p className=" font-bold " style={{ fontSize: "14px" }}>
-                        {t("serviceSetting")}
-                    </p>
-
-                    <div
-                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
-                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                        <div className="w-[60vw]">
-                            <div className="text-[14px]">
-                                {t("isAutoApprove")}
-                            </div>
-                            <p className="text-[#6A6A6A] font-[12px]">
-                                {t("desc:autoApprove")}
-                            </p>
-                        </div>
-                        <MuiToggleButton
-                            value={isAutoApprove}
-                            aria-label="Toggle switch"
-                            onClick={() => setIsAutoApprove(!isAutoApprove)}
-                            sx={{
-                                width: 49,
-                                height: 28,
-                                borderRadius: 16,
-                                backgroundColor: isAutoApprove
-                                    ? "#020873"
-                                    : "#ffffff",
-                                border: isAutoApprove
-                                    ? "2px solid #020873"
-                                    : "2px solid  #9E9E9E",
-                                ":focus": { outline: "none" },
-                                ":hover": {
-                                    backgroundColor: isAutoApprove
-                                        ? "#020873"
-                                        : "#ffffff",
-                                },
-                            }}>
-                            <span
-                                style={{
-                                    width: 23,
-                                    height: 23,
-                                    marginLeft: isAutoApprove ? "" : "1px",
-                                    marginRight: isAutoApprove ? "100px" : " ",
-                                    backgroundColor: isAutoApprove
-                                        ? "#ffffff"
-                                        : "#9E9E9E",
-                                    color: isAutoApprove
-                                        ? "#020873"
-                                        : "#ffffff",
-                                    borderRadius: "50%",
-                                }}
-                                className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isAutoApprove
-                                        ? "transform translate-x-full"
-                                        : ""
-                                }`}>
-                                {isAutoApprove ? (
-                                    <CheckIcon sx={{ fontSize: "14px" }} />
-                                ) : (
-                                    <CloseIcon sx={{ fontSize: "14px" }} />
-                                )}
-                            </span>
-                        </MuiToggleButton>
-                    </div>
-                    {/* <div
-                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
-                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                        <div>{t("isHideServPrice")}</div>
-                        <MuiToggleButton
-                            value={isHidePrice}
-                            aria-label="Toggle switch"
-                            onClick={() => setIsHidePrice(!isHidePrice)}
-                            sx={{
-                                width: 49,
-                                height: 28,
-                                borderRadius: 16,
-                                backgroundColor: isHidePrice
-                                    ? "#020873"
-                                    : "#ffffff",
-                                border: isHidePrice
-                                    ? "2px solid #020873"
-                                    : "2px solid  #9E9E9E",
-                                ":focus": { outline: "none" },
-                                ":hover": {
-                                    backgroundColor: isHidePrice
-                                        ? "#020873"
-                                        : "#ffffff",
-                                },
-                            }}>
-                            <span
-                                style={{
-                                    width: 23,
-                                    height: 23,
-                                    marginLeft: isHidePrice ? "" : "1px",
-                                    marginRight: isHidePrice ? "100px" : " ",
-                                    backgroundColor: isHidePrice
-                                        ? "#ffffff"
-                                        : "#9E9E9E",
-                                    color: isHidePrice ? "#020873" : "#ffffff",
-                                    borderRadius: "50%",
-                                }}
-                                className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHidePrice
-                                        ? "transform translate-x-full"
-                                        : ""
-                                }`}>
-                                {isHidePrice ? (
-                                    <CheckIcon sx={{ fontSize: "14px" }} />
-                                ) : (
-                                    <CloseIcon sx={{ fontSize: "14px" }} />
-                                )}
-                            </span>
-                        </MuiToggleButton>
-                    </div>
-
-                    <div
-                        style={{ borderColor: `${alpha("#000000", 0.2)}` }}
-                        className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                        <div>{t("isHideEndDate")}</div>
-                        <MuiToggleButton
-                            value={isHideEndTime}
-                            aria-label="Toggle switch"
-                            onChange={() => setIsHideEndTime(!isHideEndTime)}
-                            sx={{
-                                width: 49,
-                                height: 28,
-                                borderRadius: 16,
-                                backgroundColor: isHideEndTime
-                                    ? "#020873"
-                                    : "#ffffff",
-                                border: isHideEndTime
-                                    ? "2px solid #020873"
-                                    : "2px solid  #9E9E9E",
-                                ":focus": { outline: "none" },
-                                ":hover": {
-                                    backgroundColor: isHideEndTime
-                                        ? "#020873"
-                                        : "#ffffff",
-                                },
-                            }}>
-                            <span
-                                style={{
-                                    width: 23,
-                                    height: 23,
-                                    marginLeft: isHideEndTime ? "" : "1px",
-                                    marginRight: isHideEndTime ? "100px" : " ",
-                                    backgroundColor: isHideEndTime
-                                        ? "#ffffff"
-                                        : "#9E9E9E",
-                                    color: isHideEndTime
-                                        ? "#020873"
-                                        : "#ffffff",
-                                    borderRadius: "50%",
-                                }}
-                                className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${
-                                    isHideEndTime
-                                        ? "transform translate-x-full"
-                                        : ""
-                                }`}>
-                                {isHideEndTime ? (
-                                    <CheckIcon sx={{ fontSize: "14px" }} />
-                                ) : (
-                                    <CloseIcon sx={{ fontSize: "14px" }} />
-                                )}
-                            </span>
-                        </MuiToggleButton>
-                    </div> */}
-
-                    <div
-                        className="w-full flex justify-center bottom-0 inset-y-0 gap-2"
-                        style={{
-                            marginTop: serviceTime.length > 0 ? 0 : "100px",
-                        }}>
-                        <button
-                            className="border text-white mt-4 rounded-lg font-semibold"
-                            style={{
-                                borderColor: `${alpha("#000000", 0.2)}`,
-                                color: "black",
-                                width: "166px",
-                                height: "51px",
-                                cursor: "pointer",
-                                backgroundColor: "white",
-                                fontSize: "14px",
-                            }}
-                            onClick={handlePreview}>
-                            {t("button:preview")}
-                        </button>
-                        <button
-                            onClick={handleCreateService}
-                            type="submit"
-                            className="text-white mt-4 rounded-lg font-semibold"
-                            style={{
-                                width: "166px",
-                                height: "51px",
-                                cursor: "pointer",
-                                backgroundColor: "#020873",
-                                fontSize: "14px",
-                            }}>
-                            {t("button:confirm")}
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
