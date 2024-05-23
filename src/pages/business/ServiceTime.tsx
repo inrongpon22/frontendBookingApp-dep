@@ -75,6 +75,7 @@ export default function ServiceTime(props: IProps) {
     const [selectIndex, setSelectIndex] = useState<number>(-1);
     const TimeSlots: string[] = [];
     const [isCreateService, setIsCreateService] = useState(false);
+    // const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
 
     useEffect(() => {
         if (businessData) {
@@ -101,18 +102,18 @@ export default function ServiceTime(props: IProps) {
         return daysOpen.includes(dayValue);
     };
 
-    const dayOrder = dataOfWeekEng.map(day => day.value);
+    const dayOrder = dataOfWeekEng.map((day) => day.value);
     const toggleDay = (dayValue: string) => {
         if (isDaySelected(dayValue)) {
             setDaysOpen((prevDays) =>
-                prevDays.filter((day) => day !== dayValue).sort((a, b) =>
-                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
-                )
+                prevDays
+                    .filter((day) => day !== dayValue)
+                    .sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b))
             );
         } else {
             setDaysOpen((prevDays) =>
-                [...prevDays, dayValue].sort((a, b) =>
-                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
+                [...prevDays, dayValue].sort(
+                    (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
                 )
             );
         }
@@ -140,7 +141,10 @@ export default function ServiceTime(props: IProps) {
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
             setManualCapacity((prevCapacity) => {
-                const newCapacity = [...prevCapacity, { startTime, endTime, capacity: guestNumber }];
+                const newCapacity = [
+                    ...prevCapacity,
+                    { startTime, endTime, capacity: guestNumber },
+                ];
                 return newCapacity.sort((a, b) => {
                     if (a.startTime < b.startTime) return -1;
                     if (a.startTime > b.startTime) return 1;
@@ -159,24 +163,68 @@ export default function ServiceTime(props: IProps) {
     };
 
     // Function to generate time slots
+    // const generateTimeSlots = (
+    //     startTime: string,
+    //     endTime: string,
+    //     duration: number
+    // ) => {
+    //     if (endTime == "23:59") {
+    //         endTime = "24:00";
+    //     }
+    //     let currentTime = startTime;
+    //     while (currentTime <= endTime) {
+    //         TimeSlots.push(currentTime);
+    //         const [hours, minutes] = currentTime.split(":").map(Number);
+    //         const totalMinutes = hours * 60 + minutes;
+    //         const newTotalMinutes = totalMinutes + duration;
+    //         const newHours = Math.floor(newTotalMinutes / 60);
+    //         const newMinutes = newTotalMinutes % 60;
+    //         currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
+    //             .toString()
+    //             .padStart(2, "0")}`;
+    //     }
+    // };
+    const timeSlots: {
+        startTime: string;
+        endTime: string;
+    }[] = [];
     const generateTimeSlots = (
         startTime: string,
         endTime: string,
         duration: number
     ) => {
+        if (endTime == "23:59") {
+            endTime = "24:00";
+        }
+        duration = duration * 60;
         let currentTime = startTime;
         while (currentTime <= endTime) {
-            TimeSlots.push(currentTime);
             const [hours, minutes] = currentTime.split(":").map(Number);
             const totalMinutes = hours * 60 + minutes;
             const newTotalMinutes = totalMinutes + duration;
             const newHours = Math.floor(newTotalMinutes / 60);
             const newMinutes = newTotalMinutes % 60;
+            const endTimeHours = Math.floor(newTotalMinutes / 60);
+            const endTimeMinutes = newTotalMinutes % 60;
+            const endTimeString = `${endTimeHours
+                .toString()
+                .padStart(2, "0")}:${endTimeMinutes
+                .toString()
+                .padStart(2, "0")}`;
+            if (endTimeString > endTime) {
+                break;
+            }
+            timeSlots.push({
+                startTime: currentTime,
+                endTime: endTimeString !== "24:00" ? endTimeString : "00:00",
+            });
             currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
                 .toString()
                 .padStart(2, "0")}`;
         }
     };
+
+    generateTimeSlots(openTime, closeTime, duration);
 
     const handleIncreaseCapacityManual = (
         startTime: string,
@@ -237,8 +285,6 @@ export default function ServiceTime(props: IProps) {
             ]);
         }
     };
-
-    generateTimeSlots(openTime, closeTime, duration * 60);
 
     const handleSubmit = () => {
         const insertData = {
@@ -347,6 +393,22 @@ export default function ServiceTime(props: IProps) {
         setManualCapacity(serviceTime[index].slotsTime);
         addDisbleDays();
     };
+
+    // const handleSetTwentyFourHour = () => {
+    //     setIsTwentyFourHour(!isTwentyFourHour);
+    // };
+
+    // useEffect(() => {
+    //     if (isTwentyFourHour) {
+    //         console.log("24 hour");
+    //         setOpenTime("00:00");
+    //         setCloseTime("23:59");
+    //     } else {
+    //         setOpenTime(businessData?.openTime.substring(0, 5) ?? "");
+    //         setCloseTime(businessData?.closeTime.substring(0, 5) ?? "");
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isTwentyFourHour]);
 
     // const summaryServiceInFo = () => (
     //     <CreateService
@@ -479,17 +541,17 @@ export default function ServiceTime(props: IProps) {
                                             border: isDaySelected(day.value)
                                                 ? "2px solid #020873"
                                                 : `1px solid ${alpha(
-                                                    "#000000",
-                                                    0.2
-                                                )}`,
+                                                      "#000000",
+                                                      0.2
+                                                  )}`,
                                             borderRadius: "8px",
                                             backgroundColor: disibleDays.some(
                                                 (item) => item == day.value
                                             )
                                                 ? "#dddddd" // Background color for disabled button
                                                 : isDaySelected(day.value)
-                                                    ? "rgba(2, 8, 115, 0.2)"
-                                                    : "white",
+                                                ? "rgba(2, 8, 115, 0.2)"
+                                                : "white",
                                         }}>
                                         {day.name}
                                     </button>
@@ -500,12 +562,34 @@ export default function ServiceTime(props: IProps) {
                             At least one day must be selected
                         </div>
                     ) : null} */}
-
                             <p
                                 className="font-semibold mt-3"
                                 style={{ fontSize: "14px" }}>
                                 {t("availableTime")}
                             </p>
+                            {/* <div className="flex justify-between items-center">
+                                <div
+                                    className="font-semibold mt-3"
+                                    style={{ fontSize: "14px" }}>
+                                    {t("availableTime")}
+                                </div>
+                                <div className="flex">
+                                    <div
+                                        className="mt-3"
+                                        style={{
+                                            fontSize: "14px",
+                                            marginRight: "10px",
+                                        }}>
+                                        24 hour
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="mt-3"
+                                        onChange={handleSetTwentyFourHour}
+                                        checked={isTwentyFourHour}
+                                    />
+                                </div>
+                            </div> */}
                             <div className="flex justify-between mt-3">
                                 <div
                                     style={{
@@ -622,50 +706,42 @@ export default function ServiceTime(props: IProps) {
                                 {t("openSlot")}
                             </p>
                             <div className="flex justify-between gap-2 w-full flex-wrap mt-3">
-                                {TimeSlots.slice(0, -1).map(
-                                    (_timeSlot, index) => (
-                                        <div
-                                            key={index}
-                                            className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                				${selectedSlots.includes(index)
-                                                    ? "border-custom-color border-2"
-                                                    : "border-black-50 border"
-                                                }`}
-                                            style={{
-                                                width: "48%",
-                                                height: "51px",
-                                                borderColor:
-                                                    selectedSlots.includes(
-                                                        index
-                                                    )
-                                                        ? "#020873"
-                                                        : `${alpha(
-                                                            "#000000",
-                                                            0.2
-                                                        )}`,
-                                                backgroundColor:
-                                                    selectedSlots.includes(
-                                                        index
-                                                    )
-                                                        ? "rgb(2, 8, 115,0.2)"
-                                                        : "white",
-                                            }}
-                                            onClick={() =>
-                                                toggleSlotSelection(
-                                                    index,
-                                                    TimeSlots[index],
-                                                    TimeSlots[index + 1]
-                                                )
-                                            }>
-                                            {TimeSlots[index]} -{" "}
-                                            {TimeSlots[index + 1]}
-                                        </div>
-                                    )
-                                )}
+                                {timeSlots.map((slot, index) => (
+                                    <div
+                                        key={index}
+                                        className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
+                                ${
+                                    selectedSlots.includes(index)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                }`}
+                                        style={{
+                                            width: "48%",
+                                            height: "51px",
+                                            borderColor: selectedSlots.includes(
+                                                index
+                                            )
+                                                ? "#020873"
+                                                : `${alpha("#000000", 0.2)}`,
+                                            backgroundColor:
+                                                selectedSlots.includes(index)
+                                                    ? "rgb(2, 8, 115,0.2)"
+                                                    : "white",
+                                        }}
+                                        onClick={() =>
+                                            toggleSlotSelection(
+                                                index,
+                                                timeSlots[index].startTime,
+                                                timeSlots[index].endTime
+                                            )
+                                        }>
+                                        {slot.startTime} - {slot.endTime}
+                                    </div>
+                                ))}
                             </div>
 
                             {isManually == true ? (
-                                <div className="flex flex-col mt-5 border-black-50 border p-3">
+                                <div className="flex flex-col mt-5 border-black-50 border p-3 rounded-lg">
                                     <div className="flex justify-between">
                                         <p className="text-sm">
                                             {t("Availableguests")}
@@ -686,48 +762,56 @@ export default function ServiceTime(props: IProps) {
                                             <div key={element}>
                                                 <div className="flex justify-between">
                                                     <div className="p-3">
-                                                        {TimeSlots[element]} -{" "}
-                                                        {TimeSlots[element + 1]}
+                                                        {
+                                                            timeSlots[element]
+                                                                .startTime
+                                                        }{" "}
+                                                        -{" "}
+                                                        {
+                                                            timeSlots[element]
+                                                                .endTime
+                                                        }
                                                     </div>
                                                     <div className="flex justify-between gap-3 items-center p-3">
                                                         <button
                                                             onClick={() =>
                                                                 handleDecreaseCapacityManual(
-                                                                    TimeSlots[
-                                                                    element
-                                                                    ],
-                                                                    TimeSlots[
-                                                                    element +
-                                                                    1
-                                                                    ]
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].startTime,
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].endTime
                                                                 )
                                                             }
+                                                            style={{
+                                                                cursor: "pointer",
+                                                            }}
                                                             className="border flex justify-center items-center w-8 h-8 rounded-md">
                                                             <KeyboardArrowDownIcon />
                                                         </button>
                                                         {manualCapacity.find(
                                                             (item) =>
                                                                 item.startTime ==
-                                                                TimeSlots[
-                                                                element
-                                                                ] &&
+                                                                    timeSlots[
+                                                                        element
+                                                                    ]
+                                                                        .startTime &&
                                                                 item.endTime ==
-                                                                TimeSlots[
-                                                                element +
-                                                                1
-                                                                ]
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].endTime
                                                         )?.capacity ??
                                                             guestNumber}
                                                         <button
                                                             onClick={() =>
                                                                 handleIncreaseCapacityManual(
-                                                                    TimeSlots[
-                                                                    element
-                                                                    ],
-                                                                    TimeSlots[
-                                                                    element +
-                                                                    1
-                                                                    ],
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].startTime,
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].endTime,
                                                                     guestNumber
                                                                 )
                                                             }
@@ -770,8 +854,8 @@ export default function ServiceTime(props: IProps) {
                                         <button
                                             onClick={() => setIsManually(true)}
                                             disabled={
-                                                TimeSlots.length == 0 ||
-                                                TimeSlots[0] == "" ||
+                                                timeSlots.length == 0 ||
+                                                timeSlots[0].startTime == "" ||
                                                 selectedSlots.length == 0
                                             }>
                                             <u
