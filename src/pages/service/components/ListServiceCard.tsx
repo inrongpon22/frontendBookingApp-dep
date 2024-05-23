@@ -3,6 +3,7 @@ import { truncateContext } from "../../../helper/limitedText";
 import { styled } from "@mui/material/styles";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
 import { t } from "i18next";
+import { dataOfWeekThai, dataOfWeekEng } from "../../../helper/daysOfWeek";
 
 interface IProps {
     serviceId: number;
@@ -15,7 +16,7 @@ interface IProps {
     daysOpen: string[];
     // open: boolean;
     openConfirm: boolean;
-    handleOpen: () => void;
+    handleOpen: (serviceId: number) => void;
     handleClose: () => void;
     handleRefresh: () => void;
     handleSelectService?: (serviceId: number) => void;
@@ -39,10 +40,9 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     position: "relative",
 }));
 
-
-
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
+    const lan = localStorage.getItem("lang");
 
     const handleDeleteService = async () => {
         try {
@@ -70,41 +70,6 @@ export default function ListServiceCard(props: IProps) {
                 handleConfirm={handleDeleteService}
             />
 
-            {/* <div
-                style={{
-                    width: "65px",
-                    height: "104px",
-                    background: "#FA6056",
-                }}
-                className={`absolute top-0 right-0 
-                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
-                    } shadow-md flex justify-center items-center`}>
-                <div
-                    className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={props.handleOpen}>
-                    <DeleteOutlinedIcon
-                        sx={{ color: "white", fontSize: "18.5px" }}
-                    />
-                </div>
-            </div>
-            <div
-                style={{
-                    width: "65px",
-                    height: "104px",
-                    background: "#898A8D",
-                    right: "65px",
-                }}
-                className={`absolute top-0 
-                    transition-opacity duration-500 ease-in-out ${props.open ? "opacity-100" : "opacity-0"
-                    } shadow-md flex justify-center items-center`}>
-                <div
-                    className="text-gray-600 hover:text-gray-800 cursor-pointer"
-                    onClick={() => props.handleSelectService && props.handleSelectService(props.serviceId)}>
-                    <ModeEditOutlinedIcon
-                        sx={{ color: "white", fontSize: "18.5px" }}
-                    />
-                </div>
-            </div> */}
             <Main>
                 <div>
                     <div className="flex justify-between">
@@ -125,7 +90,33 @@ export default function ListServiceCard(props: IProps) {
                         {truncateContext(props.description, 90)}
                     </p>
                     <p style={{ fontSize: "12px" }}>
-                        {props.openTime} - {props.closeTime}
+                        {props.openTime.substring(0, 5)} -{" "}
+                        {props.closeTime.substring(0, 5)}{" "}
+                    </p>
+                    <p style={{ fontSize: "12px" }}>
+                        {props.daysOpen.map((day: string, index) => {
+                            const dayName = lan === "th"
+                                ? dataOfWeekThai.find((x) => x.value === day)?.name
+                                : dataOfWeekEng.find((x) => x.value === day)?.name;
+                            // Determine if 'and' or 'และ' should be added
+                            const isSecondLast = index === props.daysOpen.length - 2;
+                            const isLast = index === props.daysOpen.length - 1;
+
+                            // Add appropriate punctuation
+                            let separator = "";
+                            if (isSecondLast) {
+                                separator = lan === "th" ? " และ " : " and ";
+                            } else if (!isLast) {
+                                separator = ", ";
+                            }
+
+                            return (
+                                <span key={index}>
+                                    {dayName}
+                                    {separator}
+                                </span>
+                            );
+                        })}
                     </p>
                 </div>
             </Main>

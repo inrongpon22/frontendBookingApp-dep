@@ -5,8 +5,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from '@mui/icons-material/Close';
-import { IServiceEditTime, IBookingSlot } from "../../interfaces/services/Iservice";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+    IServiceEditTime,
+    IBookingSlot,
+} from "../../interfaces/services/Iservice";
+import { useParams } from "react-router";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
+import Loading from "../../components/dialog/Loading";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -16,12 +23,20 @@ interface IParams {
 
 export default function AddServiceTime(props: IParams) {
     const { t } = useTranslation();
-
+    const { businessId } = useParams();
+    const { data: businessData, isLoading: businessLoading } = useSWR<any>(
+        businessId && `${app_api}/business/${businessId}`,
+        fetcher
+    );
     const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
     const [duration, setDuration] = useState(1);
-    const [openTime, setOpenTime] = useState("");
-    const [closeTime, setCloseTime] = useState("");
+    const [openTime, setOpenTime] = useState(
+        businessData?.openTime.substring(0, 5) ?? ""
+    );
+    const [closeTime, setCloseTime] = useState(
+        businessData?.closeTime.substring(0, 5) ?? ""
+    );
     const [guestNumber, setGuestNumber] = useState(1);
     const [isManually, setIsManually] = useState(false);
     const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
@@ -66,22 +81,32 @@ export default function AddServiceTime(props: IParams) {
     };
 
     useEffect(() => {
-        props.serviceTime.forEach((element) => {
-            if (
-                element.availableFromDate <= availableFromDate &&
-                element.availableToDate == availableToDate
-            ) {
-                element.daysOpen.forEach((day) => {
-                    setDisibleDays((prev) => [...prev, day]);
-                });
-            } else {
-                setDisibleDays([]);
-            }
-        });
+        if (businessData) {
+            setOpenTime(businessData.openTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
+        }
+    }, [businessData]);
+
+    useEffect(() => {
+        if (props.serviceTime[0].daysOpen !== undefined) {
+            const uniqueDays = new Set(); // Create a Set to store unique days
+            props.serviceTime.forEach((element) => {
+                if (
+                    element.availableFromDate <= availableFromDate &&
+                    (element.availableToDate ?? "") == availableToDate
+                ) {
+                    element.daysOpen.forEach((day) => uniqueDays.add(day));
+                }
+            });
+            setDisibleDays(Array.from(uniqueDays) as string[]);
+        } else {
+            setDisibleDays([""]);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [availableFromDate, availableToDate]);
+    }, [availableFromDate, availableToDate, props.serviceTime]);
 
     const toggleSlotSelection = (index: number) => {
+        console.log(index);
         if (selectedSlots.includes(index)) {
             setSelectedSlots(
                 selectedSlots.filter((slotIndex) => slotIndex !== index)
@@ -198,10 +223,12 @@ export default function AddServiceTime(props: IParams) {
 
     const handleSubmit = async () => {
         if (manualCapacity.length == 0) {
-            manualCapacity.push({
-                startTime: timeSlots[0].startTime,
-                endTime: timeSlots[0].endTime,
-                capacity: guestNumber,
+            selectedSlots.forEach((element) => {
+                manualCapacity.push({
+                    startTime: timeSlots[element].startTime,
+                    endTime: timeSlots[element].endTime,
+                    capacity: guestNumber,
+                });
             });
         }
         const insertData = {
@@ -210,14 +237,17 @@ export default function AddServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
-            openTime: openTime,
-            closeTime: closeTime,
+            // openTime: openTime,
+            // closeTime: closeTime,
         };
         props.serviceTime.push(insertData);
         if (props.handleAddTime) {
             props.handleAddTime();
         } else {
-            localStorage.setItem("serviceTime", JSON.stringify(props.serviceTime));
+            localStorage.setItem(
+                "serviceTime",
+                JSON.stringify(props.serviceTime)
+            );
             if (props.handleCloseCard) {
                 props.handleCloseCard();
             }
@@ -226,9 +256,15 @@ export default function AddServiceTime(props: IParams) {
 
     return (
         <div style={{ width: "100vw" }}>
+            <Loading openLoading={businessLoading} />
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
-                    <div onClick={props.handleAddTime == undefined ? props.handleCloseCard : props.handleAddTime}>
+                    <div
+                        onClick={
+                            props.handleAddTime == undefined
+                                ? props.handleCloseCard
+                                : props.handleAddTime
+                        }>
                         <CloseIcon
                             sx={{
                                 width: "20px",
@@ -247,8 +283,7 @@ export default function AddServiceTime(props: IParams) {
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4">
-                <div
-                    className="mt-4 flex flex-col">
+                <div className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
                     </p>
@@ -329,19 +364,23 @@ export default function AddServiceTime(props: IParams) {
                                         ? "2px solid #020873"
                                         : `1px solid ${alpha("#000000", 0.2)}`,
                                     borderRadius: "8px",
-                                    backgroundColor: isDaySelected(day.value)
-                                        ? "rgb(2, 8, 115,0.2)"
-                                        : "white",
+                                    backgroundColor: disibleDays.some(
+                                        (item) => item == day.value
+                                    )
+                                        ? "#dddddd" // Background color for disabled button
+                                        : isDaySelected(day.value)
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                 }}>
                                 {day.name}
                             </button>
                         ))}
                     </div>
-                    {daysOpen.length < 0 ? (
+                    {/* {daysOpen.length < 0 ? (
                         <div className="text-red-500 text-sm mt-1">
                             At least one day must be selected
                         </div>
-                    ) : null}
+                    ) : null} */}
 
                     <p
                         className="font-semibold mt-3"
@@ -401,7 +440,7 @@ export default function AddServiceTime(props: IParams) {
                                     style={{ border: "none" }}
                                     className="focus:outline-none"
                                     name="closeTime"
-                                    disabled={openTime == ""}
+                                    // disabled={openTime == ""}
                                     required
                                 />
                             </div>
@@ -622,7 +661,8 @@ export default function AddServiceTime(props: IParams) {
                                 !closeTime ||
                                 !duration ||
                                 !guestNumber ||
-                                !availableFromDate
+                                !availableFromDate ||
+                                selectedSlots.length == 0
                             }
                             onClick={handleSubmit}
                             type="submit"

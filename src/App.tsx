@@ -9,7 +9,6 @@ import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 import BusinessAuth from "./pages/auth/BusinessAuth.tsx";
 import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
 import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
-import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
@@ -19,6 +18,8 @@ import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
 import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
+import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
+import CreateSuccessful from "./pages/service/CreateSuccessful.tsx";
 // error pages
 import NotFound from "./pages/errors/404NotFound.tsx";
 import Unauthorized from "./pages/errors/401Unauthorized.tsx";
@@ -72,6 +73,7 @@ function App() {
                         element={<BusinessSetting />}
                     />
 
+
                     {/* service */}
                     <Route
                         path="/service-info/:businessId"
@@ -81,10 +83,7 @@ function App() {
                         path="/service-time/:businessId"
                         element={<ServiceTime />}
                     />
-                    {/* <Route
-            path="/create-service/:businessId"
-            element={<CreateService />}
-          /> */}
+
                     <Route
                         path="/service-setting/:businessId"
                         element={<ServiceSetting />}
@@ -96,6 +95,10 @@ function App() {
                     <Route
                         path="/service-detail/:businessId/:serviceId"
                         element={<ServiceDetail serviceId={0} />}
+                    />
+                    <Route
+                        path="/create-successful/:businessId"
+                        element={<CreateSuccessful />}
                     />
 
                     {/* day off */}

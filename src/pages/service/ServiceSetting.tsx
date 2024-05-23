@@ -31,6 +31,7 @@ export default function ServiceSetting() {
         right: false,
     });
     const [open, setOpen] = useState(false);
+    const [isEditService, setIsEditService] = useState(false);
 
     const {
         data: serviceData,
@@ -42,7 +43,23 @@ export default function ServiceSetting() {
         fetcher
     );
 
-    const handleOpenConfirm = () => setOpen(true);
+    const mergeDayOpen = (serviceId: number) => {
+        const dayOpen: string[] = []; // Initialize dayOpen as an empty array
+        serviceData &&
+            serviceData.filter((service) => service.id == serviceId).map((item) => {
+                item.bookingSlots?.map((slot) => {
+                    slot.daysOpen.map((day: string) => {
+                        dayOpen.push(day);
+                    });
+                });
+            });
+        return dayOpen;
+    };
+
+    const handleOpenConfirm = (serviceId: number) => {
+        setSelectedId(serviceId);
+        setOpen(true);
+    };
     const handleCloseConfirm = () => setOpen(false);
 
     const toggleDrawer =
@@ -63,7 +80,7 @@ export default function ServiceSetting() {
         <Box
             sx={{
                 width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
-                height: "100vh",
+                height: "dvh",
             }}
             role="presentation">
             <ServiceInfo
@@ -71,103 +88,111 @@ export default function ServiceSetting() {
                 isEdit={false}
                 handleClose={toggleDrawer("bottom", false)}
                 handleCloseFromEdit={() =>
-                    setState({ ...state, ["bottom"]: false })
+                    setState({ ...state, [anchor]: false })
                 }
                 serviceMutate={serviceMutate}
             />
         </Box>
     );
-    const serviceDetail = (anchor: Anchor) => (
-        <ServiceDetail
-            serviceId={selectedId}
-            handleClose={() => setState({ ...state, [anchor]: false })}
-            serviceMutate={serviceMutate}
-        />
-    );
 
     const handleSelectService = (serviceId: number) => {
         setSelectedId(serviceId);
-        setState({ ...state, ["right"]: true });
+        setIsEditService(true);
     };
 
     return (
-        <div className=" overflow-y-hidden">
-            <Loading openLoading={serviceLoading} />
-            <Drawer
-                anchor={"bottom"}
-                open={state["bottom"]}
-                onClose={toggleDrawer("bottom", false)}>
-                {addService("bottom")}
-            </Drawer>
-            <Drawer
-                anchor={"right"}
-                open={state["right"]}
-                onClose={toggleDrawer("right", false)}>
-                {serviceDetail("right")}
-            </Drawer>
-            <div className="pr-4 pl-4 pt-6">
-                <Header context={t("title:serviceInformation")} />
-            </div>
-            <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
-                <button
-                    onClick={toggleDrawer("bottom", true)}
-                    style={{
-                        width: "343px",
-                        height: "43px",
-                        background: `${alpha("#020873", 0.1)}`,
-                        color: "#020873",
-                    }}
-                    className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center">
-                    <AddCircleOutlineIcon
-                        sx={{ fontSize: "18px", color: "#020873" }}
-                    />
-                    {t("button:createNewService")}
-                </button>
-            </div>
-            <div style={{ background: "#F7F7F7" }}>
-                <p className="pr-4 pl-4 pt-3 pb-3">
-                    {t("services")}{" "}
-                    {`(${serviceData &&
-                        serviceData.filter((item) => item.isDeleted == false)
-                            .length
-                        })`}{" "}
-                </p>
-                {serviceData &&
-                    serviceData
-                        .filter((item) => item.isDeleted == false)
-                        .map((service, index) => (
-                            <div key={index} className="mb-2">
-                                <SwipeableList
-                                    type={Type.IOS}
-                                    fullSwipe={false}>
-                                    <SwipeableListItem
-                                        trailingActions={trailingActions(
-                                            handleOpenConfirm,
-                                            handleSelectService,
-                                            service.id
-                                        )}>
-                                        <ListServiceCard
-                                            serviceId={service.id}
-                                            serviceName={service.title}
-                                            price={service.price}
-                                            description={service.description}
-                                            currency={service.currency}
-                                            openTime={service.openTime}
-                                            closeTime={service.closeTime}
-                                            daysOpen={service.daysOpen}
-                                            openConfirm={open}
-                                            handleOpen={handleOpenConfirm}
-                                            handleClose={handleCloseConfirm}
-                                            handleRefresh={serviceMutate}
-                                            handleSelectService={
-                                                handleSelectService
-                                            }
-                                        />
-                                    </SwipeableListItem>
-                                </SwipeableList>
-                            </div>
-                        ))}
-            </div>
-        </div>
+        <>
+            {isEditService ? (
+                <ServiceDetail
+                    serviceId={selectedId}
+                    handleClose={() => setIsEditService(false)}
+                    serviceMutate={serviceMutate}
+                />
+            ) : (
+                <div className=" overflow-y-hidden bg-[#F7F7F7] h-[100vh]">
+                    <Loading openLoading={serviceLoading} />
+                    <Drawer
+                        anchor={"bottom"}
+                        open={state["bottom"]}
+                        onClose={toggleDrawer("bottom", false)}>
+                        {addService("bottom")}
+                    </Drawer>
+                    <div className="pr-4 pl-4 pt-6">
+                        <Header context={t("title:serviceInformation")} />
+                    </div>
+                    <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
+                        <button
+                            onClick={toggleDrawer("bottom", true)}
+                            style={{
+                                width: "343px",
+                                height: "43px",
+                                background: `${alpha("#020873", 0.1)}`,
+                                color: "#020873",
+                            }}
+                            className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center">
+                            <AddCircleOutlineIcon
+                                sx={{ fontSize: "18px", color: "#020873" }}
+                            />
+                            {t("button:createNewService")}
+                        </button>
+                    </div>
+                    <div>
+                        <p className="pr-4 pl-4 pt-3 pb-3">
+                            {t("services")}{" "}
+                            {`(${serviceData &&
+                                serviceData.filter(
+                                    (item) => item.isDeleted == false
+                                ).length
+                                })`}{" "}
+                        </p>
+                        {serviceData &&
+                            serviceData
+                                .filter((item) => item.isDeleted == false)
+                                .map((service, index) => (
+                                    <div key={index} className="mb-2">
+                                        <SwipeableList
+                                            type={Type.IOS}
+                                            fullSwipe={false}>
+                                            <SwipeableListItem
+                                                trailingActions={trailingActions(
+                                                    handleOpenConfirm,
+                                                    handleSelectService,
+                                                    service.id
+                                                )}>
+                                                <ListServiceCard
+                                                    serviceId={selectedId}
+                                                    serviceName={service.title}
+                                                    price={service.price}
+                                                    description={
+                                                        service.description
+                                                    }
+                                                    currency={service.currency}
+                                                    openTime={service.openTime}
+                                                    closeTime={
+                                                        service.closeTime
+                                                    }
+                                                    daysOpen={mergeDayOpen(service.id)}
+                                                    openConfirm={open}
+                                                    handleOpen={
+                                                        handleOpenConfirm
+                                                    }
+                                                    handleClose={
+                                                        handleCloseConfirm
+                                                    }
+                                                    handleRefresh={
+                                                        serviceMutate
+                                                    }
+                                                    handleSelectService={
+                                                        handleSelectService
+                                                    }
+                                                />
+                                            </SwipeableListItem>
+                                        </SwipeableList>
+                                    </div>
+                                ))}
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

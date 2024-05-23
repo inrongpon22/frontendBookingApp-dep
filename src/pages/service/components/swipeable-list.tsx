@@ -3,7 +3,7 @@ import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 export const trailingActions = (
-    handleOpenConfirm: () => void,
+    handleOpenConfirm: (serviceId: number) => void,
     handleSelectService: (serviceId: number) => void,
     serviceId: number
 ) => (
@@ -36,7 +36,7 @@ export const trailingActions = (
         <SwipeAction
             destructive={false}
             onClick={() => {
-                handleOpenConfirm();
+                handleOpenConfirm(serviceId);
             }}>
             <div
                 style={{

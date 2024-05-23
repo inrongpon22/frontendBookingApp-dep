@@ -18,7 +18,12 @@ import { useParams } from "react-router-dom";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { Anchor } from "./ServiceSetting";
 import BusinessPreview from "./BusinessPreview";
-import { IServiceInfo, IServiceEditTime } from "../../interfaces/services/Iservice";
+import {
+    IServiceInfo,
+    IServiceEditTime,
+} from "../../interfaces/services/Iservice";
+import toast from "react-hot-toast";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 interface IParams {
     serviceId: number;
@@ -101,9 +106,13 @@ export default function ServiceDetail(props: IParams) {
             isHideEndTime: isHideEndTime,
             businessId: Number(businessId),
         };
+
         await updateService(serviceInfo.id, insertData, token || "");
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
+        toast(t("editSuccess"), {
+            icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+        });
         props.handleClose && props.handleClose();
     };
 

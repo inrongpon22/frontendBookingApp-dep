@@ -17,6 +17,7 @@ import { IServiceInfo, IServiceTime } from "../../interfaces/services/Iservice";
 import EditServiceInfo from "../service/EditServiceInfo";
 import EditServiceTime from "../service/EditServiceTime";
 import AddServiceTime from "../service/AddServiceTime";
+import Loading from "../../components/dialog/Loading";
 
 interface IProps {
     handleClose?: () => void;
@@ -32,6 +33,8 @@ export default function CreateService(props: IProps) {
     const { businessId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
+    const queryParams = new URLSearchParams(location.search);
+    const step = queryParams.get("step");
     const { t } = useTranslation();
     const serviceInfo = JSON.parse(
         localStorage.getItem("serviceInfo") || "{}"
@@ -46,6 +49,7 @@ export default function CreateService(props: IProps) {
     const [refresh, setRefresh] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [state, setState] = useState({
         top: false,
@@ -95,13 +99,20 @@ export default function CreateService(props: IProps) {
 
         try {
             if (token === null) throw new Error("Token is not found");
-            await addService(insertData, token);
-            props.serviceMutate && props.serviceMutate();
-            localStorage.removeItem("serviceInfo");
-            localStorage.removeItem("serviceTime");
-            props.handleCloseServiceInFo && props.handleCloseServiceInFo();
-            props.handleCloseServiceTime && props.handleCloseServiceTime();
-            navigate(`/service-setting/${businessId}`);
+            setIsLoading(true);
+            await addService(insertData, token).then(() => {
+                props.serviceMutate && props.serviceMutate();
+                localStorage.removeItem("serviceInfo");
+                localStorage.removeItem("serviceTime");
+                props.handleCloseServiceInFo && props.handleCloseServiceInFo();
+                props.handleCloseServiceTime && props.handleCloseServiceTime();
+                setIsLoading(false);
+                if (step === "1" && step !== null) {
+                    navigate(`/create-successful/${businessId}`);
+                } else {
+                    navigate(`/service-setting/${businessId}`);
+                }
+            });
         } catch (error) {
             console.log(error);
         }
@@ -141,12 +152,12 @@ export default function CreateService(props: IProps) {
         <Box sx={{ height: "100vh" }}>
             <EditServiceInfo
                 serviceName={serviceInfo.serviceName}
-                serviceDescription={
-                    serviceInfo.serviceDescription
-                }
+                serviceDescription={serviceInfo.serviceDescription}
                 price={serviceInfo.price}
                 currency={serviceInfo.currency}
-                handleSetEditInfo={() => setState({ ...state, ["bottom"]: false })}
+                handleSetEditInfo={() =>
+                    setState({ ...state, ["bottom"]: false })
+                }
                 serviceMutate={props.serviceMutate || (() => { })}
             />
         </Box>
@@ -180,23 +191,34 @@ export default function CreateService(props: IProps) {
 
     const editServiceTime = () => (
         <Box sx={{ height: "100vh" }}>
-            {serviceTime.length > 0 && (
-                isAddTime ? (
+            {serviceTime.length > 0 &&
+                (isAddTime ? (
                     <AddServiceTime
                         serviceTime={serviceTime}
-                        handleCloseCard={() => setState({ ...state, ["bottom"]: false })}
+                        handleCloseCard={() =>
+                            setState({ ...state, ["bottom"]: false })
+                        }
                     />
                 ) : (
                     <EditServiceTime
                         serviceTime={serviceTime}
-                        openTime={serviceTime[selectedIndex].openTime == undefined ? "" : serviceTime[selectedIndex].openTime}
-                        closeTime={serviceTime[selectedIndex].closeTime == undefined ? "" : serviceTime[selectedIndex].closeTime}
+                        openTime={
+                            serviceTime[selectedIndex].openTime == undefined
+                                ? ""
+                                : serviceTime[selectedIndex].openTime
+                        }
+                        closeTime={
+                            serviceTime[selectedIndex].closeTime == undefined
+                                ? ""
+                                : serviceTime[selectedIndex].closeTime
+                        }
                         editIndex={selectedIndex}
                         isAddTime={isAddTime}
-                        handleSetEditTime={() => setState({ ...state, ["bottom"]: false })}
+                        handleSetEditTime={() =>
+                            setState({ ...state, ["bottom"]: false })
+                        }
                     />
-                )
-            )}
+                ))}
         </Box>
     );
 
@@ -222,12 +244,14 @@ export default function CreateService(props: IProps) {
         setTypeName("serviceTime");
         setState({ ...state, ["bottom"]: true });
         setIsAddTime(true);
+        props.handleAddData && props.handleAddData();
     };
 
     return (
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
+            <Loading openLoading={isLoading} />
             {typeName == "service" ? (
                 <Drawer
                     anchor={"bottom"}
@@ -249,7 +273,6 @@ export default function CreateService(props: IProps) {
                     onClose={toggleDrawer("bottom", false)}>
                     {editServiceTime()}
                 </Drawer>
-
             )}
 
             <div className="pr-4 pl-4 pt-6">
@@ -277,7 +300,9 @@ export default function CreateService(props: IProps) {
                                     index={index}
                                     serviceTime={time}
                                     handleDelete={handleDelete}
-                                    handleEditServiceTime={handleEditServiceTime}
+                                    handleEditServiceTime={
+                                        handleEditServiceTime
+                                    }
                                 />
                             </div>
                         ))}
@@ -293,7 +318,9 @@ export default function CreateService(props: IProps) {
                         }}
                         className=" items-center gap-1 p-1 ">
                         <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
-                        <div className=" font-medium " onClick={handleAddServiceTime}>
+                        <div
+                            className=" font-medium "
+                            onClick={handleAddServiceTime}>
                             {t("button:addServiceTime")}
                         </div>
                     </button>
