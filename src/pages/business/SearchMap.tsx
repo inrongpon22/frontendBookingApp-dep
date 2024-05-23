@@ -74,7 +74,6 @@ export default function SearchMap(props: IParameter) {
                                     placeholder: "Search Places ...",
                                     className: "location-search-input",
                                 })}
-                                value={props.oldAddress ?? ""}
                                 type="search"
                                 id="default-search"
                                 style={{

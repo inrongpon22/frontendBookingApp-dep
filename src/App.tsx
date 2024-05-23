@@ -93,7 +93,7 @@ function App() {
                     />
                     <Route
                         path="/create-successful/:businessId"
-                        element={<CreateSuccessful />}
+                        element={<CreateSuccessful openLoading={false} />}
                     />
 
                     {/* day off */}
