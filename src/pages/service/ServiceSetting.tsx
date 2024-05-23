@@ -46,13 +46,15 @@ export default function ServiceSetting() {
     const mergeDayOpen = (serviceId: number) => {
         const dayOpen: string[] = []; // Initialize dayOpen as an empty array
         serviceData &&
-            serviceData.filter((service) => service.id == serviceId).map((item) => {
-                item.bookingSlots?.map((slot) => {
-                    slot.daysOpen.map((day: string) => {
-                        dayOpen.push(day);
+            serviceData
+                .filter((service) => service.id == serviceId)
+                .map((item) => {
+                    item.bookingSlots?.map((slot) => {
+                        slot.daysOpen.map((day: string) => {
+                            dayOpen.push(day);
+                        });
                     });
                 });
-            });
         return dayOpen;
     };
 
@@ -64,23 +66,23 @@ export default function ServiceSetting() {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
 
-                setState({ ...state, [anchor]: open });
-            };
+            setState({ ...state, [anchor]: open });
+        };
 
     const addService = (anchor: Anchor) => (
         <Box
             sx={{
                 width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
-                height: "dvh",
+                height: "100vh",
             }}
             role="presentation">
             <ServiceInfo
@@ -139,11 +141,12 @@ export default function ServiceSetting() {
                     <div>
                         <p className="pr-4 pl-4 pt-3 pb-3">
                             {t("services")}{" "}
-                            {`(${serviceData &&
+                            {`(${
+                                serviceData &&
                                 serviceData.filter(
                                     (item) => item.isDeleted == false
                                 ).length
-                                })`}{" "}
+                            })`}{" "}
                         </p>
                         {serviceData &&
                             serviceData
@@ -171,7 +174,9 @@ export default function ServiceSetting() {
                                                     closeTime={
                                                         service.closeTime
                                                     }
-                                                    daysOpen={mergeDayOpen(service.id)}
+                                                    daysOpen={mergeDayOpen(
+                                                        service.id
+                                                    )}
                                                     openConfirm={open}
                                                     handleOpen={
                                                         handleOpenConfirm
