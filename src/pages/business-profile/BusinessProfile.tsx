@@ -174,9 +174,11 @@ const BusinessProfile = () => {
                 </div>
 
                 <div className="flex flex-col gap-5 py-5">
-                    <Divider sx={{ width: "120%", translate:"-10%" }} >
+                    {/* time indicator */}
+                    {/* <Divider sx={{ width: "120%", translate:"-10%" }} >
                         <span className="text-red-400 font-bold">Now, {moment().format("HH:mm")}</span>
-                    </Divider>
+                    </Divider> */}
+                    {/* time indicator */}
                     {todayBookings?.map((item: Ireservation, index: number) => {
                         return (
                             <div key={index} className="flex justify-between">
