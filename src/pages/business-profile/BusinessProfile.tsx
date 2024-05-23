@@ -34,7 +34,7 @@ const BusinessProfile = () => {
 
     const {
         getReservationByBusinessIdData,
-        getReservationByBusinessIdLoading,
+        getReservationByBusinessIdLoading
     } = getReservationByBusinessId(Number(businessId), "all"); // get reservation by bussiness id
 
     // filter only pending
@@ -59,14 +59,14 @@ const BusinessProfile = () => {
 
             return { ...item, bookingDate: combinedBookingDate };
         })
-        .sort((a, b) => moment(a.bookingDate).diff(moment(b.bookingDate)));
+        .sort((a:any, b:any) => moment(a.bookingDate).diff(moment(b.bookingDate)));
 
     useEffect(() => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
     }, [getReservationByBusinessIdLoading]);
 
     return (
-        <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-hidden">
+        <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
             {/* headers */}
             <div className="flex justify-between items-center bg-white p-5">
                 <p className="text-[22px] font-semibold text-deep-blue text-opacity-80">

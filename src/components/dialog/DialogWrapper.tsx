@@ -56,6 +56,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
             phoneNumbers: "",
             otp: "",
             additionalNotes: "",
+            isSendSMS: true,
+            isBusinessOnly: false,
         },
         validationSchema:
             confirmationDialogSchemas[
@@ -169,6 +171,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         },
     });
 
+    console.log(formik.values)
+
     const DialogHeader = (): string => {
         switch (dialogState) {
             case "booking-detail-preview":
@@ -184,8 +188,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                 return "";
         }
     };
-
-    console.log(dialogState);
 
     const SwitchState = () => {
         switch (dialogState) {

@@ -1,23 +1,85 @@
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { app_api } from "../../helper/url";
 import toast from "react-hot-toast";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import moment from "moment";
+import { Switch, SwitchProps, styled } from "@mui/material";
+import { getReservationByBusinessId } from "../../api/booking";
+
+const IOSSwitch = styled((props: SwitchProps) => (
+    <Switch
+        focusVisibleClassName=".Mui-focusVisible"
+        disableRipple
+        {...props}
+    />
+))(({ theme }) => ({
+    width: 42,
+    height: 26,
+    padding: 0,
+    "& .MuiSwitch-switchBase": {
+        padding: 0,
+        margin: 2,
+        transitionDuration: "300ms",
+        "&.Mui-checked": {
+            transform: "translateX(16px)",
+            color: "#fff",
+            "& + .MuiSwitch-track": {
+                backgroundColor: "#35398F",
+                opacity: 1,
+                border: 0,
+            },
+            "&.Mui-disabled + .MuiSwitch-track": {
+                opacity: 0.5,
+            },
+        },
+        "&.Mui-focusVisible .MuiSwitch-thumb": {
+            color: "#33cf4d",
+            border: "6px solid #fff",
+        },
+        "&.Mui-disabled .MuiSwitch-thumb": {
+            color:
+                theme.palette.mode === "light"
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[600],
+        },
+        "&.Mui-disabled + .MuiSwitch-track": {
+            opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+        },
+    },
+    "& .MuiSwitch-thumb": {
+        boxSizing: "border-box",
+        width: 22,
+        height: 22,
+    },
+    "& .MuiSwitch-track": {
+        borderRadius: 26 / 2,
+        backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+        opacity: 1,
+        transition: theme.transitions.create(["background-color"], {
+            duration: 500,
+        }),
+    },
+}));
 
 const BookingDetailsPreview = () => {
+    const { businessId } = useParams();
     const navigate = useNavigate();
     const { pathname } = useLocation();
+    const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
 
     const { formik } = useContext<any>(DialogContext);
 
     const { setIsGlobalLoading, setShowDialog, setDialogState } =
         useContext(GlobalContext);
 
-    const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
+    const { mutateReservationByBusinessId } = getReservationByBusinessId(
+        Number(businessId),
+        "all"
+    ); // get reservation by bussiness id
 
     const {
         t,
@@ -58,6 +120,8 @@ const BookingDetailsPreview = () => {
                         phoneNumbers: res.data.phoneNumber,
                         otp: "",
                         additionalNotes: "",
+                        isSendSMS: true,
+                        isBusinessOnly: false,
                     });
                 });
         }
@@ -89,7 +153,7 @@ const BookingDetailsPreview = () => {
             .post(
                 `${app_api}/${
                     pathname.includes("business")
-                        ? "makeMutiReservationByBus"
+                        ? `makeMutiReservationByBus/${language}/${formik.values.isSendSMS}`
                         : `makeMutiReservation/${language}`
                 }`,
                 body,
@@ -102,10 +166,11 @@ const BookingDetailsPreview = () => {
             .then((res) => {
                 setIsGlobalLoading(false);
                 if (pathname.includes("business")) {
+                    mutateReservationByBusinessId();
                     setDialogState("business-more-options");
                     setShowDialog(false);
                     toast.success("การสร้างการจองด้วยตัวเองสำเร็จ");
-                    localStorage.removeItem("bookingDetail")
+                    localStorage.removeItem("bookingDetail");
                 } else {
                     navigate(`/booking/${res.data.reservationId}`);
                 }
@@ -161,8 +226,31 @@ const BookingDetailsPreview = () => {
                     </p>
                 </div>
             </div>
-            <div className="">
-                <p className="text-[14px] font-semibold">{t("bookingName")}</p>
+
+            <div
+                className={`${
+                    pathname.includes("business") ? "" : "hidden"
+                } flex justify-between items-center border rounded-lg p-5`}
+            >
+                <p className="flex flex-col pe-10">
+                    <span className="text-[14px] font-bold">
+                        จองไว้สำหรับร้านค้าเท่านั้น
+                    </span>
+                    <span className="text-[12px] font-normal">
+                        ลูกค้าจะไม่สามารถใช้บริการในวันและเวลาที่ร้านสำรองไว้ได้
+                    </span>
+                </p>
+                <IOSSwitch
+                    checked={formik.values.isBusinessOnly}
+                    onChange={(e) =>
+                        formik.setFieldValue("isBusinessOnly", e.target.checked)
+                    }
+                />
+            </div>
+            <div className={formik.values.isBusinessOnly ? "hidden" : "mt-5"}>
+                <p className="flex justify-between items-center text-[14px] font-semibold">
+                    <span>{t("bookingName")}</span>
+                </p>
                 <input
                     type="text"
                     {...formik.getFieldProps("username")}
@@ -178,44 +266,78 @@ const BookingDetailsPreview = () => {
                         {formik.errors?.username}
                     </span>
                 )}
-            </div>
-            <div className="">
-                <p className="text-[14px] font-semibold">
-                    {t("bookingNumbers")}
-                </p>
-                <input
-                    type="text"
-                    {...formik.getFieldProps("phoneNumbers")}
-                    className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
-                        formik.errors?.phoneNumbers
-                            ? "border-2 border-rose-500"
-                            : "border"
-                    }`}
-                    placeholder="012 345 6789"
-                />
-                {formik.touched.phoneNumbers && formik.errors.phoneNumbers && (
-                    <span className="text-[14px] text-rose-500">
-                        {formik.errors?.phoneNumbers}
-                    </span>
-                )}
-            </div>
-            <div className="">
-                <p className="text-[14px] font-semibold">{t("notes")}</p>
-                <textarea
-                    rows={3}
-                    {...formik.getFieldProps("additionalNotes")}
-                    className="w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal"
-                    placeholder="ตัวอย่าง ตัดผมโดยสปาและทรีทเมนท์"
-                />
-            </div>
-            <div className="flex flex-col py-2">
-                <label htmlFor="" className="text-[12px] text-[#5C5C5C]">
-                    {t("termsAndprivacy")}
-                </label>
+
+                <div className="">
+                    <p className="flex justify-between items-center text-[14px] font-semibold">
+                        <span>{t("bookingNumbers")}</span>
+                    </p>
+                    <input
+                        type="text"
+                        {...formik.getFieldProps("phoneNumbers")}
+                        className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
+                            formik.errors?.phoneNumbers
+                                ? "border-2 border-rose-500"
+                                : "border"
+                        }`}
+                        placeholder="012 345 6789"
+                    />
+                    {formik.touched.phoneNumbers &&
+                        formik.errors.phoneNumbers && (
+                            <span className="text-[14px] text-rose-500">
+                                {formik.errors?.phoneNumbers}
+                            </span>
+                        )}
+                    <div
+                        className={`${
+                            pathname.includes("business") ? "" : "hidden"
+                        } flex justify-between items-center border rounded-lg p-5 mt-2`}
+                    >
+                        <p className="flex flex-col pe-10">
+                            <span className="text-[14px] font-bold">
+                                ส่งข้อความ SMS
+                            </span>
+                            <span className="text-[12px] font-normal">
+                                เราจะส่งข้อความ SMS รายละเอียดการจองเช่น วันที่
+                                เวลา ประเภทของบริการ และอื่นๆ
+                            </span>
+                        </p>
+                        <IOSSwitch
+                            checked={formik.values.isSendSMS}
+                            onChange={(e) =>
+                                formik.setFieldValue(
+                                    "isSendSMS",
+                                    e.target.checked
+                                )
+                            }
+                        />
+                    </div>
+                </div>
+                <div className="">
+                    <p className="text-[14px] font-semibold">{t("notes")}</p>
+                    <textarea
+                        rows={3}
+                        {...formik.getFieldProps("additionalNotes")}
+                        className="w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal"
+                        placeholder="ตัวอย่าง ตัดผมโดยสปาและทรีทเมนท์"
+                    />
+                </div>
+                <div className="flex flex-col py-2">
+                    <label htmlFor="" className="text-[12px] text-[#5C5C5C]">
+                        {t("termsAndprivacy")}
+                    </label>
+                </div>
             </div>
             <button
                 type="button"
-                className="bg-[#020873] w-full text-white p-2 rounded-lg"
+                className={`${
+                    (formik.errors?.phoneNumbers && formik.values.isSendSMS) ||
+                    formik.errors?.username
+                        ? "bg-gray-400"
+                        : "bg-deep-blue"
+                } w-full text-white p-2 rounded-lg`}
+                disabled={
+                    formik.errors?.username || formik.errors?.phoneNumbers
+                }
                 onClick={createReservation}
             >
                 {t("button:confirmBookingButton")}

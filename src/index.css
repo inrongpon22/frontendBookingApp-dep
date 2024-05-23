@@ -39,8 +39,8 @@ textarea {
 
 .custom-dialog {
   width: 100vw !important;
-  height: 55vh !important;
-  max-height: 55vh !important;
+  height: auto !important;
+  /* max-height: 55vh !important; */
   position: fixed !important;
   bottom: 0 !important;
   border-top-left-radius: 8px !important;
