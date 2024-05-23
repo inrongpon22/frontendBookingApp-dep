@@ -1,17 +1,22 @@
 import { useNavigate, useParams } from "react-router-dom";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import { Modal } from "@mui/material";
 
 interface IProps {
     openLoading: boolean;
+    title: string;
+    description: string;
+    btnWord: string;
 }
 
 export default function CreateSuccessful(props: IProps) {
     const navigate = useNavigate();
     const { businessId } = useParams();
+    if (!props.openLoading) {
+        return null;
+    }
     return (
         <>
-            {/* <Modal open={props.openLoading}>
+            <div className={props.openLoading ? "hide" : "show"}>
                 <div className="flex flex-col justify-center items-center h-screen">
                     <div className="flex flex-col justify-between items-center h-full w-5/6">
                         <div className="flex flex-col flex-grow justify-center">
@@ -42,8 +47,8 @@ export default function CreateSuccessful(props: IProps) {
                         Go back
                     </button>
                 </div>
-            </Modal> */}
-            <div className="flex flex-col justify-center items-center h-screen">
+            </div>
+            {/* <div className="flex flex-col justify-center items-center h-screen">
                 <div className="flex flex-col justify-between items-center h-full w-5/6">
                     <div className="flex flex-col flex-grow justify-center">
                         <div className="flex justify-center my-12">
@@ -70,7 +75,7 @@ export default function CreateSuccessful(props: IProps) {
                 >
                     Go back
                 </button>
-            </div>
+            </div> */}
         </>
     );
 }

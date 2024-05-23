@@ -162,28 +162,6 @@ export default function ServiceTime(props: IProps) {
         }
     };
 
-    // Function to generate time slots
-    // const generateTimeSlots = (
-    //     startTime: string,
-    //     endTime: string,
-    //     duration: number
-    // ) => {
-    //     if (endTime == "23:59") {
-    //         endTime = "24:00";
-    //     }
-    //     let currentTime = startTime;
-    //     while (currentTime <= endTime) {
-    //         TimeSlots.push(currentTime);
-    //         const [hours, minutes] = currentTime.split(":").map(Number);
-    //         const totalMinutes = hours * 60 + minutes;
-    //         const newTotalMinutes = totalMinutes + duration;
-    //         const newHours = Math.floor(newTotalMinutes / 60);
-    //         const newMinutes = newTotalMinutes % 60;
-    //         currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
-    //             .toString()
-    //             .padStart(2, "0")}`;
-    //     }
-    // };
     const timeSlots: {
         startTime: string;
         endTime: string;
@@ -223,8 +201,6 @@ export default function ServiceTime(props: IProps) {
                 .padStart(2, "0")}`;
         }
     };
-
-    generateTimeSlots(openTime, closeTime, duration);
 
     const handleIncreaseCapacityManual = (
         startTime: string,
@@ -393,6 +369,16 @@ export default function ServiceTime(props: IProps) {
         setManualCapacity(serviceTime[index].slotsTime);
         addDisbleDays();
     };
+
+    generateTimeSlots(openTime, closeTime, duration);
+    useEffect(() => {
+        const selectedSlots: number[] = [];
+        timeSlots.forEach((_, index) => {
+            selectedSlots.push(index);
+        });
+        setSelectedSlots(selectedSlots);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openTime, closeTime, duration]);
 
     // const handleSetTwentyFourHour = () => {
     //     setIsTwentyFourHour(!isTwentyFourHour);

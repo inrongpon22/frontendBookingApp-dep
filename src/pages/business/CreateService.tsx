@@ -320,6 +320,7 @@ export default function CreateService(props: IProps) {
                         ))}
 
                     <button
+                        onClick={handleAddServiceTime}
                         style={{
                             display: "flex",
                             background: `${alpha("#020873", 0.1)}`,
@@ -327,14 +328,13 @@ export default function CreateService(props: IProps) {
                             height: "27px",
                             fontSize: "14px",
                             borderRadius: "8px",
+                            textAlign: "center",
+                            justifyContent: "center",
+                            color: "#020873",
                         }}
                         className=" items-center gap-1 p-1 ">
                         <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
-                        <div
-                            className=" font-medium "
-                            onClick={handleAddServiceTime}>
-                            {t("button:addServiceTime")}
-                        </div>
+                        {t("button:addServiceTime")}
                     </button>
 
                     <p className=" font-bold " style={{ fontSize: "14px" }}>
@@ -344,7 +344,14 @@ export default function CreateService(props: IProps) {
                     <div
                         style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                         className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                        <div>{t("isAutoApprove")}</div>
+                        <div className="w-[60vw]">
+                            <div className="text-[14px]">
+                                {t("isAutoApprove")}
+                            </div>
+                            <p className="text-[#6A6A6A] font-[12px]">
+                                {t("desc:autoApprove")}
+                            </p>
+                        </div>
                         <MuiToggleButton
                             value={isAutoApprove}
                             aria-label="Toggle switch"
@@ -394,7 +401,7 @@ export default function CreateService(props: IProps) {
                             </span>
                         </MuiToggleButton>
                     </div>
-                    <div
+                    {/* <div
                         style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                         className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
                         <div>{t("isHideServPrice")}</div>
@@ -498,7 +505,7 @@ export default function CreateService(props: IProps) {
                                 )}
                             </span>
                         </MuiToggleButton>
-                    </div>
+                    </div> */}
 
                     <div
                         className="w-full flex justify-center bottom-0 inset-y-0 gap-2"
@@ -517,7 +524,7 @@ export default function CreateService(props: IProps) {
                                 fontSize: "14px",
                             }}
                             onClick={handlePreview}>
-                            Preview
+                            {t("button:preview")}
                         </button>
                         <button
                             onClick={handleCreateService}
