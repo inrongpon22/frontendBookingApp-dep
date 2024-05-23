@@ -18,6 +18,9 @@ import EditServiceInfo from "../service/EditServiceInfo";
 import EditServiceTime from "../service/EditServiceTime";
 import AddServiceTime from "../service/AddServiceTime";
 import Loading from "../../components/dialog/Loading";
+import useSWR from "swr";
+import { app_api, fetcher } from "../../helper/url";
+// import CreateSuccessful from "../service/CreateSuccessful";
 
 interface IProps {
     handleClose?: () => void;
@@ -31,6 +34,10 @@ interface IProps {
 
 export default function CreateService(props: IProps) {
     const { businessId } = useParams();
+    const { data: businessData } = useSWR<any>(
+        businessId && `${app_api}/business/${businessId}`,
+        fetcher
+    );
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const queryParams = new URLSearchParams(location.search);
@@ -74,20 +81,28 @@ export default function CreateService(props: IProps) {
             price: serviceInfo.price,
             isAutoApprove: isAutoApprove,
             currency: serviceInfo.currency,
-            openTime: serviceTime[0].openTime,
-            closeTime: serviceTime[0].closeTime,
-            bookingSlots: [
-                {
-                    daysOpen: serviceTime[0].daysOpen,
-                    availableFromDate: serviceTime[0].availableFromDate,
-                    availableToDate:
-                        serviceTime[0].availableToDate === ""
-                            ? null
-                            : serviceTime[0].availableToDate,
-                    slotsTime: serviceTime[0].slotsTime,
-                    duration: serviceTime[0].duration,
-                },
-            ],
+            openTime: businessData?.openTime.substring(0, 5),
+            closeTime: businessData?.closeTime.substring(0, 5),
+            // bookingSlots: [
+            //     {
+            //         daysOpen: serviceTime[0].daysOpen,
+            //         availableFromDate: serviceTime[0].availableFromDate,
+            //         availableToDate:
+            //             serviceTime[0].availableToDate === ""
+            //                 ? null
+            //                 : serviceTime[0].availableToDate,
+            //         slotsTime: serviceTime[0].slotsTime,
+            //         duration: serviceTime[0].duration,
+            //     },
+            // ],
+            bookingSlots: serviceTime.map((time) => ({
+                daysOpen: time.daysOpen,
+                availableFromDate: time.availableFromDate,
+                availableToDate:
+                    time.availableToDate === "" ? null : time.availableToDate,
+                slotsTime: time.slotsTime,
+                duration: time.duration,
+            })),
             availableFromDate: serviceTime[0].availableFromDate,
             availableToDate:
                 serviceTime[0].availableToDate === ""
@@ -97,9 +112,11 @@ export default function CreateService(props: IProps) {
             isHideEndTime: isHideEndTime,
         };
 
+        console.log("insertData", insertData);
+
         try {
             if (token === null) throw new Error("Token is not found");
-            setIsLoading(true);
+            // setIsLoading(true);
             await addService(insertData, token).then(() => {
                 props.serviceMutate && props.serviceMutate();
                 localStorage.removeItem("serviceInfo");
@@ -137,16 +154,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -158,13 +175,14 @@ export default function CreateService(props: IProps) {
                 handleSetEditInfo={() =>
                     setState({ ...state, ["bottom"]: false })
                 }
-                serviceMutate={props.serviceMutate || (() => { })}
+                serviceMutate={props.serviceMutate || (() => {})}
             />
         </Box>
     );
 
     const previewService = () => (
         <Box sx={{ height: "100vh" }}>
+            {/* <CreateSuccessful openLoading={true} /> */}
             {serviceTime.length > 0 && (
                 <BusinessPreview
                     businessId={Number(businessId)}
@@ -188,30 +206,22 @@ export default function CreateService(props: IProps) {
             )}
         </Box>
     );
-
     const editServiceTime = () => (
         <Box sx={{ height: "100vh" }}>
             {serviceTime.length > 0 &&
                 (isAddTime ? (
                     <AddServiceTime
                         serviceTime={serviceTime}
-                        handleCloseCard={() =>
-                            setState({ ...state, ["bottom"]: false })
-                        }
+                        handleCloseCard={() => {
+                            setState({ ...state, ["bottom"]: false });
+                            setIsAddTime(false);
+                        }}
                     />
                 ) : (
                     <EditServiceTime
                         serviceTime={serviceTime}
-                        openTime={
-                            serviceTime[selectedIndex].openTime == undefined
-                                ? ""
-                                : serviceTime[selectedIndex].openTime
-                        }
-                        closeTime={
-                            serviceTime[selectedIndex].closeTime == undefined
-                                ? ""
-                                : serviceTime[selectedIndex].closeTime
-                        }
+                        openTime={businessData?.openTime}
+                        closeTime={businessData?.closeTime}
                         editIndex={selectedIndex}
                         isAddTime={isAddTime}
                         handleSetEditTime={() =>
@@ -238,6 +248,7 @@ export default function CreateService(props: IProps) {
         setTypeName("serviceTime");
         setState({ ...state, ["bottom"]: true });
         setSelectedIndex(index);
+        setRefresh(!refresh);
     };
 
     const handleAddServiceTime = () => {
@@ -245,6 +256,7 @@ export default function CreateService(props: IProps) {
         setState({ ...state, ["bottom"]: true });
         setIsAddTime(true);
         props.handleAddData && props.handleAddData();
+        setRefresh(!refresh);
     };
 
     return (
@@ -369,10 +381,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isAutoApprove
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isAutoApprove
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isAutoApprove ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -419,10 +432,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHidePrice
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHidePrice
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHidePrice ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (
@@ -472,10 +486,11 @@ export default function CreateService(props: IProps) {
                                     borderRadius: "50%",
                                 }}
                                 className={`absolute left-0 rounded-full 
-                                shadow-md flex items-center justify-center transition-transform duration-300 ${isHideEndTime
+                                shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                    isHideEndTime
                                         ? "transform translate-x-full"
                                         : ""
-                                    }`}>
+                                }`}>
                                 {isHideEndTime ? (
                                     <CheckIcon sx={{ fontSize: "14px" }} />
                                 ) : (

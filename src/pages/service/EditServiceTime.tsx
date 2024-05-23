@@ -59,12 +59,16 @@ export default function EditServiceTime(props: IParams) {
         startTime: string;
         endTime: string;
     }[] = [];
+    // const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
 
     const generateTimeSlots = (
         startTime: string,
         endTime: string,
         duration: number
     ) => {
+        if (endTime == "23:59") {
+            endTime = "24:00";
+        }
         duration = duration * 60;
         let currentTime = startTime;
         while (currentTime <= endTime) {
@@ -78,12 +82,15 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
-            timeSlots.push({ startTime: currentTime, endTime: endTimeString });
+            timeSlots.push({
+                startTime: currentTime,
+                endTime: endTimeString !== "24:00" ? endTimeString : "00:00",
+            });
             currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
                 .toString()
                 .padStart(2, "0")}`;
@@ -97,11 +104,15 @@ export default function EditServiceTime(props: IParams) {
                 .filter((_item, index) => index !== props.editIndex)
                 .forEach((element) => {
                     if (
-                        element.availableFromDate <= availableFromDate &&
+                        element.availableFromDate == availableFromDate &&
                         element.availableToDate == availableToDate
                     ) {
                         element.daysOpen.forEach((day) => uniqueDays.add(day));
-                        setDisibleDays(Array.from(uniqueDays) as string[]);
+                        if (
+                            !daysOpen.some((dayName) => uniqueDays.has(dayName))
+                        ) {
+                            setDisibleDays(Array.from(uniqueDays) as string[]);
+                        }
                     } else {
                         setDisibleDays([]);
                     }
@@ -132,7 +143,10 @@ export default function EditServiceTime(props: IParams) {
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
             setManualCapacity((prevCapacity) => {
-                const newCapacity = [...prevCapacity, { startTime, endTime, capacity: guestNumber }];
+                const newCapacity = [
+                    ...prevCapacity,
+                    { startTime, endTime, capacity: guestNumber },
+                ];
                 return newCapacity.sort((a, b) => {
                     if (a.startTime < b.startTime) return -1;
                     if (a.startTime > b.startTime) return 1;
@@ -150,23 +164,22 @@ export default function EditServiceTime(props: IParams) {
         }
     };
 
-
     const isDaySelected = (dayValue: string) => {
         return daysOpen.includes(dayValue);
     };
 
-    const dayOrder = dataOfWeekEng.map(day => day.value);
+    const dayOrder = dataOfWeekEng.map((day) => day.value);
     const toggleDay = (dayValue: string) => {
         if (isDaySelected(dayValue)) {
             setDaysOpen((prevDays) =>
-                prevDays.filter((day) => day !== dayValue).sort((a, b) =>
-                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
-                )
+                prevDays
+                    .filter((day) => day !== dayValue)
+                    .sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b))
             );
         } else {
             setDaysOpen((prevDays) =>
-                [...prevDays, dayValue].sort((a, b) =>
-                    dayOrder.indexOf(a) - dayOrder.indexOf(b)
+                [...prevDays, dayValue].sort(
+                    (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
                 )
             );
         }
@@ -256,6 +269,7 @@ export default function EditServiceTime(props: IParams) {
         manualCapacity.forEach((element) => {
             element.capacity = 1;
         });
+        setGuestNumber(1);
         setIsManually(false);
     };
 
@@ -264,6 +278,23 @@ export default function EditServiceTime(props: IParams) {
     };
 
     generateTimeSlots(openTime, closeTime, duration);
+
+    // const handleSetTwentyFourHour = () => {
+    //     setIsTwentyFourHour(!isTwentyFourHour);
+    // };
+
+    // useEffect(() => {
+    //     if (isTwentyFourHour) {
+    //         setOpenTime("00:00");
+    //         setCloseTime("23:59");
+    //         setSelectedSlots([]);
+    //     } else {
+    //         setOpenTime(props.openTime.substring(0, 5));
+    //         setCloseTime(props.closeTime.substring(0, 5));
+    //     }
+
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isTwentyFourHour]);
 
     useEffect(() => {
         if (
@@ -419,8 +450,8 @@ export default function EditServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                            ? "rgba(2, 8, 115, 0.2)"
-                                            : "white",
+                                        ? "rgba(2, 8, 115, 0.2)"
+                                        : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -431,6 +462,30 @@ export default function EditServiceTime(props: IParams) {
                             At least one day must be selected
                         </div>
                     ) : null} */}
+
+                    {/* <div className="flex justify-between items-center">
+                        <div
+                            className="font-semibold mt-3"
+                            style={{ fontSize: "14px" }}>
+                            {t("availableTime")}
+                        </div>
+                        <div className="flex">
+                            <div
+                                className="mt-3"
+                                style={{
+                                    fontSize: "14px",
+                                    marginRight: "10px",
+                                }}>
+                                24 hour
+                            </div>
+                            <input
+                                type="checkbox"
+                                className="mt-3"
+                                onChange={handleSetTwentyFourHour}
+                                checked={isTwentyFourHour}
+                            />
+                        </div>
+                    </div> */}
 
                     <p
                         className="font-semibold mt-3"
@@ -553,10 +608,11 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
+                                ${
+                                    selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                    }`}
+                                }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -582,7 +638,7 @@ export default function EditServiceTime(props: IParams) {
                     </div>
 
                     {isManually == true ? (
-                        <div className="flex flex-col mt-5 border-black-50 border p-3">
+                        <div className="flex flex-col mt-5 border-black-50 border p-3 rounded-lg">
                             <div className="flex justify-between">
                                 <p className="text-sm">
                                     {t("Availableguests")}
@@ -599,8 +655,8 @@ export default function EditServiceTime(props: IParams) {
                             </div>
                             {selectedSlots
                                 .sort((a, b) => a - b)
-                                .map((element) => (
-                                    <div key={element}>
+                                .map((element, index) => (
+                                    <div key={index}>
                                         <div className="flex justify-between">
                                             <div className="p-3">
                                                 {timeSlots[element].startTime} -{" "}
@@ -625,11 +681,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                        timeSlots[element]
-                                                            .startTime &&
+                                                            timeSlots[element]
+                                                                .startTime &&
                                                         item.endTime ==
-                                                        timeSlots[element]
-                                                            .endTime
+                                                            timeSlots[element]
+                                                                .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -711,7 +767,7 @@ export default function EditServiceTime(props: IParams) {
 
                     <div
                         style={{
-                            marginBottom: openTime && closeTime ? "20px" : "",
+                            marginBottom: "20px",
                         }}
                         className="w-full flex justify-center bottom-0 inset-x-0">
                         <button
