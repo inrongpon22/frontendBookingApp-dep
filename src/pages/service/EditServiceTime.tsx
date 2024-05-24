@@ -319,27 +319,28 @@ export default function EditServiceTime(props: IParams) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (timeSlots.length > 0) {
-            setManualCapacity([]);
-            const uniqueSlots = new Set<number>();
-            const newSelectedSlots: number[] = [];
+    generateTimeSlots(openTime, closeTime, duration);
+    // useEffect(() => {
+    //     if (timeSlots.length > 0) {
+    //         setManualCapacity([]);
+    //         const uniqueSlots = new Set<number>();
+    //         const newSelectedSlots: number[] = [];
 
-            timeSlots.forEach((element, index) => {
-                if (!uniqueSlots.has(index)) {
-                    uniqueSlots.add(index);
-                    newSelectedSlots.push(index);
-                    toggleSlotSelection(
-                        index,
-                        element.startTime,
-                        element.endTime
-                    );
-                }
-            });
-            setSelectedSlots(newSelectedSlots);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [openTime, closeTime, duration]);
+    //         timeSlots.forEach((element, index) => {
+    //             if (!uniqueSlots.has(index)) {
+    //                 uniqueSlots.add(index);
+    //                 newSelectedSlots.push(index);
+    //                 toggleSlotSelection(
+    //                     index,
+    //                     element.startTime,
+    //                     element.endTime
+    //                 );
+    //             }
+    //         });
+    //         setSelectedSlots(newSelectedSlots);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [openTime, closeTime, duration]);
 
     const handleSubmit = async () => {
         const insertData = {
@@ -361,7 +362,7 @@ export default function EditServiceTime(props: IParams) {
         props.handleSetEditTime();
     };
 
-    generateTimeSlots(openTime, closeTime, duration);
+    console.log(manualCapacity);
 
     return (
         // <>
@@ -389,7 +390,7 @@ export default function EditServiceTime(props: IParams) {
                 </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
-            <div className="flex flex-col pr-4 pl-4 mb-[12vh]">
+            <div className="flex flex-col pr-4 pl-4 mb-[10vh]">
                 <div className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
@@ -694,6 +695,10 @@ export default function EditServiceTime(props: IParams) {
                                             </div>
                                             <div className="flex justify-between gap-3 items-center p-3">
                                                 <button
+                                                    // disabled={
+                                                    //     manualCapacity[element]
+                                                    //         .capacity == 1
+                                                    // }
                                                     onClick={() =>
                                                         handleDecreaseCapacityManual(
                                                             timeSlots[element]

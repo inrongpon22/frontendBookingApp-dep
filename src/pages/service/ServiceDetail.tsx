@@ -253,14 +253,14 @@ export default function ServiceDetail(props: IParams) {
                     <div
                         className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
                         style={{ width: "100vw" }}>
-                        <div className="pr-4 pl-4 pt-6 mb-[80px]">
+                        <div className="pr-4 pl-4 pt-6">
                             <Header
                                 context={t("title:serviceInformation")}
                                 handleClose={handleCloseCardDetail}
                             />
                         </div>
                         <Divider sx={{ marginTop: "16px", width: "100%" }} />
-                        <div className="flex flex-col pr-4 pl-4">
+                        <div className="flex flex-col pr-4 pl-4 mb-[80px]">
                             <div className="mt-4 flex flex-col gap-3">
                                 <ServiceCard
                                     serviceId={serviceInfo.id}
