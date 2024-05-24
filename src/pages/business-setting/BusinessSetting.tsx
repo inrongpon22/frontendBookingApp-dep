@@ -3,17 +3,19 @@ import BusinessInfo from "./BusinessInfo";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IgetBusiness } from "../business/interfaces/business";
 import Header from "./Header";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
-import Loading from "../../components/dialog/Loading";
+import { GlobalContext } from "../../contexts/BusinessContext"; // global context
 
 export default function BusinessSetting() {
     const { t } = useTranslation();
     const { businessId } = useParams();
     const [isEdit, setIsEdit] = useState(false);
+
+    const { setIsGlobalLoading } = useContext(GlobalContext);
 
     // useEffect(() => {
     //     const token = localStorage.getItem("token");
@@ -45,9 +47,12 @@ export default function BusinessSetting() {
         setIsEdit(!isEdit);
     };
 
+    useEffect(() => {
+        setIsGlobalLoading(businessLoading);
+    }, [businessLoading]);
+
     return (
         <div>
-            <Loading openLoading={businessLoading} />
             <div className="px-4 pt-6">
                 <Header
                     context={t("title:businessSetting")}

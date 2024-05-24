@@ -9,7 +9,7 @@ interface CustomTabsProps {
 
 const CustomTabs = (
     { tabStatus, setTabStatus }: CustomTabsProps,
-    tabData: any
+    _: any
 ) => {
     const { t } = useTranslation();
     const AntTabs = styled(Tabs)({

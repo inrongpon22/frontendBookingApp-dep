@@ -321,7 +321,7 @@ const BookingApproval = (): React.ReactElement => {
                                                             }
                                                         })()}`}
                                                     >
-                                                        {item.children?.length}
+                                                        {item.children?.length}{" "}
                                                         {tabStatus == 0
                                                             ? t("pending")
                                                             : tabStatus == 1

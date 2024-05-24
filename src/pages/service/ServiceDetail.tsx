@@ -1,6 +1,6 @@
 import { alpha, Drawer } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { updateService } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,8 @@ import {
     IServiceEditTime,
 } from "../../interfaces/services/Iservice";
 import toast from "react-hot-toast";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 interface IParams {
     serviceId: number;
@@ -36,7 +37,7 @@ export default function ServiceDetail(props: IParams) {
     const { businessId } = useParams();
     const { t } = useTranslation();
 
-    // console.log(serviceInfo)
+    const { setShowDialog, setDialogState } = useContext(GlobalContext);
 
     // service Info
     const [isHideEndTime, setIsHideEndTime] = useState(false);
@@ -110,6 +111,10 @@ export default function ServiceDetail(props: IParams) {
         await updateService(serviceInfo.id, insertData, token || "");
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
+        // reset dialog
+        setShowDialog(false);
+        setDialogState("phone-input");
+        // reset dialog
         toast(t("editSuccess"), {
             icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
         });
@@ -133,16 +138,16 @@ export default function ServiceDetail(props: IParams) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const handleIsModifiedData = () => {
         return (
@@ -204,7 +209,8 @@ export default function ServiceDetail(props: IParams) {
             <Drawer
                 anchor={"bottom"}
                 open={state["bottom"]}
-                onClose={toggleDrawer("bottom", false)}>
+                onClose={toggleDrawer("bottom", false)}
+            >
                 {previewService()}
             </Drawer>
             <ConfirmCard
@@ -248,7 +254,8 @@ export default function ServiceDetail(props: IParams) {
                 ) : (
                     <div
                         className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
-                        style={{ width: "100vw" }}>
+                        style={{ width: "100vw" }}
+                    >
                         <div className="pr-4 pl-4 pt-6">
                             <Header
                                 context={t("title:serviceInformation")}
@@ -312,20 +319,23 @@ export default function ServiceDetail(props: IParams) {
                                         borderRadius: "8px",
                                         justifyContent: "center",
                                     }}
-                                    className=" items-center gap-1 p-1 ">
+                                    className=" items-center gap-1 p-1 "
+                                >
                                     <AddCircleOutlineIcon
                                         sx={{ fontSize: "13px" }}
                                     />
                                     <div
                                         className=" font-medium "
-                                        onClick={handleAddTime}>
+                                        onClick={handleAddTime}
+                                    >
                                         {t("button:addServiceTime")}
                                     </div>
                                 </button>
 
                                 <p
                                     className=" font-bold "
-                                    style={{ fontSize: "14px" }}>
+                                    style={{ fontSize: "14px" }}
+                                >
                                     {t("serviceSetting")}
                                 </p>
 
@@ -347,13 +357,15 @@ export default function ServiceDetail(props: IParams) {
                                 <div className="w-full flex justify-center gap-2 my-5">
                                     <button
                                         className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
-                                        onClick={toggleDrawer("bottom", true)}>
+                                        onClick={toggleDrawer("bottom", true)}
+                                    >
                                         {t("button:preview")}
                                     </button>
                                     <button
                                         onClick={handleUpdateService}
                                         type="submit"
-                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold">
+                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold"
+                                    >
                                         {t("button:confirm")}
                                     </button>
                                 </div>

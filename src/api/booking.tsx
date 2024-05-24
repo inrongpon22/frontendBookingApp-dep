@@ -1,7 +1,6 @@
 import axios from "axios";
 import { app_api } from "../helper/url";
 import useSWR from "swr";
-import { Ireservation } from "../interface/reservation";
 import moment from "moment";
 
 const token = localStorage.getItem("token");
@@ -34,7 +33,7 @@ export const getReservationByBusinessId = (
     businessId: number,
     status: string
 ) => {
-    const { data, error, isLoading } = useSWR<Ireservation[]>(
+    const { data, error, isLoading, mutate } = useSWR(
         `${app_api}/getReservationByBusinessId/${businessId}/${status}`,
         (url: string) =>
             axios
@@ -50,6 +49,7 @@ export const getReservationByBusinessId = (
         getReservationByBusinessIdData: data,
         getReservationByBusinessIdError: error,
         getReservationByBusinessIdLoading: isLoading,
+        mutateReservationByBusinessId: mutate,
     };
 };
 

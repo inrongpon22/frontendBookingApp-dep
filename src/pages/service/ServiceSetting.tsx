@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
-import { alpha } from "@mui/material";
+import { ThemeProvider, alpha, createTheme } from "@mui/material";
 import ListServiceCard from "./components/ListServiceCard";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -14,14 +14,24 @@ import { SwipeableList, SwipeableListItem, Type } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
-import Loading from "../../components/dialog/Loading";
 export type Anchor = "top" | "left" | "bottom" | "right";
 import { trailingActions } from "./components/swipeable-list";
 import { IService } from "../../interfaces/services/Iservice";
+import { GlobalContext } from "../../contexts/BusinessContext";
+
+const theme = createTheme({
+    palette: {
+        info: {
+            main: "#E6F1FD",
+        },
+    },
+});
 
 export default function ServiceSetting() {
     const { businessId } = useParams();
     const { t } = useTranslation();
+
+    const { setIsGlobalLoading } = useContext(GlobalContext);
     // const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [state, setState] = useState({
@@ -66,17 +76,17 @@ export default function ServiceSetting() {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
 
-                setState({ ...state, [anchor]: open });
-            };
+            setState({ ...state, [anchor]: open });
+        };
 
     const addService = (anchor: Anchor) => (
         <Box
@@ -84,7 +94,8 @@ export default function ServiceSetting() {
                 width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
                 height: "100vh",
             }}
-            role="presentation">
+            role="presentation"
+        >
             <ServiceInfo
                 isClose={true}
                 isEdit={false}
@@ -102,8 +113,12 @@ export default function ServiceSetting() {
         setIsEditService(true);
     };
 
+    useEffect(() => {
+        setIsGlobalLoading(serviceLoading);
+    }, [serviceLoading]);
+
     return (
-        <>
+        <ThemeProvider theme={theme}>
             {isEditService ? (
                 <ServiceDetail
                     serviceId={selectedId}
@@ -112,11 +127,11 @@ export default function ServiceSetting() {
                 />
             ) : (
                 <div className=" overflow-y-auto bg-[#F7F7F7] h-[100vh] mb-5">
-                    <Loading openLoading={serviceLoading} />
                     <Drawer
                         anchor={"bottom"}
                         open={state["bottom"]}
-                        onClose={toggleDrawer("bottom", false)}>
+                        onClose={toggleDrawer("bottom", false)}
+                    >
                         {addService("bottom")}
                     </Drawer>
                     <div className="pr-4 pl-4 pt-6">
@@ -131,7 +146,8 @@ export default function ServiceSetting() {
                                 background: `${alpha("#020873", 0.1)}`,
                                 color: "#020873",
                             }}
-                            className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center">
+                            className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center"
+                        >
                             <AddCircleOutlineIcon
                                 sx={{ fontSize: "18px", color: "#020873" }}
                             />
@@ -141,11 +157,12 @@ export default function ServiceSetting() {
                     <div>
                         <p className="pr-4 pl-4 pt-3 pb-3">
                             {t("services")}{" "}
-                            {`(${serviceData &&
+                            {`(${
+                                serviceData &&
                                 serviceData.filter(
                                     (item) => item.isDeleted == false
                                 ).length
-                                })`}{" "}
+                            })`}{" "}
                         </p>
                         {serviceData &&
                             serviceData
@@ -154,13 +171,15 @@ export default function ServiceSetting() {
                                     <div key={index} className="mb-2">
                                         <SwipeableList
                                             type={Type.IOS}
-                                            fullSwipe={false}>
+                                            fullSwipe={false}
+                                        >
                                             <SwipeableListItem
                                                 trailingActions={trailingActions(
                                                     handleOpenConfirm,
                                                     handleSelectService,
                                                     service.id
-                                                )}>
+                                                )}
+                                            >
                                                 <ListServiceCard
                                                     serviceId={selectedId}
                                                     serviceName={service.title}
@@ -197,6 +216,6 @@ export default function ServiceSetting() {
                     </div>
                 </div>
             )}
-        </>
+        </ThemeProvider>
     );
 }

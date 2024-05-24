@@ -34,7 +34,7 @@ export const insertUser = async (userData: { phoneNumber: string }) => {
 export const ReqOtp = async (phoneNumber: string) => {
     try {
         const reqotp = await axios.post(
-            `${app_api}/requestOTP/${phoneNumber}/${language}`
+            `${app_api}/requestOTP/${phoneNumber}/${language ?? "th"}`
         );
         return reqotp;
     } catch (error) {
