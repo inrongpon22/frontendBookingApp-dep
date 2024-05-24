@@ -248,7 +248,7 @@ const ShopDetailsPageWrapper = () => {
                                     (item: any) => item.isSelected
                                 )
                             ) {
-                                if (token && userId !== "0") {
+                                if (token && userId) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");
                                 } else {

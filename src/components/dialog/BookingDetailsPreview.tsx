@@ -69,10 +69,12 @@ const BookingDetailsPreview = () => {
     const { businessId } = useParams();
     const navigate = useNavigate();
     const { pathname } = useLocation();
+
     const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
 
+    const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-
+    
     const { formik } = useContext<any>(DialogContext);
 
     const { setIsGlobalLoading, setShowDialog, setDialogState } =
@@ -88,7 +90,7 @@ const BookingDetailsPreview = () => {
         i18n: { language },
     } = useTranslation();
 
-    const token = localStorage.getItem("token");
+    
 
     const slotArrays = JSON.parse(bookingDetail)?.serviceById.bookingSlots.find(
         (item: any) =>
@@ -114,10 +116,11 @@ const BookingDetailsPreview = () => {
                         Authorization: `${token}`,
                     },
                 })
-                .then((res) => {
+                .then((res:any) => {
+                    console.log(res.data)
                     formik.setValues({
-                        userId: res.data.id,
-                        username: res.data.name,
+                        userId: Number(res.data.id),
+                        username: res.data.name ?? "",
                         phoneNumbers: res.data.phoneNumber,
                         otp: "",
                         additionalNotes: "",
@@ -143,7 +146,7 @@ const BookingDetailsPreview = () => {
             }),
             status: "pending",
             by: pathname.includes("business") ? "business" : "customer",
-            userName: formik.values.username,
+            userName: formik.values.isBusinessOnly ? "โดยร้านค้า" : formik.values.username,
             bookingDate: moment(
                 JSON.parse(bookingDetail).selectedDate.date
             ).format("YYYY-MM-DD"),

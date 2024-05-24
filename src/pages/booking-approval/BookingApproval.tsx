@@ -22,7 +22,7 @@ import { GlobalContext } from "../../contexts/BusinessContext";
 import CustomTabs from "./CustomTabs";
 
 const BookingApproval = (): React.ReactElement => {
-    const { businessId, serviceId } = useParams();
+    const { businessId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const query = useQuery();
@@ -89,7 +89,7 @@ const BookingApproval = (): React.ReactElement => {
     } = useSWR(
         businessId &&
             token &&
-            `${app_api}/getReservationByServiceId/${serviceId}/${businessId}/${converted()}?page=1&limit=100`,
+            `${app_api}/getReservationByBusinessId/${businessId}/${converted()}?page=1&limit=100`,
         (url: string) =>
             axios
                 .get(url, {
@@ -99,7 +99,6 @@ const BookingApproval = (): React.ReactElement => {
                 })
                 .then(async (res) => {
                     const filtered = res?.data
-                        .filter((item: any) => item.serviceId === serviceId)
                         .sort(
                             (a: any, b: any) =>
                                 moment(a.bookingDate).valueOf() -
@@ -157,7 +156,7 @@ const BookingApproval = (): React.ReactElement => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
                     // t("noti:booking:approve:fail")
                 });
         } else {
@@ -202,7 +201,7 @@ const BookingApproval = (): React.ReactElement => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
                     // t("noti:booking:reject:fail")
                 });
         } else {
