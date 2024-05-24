@@ -171,8 +171,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         },
     });
 
-    console.log(formik.values)
-
     const DialogHeader = (): string => {
         switch (dialogState) {
             case "booking-detail-preview":

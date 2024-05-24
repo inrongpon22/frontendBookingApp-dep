@@ -21,12 +21,15 @@ const BusinessProfileMoreOptions = () => {
     const { businessId } = useParams();
     const { t } = useTranslation();
 
-    const { setDialogState, setIsGlobalLoading } = useContext(GlobalContext);
+    const { setDialogState, setShowDialog } = useContext(GlobalContext);
 
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
     const handleLogout = async () => {
-        setIsGlobalLoading(true);
+        // reset dialog state
+        setShowDialog(false);
+        setDialogState("phone-input")
+        // reset dialog state
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         navigate("/");

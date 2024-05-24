@@ -23,7 +23,6 @@ import Quantity from "../../components/shop-details/Quantity";
 import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
-// import { getServices } from "../../api/service";
 import { GlobalContext } from "../../contexts/BusinessContext";
 
 const theme = createTheme({
@@ -134,19 +133,26 @@ const ShopDetailsPageWrapper = () => {
                     bookingSlots: res.data.bookingSlots.map((item: any) => {
                         return {
                             ...item,
-                            slotsTime: item.slotsTime.map((ii: any) => {
-                                return { ...ii, isSelected: false };
-                            }),
+                            slotsTime: item.slotsTime
+                                .filter((item: any) =>
+                                    moment().isBefore(
+                                        selectedDate?.date.format(
+                                            `D MMMM YYYY ${item.startTime}`
+                                        )
+                                    )
+                                )
+                                .map((ii: any) => {
+                                    return {
+                                        ...ii,
+                                        isSelected: false,
+                                    };
+                                }),
                         };
                     }),
                 });
                 setSelectedIndices(new Set());
             })
     );
-
-    // const { servicesss } = getServices();
-
-    // console.log(servicesss);
 
     useEffect(() => {
         setIsGlobalLoading(servByIdLoading);
@@ -155,7 +161,7 @@ const ShopDetailsPageWrapper = () => {
     // browser tab title
     useEffect(() => {
         document.title = shopDetail?.title || "Shop Detail";
-        localStorage.removeItem("bookingDetail")
+        localStorage.removeItem("bookingDetail");
     }, [shopDetail]);
 
     // catch errors api
@@ -165,7 +171,10 @@ const ShopDetailsPageWrapper = () => {
     return (
         <ThemeProvider theme={theme}>
             <div className="">
-                <Slideshow data={shopDetail?.imagesURL || []} fixedHeight={300} />
+                <Slideshow
+                    data={shopDetail?.imagesURL || []}
+                    fixedHeight={300}
+                />
 
                 <div className={`flex flex-col gap-5 p-5`}>
                     <ShopInformation shopDetail={shopDetail} />
@@ -227,7 +236,7 @@ const ShopDetailsPageWrapper = () => {
                                         )?.id
                                     ),
                                     serviceById: serviceById,
-                                    selectedDate:selectedDate,
+                                    selectedDate: selectedDate,
                                     bookingDate:
                                         selectedDate.date.format("YYYY-MM-DD"),
                                     guestNumber: quantities.quantities,

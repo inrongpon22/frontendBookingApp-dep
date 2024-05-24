@@ -48,8 +48,9 @@ const BusinessAuth = () => {
             <button
                 type="button"
                 style={{ marginBottom: "56px" }}
-                className="py-3 px-10 bg-[#020873] text-white rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
-                onClick={() => setShowDialog(true)}>
+                className="py-3 px-10 bg-deep-blue bg-opacity-80 text-white rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
+                onClick={() => setShowDialog(true)}
+            >
                 {t("button:getStartedButton")}
             </button>
 

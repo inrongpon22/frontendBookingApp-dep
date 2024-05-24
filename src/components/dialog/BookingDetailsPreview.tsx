@@ -190,7 +190,7 @@ const BookingDetailsPreview = () => {
                 <p className="text-[14px] font-semibold">
                     {t("bookingDetails")}
                 </p>
-                <div className="flex flex-col gap-3 border rounded-md p-3">
+                <div className="flex flex-col gap-3 border rounded-md p-3 mt-1">
                     <p className="flex justify-between">
                         <span>{t("services")}:</span>
                         <span className="text-[14px] font-bold">
@@ -255,7 +255,7 @@ const BookingDetailsPreview = () => {
                     type="text"
                     {...formik.getFieldProps("username")}
                     className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
-                        formik.errors?.username
+                        formik.touched.username && formik.errors.username
                             ? "border-2 border-rose-500"
                             : "border"
                     }`}
@@ -267,7 +267,7 @@ const BookingDetailsPreview = () => {
                     </span>
                 )}
 
-                <div className="">
+                <div className="mt-2">
                     <p className="flex justify-between items-center text-[14px] font-semibold">
                         <span>{t("bookingNumbers")}</span>
                     </p>
@@ -275,7 +275,8 @@ const BookingDetailsPreview = () => {
                         type="text"
                         {...formik.getFieldProps("phoneNumbers")}
                         className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
-                            formik.errors?.phoneNumbers
+                            formik.touched.phoneNumbers &&
+                            formik.errors.phoneNumbers
                                 ? "border-2 border-rose-500"
                                 : "border"
                         }`}
@@ -312,7 +313,7 @@ const BookingDetailsPreview = () => {
                         />
                     </div>
                 </div>
-                <div className="">
+                <div className="mt-2">
                     <p className="text-[14px] font-semibold">{t("notes")}</p>
                     <textarea
                         rows={3}

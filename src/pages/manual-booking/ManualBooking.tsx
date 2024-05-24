@@ -108,9 +108,20 @@ const ManualBooking = () => {
                     bookingSlots: res.data.bookingSlots.map((item: any) => {
                         return {
                             ...item,
-                            slotsTime: item.slotsTime.map((ii: any) => {
-                                return { ...ii, isSelected: false };
-                            }),
+                            slotsTime: item.slotsTime
+                                .filter((item: any) =>
+                                    moment().isBefore(
+                                        selectedDate?.date.format(
+                                            `D MMMM YYYY ${item.startTime}`
+                                        )
+                                    )
+                                )
+                                .map((ii: any) => {
+                                    return {
+                                        ...ii,
+                                        isSelected: false,
+                                    };
+                                }),
                         };
                     }),
                 });
