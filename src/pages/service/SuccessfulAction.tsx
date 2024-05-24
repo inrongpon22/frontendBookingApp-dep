@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import { Modal } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
+// import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+// import { Modal } from "@mui/material";
 
 interface IProps {
     openCard: boolean;
@@ -13,13 +13,13 @@ interface IProps {
 }
 
 export default function SuccessfulAction(props: IProps) {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     if (!props.openCard) {
         return null;
     }
     return (
         <>
-            <Modal
+            {/* <Modal
                 open={props.openCard}
                 sx={{
                     background: "#FFFFFF",
@@ -68,7 +68,7 @@ export default function SuccessfulAction(props: IProps) {
                         </button>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
         </>
     );
 }

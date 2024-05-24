@@ -65,6 +65,7 @@ const BusinessProfile = () => {
 
     useEffect(() => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getReservationByBusinessIdLoading]);
 
     return (
@@ -89,8 +90,7 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}
-                    >
+                        }}>
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -118,8 +118,7 @@ const BusinessProfile = () => {
                                                 state: item,
                                             }
                                         )
-                                    }
-                                >
+                                    }>
                                     <div className="flex flex-col">
                                         <p className="flex items-center gap-1">
                                             <span className="text-[14px] font-semibold">
@@ -192,8 +191,7 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                 : "bg-zinc-200 text-zinc-400"
-                                        } px-1 rounded`}
-                                    >
+                                        } px-1 rounded`}>
                                         {item.startTime.slice(0, -3)}
                                     </p>
                                     <p
@@ -201,8 +199,7 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? ""
                                                 : "text-zinc-400"
-                                        } font-semibold`}
-                                    >
+                                        } font-semibold`}>
                                         {item.title}
                                     </p>
                                 </div>
@@ -211,8 +208,7 @@ const BusinessProfile = () => {
                                         item.status === "approval"
                                             ? ""
                                             : "text-zinc-400"
-                                    }`}
-                                >
+                                    }`}>
                                     <span>
                                         {item.status === "approval"
                                             ? item.userName

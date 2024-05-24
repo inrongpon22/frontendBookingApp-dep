@@ -321,7 +321,6 @@ export default function ServiceTime(props: IProps) {
             availableFromDate: availableFromDate,
             availableToDate: availableToDate,
         };
-        console.log(insertData);
         if (selectIndex !== -1) {
             serviceTime[selectIndex] = insertData;
         } else {
@@ -333,6 +332,7 @@ export default function ServiceTime(props: IProps) {
                 setSelectIndex(serviceTime.length - 1);
             }
         }
+
         localStorage.setItem("serviceTime", JSON.stringify(serviceTime));
         // setState({ ...state, ["right"]: true });
         setIsCreateService(true);
@@ -439,6 +439,9 @@ export default function ServiceTime(props: IProps) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [openTime, closeTime, duration]);
+    // console.log("manualCapacity", manualCapacity);
+    // console.log("manualCapacity", openTime, closeTime, duration);
+    // console.log("manualCapacity", timeSlots);
 
     // const handleSetTwentyFourHour = () => {
     //     setIsTwentyFourHour(!isTwentyFourHour);
@@ -655,9 +658,10 @@ export default function ServiceTime(props: IProps) {
                                         <input
                                             className="font-black-500 focus:outline-none"
                                             value={openTime}
-                                            onChange={(e) =>
-                                                setOpenTime(e.target.value)
-                                            }
+                                            onChange={(e) => {
+                                                setManualCapacity([]);
+                                                setOpenTime(e.target.value);
+                                            }}
                                             type="time"
                                             style={{
                                                 border: "none",
@@ -684,14 +688,14 @@ export default function ServiceTime(props: IProps) {
                                         <input
                                             min={openTime}
                                             value={closeTime}
-                                            onChange={(e) =>
-                                                setCloseTime(e.target.value)
-                                            }
+                                            onChange={(e) => {
+                                                setManualCapacity([]);
+                                                setCloseTime(e.target.value);
+                                            }}
                                             type="time"
                                             style={{ border: "none" }}
                                             className="focus:outline-none"
                                             name="closeTime"
-                                            // disabled={openTime == ""}
                                             required
                                         />
                                     </div>
@@ -820,6 +824,11 @@ export default function ServiceTime(props: IProps) {
                                                     </div>
                                                     <div className="flex justify-between gap-3 items-center p-3">
                                                         <button
+                                                            disabled={
+                                                                manualCapacity[
+                                                                    element
+                                                                ].capacity == 1
+                                                            }
                                                             onClick={() =>
                                                                 handleDecreaseCapacityManual(
                                                                     timeSlots[

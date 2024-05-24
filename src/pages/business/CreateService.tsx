@@ -2,14 +2,14 @@ import { Box, Drawer, alpha } from "@mui/material";
 import ServiceCard from "./components/ServiceCard";
 import TimeCard from "./components/TimeCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { addService } from "../../api/service";
 import Header from "./components/Header";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 // import { ToggleButton as MuiToggleButton } from "@mui/material";
-// import CheckIcon from "@mui/icons-material/Check";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 // import CloseIcon from "@mui/icons-material/Close";
 import { Anchor } from "../service/ServiceSetting";
 import BusinessPreview from "../service/BusinessPreview";
@@ -21,8 +21,7 @@ import Loading from "../../components/dialog/Loading";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import SettingServiceBtn from "../service/components/SettingServiceBtn";
-import SuccessfulAction from "../service/SuccessfulAction";
-// import CreateSuccessful from "../service/CreateSuccessful";
+import toast from "react-hot-toast";
 
 interface IProps {
     handleClose?: () => void;
@@ -58,7 +57,7 @@ export default function CreateService(props: IProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const [state, setState] = useState({
         top: false,
@@ -114,14 +113,22 @@ export default function CreateService(props: IProps) {
             isHideEndTime: isHideEndTime,
         };
 
-        console.log("insertData", insertData);
-
         try {
             if (token === null) throw new Error("Token is not found");
-            // setIsLoading(true);
+            setIsLoading(true);
             await addService(insertData, token).then(() => {
+                props.serviceMutate && props.serviceMutate();
+                localStorage.removeItem("serviceInfo");
+                localStorage.removeItem("serviceTime");
+                props.handleCloseServiceInFo && props.handleCloseServiceInFo();
+                props.handleCloseServiceTime && props.handleCloseServiceTime();
+                toast(t("addService"), {
+                    icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                });
                 setIsLoading(false);
-                setIsSuccess(true);
+                step === "1" && step !== null
+                    ? navigate(`/business-profile/${businessId}`)
+                    : navigate(`/service-setting/${businessId}`);
             });
         } catch (error) {
             console.log(error);
@@ -254,28 +261,6 @@ export default function CreateService(props: IProps) {
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
-            <SuccessfulAction
-                openCard={isSuccess}
-                title={t("title:alldone")}
-                description={t("desc:desUpdate")}
-                btnWord={t("button:done")}
-                iconType={""}
-                navigateTo={
-                    step === "1" && step !== null
-                        ? `business-profile/${businessId}`
-                        : `service-setting/${businessId}`
-                }
-                handleOnClose={() => {
-                    props.serviceMutate && props.serviceMutate();
-                    localStorage.removeItem("serviceInfo");
-                    localStorage.removeItem("serviceTime");
-                    props.handleCloseServiceInFo &&
-                        props.handleCloseServiceInFo();
-                    props.handleCloseServiceTime &&
-                        props.handleCloseServiceTime();
-                    setIsSuccess(false);
-                }}
-            />
             <Loading openLoading={isLoading} />
             {typeName == "service" ? (
                 <Drawer
