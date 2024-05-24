@@ -262,7 +262,7 @@ export default function CreateService(props: IProps) {
                 iconType={""}
                 navigateTo={
                     step === "1" && step !== null
-                        ? `business-setting/${businessId}`
+                        ? `business-profile/${businessId}`
                         : `service-setting/${businessId}`
                 }
                 handleOnClose={() => {
