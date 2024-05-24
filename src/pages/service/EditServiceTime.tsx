@@ -82,8 +82,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -319,27 +319,28 @@ export default function EditServiceTime(props: IParams) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // useEffect(() => {
-    //     if (timeSlots.length > 0) {
-    //         setManualCapacity([]);
-    //         const uniqueSlots = new Set<number>();
-    //         const newSelectedSlots: number[] = [];
+    generateTimeSlots(openTime, closeTime, duration);
+    useEffect(() => {
+        if (timeSlots.length > 0 && manualCapacity.length === 0) {
+            setManualCapacity([]);
+            const uniqueSlots = new Set<number>();
+            const newSelectedSlots: number[] = [];
 
-    //         timeSlots.forEach((element, index) => {
-    //             if (!uniqueSlots.has(index)) {
-    //                 uniqueSlots.add(index);
-    //                 newSelectedSlots.push(index);
-    //                 toggleSlotSelection(
-    //                     index,
-    //                     element.startTime,
-    //                     element.endTime
-    //                 );
-    //             }
-    //         });
-    //         setSelectedSlots(newSelectedSlots);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [openTime, closeTime, duration]);
+            timeSlots.forEach((element, index) => {
+                if (!uniqueSlots.has(index)) {
+                    uniqueSlots.add(index);
+                    newSelectedSlots.push(index);
+                    toggleSlotSelection(
+                        index,
+                        element.startTime,
+                        element.endTime
+                    );
+                }
+            });
+            setSelectedSlots(newSelectedSlots);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openTime, closeTime, duration]);
 
     const handleSubmit = async () => {
         const insertData = {
@@ -361,7 +362,7 @@ export default function EditServiceTime(props: IParams) {
         props.handleSetEditTime();
     };
 
-    generateTimeSlots(openTime, closeTime, duration);
+    console.log(manualCapacity);
 
     return (
         // <>
@@ -389,7 +390,7 @@ export default function EditServiceTime(props: IParams) {
                 </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
-            <div className="flex flex-col pr-4 pl-4 mb-[12vh]">
+            <div className="flex flex-col pr-4 pl-4 mb-[10vh]">
                 <div className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
@@ -476,8 +477,8 @@ export default function EditServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                        ? "rgba(2, 8, 115, 0.2)"
-                                        : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -638,11 +639,10 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -694,6 +694,10 @@ export default function EditServiceTime(props: IParams) {
                                             </div>
                                             <div className="flex justify-between gap-3 items-center p-3">
                                                 <button
+                                                    disabled={
+                                                        manualCapacity[element]
+                                                            ?.capacity == 1
+                                                    }
                                                     onClick={() =>
                                                         handleDecreaseCapacityManual(
                                                             timeSlots[element]
@@ -705,17 +709,19 @@ export default function EditServiceTime(props: IParams) {
                                                     style={{
                                                         cursor: "pointer",
                                                     }}
-                                                    className="border flex justify-center items-center w-8 h-8 rounded-md">
+                                                    className={`border flex justify-center items-center w-8 h-8 rounded-md 
+                                                    ${manualCapacity[element]
+                                                            ?.capacity == 1 ? "opacity-40" : ""}`}>
                                                     <KeyboardArrowDownIcon />
                                                 </button>
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -767,7 +773,8 @@ export default function EditServiceTime(props: IParams) {
                                     disabled={
                                         timeSlots.length == 0 ||
                                         timeSlots[0].startTime == "" ||
-                                        selectedSlots.length == 0
+                                        selectedSlots.length == 0 ||
+                                        manualCapacity.length == 0
                                     }>
                                     <u
                                         style={{
@@ -782,7 +789,7 @@ export default function EditServiceTime(props: IParams) {
                                 <button
                                     disabled={guestNumber == 1}
                                     onClick={decreaseGuest}
-                                    className="border flex justify-center items-center w-8 h-8 rounded-md">
+                                    className={`border flex justify-center items-center w-8 h-8 rounded-md ${guestNumber == 1 ? "opacity-40" : ""}`}>
                                     <KeyboardArrowDownIcon />
                                 </button>
                                 {guestNumber}
@@ -814,22 +821,22 @@ export default function EditServiceTime(props: IParams) {
                                 height: "51px",
                                 cursor:
                                     daysOpen.length == 0 ||
-                                    !openTime ||
-                                    !closeTime ||
-                                    !duration ||
-                                    !guestNumber ||
-                                    !availableFromDate ||
-                                    selectedSlots.length == 0
+                                        !openTime ||
+                                        !closeTime ||
+                                        !duration ||
+                                        !guestNumber ||
+                                        !availableFromDate ||
+                                        selectedSlots.length == 0
                                         ? "not-allowed"
                                         : "pointer",
                                 backgroundColor:
                                     daysOpen.length == 0 ||
-                                    !openTime ||
-                                    !closeTime ||
-                                    !duration ||
-                                    !guestNumber ||
-                                    !availableFromDate ||
-                                    selectedSlots.length == 0
+                                        !openTime ||
+                                        !closeTime ||
+                                        !duration ||
+                                        !guestNumber ||
+                                        !availableFromDate ||
+                                        selectedSlots.length == 0
                                         ? "#cccccc"
                                         : "#020873",
                                 fontSize: "14px",
