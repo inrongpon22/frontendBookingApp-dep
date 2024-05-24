@@ -21,6 +21,7 @@ import Loading from "../../components/dialog/Loading";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import SettingServiceBtn from "../service/components/SettingServiceBtn";
+import SuccessfulAction from "../service/SuccessfulAction";
 // import CreateSuccessful from "../service/CreateSuccessful";
 
 interface IProps {
@@ -58,6 +59,7 @@ export default function CreateService(props: IProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isAddTime, setIsAddTime] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const [state, setState] = useState({
         top: false,
@@ -119,17 +121,8 @@ export default function CreateService(props: IProps) {
             if (token === null) throw new Error("Token is not found");
             // setIsLoading(true);
             await addService(insertData, token).then(() => {
-                props.serviceMutate && props.serviceMutate();
-                localStorage.removeItem("serviceInfo");
-                localStorage.removeItem("serviceTime");
-                props.handleCloseServiceInFo && props.handleCloseServiceInFo();
-                props.handleCloseServiceTime && props.handleCloseServiceTime();
                 setIsLoading(false);
-                if (step === "1" && step !== null) {
-                    navigate(`/create-successful/${businessId}`);
-                } else {
-                    navigate(`/service-setting/${businessId}`);
-                }
+                setIsSuccess(true);
             });
         } catch (error) {
             console.log(error);
@@ -155,16 +148,16 @@ export default function CreateService(props: IProps) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const editService = () => (
         <Box sx={{ height: "100vh" }}>
@@ -173,17 +166,14 @@ export default function CreateService(props: IProps) {
                 serviceDescription={serviceInfo.serviceDescription}
                 price={serviceInfo.price}
                 currency={serviceInfo.currency}
-                handleSetEditInfo={() =>
-                    setTypeName("createService")
-                }
-                serviceMutate={props.serviceMutate || (() => { })}
+                handleSetEditInfo={() => setTypeName("createService")}
+                serviceMutate={props.serviceMutate || (() => {})}
             />
         </Box>
     );
 
     const previewService = () => (
         <Box sx={{ height: "100vh" }}>
-            {/* <CreateSuccessful openLoading={true} /> */}
             {serviceTime.length > 0 && (
                 <BusinessPreview
                     businessId={Number(businessId)}
@@ -209,7 +199,7 @@ export default function CreateService(props: IProps) {
     );
     const editServiceTime = () => (
         <Box sx={{ height: "100vh" }}>
-            {serviceTime.length > 0 &&
+            {serviceTime.length > 0 && (
                 <EditServiceTime
                     serviceTime={serviceTime}
                     openTime={businessData?.openTime}
@@ -217,7 +207,8 @@ export default function CreateService(props: IProps) {
                     editIndex={selectedIndex}
                     isAddTime={isAddTime}
                     handleSetEditTime={() => setTypeName("createService")}
-                />}
+                />
+            )}
         </Box>
     );
 
@@ -264,6 +255,28 @@ export default function CreateService(props: IProps) {
         <div
             className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
             style={{ width: "100vw" }}>
+            <SuccessfulAction
+                openCard={isSuccess}
+                title={t("title:alldone")}
+                description={t("desc:desUpdate")}
+                btnWord={t("button:done")}
+                iconType={""}
+                navigateTo={
+                    step === "1" && step !== null
+                        ? `business-setting/${businessId}`
+                        : `service-setting/${businessId}`
+                }
+                handleOnClose={() => {
+                    props.serviceMutate && props.serviceMutate();
+                    localStorage.removeItem("serviceInfo");
+                    localStorage.removeItem("serviceTime");
+                    props.handleCloseServiceInFo &&
+                        props.handleCloseServiceInFo();
+                    props.handleCloseServiceTime &&
+                        props.handleCloseServiceTime();
+                    setIsSuccess(false);
+                }}
+            />
             <Loading openLoading={isLoading} />
             {typeName == "service" ? (
                 <Drawer
@@ -280,13 +293,9 @@ export default function CreateService(props: IProps) {
                     {previewService()}
                 </Drawer>
             ) : typeName == "addServiceTime" ? (
-                <div>
-                    {addServiceTime()}
-                </div>
+                <div>{addServiceTime()}</div>
             ) : typeName == "editServiceTime" ? (
-                <div>
-                    {editServiceTime()}
-                </div>
+                <div>{editServiceTime()}</div>
             ) : (
                 <>
                     <div className="pr-4 pl-4 pt-6">
@@ -335,11 +344,15 @@ export default function CreateService(props: IProps) {
                                     color: "#020873",
                                 }}
                                 className=" items-center gap-1 p-1 ">
-                                <AddCircleOutlineIcon sx={{ fontSize: "13px" }} />
+                                <AddCircleOutlineIcon
+                                    sx={{ fontSize: "13px" }}
+                                />
                                 {t("button:addServiceTime")}
                             </button>
 
-                            <p className=" font-bold " style={{ fontSize: "14px" }}>
+                            <p
+                                className=" font-bold "
+                                style={{ fontSize: "14px" }}>
                                 {t("serviceSetting")}
                             </p>
 
@@ -361,7 +374,8 @@ export default function CreateService(props: IProps) {
                             <div
                                 className={`w-full flex justify-center bottom-0 inset-x-0 gap-2 mb-3 fixed`}
                                 style={{
-                                    marginTop: serviceTime.length > 0 ? 0 : "100px",
+                                    marginTop:
+                                        serviceTime.length > 0 ? 0 : "100px",
                                 }}>
                                 <button
                                     className="border text-white mt-4 rounded-lg font-semibold"
@@ -395,8 +409,6 @@ export default function CreateService(props: IProps) {
                     </div>
                 </>
             )}
-
-
         </div>
     );
 }

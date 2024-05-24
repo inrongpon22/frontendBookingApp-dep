@@ -82,7 +82,9 @@
         "dayOff": "Day-off",
         "addDayOff": "Add Day-off",
         "discardChanges": "Discard Changes?",
-        "conceptWord": "Make bookings easy"
+        "conceptWord": "Make bookings easy",
+        "UpdateSuccessful": "Update Successful",
+        "alldone": "All done"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -99,7 +101,9 @@
         "discardChanges": "Are you sure you want to discard the changes?",
         "desDeleteServiceF": "Once deleted, the service time will be removed from the system.",
         "desConceptWord": "Fast and friendly, anywhere, anytime.",
-        "autoApprove": "Customer's booking does not require your confirmation."
+        "autoApprove": "Customer's booking does not require your confirmation.",
+        "desUpdate": "Your update has been successfully completed!",
+        "desAllDone": "You've successfully created your business."
     },
     "button": {
         "cancel": "Cancel",
@@ -133,7 +137,8 @@
         "preview": "Preview",
         "back": "Back",
         "discard": "Discard",
-        "addServiceTime": "Add Service Time"
+        "addServiceTime": "Add Service Time",
+        "done": "Done"
     },
     "noti": {
         "business": {

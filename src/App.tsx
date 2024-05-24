@@ -71,7 +71,6 @@ function App() {
                         element={<BusinessSetting />}
                     />
 
-
                     {/* service */}
                     <Route
                         path="/service-info/:businessId"

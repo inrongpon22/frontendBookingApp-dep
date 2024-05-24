@@ -18,6 +18,7 @@ export type Anchor = "top" | "left" | "bottom" | "right";
 import { trailingActions } from "./components/swipeable-list";
 import { IService } from "../../interfaces/services/Iservice";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import Loading from "../../components/dialog/Loading";
 
 const theme = createTheme({
     palette: {
@@ -94,8 +95,7 @@ export default function ServiceSetting() {
                 width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
                 height: "100vh",
             }}
-            role="presentation"
-        >
+            role="presentation">
             <ServiceInfo
                 isClose={true}
                 isEdit={false}
@@ -115,6 +115,7 @@ export default function ServiceSetting() {
 
     useEffect(() => {
         setIsGlobalLoading(serviceLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [serviceLoading]);
 
     return (
@@ -126,12 +127,12 @@ export default function ServiceSetting() {
                     serviceMutate={serviceMutate}
                 />
             ) : (
-                <div className=" overflow-y-auto bg-[#F7F7F7] h-[100vh] mb-5">
+                <div className=" overflow-y-auto bg-[#F7F7F7] h-dvh">
+                    <Loading openLoading={serviceLoading} />
                     <Drawer
                         anchor={"bottom"}
                         open={state["bottom"]}
-                        onClose={toggleDrawer("bottom", false)}
-                    >
+                        onClose={toggleDrawer("bottom", false)}>
                         {addService("bottom")}
                     </Drawer>
                     <div className="pr-4 pl-4 pt-6">
@@ -146,8 +147,7 @@ export default function ServiceSetting() {
                                 background: `${alpha("#020873", 0.1)}`,
                                 color: "#020873",
                             }}
-                            className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center"
-                        >
+                            className=" font-medium gap-1 bg-primary rounded-lg p-2 mt-4 flex justify-center items-center">
                             <AddCircleOutlineIcon
                                 sx={{ fontSize: "18px", color: "#020873" }}
                             />
@@ -171,15 +171,13 @@ export default function ServiceSetting() {
                                     <div key={index} className="mb-2">
                                         <SwipeableList
                                             type={Type.IOS}
-                                            fullSwipe={false}
-                                        >
+                                            fullSwipe={false}>
                                             <SwipeableListItem
                                                 trailingActions={trailingActions(
                                                     handleOpenConfirm,
                                                     handleSelectService,
                                                     service.id
-                                                )}
-                                            >
+                                                )}>
                                                 <ListServiceCard
                                                     serviceId={selectedId}
                                                     serviceName={service.title}

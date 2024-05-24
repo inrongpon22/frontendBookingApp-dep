@@ -68,8 +68,8 @@ export default function AddServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -82,7 +82,6 @@ export default function AddServiceTime(props: IParams) {
 
     useEffect(() => {
         if (businessData) {
-            setDaysOpen(businessData.daysOpen);
             setOpenTime(businessData.openTime.substring(0, 5));
             setCloseTime(businessData.closeTime.substring(0, 5));
         }
@@ -259,6 +258,24 @@ export default function AddServiceTime(props: IParams) {
         }
     };
 
+    useEffect(() => {
+        if (timeSlots.length > 0) {
+            setManualCapacity([]);
+            const uniqueSlots = new Set<number>();
+            const newSelectedSlots: number[] = [];
+
+            timeSlots.forEach((_element, index) => {
+                if (!uniqueSlots.has(index)) {
+                    uniqueSlots.add(index);
+                    newSelectedSlots.push(index);
+                    toggleSlotSelection(index);
+                }
+            });
+            setSelectedSlots(newSelectedSlots);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openTime, closeTime, duration]);
+
     return (
         <>
             <div style={{ width: "100vw" }}>
@@ -292,7 +309,9 @@ export default function AddServiceTime(props: IParams) {
                 <Divider sx={{ marginTop: "16px", width: "100%" }} />
                 <div className="flex flex-col pr-4 pl-4">
                     <div className="mt-4 flex flex-col">
-                        <p className="font-semibold" style={{ fontSize: "14px" }}>
+                        <p
+                            className="font-semibold"
+                            style={{ fontSize: "14px" }}>
                             {t("availableDate")}
                         </p>
                         <div className="flex justify-between mt-3">
@@ -370,15 +389,18 @@ export default function AddServiceTime(props: IParams) {
                                         height: "47px",
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
-                                            : `1px solid ${alpha("#000000", 0.2)}`,
+                                            : `1px solid ${alpha(
+                                                  "#000000",
+                                                  0.2
+                                              )}`,
                                         borderRadius: "8px",
                                         backgroundColor: disibleDays.some(
                                             (item) => item == day.value
                                         )
                                             ? "#dddddd" // Background color for disabled button
                                             : isDaySelected(day.value)
-                                                ? "rgba(2, 8, 115, 0.2)"
-                                                : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                     }}>
                                     {day.name}
                                 </button>
@@ -436,7 +458,9 @@ export default function AddServiceTime(props: IParams) {
                                     borderColor: `${alpha("#000000", 0.2)}`,
                                 }}
                                 className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
-                                <div style={{ fontSize: "14px" }}>{t("to")}</div>
+                                <div style={{ fontSize: "14px" }}>
+                                    {t("to")}
+                                </div>
                                 <div className="flex">
                                     <input
                                         min={openTime}
@@ -461,7 +485,9 @@ export default function AddServiceTime(props: IParams) {
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
                             className="rounded-lg flex border-black-50 border justify-between items-center p-4 mt-3">
-                            <div style={{ fontSize: "14px" }}>{t("duration")}</div>
+                            <div style={{ fontSize: "14px" }}>
+                                {t("duration")}
+                            </div>
                             <div className="flex items-center gap-2">
                                 <input
                                     className=" focus:outline-none "
@@ -511,14 +537,17 @@ export default function AddServiceTime(props: IParams) {
                                 <div
                                     key={index}
                                     className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
-                                            ? "border-custom-color border-2"
-                                            : "border-black-50 border"
-                                        }`}
+                                ${
+                                    selectedSlots.includes(index)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                }`}
                                     style={{
                                         width: "48%",
                                         height: "51px",
-                                        borderColor: selectedSlots.includes(index)
+                                        borderColor: selectedSlots.includes(
+                                            index
+                                        )
                                             ? "#020873"
                                             : `${alpha("#000000", 0.2)}`,
                                         backgroundColor: selectedSlots.includes(
@@ -555,17 +584,23 @@ export default function AddServiceTime(props: IParams) {
                                         <div key={element}>
                                             <div className="flex justify-between">
                                                 <div className="p-3">
-                                                    {timeSlots[element].startTime} -{" "}
+                                                    {
+                                                        timeSlots[element]
+                                                            .startTime
+                                                    }{" "}
+                                                    -{" "}
                                                     {timeSlots[element].endTime}
                                                 </div>
                                                 <div className="flex justify-between gap-3 items-center p-3">
                                                     <button
                                                         onClick={() =>
                                                             handleDecreaseCapacityManual(
-                                                                timeSlots[element]
-                                                                    .startTime,
-                                                                timeSlots[element]
-                                                                    .endTime
+                                                                timeSlots[
+                                                                    element
+                                                                ].startTime,
+                                                                timeSlots[
+                                                                    element
+                                                                ].endTime
                                                             )
                                                         }
                                                         style={{
@@ -577,19 +612,23 @@ export default function AddServiceTime(props: IParams) {
                                                     {manualCapacity.find(
                                                         (item) =>
                                                             item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                                timeSlots[
+                                                                    element
+                                                                ].startTime &&
                                                             item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                                timeSlots[
+                                                                    element
+                                                                ].endTime
                                                     )?.capacity ?? guestNumber}
                                                     <button
                                                         onClick={() =>
                                                             handleIncreaseCapacityManual(
-                                                                timeSlots[element]
-                                                                    .startTime,
-                                                                timeSlots[element]
-                                                                    .endTime,
+                                                                timeSlots[
+                                                                    element
+                                                                ].startTime,
+                                                                timeSlots[
+                                                                    element
+                                                                ].endTime,
                                                                 guestNumber
                                                             )
                                                         }
