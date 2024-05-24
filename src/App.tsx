@@ -55,7 +55,7 @@ function App() {
                         element={<BusinessProfile />}
                     />
                     <Route
-                        path="/booking-approval/:businessId/:serviceId"
+                        path="/booking-approval/:businessId"
                         element={<BookingApproval />}
                     />
                     <Route
