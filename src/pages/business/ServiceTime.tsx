@@ -184,7 +184,8 @@ export default function ServiceTime(props: IProps) {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
             setManualCapacity((prevCapacity) => {
                 const slotExists = prevCapacity.some(
-                    (slot) => slot.startTime === startTime && slot.endTime === endTime
+                    (slot) =>
+                        slot.startTime === startTime && slot.endTime === endTime
                 );
                 if (slotExists) {
                     return prevCapacity;
@@ -211,7 +212,6 @@ export default function ServiceTime(props: IProps) {
         }
     };
 
-
     const timeSlots: {
         startTime: string;
         endTime: string;
@@ -237,8 +237,8 @@ export default function ServiceTime(props: IProps) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -424,6 +424,7 @@ export default function ServiceTime(props: IProps) {
     generateTimeSlots(openTime, closeTime, duration);
     useEffect(() => {
         if (timeSlots.length > 0) {
+            setManualCapacity([]);
             const uniqueSlots = new Set<number>();
             const newSelectedSlots: number[] = [];
 
@@ -590,17 +591,17 @@ export default function ServiceTime(props: IProps) {
                                             border: isDaySelected(day.value)
                                                 ? "2px solid #020873"
                                                 : `1px solid ${alpha(
-                                                    "#000000",
-                                                    0.2
-                                                )}`,
+                                                      "#000000",
+                                                      0.2
+                                                  )}`,
                                             borderRadius: "8px",
                                             backgroundColor: disibleDays.some(
                                                 (item) => item == day.value
                                             )
                                                 ? "#dddddd" // Background color for disabled button
                                                 : isDaySelected(day.value)
-                                                    ? "rgba(2, 8, 115, 0.2)"
-                                                    : "white",
+                                                ? "rgba(2, 8, 115, 0.2)"
+                                                : "white",
                                         }}>
                                         {day.name}
                                     </button>
@@ -759,10 +760,11 @@ export default function ServiceTime(props: IProps) {
                                     <div
                                         key={index}
                                         className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
-                                                ? "border-custom-color border-2"
-                                                : "border-black-50 border"
-                                            }`}
+                                ${
+                                    selectedSlots.includes(index)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                }`}
                                         style={{
                                             width: "48%",
                                             height: "51px",
@@ -841,14 +843,14 @@ export default function ServiceTime(props: IProps) {
                                                         {manualCapacity.find(
                                                             (item) =>
                                                                 item.startTime ==
-                                                                timeSlots[
-                                                                    element
-                                                                ]
-                                                                    .startTime &&
+                                                                    timeSlots[
+                                                                        element
+                                                                    ]
+                                                                        .startTime &&
                                                                 item.endTime ==
-                                                                timeSlots[
-                                                                    element
-                                                                ].endTime
+                                                                    timeSlots[
+                                                                        element
+                                                                    ].endTime
                                                         )?.capacity ??
                                                             guestNumber}
                                                         <button
@@ -932,8 +934,7 @@ export default function ServiceTime(props: IProps) {
                                 </div>
                             )}
 
-                            <div
-                                className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
+                            <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                                 <button
                                     disabled={
                                         daysOpen.length == 0 ||

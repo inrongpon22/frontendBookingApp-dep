@@ -22,8 +22,9 @@ import {
     IServiceInfo,
     IServiceEditTime,
 } from "../../interfaces/services/Iservice";
-import toast from "react-hot-toast";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+// import toast from "react-hot-toast";
+// import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import SuccessfulAction from "./SuccessfulAction";
 
 interface IParams {
     serviceId: number;
@@ -64,6 +65,7 @@ export default function ServiceDetail(props: IParams) {
         bottom: false,
         right: false,
     });
+    const [isSuccess, setIsSuccess] = useState(false);
 
     useEffect(
         () => {
@@ -108,12 +110,9 @@ export default function ServiceDetail(props: IParams) {
         };
 
         await updateService(serviceInfo.id, insertData, token || "");
+        setIsSuccess(true);
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
-        toast(t("editSuccess"), {
-            icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
-        });
-        props.handleClose && props.handleClose();
     };
 
     const handleDeleteServiceTime = async () => {
@@ -133,16 +132,16 @@ export default function ServiceDetail(props: IParams) {
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Tab" ||
-                        (event as React.KeyboardEvent).key === "Shift")
-                ) {
-                    return;
-                }
-                setState({ ...state, [anchor]: open });
-            };
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event.type === "keydown" &&
+                ((event as React.KeyboardEvent).key === "Tab" ||
+                    (event as React.KeyboardEvent).key === "Shift")
+            ) {
+                return;
+            }
+            setState({ ...state, [anchor]: open });
+        };
 
     const handleIsModifiedData = () => {
         return (
@@ -201,6 +200,18 @@ export default function ServiceDetail(props: IParams) {
 
     return (
         <>
+            <SuccessfulAction
+                openCard={isSuccess}
+                title={t("title:UpdateSuccessful")}
+                description={t("desc:desAllDone")}
+                btnWord={t("button:done")}
+                iconType={""}
+                navigateTo={`service-setting/${businessId}`}
+                handleOnClose={() => {
+                    props.handleClose && props.handleClose();
+                    setIsSuccess(false);
+                }}
+            />
             <Drawer
                 anchor={"bottom"}
                 open={state["bottom"]}

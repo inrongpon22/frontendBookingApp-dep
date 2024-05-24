@@ -82,8 +82,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -262,7 +262,6 @@ export default function EditServiceTime(props: IParams) {
         setDuration((prev) => prev + 0.5);
         setManualCapacity([]);
         setSelectedSlots([]);
-
     };
     const decreaseDuration = () => {
         setDuration((prev) => prev - 0.5);
@@ -319,6 +318,28 @@ export default function EditServiceTime(props: IParams) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (timeSlots.length > 0) {
+            setManualCapacity([]);
+            const uniqueSlots = new Set<number>();
+            const newSelectedSlots: number[] = [];
+
+            timeSlots.forEach((element, index) => {
+                if (!uniqueSlots.has(index)) {
+                    uniqueSlots.add(index);
+                    newSelectedSlots.push(index);
+                    toggleSlotSelection(
+                        index,
+                        element.startTime,
+                        element.endTime
+                    );
+                }
+            });
+            setSelectedSlots(newSelectedSlots);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openTime, closeTime, duration]);
 
     const handleSubmit = async () => {
         const insertData = {
@@ -455,8 +476,8 @@ export default function EditServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                            ? "rgba(2, 8, 115, 0.2)"
-                                            : "white",
+                                        ? "rgba(2, 8, 115, 0.2)"
+                                        : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -520,8 +541,7 @@ export default function EditServiceTime(props: IParams) {
                                         setOpenTime(e.target.value);
                                         setSelectedSlots([]);
                                         setManualCapacity([]);
-                                    }
-                                    }
+                                    }}
                                     type="time"
                                     style={{
                                         border: "none",
@@ -550,8 +570,7 @@ export default function EditServiceTime(props: IParams) {
                                         handleCloseTime(e.target.value);
                                         setSelectedSlots([]);
                                         setManualCapacity([]);
-                                    }
-                                    }
+                                    }}
                                     type="time"
                                     style={{ border: "none" }}
                                     className="focus:outline-none"
@@ -619,10 +638,11 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
+                                ${
+                                    selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                    }`}
+                                }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -691,11 +711,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                        timeSlots[element]
-                                                            .startTime &&
+                                                            timeSlots[element]
+                                                                .startTime &&
                                                         item.endTime ==
-                                                        timeSlots[element]
-                                                            .endTime
+                                                            timeSlots[element]
+                                                                .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -792,23 +812,28 @@ export default function EditServiceTime(props: IParams) {
                             style={{
                                 width: "343px",
                                 height: "51px",
-                                cursor: daysOpen.length == 0 ||
+                                cursor:
+                                    daysOpen.length == 0 ||
                                     !openTime ||
                                     !closeTime ||
                                     !duration ||
                                     !guestNumber ||
                                     !availableFromDate ||
-                                    selectedSlots.length == 0 ? "not-allowed" : "pointer",
-                                backgroundColor: daysOpen.length == 0 ||
+                                    selectedSlots.length == 0
+                                        ? "not-allowed"
+                                        : "pointer",
+                                backgroundColor:
+                                    daysOpen.length == 0 ||
                                     !openTime ||
                                     !closeTime ||
                                     !duration ||
                                     !guestNumber ||
                                     !availableFromDate ||
-                                    selectedSlots.length == 0 ? "#cccccc" : "#020873",
+                                    selectedSlots.length == 0
+                                        ? "#cccccc"
+                                        : "#020873",
                                 fontSize: "14px",
-                            }}
-                        >
+                            }}>
                             {t("button:next")}
                         </button>
                     </div>
