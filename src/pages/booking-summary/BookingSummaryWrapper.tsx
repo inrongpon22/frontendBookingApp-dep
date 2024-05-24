@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
@@ -7,19 +7,22 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 // icons
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { cancelBooking } from "../../api/booking";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const BookingSummaryWrapper = () => {
     const navigate = useNavigate();
     const query = useQuery();
     const { bookingId } = useParams(); // bookingId click from my-bookings
+
+    const { setShowDialog, setDialogState } = useContext(GlobalContext);
 
     const token: string = localStorage.getItem("token") ?? "";
 
@@ -47,7 +50,9 @@ const BookingSummaryWrapper = () => {
                     title: t("title:bookingHasApproved"),
                     desc: t("desc:bookingHasApproved"),
                     icon: (
-                        <CheckRoundedIcon style={{ fontSize: 50, color:"#2ECC71" }} />
+                        <CheckRoundedIcon
+                            style={{ fontSize: 50, color: "#2ECC71" }}
+                        />
                     ),
                 };
 
@@ -55,7 +60,12 @@ const BookingSummaryWrapper = () => {
                 return {
                     title: t("title:bookingHasCancelled"),
                     desc: t("desc:bookingHasCancelled"),
-                    icon: <CloseRoundedIcon style={{ fontSize: 50 }} color="error" />,
+                    icon: (
+                        <CloseRoundedIcon
+                            style={{ fontSize: 50 }}
+                            color="error"
+                        />
+                    ),
                 };
 
             case "expired":
@@ -130,12 +140,14 @@ const BookingSummaryWrapper = () => {
     const handleCancelBooking = async () => {
         await cancelBooking(token, bookingId, bookingById.serviceId, language)
             .then(() => {
+                setShowDialog(false);
+                setDialogState("phone-input");
                 toast.success(t("noti:booking:cancel:success"));
                 navigate("/my-bookings");
             })
             .catch((error) => {
                 console.log(error);
-                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
                 // t("noti:booking:cancel:fail")
             });
     };
@@ -250,7 +262,7 @@ const BookingSummaryWrapper = () => {
                                 ? "border-2 border-deep-blue text-deep-blue"
                                 : "bg-deep-blue text-white"
                         }`}
-                        onClick={() =>
+                        onClick={() => {
                             navigate(
                                 `/my-bookings${
                                     query.get("accessCode")
@@ -264,8 +276,10 @@ const BookingSummaryWrapper = () => {
                                         userId: bookingDatas?.userId,
                                     },
                                 }
-                            )
-                        }
+                            );
+                            setShowDialog(false);
+                            setDialogState("phone-input");
+                        }}
                     >
                         {t("button:goToMyBookingButton")}
                     </button>
