@@ -96,10 +96,10 @@ function App() {
                         path="/service-detail/:businessId/:serviceId"
                         element={<ServiceDetail serviceId={0} />}
                     />
-                    <Route
+                    {/* <Route
                         path="/create-successful/:businessId"
-                        element={<CreateSuccessful openLoading={false} />}
-                    />
+                        element={<CreateSuccessful openLoading={true} />}
+                    /> */}
 
                     {/* day off */}
                     <Route

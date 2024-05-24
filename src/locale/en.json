@@ -98,7 +98,8 @@
         "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection.",
         "discardChanges": "Are you sure you want to discard the changes?",
         "desDeleteServiceF": "Once deleted, the service time will be removed from the system.",
-        "desConceptWord": "Fast and friendly, anywhere, anytime."
+        "desConceptWord": "Fast and friendly, anywhere, anytime.",
+        "autoApprove": "Customer's booking does not require your confirmation."
     },
     "button": {
         "cancel": "Cancel",
@@ -129,6 +130,7 @@
         "backToMain": "Back to main page",
         "addNewDayOff": "Add New Day-off",
         "leavePreview": "Leave Preview",
+        "preview": "Preview",
         "back": "Back",
         "discard": "Discard",
         "addServiceTime": "Add Service Time"

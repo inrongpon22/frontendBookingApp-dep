@@ -82,8 +82,8 @@ export default function EditServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -260,9 +260,14 @@ export default function EditServiceTime(props: IParams) {
 
     const increaseDuration = () => {
         setDuration((prev) => prev + 0.5);
+        setManualCapacity([]);
+        setSelectedSlots([]);
+
     };
     const decreaseDuration = () => {
         setDuration((prev) => prev - 0.5);
+        setManualCapacity([]);
+        setSelectedSlots([]);
     };
 
     const handleResetGustNumber = () => {
@@ -276,8 +281,6 @@ export default function EditServiceTime(props: IParams) {
     const handleCloseTime = (time: string) => {
         setCloseTime(time);
     };
-
-    generateTimeSlots(openTime, closeTime, duration);
 
     // const handleSetTwentyFourHour = () => {
     //     setIsTwentyFourHour(!isTwentyFourHour);
@@ -324,8 +327,6 @@ export default function EditServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
-            // openTime: openTime,
-            // closeTime: closeTime,
         };
         props.serviceTime[props.editIndex] = insertData;
         if (props.handleSetServiceTime) {
@@ -339,7 +340,11 @@ export default function EditServiceTime(props: IParams) {
         props.handleSetEditTime();
     };
 
+    generateTimeSlots(openTime, closeTime, duration);
+
     return (
+        // <>
+        // </>
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
@@ -363,7 +368,7 @@ export default function EditServiceTime(props: IParams) {
                 </div>
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
-            <div className="flex flex-col pr-4 pl-4">
+            <div className="flex flex-col pr-4 pl-4 mb-[12vh]">
                 <div className="mt-4 flex flex-col">
                     <p className="font-semibold" style={{ fontSize: "14px" }}>
                         {t("availableDate")}
@@ -450,8 +455,8 @@ export default function EditServiceTime(props: IParams) {
                                     )
                                         ? "#dddddd" // Background color for disabled button
                                         : isDaySelected(day.value)
-                                        ? "rgba(2, 8, 115, 0.2)"
-                                        : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                 }}>
                                 {day.name}
                             </button>
@@ -511,8 +516,11 @@ export default function EditServiceTime(props: IParams) {
                                 <input
                                     className="font-black-500 focus:outline-none"
                                     value={openTime}
-                                    onChange={(e) =>
-                                        setOpenTime(e.target.value)
+                                    onChange={(e) => {
+                                        setOpenTime(e.target.value);
+                                        setSelectedSlots([]);
+                                        setManualCapacity([]);
+                                    }
                                     }
                                     type="time"
                                     style={{
@@ -538,8 +546,11 @@ export default function EditServiceTime(props: IParams) {
                                 <input
                                     min={openTime}
                                     value={closeTime}
-                                    onChange={(e) =>
-                                        handleCloseTime(e.target.value)
+                                    onChange={(e) => {
+                                        handleCloseTime(e.target.value);
+                                        setSelectedSlots([]);
+                                        setManualCapacity([]);
+                                    }
                                     }
                                     type="time"
                                     style={{ border: "none" }}
@@ -608,11 +619,10 @@ export default function EditServiceTime(props: IParams) {
                             <div
                                 key={index}
                                 className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
+                                ${selectedSlots.includes(index)
                                         ? "border-custom-color border-2"
                                         : "border-black-50 border"
-                                }`}
+                                    }`}
                                 style={{
                                     width: "48%",
                                     height: "51px",
@@ -681,11 +691,11 @@ export default function EditServiceTime(props: IParams) {
                                                 {manualCapacity.find(
                                                     (item) =>
                                                         item.startTime ==
-                                                            timeSlots[element]
-                                                                .startTime &&
+                                                        timeSlots[element]
+                                                            .startTime &&
                                                         item.endTime ==
-                                                            timeSlots[element]
-                                                                .endTime
+                                                        timeSlots[element]
+                                                            .endTime
                                                 )?.capacity ?? guestNumber}
                                                 <button
                                                     onClick={() =>
@@ -765,11 +775,7 @@ export default function EditServiceTime(props: IParams) {
                         </div>
                     )}
 
-                    <div
-                        style={{
-                            marginBottom: "20px",
-                        }}
-                        className="w-full flex justify-center bottom-0 inset-x-0">
+                    <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                         <button
                             disabled={
                                 daysOpen.length == 0 ||
@@ -786,10 +792,23 @@ export default function EditServiceTime(props: IParams) {
                             style={{
                                 width: "343px",
                                 height: "51px",
-                                cursor: "pointer",
-                                backgroundColor: "#020873",
+                                cursor: daysOpen.length == 0 ||
+                                    !openTime ||
+                                    !closeTime ||
+                                    !duration ||
+                                    !guestNumber ||
+                                    !availableFromDate ||
+                                    selectedSlots.length == 0 ? "not-allowed" : "pointer",
+                                backgroundColor: daysOpen.length == 0 ||
+                                    !openTime ||
+                                    !closeTime ||
+                                    !duration ||
+                                    !guestNumber ||
+                                    !availableFromDate ||
+                                    selectedSlots.length == 0 ? "#cccccc" : "#020873",
                                 fontSize: "14px",
-                            }}>
+                            }}
+                        >
                             {t("button:next")}
                         </button>
                     </div>

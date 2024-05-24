@@ -19,7 +19,14 @@ export default function SettingServiceBtn(props: IParams) {
             <div
                 style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                 className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                <div>{t("isAutoApprove")}</div>
+                <div className="w-[60vw]">
+                    <div className="text-[14px]">
+                        {t("isAutoApprove")}
+                    </div>
+                    <p className="text-[#6A6A6A] font-[12px]">
+                        {t("desc:autoApprove")}
+                    </p>
+                </div>
                 <MuiToggleButton
                     value={props.isAutoApprove}
                     aria-label="Toggle switch"
@@ -43,10 +50,10 @@ export default function SettingServiceBtn(props: IParams) {
                     </span>
                 </MuiToggleButton>
             </div>
-            <div
+            {/* <div
                 style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                 className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
-                <div>{t("isHideServPrice")}</div>
+                <div>{t("isHideServPrice")} </div>
                 <MuiToggleButton
                     value={props.isHidePrice}
                     aria-label="Toggle switch"
@@ -96,7 +103,7 @@ export default function SettingServiceBtn(props: IParams) {
                         {props.isHideEndTime ? <CheckIcon sx={{ fontSize: "14px" }} /> : <CloseIcon sx={{ fontSize: "14px" }} />}
                     </span>
                 </MuiToggleButton>
-            </div>
+            </div> */}
         </>
     );
 }
