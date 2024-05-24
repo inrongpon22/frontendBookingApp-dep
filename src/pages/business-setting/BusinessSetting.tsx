@@ -9,6 +9,7 @@ import Header from "./Header";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext"; // global context
+import Loading from "../../components/dialog/Loading";
 
 export default function BusinessSetting() {
     const { t } = useTranslation();
@@ -54,6 +55,7 @@ export default function BusinessSetting() {
 
     return (
         <div>
+            <Loading openLoading={businessLoading} />
             <div className="px-4 pt-6">
                 <Header
                     context={t("title:businessSetting")}
