@@ -695,10 +695,10 @@ export default function EditServiceTime(props: IParams) {
                                             </div>
                                             <div className="flex justify-between gap-3 items-center p-3">
                                                 <button
-                                                    // disabled={
-                                                    //     manualCapacity[element]
-                                                    //         .capacity == 1
-                                                    // }
+                                                    disabled={
+                                                        manualCapacity[element]
+                                                            ?.capacity == 1
+                                                    }
                                                     onClick={() =>
                                                         handleDecreaseCapacityManual(
                                                             timeSlots[element]

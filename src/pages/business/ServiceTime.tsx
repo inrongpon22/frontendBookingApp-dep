@@ -827,7 +827,7 @@ export default function ServiceTime(props: IProps) {
                                                             disabled={
                                                                 manualCapacity[
                                                                     element
-                                                                ].capacity == 1
+                                                                ]?.capacity == 1
                                                             }
                                                             onClick={() =>
                                                                 handleDecreaseCapacityManual(
