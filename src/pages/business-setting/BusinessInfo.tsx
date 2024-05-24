@@ -28,12 +28,13 @@ interface IParams {
 export default function BusinessInfo(props: IParams) {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     const {
         t,
         i18n: { language },
     } = useTranslation();
 
-    const { setShowDialog,userId } = useContext(GlobalContext);
+    const { setShowDialog } = useContext(GlobalContext);
 
     const [files, setFiles] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);

@@ -135,7 +135,8 @@ const BookingSummaryWrapper = () => {
             })
             .catch((error) => {
                 console.log(error);
-                toast.error(t("noti:booking:cancel:fail"));
+                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                // t("noti:booking:cancel:fail")
             });
     };
 

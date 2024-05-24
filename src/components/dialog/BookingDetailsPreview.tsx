@@ -71,9 +71,11 @@ const BookingDetailsPreview = () => {
     const { pathname } = useLocation();
     const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
 
+    const userId = localStorage.getItem("userId");
+
     const { formik } = useContext<any>(DialogContext);
 
-    const { setIsGlobalLoading, setShowDialog, setDialogState,userId } =
+    const { setIsGlobalLoading, setShowDialog, setDialogState } =
         useContext(GlobalContext);
 
     const { mutateReservationByBusinessId } = getReservationByBusinessId(
@@ -103,8 +105,6 @@ const BookingDetailsPreview = () => {
     const filterSelected = slotArrays?.slotsTime.filter(
         (item: any) => item.isSelected
     );
-
-    console.log(userId)
 
     useEffect(() => {
         if (token && formik.values.userId === 0) {
@@ -172,13 +172,15 @@ const BookingDetailsPreview = () => {
                     setShowDialog(false);
                     toast.success("การสร้างการจองด้วยตัวเองสำเร็จ");
                     localStorage.removeItem("bookingDetail");
+                    formik.resetForm();
                 } else {
                     navigate(`/booking/${res.data.reservationId}`);
                 }
             })
             .catch((err) => {
+                console.log(err.response.data.message)
                 setIsGlobalLoading(false);
-                toast.error(err.response.data.message);
+                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
             });
     };
 

@@ -22,8 +22,9 @@ export default function BusinessInfo() {
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
     const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-    const {setShowDialog,userId} = useContext(GlobalContext)
+    const {setShowDialog} = useContext(GlobalContext)
     const {
         t,
         i18n: { language },
