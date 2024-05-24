@@ -233,8 +233,8 @@ export default function ServiceTime(props: IProps) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -590,17 +590,17 @@ export default function ServiceTime(props: IProps) {
                                             border: isDaySelected(day.value)
                                                 ? "2px solid #020873"
                                                 : `1px solid ${alpha(
-                                                      "#000000",
-                                                      0.2
-                                                  )}`,
+                                                    "#000000",
+                                                    0.2
+                                                )}`,
                                             borderRadius: "8px",
                                             backgroundColor: disibleDays.some(
                                                 (item) => item == day.value
                                             )
                                                 ? "#dddddd" // Background color for disabled button
                                                 : isDaySelected(day.value)
-                                                ? "rgba(2, 8, 115, 0.2)"
-                                                : "white",
+                                                    ? "rgba(2, 8, 115, 0.2)"
+                                                    : "white",
                                         }}>
                                         {day.name}
                                     </button>
@@ -760,11 +760,10 @@ export default function ServiceTime(props: IProps) {
                                     <div
                                         key={index}
                                         className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                }`}
+                                ${selectedSlots.includes(index)
+                                                ? "border-custom-color border-2"
+                                                : "border-black-50 border"
+                                            }`}
                                         style={{
                                             width: "48%",
                                             height: "51px",
@@ -850,14 +849,14 @@ export default function ServiceTime(props: IProps) {
                                                         {manualCapacity.find(
                                                             (item) =>
                                                                 item.startTime ==
-                                                                    timeSlots[
-                                                                        element
-                                                                    ]
-                                                                        .startTime &&
+                                                                timeSlots[
+                                                                    element
+                                                                ]
+                                                                    .startTime &&
                                                                 item.endTime ==
-                                                                    timeSlots[
-                                                                        element
-                                                                    ].endTime
+                                                                timeSlots[
+                                                                    element
+                                                                ].endTime
                                                         )?.capacity ??
                                                             guestNumber}
                                                         <button
@@ -913,7 +912,8 @@ export default function ServiceTime(props: IProps) {
                                             disabled={
                                                 timeSlots.length == 0 ||
                                                 timeSlots[0].startTime == "" ||
-                                                selectedSlots.length == 0
+                                                selectedSlots.length == 0 ||
+                                                manualCapacity.length == 0
                                             }>
                                             <u
                                                 style={{
@@ -928,7 +928,7 @@ export default function ServiceTime(props: IProps) {
                                         <button
                                             disabled={guestNumber == 1}
                                             onClick={decreaseGuest}
-                                            className="border flex justify-center items-center w-8 h-8 rounded-md">
+                                            className={`border flex justify-center items-center w-8 h-8 rounded-md ${guestNumber == 1 ? "opacity-40" : ""}`}>
                                             <KeyboardArrowDownIcon />
                                         </button>
                                         {guestNumber}
