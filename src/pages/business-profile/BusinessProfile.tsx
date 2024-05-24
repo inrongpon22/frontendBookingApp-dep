@@ -103,11 +103,11 @@ const BusinessProfile = () => {
             </div>
             {/* headers */}
 
-            {getReservationByBusinessIdData.length === 0 && congAlert && (
+            {getReservationByBusinessIdData?.length === 0 && congAlert && (
                 <FirstTimeCongrat handleClose={() => setCongAlert(false)} />
             )}
 
-            {getReservationByBusinessIdData.length === 0 && addMoreService && (
+            {getReservationByBusinessIdData?.length === 0 && addMoreService && (
                 <FirstTimeAddMoreService
                     handleClose={() => setAddMoreService(false)}
                 />
@@ -125,12 +125,12 @@ const BusinessProfile = () => {
                             (item: Ireservation, index: number) => {
                                 return (
                                     <div
-                                        // Link to={`/booking-approval/${businessId}/${item.serviceId}`}
+                                        // Link to={`/booking-approval/${businessId}`}
                                         key={index}
                                         className="flex justify-between cursor-pointer hover:bg-gray-100 px-5 py-3"
                                         onClick={() =>
                                             navigate(
-                                                `/booking-approval/${businessId}/${item.serviceId}`,
+                                                `/booking-approval/${businessId}`,
                                                 {
                                                     state: item,
                                                 }
@@ -198,9 +198,16 @@ const BusinessProfile = () => {
 
             {/* today section */}
             <div className="text-[14px] bg-white p-5 mt-2">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                     <p className="font-bold text-zinc-400">วันนี้</p>
-                    {/* <p className="font-bold text-[12px] underline" onClick={() => toast("coming soon")}>View all</p> */}
+                    <p
+                        className="font-bold text-[10px] text-deep-blue text-opacity-60 underline"
+                        onClick={() =>
+                            navigate(`/booking-approval/${businessId}`)
+                        }
+                    >
+                        View all
+                    </p>
                 </div>
 
                 <div className="flex flex-col gap-5 py-5">
