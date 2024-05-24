@@ -55,15 +55,9 @@ export default function ServiceTime(props: IProps) {
         businessId && `${app_api}/business/${businessId}`,
         fetcher
     );
-    const [daysOpen, setDaysOpen] = useState<string[]>(
-        businessData?.daysOpen ?? []
-    );
-    const [openTime, setOpenTime] = useState(
-        businessData?.openTime.substring(0, 5) ?? ""
-    );
-    const [closeTime, setCloseTime] = useState(
-        businessData?.closeTime.substring(0, 5) ?? ""
-    );
+    const [daysOpen, setDaysOpen] = useState<string[]>([]);
+    const [openTime, setOpenTime] = useState("");
+    const [closeTime, setCloseTime] = useState("");
     const [guestNumber, setGuestNumber] = useState(1);
     const [isManually, setIsManually] = useState(false);
     const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
@@ -82,6 +76,8 @@ export default function ServiceTime(props: IProps) {
             setDaysOpen(businessData.daysOpen);
             setOpenTime(businessData.openTime.substring(0, 5));
             setCloseTime(businessData.closeTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
+            setOpenTime(businessData.openTime.substring(0, 5));
         }
     }, [businessData]);
 
