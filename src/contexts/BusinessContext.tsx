@@ -10,6 +10,9 @@ const BusinessContext = ({ children }: any) => {
         "phone-input"
     );
 
+    // user
+    const [userId, setUserId] = useState<number>(0)
+
     return (
         <GlobalContext.Provider
             value={{
@@ -19,6 +22,8 @@ const BusinessContext = ({ children }: any) => {
                 setShowDialog,
                 dialogState,
                 setDialogState,
+                userId,
+                setUserId
             }}
         >
             {children}

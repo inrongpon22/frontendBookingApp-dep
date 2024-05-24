@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha, Badge, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -17,6 +17,7 @@ import {
 } from "../business/interfaces/business";
 import SearchMap from "../business/SearchMap";
 import toast from "react-hot-toast";
+import { GlobalContext } from "../../contexts/BusinessContext"; //global context
 
 interface IParams {
     businessData?: IgetBusiness;
@@ -27,11 +28,12 @@ interface IParams {
 export default function BusinessInfo(props: IParams) {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
     const {
         t,
         i18n: { language },
     } = useTranslation();
+
+    const { setShowDialog,userId } = useContext(GlobalContext);
 
     const [files, setFiles] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -272,6 +274,7 @@ export default function BusinessInfo(props: IParams) {
                             <CheckCircleOutlineIcon sx={{ color: "green" }} />
                         ),
                     });
+                    setShowDialog(false);
                     navigate(`/business-profile/${props.businessData?.id}`);
                 } else {
                     console.error("Error updating business");
@@ -305,6 +308,7 @@ export default function BusinessInfo(props: IParams) {
                             <CheckCircleOutlineIcon sx={{ color: "green" }} />
                         ),
                     });
+                    setShowDialog(false);
                     navigate(`/business-profile/${props.businessData?.id}`);
                 } else {
                     console.error("Error updating business");
@@ -341,7 +345,8 @@ export default function BusinessInfo(props: IParams) {
                 <form onSubmit={formik.handleSubmit}>
                     <p
                         style={{ fontSize: "14px" }}
-                        className="mt-4 font-semibold">
+                        className="mt-4 font-semibold"
+                    >
                         {t("form:business:create:shopName")}
                     </p>
                     <input
@@ -354,10 +359,11 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -366,7 +372,8 @@ export default function BusinessInfo(props: IParams) {
                     ) : null}
                     <p
                         style={{ fontSize: "14px" }}
-                        className="mt-4 font-semibold">
+                        className="mt-4 font-semibold"
+                    >
                         {t("form:business:create:location")}
                     </p>
                     <SearchMap
@@ -375,7 +382,8 @@ export default function BusinessInfo(props: IParams) {
                     />
                     <p
                         style={{ fontSize: "14px" }}
-                        className="mt-4 font-semibold">
+                        className="mt-4 font-semibold"
+                    >
                         {t("form:business:create:openTime")}
                     </p>
                     <div className="flex justify-between mt-1">
@@ -397,11 +405,13 @@ export default function BusinessInfo(props: IParams) {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
-                            flex items-center justify-center rounded-lg`}>
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
+                            flex items-center justify-center rounded-lg`}
+                            >
                                 {day.name}
                             </div>
                         ))}
@@ -413,12 +423,14 @@ export default function BusinessInfo(props: IParams) {
                                 height: "51px",
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
-                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4"
+                        >
                             <div
                                 style={{
                                     fontSize: "14px",
                                     marginRight: "15px",
-                                }}>
+                                }}
+                            >
                                 {t("from")}
                             </div>
                             <div className="flex">
@@ -443,7 +455,8 @@ export default function BusinessInfo(props: IParams) {
                                 height: "51px",
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
-                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4"
+                        >
                             <div style={{ fontSize: "14px" }}>{t("to")}</div>
                             <div className="flex">
                                 <input
@@ -459,7 +472,8 @@ export default function BusinessInfo(props: IParams) {
                     </div>
                     <p
                         style={{ fontSize: "14px" }}
-                        className="mt-3 font-semibold">
+                        className="mt-3 font-semibold"
+                    >
                         {t("form:business:create:businessNumber")}
                     </p>
                     <input
@@ -472,10 +486,11 @@ export default function BusinessInfo(props: IParams) {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">
@@ -485,7 +500,8 @@ export default function BusinessInfo(props: IParams) {
                     <div className="flex mt-3 items-center gap-1">
                         <div
                             style={{ fontSize: "14px" }}
-                            className="font-semibold">
+                            className="font-semibold"
+                        >
                             {t("form:business:create:shortDescribe")}
                         </div>
                         <div style={{ fontSize: "14px" }}>
@@ -497,7 +513,8 @@ export default function BusinessInfo(props: IParams) {
                         style={{
                             height: "124px",
                             borderColor: `${alpha("#000000", 0.2)}`,
-                        }}>
+                        }}
+                    >
                         <textarea
                             // disabled={!props.isEdit}
                             name="description"
@@ -531,7 +548,8 @@ export default function BusinessInfo(props: IParams) {
                                                 ":hover": {
                                                     background: "black",
                                                 },
-                                            }}>
+                                            }}
+                                        >
                                             <CloseIcon
                                                 sx={{
                                                     fontSize: "12px",
@@ -539,7 +557,8 @@ export default function BusinessInfo(props: IParams) {
                                                 }}
                                             />
                                         </IconButton>
-                                    }>
+                                    }
+                                >
                                     <img
                                         src={image}
                                         className="rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
@@ -555,10 +574,12 @@ export default function BusinessInfo(props: IParams) {
 
                         <div
                             className="outline-dashed outline-1 outline-offset-1 flex items-center justify-center rounded-lg mt-3"
-                            style={{ width: "100px", height: "100px" }}>
+                            style={{ width: "100px", height: "100px" }}
+                        >
                             <label
                                 htmlFor={`fileInput`}
-                                style={{ cursor: "pointer" }}>
+                                style={{ cursor: "pointer" }}
+                            >
                                 <input
                                     id={`fileInput`}
                                     type="file"
@@ -575,7 +596,8 @@ export default function BusinessInfo(props: IParams) {
                             type="button"
                             className="w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold"
                             // disabled={!isFormModified}
-                            onClick={() => formik.handleSubmit()}>
+                            onClick={() => formik.handleSubmit()}
+                        >
                             {t("edit")}
                         </button>
                     </div>

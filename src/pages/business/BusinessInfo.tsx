@@ -1,6 +1,6 @@
 // import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
-import { IBusinessInfo, ILocation } from "./interfaces/business";
+import { ILocation } from "./interfaces/business";
 import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha } from "@mui/material";
@@ -22,15 +22,14 @@ export default function BusinessInfo() {
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
 
-    const {setShowDialog} = useContext(GlobalContext)
+    const {setShowDialog,userId} = useContext(GlobalContext)
     const {
         t,
         i18n: { language },
     } = useTranslation();
 
-    const [file, setFile] = useState<File[]>([]);
+    // const [file, setFile] = useState<File[]>([]);
     // const [previewImages, setPreviewImages] = useState<string[]>([]);
     // const { data: businessData } = useSWR<any>(
     //     businessId && `${app_api}/business/${businessId ?? ""}`,

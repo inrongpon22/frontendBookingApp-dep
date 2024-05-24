@@ -47,6 +47,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         setShowDialog,
         dialogState,
         setDialogState,
+        setUserId
     } = useContext(GlobalContext);
 
     const formik = useFormik({
@@ -91,8 +92,9 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                         .then(async (res) => {
                             console.log(res, userSide, query.get("accessCode"));
                             if (res.status === 200) {
+                                console.log(res.data.userId)
                                 localStorage.setItem("token", res.data.token);
-                                localStorage.setItem("userId", res.data.userId);
+                                setUserId(res.data.userId);
                                 formik.setFieldValue("userId", res.data.userId);
                                 formik.setFieldValue(
                                     "username",

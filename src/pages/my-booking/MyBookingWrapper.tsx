@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
 import useSWR from "swr";
 import { app_api } from "../../helper/url";
 // icons
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+// import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
@@ -13,12 +13,13 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const MyBookingWrapper = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const {userId} = useContext(GlobalContext);
 
     const { t } = useTranslation();
 

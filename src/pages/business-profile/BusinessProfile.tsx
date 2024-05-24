@@ -15,7 +15,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 // styled
-import { Badge, Divider } from "@mui/material";
+import { Badge } from "@mui/material";
 import moment from "moment";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 
@@ -34,7 +34,7 @@ const BusinessProfile = () => {
 
     const {
         getReservationByBusinessIdData,
-        getReservationByBusinessIdLoading
+        getReservationByBusinessIdLoading,
     } = getReservationByBusinessId(Number(businessId), "all"); // get reservation by bussiness id
 
     // filter only pending
@@ -59,7 +59,9 @@ const BusinessProfile = () => {
 
             return { ...item, bookingDate: combinedBookingDate };
         })
-        .sort((a:any, b:any) => moment(a.bookingDate).diff(moment(b.bookingDate)));
+        .sort((a: any, b: any) =>
+            moment(a.bookingDate).diff(moment(b.bookingDate))
+        );
 
     useEffect(() => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
@@ -87,7 +89,8 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}>
+                        }}
+                    >
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -115,7 +118,8 @@ const BusinessProfile = () => {
                                                 state: item,
                                             }
                                         )
-                                    }>
+                                    }
+                                >
                                     <div className="flex flex-col">
                                         <p className="flex items-center gap-1">
                                             <span className="text-[14px] font-semibold">
@@ -188,7 +192,8 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                 : "bg-zinc-200 text-zinc-400"
-                                        } px-1 rounded`}>
+                                        } px-1 rounded`}
+                                    >
                                         {item.startTime.slice(0, -3)}
                                     </p>
                                     <p
@@ -196,19 +201,36 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? ""
                                                 : "text-zinc-400"
-                                        } font-semibold`}>
+                                        } font-semibold`}
+                                    >
                                         {item.title}
                                     </p>
                                 </div>
                                 <p
-                                    className={
+                                    className={`flex ${
                                         item.status === "approval"
                                             ? ""
                                             : "text-zinc-400"
-                                    }>
-                                    {item.status === "approval"
-                                        ? item.userName
-                                        : "Cancel"}
+                                    }`}
+                                >
+                                    <span>
+                                        {item.status === "approval"
+                                            ? item.userName
+                                            : "Cancel"}
+                                    </span>
+                                    {/* <span
+                                        className="flex flex-col gap-1 text-end justify-center"
+                                        onClick={() =>
+                                            navigate(
+                                                `/booking-approval/${businessId}/${item.serviceId}`,
+                                                {
+                                                    state: item,
+                                                }
+                                            )
+                                        }
+                                    >
+                                        <NavigateNextIcon className="text-deep-blue" />
+                                    </span> */}
                                 </p>
                             </div>
                         );

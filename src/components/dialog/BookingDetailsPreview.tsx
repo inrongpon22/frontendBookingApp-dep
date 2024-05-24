@@ -73,7 +73,7 @@ const BookingDetailsPreview = () => {
 
     const { formik } = useContext<any>(DialogContext);
 
-    const { setIsGlobalLoading, setShowDialog, setDialogState } =
+    const { setIsGlobalLoading, setShowDialog, setDialogState,userId } =
         useContext(GlobalContext);
 
     const { mutateReservationByBusinessId } = getReservationByBusinessId(
@@ -87,7 +87,6 @@ const BookingDetailsPreview = () => {
     } = useTranslation();
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
 
     const slotArrays = JSON.parse(bookingDetail)?.serviceById.bookingSlots.find(
         (item: any) =>
@@ -104,6 +103,8 @@ const BookingDetailsPreview = () => {
     const filterSelected = slotArrays?.slotsTime.filter(
         (item: any) => item.isSelected
     );
+
+    console.log(userId)
 
     useEffect(() => {
         if (token && formik.values.userId === 0) {

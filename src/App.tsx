@@ -12,14 +12,12 @@ import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
-// import CreateService from "./pages/business/CreateService.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
 import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
 import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
-import CreateSuccessful from "./pages/service/CreateSuccessful.tsx";
 // error pages
 import NotFound from "./pages/errors/404NotFound.tsx";
 import Unauthorized from "./pages/errors/401Unauthorized.tsx";
