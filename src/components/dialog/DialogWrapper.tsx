@@ -47,7 +47,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         setShowDialog,
         dialogState,
         setDialogState,
-        setUserId
     } = useContext(GlobalContext);
 
     const formik = useFormik({
@@ -92,9 +91,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                         .then(async (res) => {
                             console.log(res, userSide, query.get("accessCode"));
                             if (res.status === 200) {
-                                console.log(res.data.userId)
                                 localStorage.setItem("token", res.data.token);
-                                setUserId(res.data.userId);
+                                localStorage.setItem("userId", res.data.userId);
                                 formik.setFieldValue("userId", res.data.userId);
                                 formik.setFieldValue(
                                     "username",
@@ -128,7 +126,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                     }
                                                 )
                                                 .then((resp) => {
-                                                    console.log("first", resp);
                                                     if (resp.status === 200) {
                                                         setShowDialog(false);
                                                         navigate(
@@ -145,9 +142,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                             "/create-business"
                                                         );
                                                     } else {
-                                                        toast.error(
-                                                            err.message
-                                                        );
+                                                        console.log(err.message)
+                                                        toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
                                                     }
                                                 });
                                         }

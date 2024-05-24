@@ -11,7 +11,9 @@ const BusinessAuth = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token") ?? "";
-    const { setShowDialog,userId } = useContext(GlobalContext);
+    const userId = localStorage.getItem("userId") ?? "";
+
+    const { setShowDialog } = useContext(GlobalContext);
 
     useEffect(() => {
         document.title = t("title:bussRootTitle");
