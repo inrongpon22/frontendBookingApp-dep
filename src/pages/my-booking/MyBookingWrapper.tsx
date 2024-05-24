@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
@@ -13,13 +13,12 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
-import { GlobalContext } from "../../contexts/BusinessContext";
 
 const MyBookingWrapper = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const token = localStorage.getItem("token");
-    const {userId} = useContext(GlobalContext);
+    const userId = localStorage.getItem("userId");
 
     const { t } = useTranslation();
 
@@ -36,7 +35,10 @@ const MyBookingWrapper = () => {
                     },
                 })
                 .then((res) => res.data)
-                .catch((err) => toast.error(err.response.data.message)),
+                .catch((err) => {
+                    console.log(err)
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                }),
         { revalidateOnFocus: false }
     );
 

@@ -157,7 +157,8 @@ const BookingApproval = (): React.ReactElement => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    toast.error(t("noti:booking:approve:fail"));
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                    // t("noti:booking:approve:fail")
                 });
         } else {
             setDialogState("phone-input");
@@ -201,7 +202,8 @@ const BookingApproval = (): React.ReactElement => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    toast.error(t("noti:booking:reject:fail"));
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                    // t("noti:booking:reject:fail")
                 });
         } else {
             setDialogState("phone-input");
