@@ -27,3 +27,28 @@ export const CheckOTP = async (phoneNumber: string, otp: string) => {
         throw error;
     }
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const getUserIdByAccessToken = async (
+    accessToken: string,
+    token: string
+) => {
+    token = token.replace(/"/g, "");
+    try {
+        const userId = await axios.post(
+            `${import.meta.env.VITE_APP_API}/getUserIdAccessToken`,
+            {
+                access_token: accessToken, // Corrected the typo here
+            },
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        );
+        return userId.data.userId;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

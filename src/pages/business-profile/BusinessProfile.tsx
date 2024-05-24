@@ -71,6 +71,7 @@ const BusinessProfile = () => {
 
     useEffect(() => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getReservationByBusinessIdLoading]);
 
     return (
@@ -95,8 +96,7 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}
-                    >
+                        }}>
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>

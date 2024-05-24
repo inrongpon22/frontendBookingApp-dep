@@ -23,7 +23,8 @@ import {
     IServiceEditTime,
 } from "../../interfaces/services/Iservice";
 import { GlobalContext } from "../../contexts/BusinessContext";
-import SuccessfulAction from "./SuccessfulAction";
+import toast from "react-hot-toast";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 interface IParams {
     serviceId: number;
@@ -64,7 +65,7 @@ export default function ServiceDetail(props: IParams) {
         bottom: false,
         right: false,
     });
-    const [isSuccess, setIsSuccess] = useState(false);
+    // const [isSuccess, setIsSuccess] = useState(false);
 
     useEffect(
         () => {
@@ -110,10 +111,13 @@ export default function ServiceDetail(props: IParams) {
 
         await updateService(serviceInfo.id, insertData, token || "");
         setShowDialog(false);
+        toast(t("editSuccess"), {
+            icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+        });
         setDialogState("phone-input");
-        setIsSuccess(true);
         props.serviceMutate && props.serviceMutate();
         serviceMutate();
+        props.handleClose && props.handleClose();
     };
 
     const handleDeleteServiceTime = async () => {
@@ -201,18 +205,6 @@ export default function ServiceDetail(props: IParams) {
 
     return (
         <>
-            <SuccessfulAction
-                openCard={isSuccess}
-                title={t("title:UpdateSuccessful")}
-                description={t("desc:desAllDone")}
-                btnWord={t("button:done")}
-                iconType={""}
-                navigateTo={`service-setting/${businessId}`}
-                handleOnClose={() => {
-                    props.handleClose && props.handleClose();
-                    setIsSuccess(false);
-                }}
-            />
             <Drawer
                 anchor={"bottom"}
                 open={state["bottom"]}
@@ -261,7 +253,7 @@ export default function ServiceDetail(props: IParams) {
                     <div
                         className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
                         style={{ width: "100vw" }}>
-                        <div className="pr-4 pl-4 pt-6">
+                        <div className="pr-4 pl-4 pt-6 mb-[80px]">
                             <Header
                                 context={t("title:serviceInformation")}
                                 handleClose={handleCloseCardDetail}
@@ -356,16 +348,17 @@ export default function ServiceDetail(props: IParams) {
                                     }
                                 />
 
-                                <div className="w-full flex justify-center gap-2 my-5">
+                                <div
+                                    className={`w-full flex justify-center bottom-0 inset-x-0 gap-2 mb-3 fixed`}>
                                     <button
-                                        className="w-1/2 p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
+                                        className="w-[45vw] p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold"
                                         onClick={toggleDrawer("bottom", true)}>
                                         {t("button:preview")}
                                     </button>
                                     <button
                                         onClick={handleUpdateService}
                                         type="submit"
-                                        className="w-1/2 p-3 text-white bg-deep-blue rounded-lg font-semibold">
+                                        className="w-[45vw] p-3 text-white bg-deep-blue rounded-lg font-semibold">
                                         {t("button:confirm")}
                                     </button>
                                 </div>

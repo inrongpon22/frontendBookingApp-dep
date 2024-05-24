@@ -4,6 +4,8 @@ import { styled } from "@mui/material/styles";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
 import { t } from "i18next";
 import { dataOfWeekThai, dataOfWeekEng } from "../../../helper/daysOfWeek";
+import toast from "react-hot-toast";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 interface IProps {
     serviceId: number;
@@ -48,6 +50,9 @@ export default function ListServiceCard(props: IProps) {
         try {
             if (token) {
                 await deleteService(props.serviceId, token);
+                toast(t("deleteSuccess"), {
+                    icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                });
                 props.handleRefresh();
                 props.handleClose();
             }
@@ -95,11 +100,16 @@ export default function ListServiceCard(props: IProps) {
                     </p>
                     <p style={{ fontSize: "12px" }}>
                         {props.daysOpen.map((day: string, index) => {
-                            const dayName = lan === "th"
-                                ? dataOfWeekThai.find((x) => x.value === day)?.name
-                                : dataOfWeekEng.find((x) => x.value === day)?.name;
+                            const dayName =
+                                lan === "th"
+                                    ? dataOfWeekThai.find(
+                                          (x) => x.value === day
+                                      )?.name
+                                    : dataOfWeekEng.find((x) => x.value === day)
+                                          ?.name;
                             // Determine if 'and' or 'และ' should be added
-                            const isSecondLast = index === props.daysOpen.length - 2;
+                            const isSecondLast =
+                                index === props.daysOpen.length - 2;
                             const isLast = index === props.daysOpen.length - 1;
 
                             // Add appropriate punctuation

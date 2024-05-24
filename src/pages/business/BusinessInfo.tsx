@@ -16,15 +16,20 @@ import moment from "moment";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
+// import { getUserIdByAccessToken } from "../../api/user";
+import toast from "react-hot-toast";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
     const token = localStorage.getItem("token");
+    // const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
+    // const userId = getUserIdByAccessToken(accessToken ?? "", token ?? "");
 
-    const {setShowDialog} = useContext(GlobalContext)
+    const { setShowDialog } = useContext(GlobalContext);
     const {
         t,
         i18n: { language },
@@ -253,7 +258,6 @@ export default function BusinessInfo() {
             }
 
             if (businessId) {
-                console.log("update");
                 const business = await updateBusiness(
                     insertData,
                     Number(businessId),
@@ -263,7 +267,10 @@ export default function BusinessInfo() {
                     "businessId",
                     String(business.data.businessId)
                 );
-                setShowDialog(false)
+                setShowDialog(false);
+                toast(t("addBusiness"), {
+                    icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                });
                 navigate(`/service-info/${business.data.businessId}?step=1`);
             } else {
                 const business = await insertBusiness(insertData, token);
@@ -271,7 +278,10 @@ export default function BusinessInfo() {
                     "businessId",
                     String(business.data.businessId)
                 );
-                setShowDialog(false)
+                setShowDialog(false);
+                toast(t("addBusiness"), {
+                    icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                });
                 navigate(`/service-info/${business.data.businessId}?step=1`);
             }
         },
