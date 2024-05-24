@@ -55,7 +55,9 @@
         "person": "person",
         "askForDelete": "Are you sure you want to delete this service time?",
         "addService": "Add Service",
-        "editSuccess": "Edit successfully"
+        "addBusiness": "Add Business",
+        "editSuccess": "Edit successfully",
+        "deleteSuccess": "Delete successfully"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",

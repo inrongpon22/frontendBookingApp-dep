@@ -15,8 +15,8 @@ import { DialogTypes, confirmationDialogSchemas } from "./dialogTypes"; //typesc
 import { Dialog, DialogContent, Slide, Toolbar } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 // icons
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 // components
 import PhoneInput from "./PhoneInput";
 import OtpVerify from "./OtpVerify";
@@ -93,6 +93,10 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                             if (res.status === 200) {
                                 localStorage.setItem("token", res.data.token);
                                 localStorage.setItem("userId", res.data.userId);
+                                localStorage.setItem(
+                                    "accessToken",
+                                    res.data.sessionToken
+                                );
                                 formik.setFieldValue("userId", res.data.userId);
                                 formik.setFieldValue(
                                     "username",
@@ -142,8 +146,12 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                             "/create-business"
                                                         );
                                                     } else {
-                                                        console.log(err.message)
-                                                        toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                                                        console.log(
+                                                            err.message
+                                                        );
+                                                        toast.error(
+                                                            "มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง"
+                                                        );
                                                     }
                                                 });
                                         }
@@ -263,8 +271,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         <DialogContext.Provider
             value={{
                 formik,
-            }}
-        >
+            }}>
             <Dialog
                 maxWidth="xl"
                 fullWidth
@@ -278,8 +285,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                             : "",
                 }}
                 TransitionComponent={Transition}
-                onClose={() => setShowDialog(false)}
-            >
+                onClose={() => setShowDialog(false)}>
                 {dialogState !== "business-more-options" && (
                     <Toolbar className="grid grid-cols-4">
                         <span
@@ -289,8 +295,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                     ? "hidden"
                                     : ""
                             }`}
-                            onClick={handleBackButton}
-                        >
+                            onClick={handleBackButton}>
                             {[
                                 "phone-input",
                                 "booking-approval-summary",

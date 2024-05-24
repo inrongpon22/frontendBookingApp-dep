@@ -17,7 +17,7 @@ import {
 import SearchMap from "../business/SearchMap";
 import toast from "react-hot-toast";
 import { GlobalContext } from "../../contexts/BusinessContext"; //global context
-import SuccessfulAction from "../service/SuccessfulAction";
+import { useNavigate } from "react-router-dom";
 
 interface IParams {
     businessData?: IgetBusiness;
@@ -26,8 +26,10 @@ interface IParams {
 }
 
 export default function BusinessInfo(props: IParams) {
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    // const accessToken = localStorage.getItem("accessToken");
     const {
         t,
         i18n: { language },
@@ -60,7 +62,6 @@ export default function BusinessInfo(props: IParams) {
         location: props.businessData?.address || "",
         description: props.businessData?.description || "",
     });
-    const [isSuccess, setIsSuccess] = useState(false);
     // const [isFormModified, setIsFormModified] = useState<boolean>(false);
 
     useEffect(() => {
@@ -274,7 +275,8 @@ export default function BusinessInfo(props: IParams) {
                             <CheckCircleOutlineIcon sx={{ color: "green" }} />
                         ),
                     });
-                    setIsSuccess(true);
+                    // setIsSuccess(true);
+                    navigate(`/business-profile/${props.businessData?.id}`);
                 } else {
                     console.error("Error updating business");
                 }
@@ -307,9 +309,9 @@ export default function BusinessInfo(props: IParams) {
                             <CheckCircleOutlineIcon sx={{ color: "green" }} />
                         ),
                     });
-                    // setShowDialog(false);
-                    setIsSuccess(true);
-                    // navigate(`/business-profile/${props.businessData?.id}`);
+                    setShowDialog(false);
+                    // setIsSuccess(true);
+                    navigate(`/business-profile/${props.businessData?.id}`);
                 } else {
                     console.error("Error updating business");
                 }
@@ -341,18 +343,6 @@ export default function BusinessInfo(props: IParams) {
 
     return (
         <>
-            <SuccessfulAction
-                openCard={isSuccess}
-                title={t("title:UpdateSuccessful")}
-                description={t("desc:desAllDone")}
-                btnWord={t("button:done")}
-                iconType={""}
-                navigateTo={`business-profile/${props.businessData?.id}`}
-                handleOnClose={() => {
-                    setShowDialog(false);
-                    setIsSuccess(false);
-                }}
-            />
             <div className="flex flex-col">
                 <form onSubmit={formik.handleSubmit}>
                     <p

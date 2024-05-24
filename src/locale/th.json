@@ -55,7 +55,9 @@
         "person": "คน",
         "askForDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบบริการนี้",
         "addService": "เพิ่มบริการใหม่",
-        "editSuccess": "แก้ไขสำเร็จ"
+        "addBusiness": "เพิ่มธุรกิจใหม่",
+        "editSuccess": "แก้ไขสำเร็จ",
+        "deleteSuccess": "ลบสำเร็จ"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
