@@ -827,7 +827,7 @@ export default function ServiceTime(props: IProps) {
                                                             disabled={
                                                                 manualCapacity[
                                                                     element
-                                                                ].capacity == 1
+                                                                ]?.capacity == 1
                                                             }
                                                             onClick={() =>
                                                                 handleDecreaseCapacityManual(
@@ -842,7 +842,9 @@ export default function ServiceTime(props: IProps) {
                                                             style={{
                                                                 cursor: "pointer",
                                                             }}
-                                                            className="border flex justify-center items-center w-8 h-8 rounded-md">
+                                                            className={`border flex justify-center items-center w-8 h-8 rounded-md ${manualCapacity[
+                                                                element
+                                                            ]?.capacity == 1 ? "opacity-40" : ""}`}>
                                                             <KeyboardArrowDownIcon />
                                                         </button>
                                                         {manualCapacity.find(

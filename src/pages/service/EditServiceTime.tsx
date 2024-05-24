@@ -319,27 +319,27 @@ export default function EditServiceTime(props: IParams) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (timeSlots.length > 0) {
-            setManualCapacity([]);
-            const uniqueSlots = new Set<number>();
-            const newSelectedSlots: number[] = [];
+    // useEffect(() => {
+    //     if (timeSlots.length > 0) {
+    //         setManualCapacity([]);
+    //         const uniqueSlots = new Set<number>();
+    //         const newSelectedSlots: number[] = [];
 
-            timeSlots.forEach((element, index) => {
-                if (!uniqueSlots.has(index)) {
-                    uniqueSlots.add(index);
-                    newSelectedSlots.push(index);
-                    toggleSlotSelection(
-                        index,
-                        element.startTime,
-                        element.endTime
-                    );
-                }
-            });
-            setSelectedSlots(newSelectedSlots);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [openTime, closeTime, duration]);
+    //         timeSlots.forEach((element, index) => {
+    //             if (!uniqueSlots.has(index)) {
+    //                 uniqueSlots.add(index);
+    //                 newSelectedSlots.push(index);
+    //                 toggleSlotSelection(
+    //                     index,
+    //                     element.startTime,
+    //                     element.endTime
+    //                 );
+    //             }
+    //         });
+    //         setSelectedSlots(newSelectedSlots);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [openTime, closeTime, duration]);
 
     const handleSubmit = async () => {
         const insertData = {

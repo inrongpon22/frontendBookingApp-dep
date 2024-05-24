@@ -18,7 +18,7 @@ import SearchMap from "../business/SearchMap";
 import toast from "react-hot-toast";
 import { GlobalContext } from "../../contexts/BusinessContext"; //global context
 import { useNavigate } from "react-router-dom";
-import { getUserIdByAccessToken } from "../../api/user";
+// import { getUserIdByAccessToken } from "../../api/user";
 
 interface IParams {
     businessData?: IgetBusiness;
@@ -28,7 +28,7 @@ interface IParams {
 
 export default function BusinessInfo(props: IParams) {
     const navigate = useNavigate();
-    // const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
     const {
         t,
         i18n: { language },
@@ -64,14 +64,14 @@ export default function BusinessInfo(props: IParams) {
     // const [isFormModified, setIsFormModified] = useState<boolean>(false);
 
     const token = localStorage.getItem("token");
-    const accessToken = localStorage.getItem("accessToken");
-    const [userId, setUserId] = useState<number | null>(0);
-    if (accessToken && token) {
-        (async () => {
-            const res = await getUserIdByAccessToken(accessToken, token);
-            setUserId(res);
-        })();
-    }
+    // const accessToken = localStorage.getItem("accessToken");
+    // const [userId, setUserId] = useState<number | null>(0);
+    // if (accessToken && token) {
+    //     (async () => {
+    //         const res = await getUserIdByAccessToken(accessToken, token);
+    //         setUserId(res);
+    //     })();
+    // }
 
     useEffect(() => {
         const fetchImageUrls = async () => {
