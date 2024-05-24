@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +18,9 @@ import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { Badge } from "@mui/material";
 import moment from "moment";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
+// components
+import FirstTimeCongrat from "./FirstTimeCongrat";
+import FirstTimeAddMoreService from "./FirstTimeAddMoreService";
 
 const BusinessProfile = () => {
     const { businessId } = useParams();
@@ -29,6 +32,9 @@ const BusinessProfile = () => {
 
     const { setDialogState, setIsGlobalLoading, setShowDialog } =
         useContext(GlobalContext);
+
+    const [congAlert, setCongAlert] = useState<boolean>(true);
+    const [addMoreService, setAddMoreService] = useState<boolean>(true);
 
     const { businessData } = getBusinessId(Number(businessId)); // get business data
 
@@ -97,74 +103,94 @@ const BusinessProfile = () => {
             </div>
             {/* headers */}
 
+            {getReservationByBusinessIdData.length === 0 && congAlert && (
+                <FirstTimeCongrat handleClose={() => setCongAlert(false)} />
+            )}
+
+            {getReservationByBusinessIdData.length === 0 && addMoreService && (
+                <FirstTimeAddMoreService
+                    handleClose={() => setAddMoreService(false)}
+                />
+            )}
+
             <div className="w-full bg-white">
-                <div className="text-[14px] text-[#A1A1A1] font-bold px-5">
+                <div className="text-[14px] text-[#A1A1A1] font-bold px-5 pt-5">
                     {t("pending")}
                 </div>
 
                 {/* pending section */}
                 <div className="bg-white w-full">
-                    {pendingBookings?.map(
-                        (item: Ireservation, index: number) => {
-                            return (
-                                <div
-                                    // Link to={`/booking-approval/${businessId}/${item.serviceId}`}
-                                    key={index}
-                                    className="flex justify-between cursor-pointer hover:bg-gray-100 px-5 py-3"
-                                    onClick={() =>
-                                        navigate(
-                                            `/booking-approval/${businessId}/${item.serviceId}`,
-                                            {
-                                                state: item,
-                                            }
-                                        )
-                                    }
-                                >
-                                    <div className="flex flex-col">
-                                        <p className="flex items-center gap-1">
-                                            <span className="text-[14px] font-semibold">
-                                                {item.title}
-                                            </span>
-                                            <span className="flex items-center text-deep-blue bg-deep-blue bg-opacity-10 rounded-lg px-1">
-                                                {item.guestNumber > 1 ? (
-                                                    <PeopleAltOutlinedIcon fontSize="small" />
-                                                ) : (
-                                                    <PersonOutlinedIcon fontSize="small" />
-                                                )}
-                                                {item.guestNumber}
-                                            </span>
-                                        </p>
-                                        <p className="flex gap-1 text-[14px]">
-                                            <span>
-                                                {item.startTime.slice(0, -3)} -{" "}
-                                                {item.endTime.slice(0, -3)}
-                                            </span>
-                                            <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
-                                            <span>
-                                                {`${moment(
-                                                    item.bookingDate
-                                                ).format("D")} ${
-                                                    monthsOfYearFullName(
-                                                        language
-                                                    )?.find(
-                                                        (ii) =>
-                                                            ii.value ===
-                                                            moment(
-                                                                item.bookingDate
-                                                            ).format("MMMM")
-                                                    )?.name ?? ""
-                                                }`}
-                                            </span>
-                                            <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
-                                            <span>{item.userName}</span>
+                    {pendingBookings?.length > 0 ? (
+                        pendingBookings?.map(
+                            (item: Ireservation, index: number) => {
+                                return (
+                                    <div
+                                        // Link to={`/booking-approval/${businessId}/${item.serviceId}`}
+                                        key={index}
+                                        className="flex justify-between cursor-pointer hover:bg-gray-100 px-5 py-3"
+                                        onClick={() =>
+                                            navigate(
+                                                `/booking-approval/${businessId}/${item.serviceId}`,
+                                                {
+                                                    state: item,
+                                                }
+                                            )
+                                        }
+                                    >
+                                        <div className="flex flex-col">
+                                            <p className="flex items-center gap-1">
+                                                <span className="text-[14px] font-semibold">
+                                                    {item.title}
+                                                </span>
+                                                <span className="flex items-center text-deep-blue bg-deep-blue bg-opacity-10 rounded-lg px-1">
+                                                    {item.guestNumber > 1 ? (
+                                                        <PeopleAltOutlinedIcon fontSize="small" />
+                                                    ) : (
+                                                        <PersonOutlinedIcon fontSize="small" />
+                                                    )}
+                                                    {item.guestNumber}
+                                                </span>
+                                            </p>
+                                            <p className="flex gap-1 text-[14px]">
+                                                <span>
+                                                    {item.startTime.slice(
+                                                        0,
+                                                        -3
+                                                    )}{" "}
+                                                    -{" "}
+                                                    {item.endTime.slice(0, -3)}
+                                                </span>
+                                                <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
+                                                <span>
+                                                    {`${moment(
+                                                        item.bookingDate
+                                                    ).format("D")} ${
+                                                        monthsOfYearFullName(
+                                                            language
+                                                        )?.find(
+                                                            (ii) =>
+                                                                ii.value ===
+                                                                moment(
+                                                                    item.bookingDate
+                                                                ).format("MMMM")
+                                                        )?.name ?? ""
+                                                    }`}
+                                                </span>
+                                                <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
+                                                <span>{item.userName}</span>
+                                            </p>
+                                        </div>
+                                        <p className="flex flex-col gap-1 text-end justify-center">
+                                            <NavigateNextIcon className="text-deep-blue" />
                                         </p>
                                     </div>
-                                    <p className="flex flex-col gap-1 text-end justify-center">
-                                        <NavigateNextIcon className="text-deep-blue" />
-                                    </p>
-                                </div>
-                            );
-                        }
+                                );
+                            }
+                        )
+                    ) : (
+                        <span className="flex justify-center text-[#A1A1A1] text-[12px] font-normal py-3">
+                            คุณยังไม่มีรายการจองที่รออนุมัติ
+                        </span>
                     )}
                 </div>
                 {/* pending section */}
@@ -183,42 +209,47 @@ const BusinessProfile = () => {
                         <span className="text-red-400 font-bold">Now, {moment().format("HH:mm")}</span>
                     </Divider> */}
                     {/* time indicator */}
-                    {todayBookings?.map((item: Ireservation, index: number) => {
-                        return (
-                            <div key={index} className="flex justify-between">
-                                <div className="flex gap-2">
-                                    <p
-                                        className={`${
-                                            item.status === "approval"
-                                                ? "bg-deep-blue bg-opacity-10 text-deep-blue"
-                                                : "bg-zinc-200 text-zinc-400"
-                                        } px-1 rounded`}
+                    {todayBookings?.length > 0 ? (
+                        todayBookings?.map(
+                            (item: Ireservation, index: number) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className="flex justify-between"
                                     >
-                                        {item.startTime.slice(0, -3)}
-                                    </p>
-                                    <p
-                                        className={`${
-                                            item.status === "approval"
-                                                ? ""
-                                                : "text-zinc-400"
-                                        } font-semibold`}
-                                    >
-                                        {item.title}
-                                    </p>
-                                </div>
-                                <p
-                                    className={`flex ${
-                                        item.status === "approval"
-                                            ? ""
-                                            : "text-zinc-400"
-                                    }`}
-                                >
-                                    <span>
-                                        {item.status === "approval"
-                                            ? item.userName
-                                            : "Cancel"}
-                                    </span>
-                                    {/* <span
+                                        <div className="flex gap-2">
+                                            <p
+                                                className={`${
+                                                    item.status === "approval"
+                                                        ? "bg-deep-blue bg-opacity-10 text-deep-blue"
+                                                        : "bg-zinc-200 text-zinc-400"
+                                                } px-1 rounded`}
+                                            >
+                                                {item.startTime.slice(0, -3)}
+                                            </p>
+                                            <p
+                                                className={`${
+                                                    item.status === "approval"
+                                                        ? ""
+                                                        : "text-zinc-400"
+                                                } font-semibold`}
+                                            >
+                                                {item.title}
+                                            </p>
+                                        </div>
+                                        <p
+                                            className={`flex ${
+                                                item.status === "approval"
+                                                    ? ""
+                                                    : "text-zinc-400"
+                                            }`}
+                                        >
+                                            <span>
+                                                {item.status === "approval"
+                                                    ? item.userName
+                                                    : "Cancel"}
+                                            </span>
+                                            {/* <span
                                         className="flex flex-col gap-1 text-end justify-center"
                                         onClick={() =>
                                             navigate(
@@ -231,10 +262,16 @@ const BusinessProfile = () => {
                                     >
                                         <NavigateNextIcon className="text-deep-blue" />
                                     </span> */}
-                                </p>
-                            </div>
-                        );
-                    })}
+                                        </p>
+                                    </div>
+                                );
+                            }
+                        )
+                    ) : (
+                        <span className="flex justify-center text-[#A1A1A1] text-[12px] font-normal py-3">
+                            คุณยังไม่มีรายการที่เข้ามารับบริการในวันนี้
+                        </span>
+                    )}
                 </div>
             </div>
             {/* today section */}
