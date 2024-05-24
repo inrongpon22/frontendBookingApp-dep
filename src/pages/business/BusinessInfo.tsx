@@ -16,7 +16,7 @@ import moment from "moment";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
-// import { getUserIdByAccessToken } from "../../api/user";
+import { getUserIdByAccessToken } from "../../api/user";
 import toast from "react-hot-toast";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
@@ -24,16 +24,23 @@ export default function BusinessInfo() {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
-    const token = localStorage.getItem("token");
-    // const accessToken = localStorage.getItem("accessToken");
-    const userId = localStorage.getItem("userId");
-    // const userId = getUserIdByAccessToken(accessToken ?? "", token ?? "");
+    // const userId = localStorage.getItem("userId");
 
     const { setShowDialog } = useContext(GlobalContext);
     const {
         t,
         i18n: { language },
     } = useTranslation();
+
+    const token = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
+    const [userId, setUserId] = useState<number | null>(0);
+    if (accessToken && token) {
+        (async () => {
+            const res = await getUserIdByAccessToken(accessToken, token);
+            setUserId(res);
+        })();
+    }
 
     // const [file, setFile] = useState<File[]>([]);
     // const [previewImages, setPreviewImages] = useState<string[]>([]);
