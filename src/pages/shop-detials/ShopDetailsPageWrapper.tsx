@@ -39,7 +39,7 @@ const ShopDetailsPageWrapper = () => {
 
     const token = localStorage.getItem("token");
 
-    const { setShowDialog, setDialogState, setIsGlobalLoading } =
+    const { setShowDialog, setDialogState, setIsGlobalLoading, userId } =
         useContext(GlobalContext);
 
     const [shopDetail, setShopDetail] = useState<shopDetailTypes>(); // get shop details by businessId connected api
@@ -247,7 +247,7 @@ const ShopDetailsPageWrapper = () => {
                                     (item: any) => item.isSelected
                                 )
                             ) {
-                                if (token) {
+                                if (token && userId !== 0) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");
                                 } else {
