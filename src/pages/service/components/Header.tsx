@@ -1,5 +1,5 @@
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface IProps {
     context: string;
@@ -8,11 +8,12 @@ interface IProps {
 
 export default function Header(props: IProps) {
     const navigate = useNavigate();
+    const { businessId } = useParams();
     const handleClick = () => {
         if (props.handleClose) {
             props.handleClose();
         } else {
-            navigate(-1);
+            navigate(`/business-profile/${businessId}`);
         }
     };
     return (

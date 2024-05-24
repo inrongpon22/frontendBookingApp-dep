@@ -1,5 +1,11 @@
 import axios from "axios";
-import { InsertService, IService, IEditServiceInfo, IServiceEditTime, IServiceShowHide } from "../interfaces/services/Iservice";
+import {
+    InsertService,
+    IService,
+    IEditServiceInfo,
+    IServiceEditTime,
+    IServiceShowHide,
+} from "../interfaces/services/Iservice";
 import useSWR from "swr";
 import { app_api } from "../helper/url";
 
@@ -166,7 +172,6 @@ export const updateServiceShowHide = async (
     token: string,
     serviceId: number
 ) => {
-    console.log(serviceData);
     token = token.replace(/"/g, "");
     try {
         const business = await axios.post(

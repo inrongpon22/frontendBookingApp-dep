@@ -2,7 +2,7 @@ import { Box, Drawer, alpha } from "@mui/material";
 import ServiceCard from "./components/ServiceCard";
 import TimeCard from "./components/TimeCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { addService } from "../../api/service";
 import Header from "./components/Header";
@@ -40,7 +40,6 @@ export default function CreateService(props: IProps) {
         businessId && `${app_api}/business/${businessId}`,
         fetcher
     );
-    const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const queryParams = new URLSearchParams(location.search);
     const step = queryParams.get("step");

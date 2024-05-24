@@ -49,6 +49,7 @@ export default function BusinessSetting() {
 
     useEffect(() => {
         setIsGlobalLoading(businessLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessLoading]);
 
     return (
