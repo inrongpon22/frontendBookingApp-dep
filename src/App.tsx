@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./i18n.ts";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
@@ -12,13 +12,16 @@ import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
 import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceInfo from "./pages/business/ServiceInfo.tsx";
 import ServiceTime from "./pages/business/ServiceTime.tsx";
-// import CreateService from "./pages/business/CreateService.tsx";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business-setting/BusinessSetting.tsx";
 import DayOffSetting from "./pages/dayoff-setting/DayOffSetting.tsx";
 import AddNewDayOff from "./pages/dayoff-setting/AddNewDayOff.tsx";
 import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
+// error pages
+import NotFound from "./pages/errors/404NotFound.tsx";
+import Unauthorized from "./pages/errors/401Unauthorized.tsx";
+import Forbidden from "./pages/errors/403Forbidden.tsx";
 
 function App() {
     useEffect(() => {
@@ -104,6 +107,14 @@ function App() {
                         path="/dayoff-setting/:businessId/add-new"
                         element={<AddNewDayOff />}
                     />
+
+                    {/* 401 unauthorize */}
+                    <Route path="/401" element={<Unauthorized />} />
+                    {/* 401 unauthorize */}
+                    <Route path="/403" element={<Forbidden />} />
+                    {/* 404 not found */}
+                    <Route path="*" element={<Navigate to="/404" />} />
+                    <Route path="/404" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
             <Toaster />

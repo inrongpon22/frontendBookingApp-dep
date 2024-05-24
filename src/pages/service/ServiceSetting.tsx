@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
-import { alpha } from "@mui/material";
+import { ThemeProvider, alpha, createTheme } from "@mui/material";
 import ListServiceCard from "./components/ListServiceCard";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -14,14 +14,25 @@ import { SwipeableList, SwipeableListItem, Type } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
-import Loading from "../../components/dialog/Loading";
 export type Anchor = "top" | "left" | "bottom" | "right";
 import { trailingActions } from "./components/swipeable-list";
 import { IService } from "../../interfaces/services/Iservice";
+import { GlobalContext } from "../../contexts/BusinessContext";
+import Loading from "../../components/dialog/Loading";
+
+const theme = createTheme({
+    palette: {
+        info: {
+            main: "#E6F1FD",
+        },
+    },
+});
 
 export default function ServiceSetting() {
     const { businessId } = useParams();
     const { t } = useTranslation();
+
+    const { setIsGlobalLoading } = useContext(GlobalContext);
     // const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [state, setState] = useState({
@@ -102,8 +113,13 @@ export default function ServiceSetting() {
         setIsEditService(true);
     };
 
+    useEffect(() => {
+        setIsGlobalLoading(serviceLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [serviceLoading]);
+
     return (
-        <>
+        <ThemeProvider theme={theme}>
             {isEditService ? (
                 <ServiceDetail
                     serviceId={selectedId}
@@ -198,6 +214,6 @@ export default function ServiceSetting() {
                     </div>
                 </div>
             )}
-        </>
+        </ThemeProvider>
     );
 }

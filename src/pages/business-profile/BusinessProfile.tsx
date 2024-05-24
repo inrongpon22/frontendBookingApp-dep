@@ -3,10 +3,12 @@ import { GlobalContext } from "../../contexts/BusinessContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 // interface
+import { Ireservation } from "../../interfaces/reservation";
+// api
 import { getBusinessId } from "../../api/business";
 import { getReservationByBusinessId } from "../../api/booking";
 // icons
-import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
+// import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
@@ -14,14 +16,16 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 // styled
 import { Badge } from "@mui/material";
-import toast from "react-hot-toast";
 import moment from "moment";
-import { Ireservation } from "../../interfaces/reservation";
+import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 
 const BusinessProfile = () => {
     const { businessId } = useParams();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language },
+    } = useTranslation();
 
     const { setDialogState, setIsGlobalLoading, setShowDialog } =
         useContext(GlobalContext);
@@ -55,27 +59,29 @@ const BusinessProfile = () => {
 
             return { ...item, bookingDate: combinedBookingDate };
         })
-        .sort((a, b) => moment(a.bookingDate).diff(moment(b.bookingDate)));
+        .sort((a: any, b: any) =>
+            moment(a.bookingDate).diff(moment(b.bookingDate))
+        );
 
     useEffect(() => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
     }, [getReservationByBusinessIdLoading]);
 
     return (
-        <div className="flex flex-col h-dvh bg-[#F7F7F7]">
+        <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
             {/* headers */}
             <div className="flex justify-between items-center bg-white p-5">
-                <p className="text-[22px] font-semibold">
+                <p className="text-[22px] font-semibold text-deep-blue text-opacity-80">
                     {businessData?.title}
                 </p>
                 <div className="flex items-center gap-3">
-                    <Badge
+                    {/* <Badge
                         color="warning"
                         variant="dot"
                         className="cursor-pointer"
                         onClick={() => toast("coming soon")}>
                         <NotificationsActiveOutlinedIcon fontSize="small" />
-                    </Badge>
+                    </Badge> */}
                     <Badge
                         color="secondary"
                         variant="standard"
@@ -83,7 +89,8 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}>
+                        }}
+                    >
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -111,7 +118,8 @@ const BusinessProfile = () => {
                                                 state: item,
                                             }
                                         )
-                                    }>
+                                    }
+                                >
                                     <div className="flex flex-col">
                                         <p className="flex items-center gap-1">
                                             <span className="text-[14px] font-semibold">
@@ -133,9 +141,19 @@ const BusinessProfile = () => {
                                             </span>
                                             <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                             <span>
-                                                {moment(
+                                                {`${moment(
                                                     item.bookingDate
-                                                ).format("DD MMM")}
+                                                ).format("D")} ${
+                                                    monthsOfYearFullName(
+                                                        language
+                                                    )?.find(
+                                                        (ii) =>
+                                                            ii.value ===
+                                                            moment(
+                                                                item.bookingDate
+                                                            ).format("MMMM")
+                                                    )?.name ?? ""
+                                                }`}
                                             </span>
                                             <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                             <span>{item.userName}</span>
@@ -155,11 +173,16 @@ const BusinessProfile = () => {
             {/* today section */}
             <div className="text-[14px] bg-white p-5 mt-2">
                 <div className="flex justify-between">
-                    <p className="font-bold text-zinc-400">Today</p>
+                    <p className="font-bold text-zinc-400">วันนี้</p>
                     {/* <p className="font-bold text-[12px] underline" onClick={() => toast("coming soon")}>View all</p> */}
                 </div>
 
                 <div className="flex flex-col gap-5 py-5">
+                    {/* time indicator */}
+                    {/* <Divider sx={{ width: "120%", translate:"-10%" }} >
+                        <span className="text-red-400 font-bold">Now, {moment().format("HH:mm")}</span>
+                    </Divider> */}
+                    {/* time indicator */}
                     {todayBookings?.map((item: Ireservation, index: number) => {
                         return (
                             <div key={index} className="flex justify-between">
@@ -169,7 +192,8 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                 : "bg-zinc-200 text-zinc-400"
-                                        } px-1 rounded`}>
+                                        } px-1 rounded`}
+                                    >
                                         {item.startTime.slice(0, -3)}
                                     </p>
                                     <p
@@ -177,19 +201,36 @@ const BusinessProfile = () => {
                                             item.status === "approval"
                                                 ? ""
                                                 : "text-zinc-400"
-                                        } font-semibold`}>
+                                        } font-semibold`}
+                                    >
                                         {item.title}
                                     </p>
                                 </div>
                                 <p
-                                    className={
+                                    className={`flex ${
                                         item.status === "approval"
                                             ? ""
                                             : "text-zinc-400"
-                                    }>
-                                    {item.status === "approval"
-                                        ? item.userName
-                                        : "Cancel"}
+                                    }`}
+                                >
+                                    <span>
+                                        {item.status === "approval"
+                                            ? item.userName
+                                            : "Cancel"}
+                                    </span>
+                                    {/* <span
+                                        className="flex flex-col gap-1 text-end justify-center"
+                                        onClick={() =>
+                                            navigate(
+                                                `/booking-approval/${businessId}/${item.serviceId}`,
+                                                {
+                                                    state: item,
+                                                }
+                                            )
+                                        }
+                                    >
+                                        <NavigateNextIcon className="text-deep-blue" />
+                                    </span> */}
                                 </p>
                             </div>
                         );

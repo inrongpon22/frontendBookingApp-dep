@@ -1,7 +1,7 @@
 // import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
-import { IBusinessInfo, ILocation } from "./interfaces/business";
-import { useEffect, useState } from "react";
+import { ILocation } from "./interfaces/business";
+import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha } from "@mui/material";
 // import CloseIcon from "@mui/icons-material/Close";
@@ -15,19 +15,21 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+
+    const {setShowDialog,userId} = useContext(GlobalContext)
     const {
         t,
         i18n: { language },
     } = useTranslation();
 
-    const [file, setFile] = useState<File[]>([]);
+    // const [file, setFile] = useState<File[]>([]);
     // const [previewImages, setPreviewImages] = useState<string[]>([]);
     // const { data: businessData } = useSWR<any>(
     //     businessId && `${app_api}/business/${businessId ?? ""}`,
@@ -260,6 +262,7 @@ export default function BusinessInfo() {
                     "businessId",
                     String(business.data.businessId)
                 );
+                setShowDialog(false)
                 navigate(`/service-info/${business.data.businessId}?step=1`);
             } else {
                 const business = await insertBusiness(insertData, token);
@@ -267,6 +270,7 @@ export default function BusinessInfo() {
                     "businessId",
                     String(business.data.businessId)
                 );
+                setShowDialog(false)
                 navigate(`/service-info/${business.data.businessId}?step=1`);
             }
         },

@@ -2,7 +2,6 @@ import axios from "axios";
 import { IaddBusiness } from "../pages/business/interfaces/business";
 import useSWR from "swr";
 import { app_api } from "../helper/url";
-import { IBusunessId } from "../interface/business";
 
 export const insertBusiness = async (
     businessData: IaddBusiness,
@@ -48,7 +47,7 @@ export const updateBusiness = async (
 };
 
 export const getBusinessId = (businessId: number) => {
-    const { data, error, isLoading } = useSWR<IBusunessId>(
+    const { data, error, isLoading } = useSWR(
         `${app_api}/business/${businessId}`,
         (url: string) =>
             axios

@@ -39,8 +39,8 @@ textarea {
 
 .custom-dialog {
   width: 100vw !important;
-  height: 55vh !important;
-  max-height: 55vh !important;
+  height: auto !important;
+  /* max-height: 55vh !important; */
   position: fixed !important;
   bottom: 0 !important;
   border-top-left-radius: 8px !important;
@@ -48,48 +48,15 @@ textarea {
   background: #F7F7F7 !important;
 }
 
-/* Slideshow */
-.slideshow {
-  margin: 0 auto;
-  overflow: hidden;
-  max-width: 500px;
-  display: relative;
-}
-
-.slideshowSlider {
-  white-space: nowrap;
-  transition: ease 1000ms;
-}
-
-.slide {
-  display: inline-block;
-  /* height: 400px; */
-  width: 100%;
-}
-
-/* Buttons */
-.slideshowDots {
-  text-align: center;
-}
+/* custom react-slick */
+/* .slick-dots li button::before{
+  width: 40px;
+  height: 40px;
+} */
 
 /* custom tabs on booking approval */
 .custom-selected-tab {
   border-bottom: none !important;
-}
-
-.slideshowDot {
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  margin: 15px 7px 0px;
-  background-color: #0000004d;
-  z-index: 1000;
-}
-
-.slideshowDot.active {
-  background-color: #000000;
 }
 
 .custom-chip-label {

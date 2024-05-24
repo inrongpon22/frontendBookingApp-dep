@@ -1,6 +1,6 @@
 import { alpha, Drawer } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { updateService } from "../../api/service";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -22,8 +22,7 @@ import {
     IServiceInfo,
     IServiceEditTime,
 } from "../../interfaces/services/Iservice";
-// import toast from "react-hot-toast";
-// import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { GlobalContext } from "../../contexts/BusinessContext";
 import SuccessfulAction from "./SuccessfulAction";
 
 interface IParams {
@@ -37,7 +36,7 @@ export default function ServiceDetail(props: IParams) {
     const { businessId } = useParams();
     const { t } = useTranslation();
 
-    // console.log(serviceInfo)
+    const { setShowDialog, setDialogState } = useContext(GlobalContext);
 
     // service Info
     const [isHideEndTime, setIsHideEndTime] = useState(false);
@@ -110,6 +109,8 @@ export default function ServiceDetail(props: IParams) {
         };
 
         await updateService(serviceInfo.id, insertData, token || "");
+        setShowDialog(false);
+        setDialogState("phone-input");
         setIsSuccess(true);
         props.serviceMutate && props.serviceMutate();
         serviceMutate();

@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 // components
 import { useParams } from "react-router";
 import Calendar from "../../components/shop-details/Calendar";
@@ -7,7 +8,6 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import useSWR from "swr";
 import { app_api } from "../../helper/url";
 import axios from "axios";
-import { useContext, useState } from "react";
 import {
     quantityTypes,
     serviceTypes,
@@ -108,9 +108,20 @@ const ManualBooking = () => {
                     bookingSlots: res.data.bookingSlots.map((item: any) => {
                         return {
                             ...item,
-                            slotsTime: item.slotsTime.map((ii: any) => {
-                                return { ...ii, isSelected: false };
-                            }),
+                            slotsTime: item.slotsTime
+                                .filter((item: any) =>
+                                    moment().isBefore(
+                                        selectedDate?.date.format(
+                                            `D MMMM YYYY ${item.startTime}`
+                                        )
+                                    )
+                                )
+                                .map((ii: any) => {
+                                    return {
+                                        ...ii,
+                                        isSelected: false,
+                                    };
+                                }),
                         };
                     }),
                 });
@@ -120,7 +131,7 @@ const ManualBooking = () => {
             revalidateOnFocus: false,
             loadingTimeout: 0,
         }
-    );
+    );     
 
     if (servicesDataError || serviceByIdError) return <>API error...</>;
 
@@ -174,6 +185,21 @@ const ManualBooking = () => {
                             : "bg-[#020873]"
                     }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
                     onClick={() => {
+                        localStorage.setItem(
+                            "bookingDetail",
+                            JSON.stringify({
+                                serviceId: Number(
+                                    services.find(
+                                        (item: any) => item.isSelected
+                                    )?.id
+                                ),
+                                serviceById: serviceById,
+                                selectedDate:selectedDate,
+                                bookingDate:
+                                    selectedDate.date.format("YYYY-MM-DD"),
+                                guestNumber: quantities.quantities,
+                            })
+                        )
                         if (
                             slotArrays?.slotsTime.filter(
                                 (item: any) => item.isSelected

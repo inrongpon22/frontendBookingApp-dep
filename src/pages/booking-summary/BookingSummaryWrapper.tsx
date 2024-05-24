@@ -7,8 +7,8 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 // icons
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import toast from "react-hot-toast";
@@ -47,7 +47,7 @@ const BookingSummaryWrapper = () => {
                     title: t("title:bookingHasApproved"),
                     desc: t("desc:bookingHasApproved"),
                     icon: (
-                        <CheckIcon style={{ fontSize: 50 }} color="success" />
+                        <CheckRoundedIcon style={{ fontSize: 50, color:"#2ECC71" }} />
                     ),
                 };
 
@@ -55,7 +55,7 @@ const BookingSummaryWrapper = () => {
                 return {
                     title: t("title:bookingHasCancelled"),
                     desc: t("desc:bookingHasCancelled"),
-                    icon: <CloseIcon style={{ fontSize: 50 }} color="error" />,
+                    icon: <CloseRoundedIcon style={{ fontSize: 50 }} color="error" />,
                 };
 
             case "expired":
@@ -195,9 +195,9 @@ const BookingSummaryWrapper = () => {
                 handleClose={() => setShowConfirmation(false)}
                 handleConfirm={handleCancelBooking}
             />
-            <div className="p-5">
-                <p className="flex flex-col justify-center items-center text-[25px] font-semibold mt-14">
-                    <span>
+            <div className="flex flex-col h-dvh p-5">
+                <p className="flex flex-col justify-center items-center text-[25px] font-semibold mb-3">
+                    <span className="my-6">
                         {bookingDatas ? (
                             switchStatus(bookingDatas?.status)?.icon
                         ) : (
@@ -206,26 +206,26 @@ const BookingSummaryWrapper = () => {
                     </span>
                     <span>{switchStatus(bookingDatas?.status)?.title}</span>
                 </p>
-                <p className="my-3 text-center">
+                <p className="text-[14px] text-center font-normal mb-10">
                     {switchStatus(bookingDatas?.status)?.desc}
                 </p>
 
-                <div className="p-4 border rounded-lg">
+                <div className="flex flex-col gap-3 border rounded-lg p-5">
                     {lists?.map((item: any, index: number) => {
                         return (
                             <div
                                 key={index}
-                                className={`text-[14px] grid grid-cols-6 py-1 ${
+                                className={`text-[14px] grid grid-cols-12 ${
                                     bookingDatas?.status === "cancel" ||
                                     bookingDatas?.status === "declinded"
                                         ? "text-gray-500"
                                         : ""
                                 }`}
                             >
-                                <div className="col-span-2 font-semibold">
+                                <div className="col-span-5 font-normal">
                                     {item.label}:
                                 </div>
-                                <span className="col-span-4 font-medium text-end">
+                                <span className="col-span-7 font-medium text-end">
                                     {item.text}
                                 </span>
                             </div>
