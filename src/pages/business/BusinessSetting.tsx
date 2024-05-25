@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 export default function BusinessSetting() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-
+    const queryParams = new URLSearchParams(location.search);
+    const action = queryParams.get("action");
     return (
         <div>
             <div className="px-4 pt-6">
                 <Header
-                    context={t("title:businessSetting")}
+                    context={action ? t("title:businessSetting") : t("title:createBusiness")}
                     isClose={false}
                     handleClose={() => navigate(-1)}
                 />

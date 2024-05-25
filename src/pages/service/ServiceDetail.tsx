@@ -53,6 +53,7 @@ export default function ServiceDetail(props: IParams) {
     const [isAddTime, setIsAddTime] = useState(false);
     const [isOpenPreview, setIsOpenPreview] = useState(false);
     const [isCreateService, setIsCreateService] = useState(true);
+    const [isCloseServiceCard, setIsCloseServiceCard] = useState(false);
     const [isCloseCard, setIsCloseCard] = useState(false);
     const [modifyServiceInfo, setModifyServiceInfo] = useState<IServiceInfo>(); // for update service info
     const [modifyServiceTime, setModifyServiceTime] =
@@ -96,6 +97,7 @@ export default function ServiceDetail(props: IParams) {
     };
     const handleSetEditTime = () => {
         setIsEditTime(!isEditTime);
+        setIsCloseServiceCard(false);
     };
     const handleAddTime = () => {
         setIsAddTime(!isAddTime);
@@ -113,13 +115,23 @@ export default function ServiceDetail(props: IParams) {
                 (_item: IServiceEditTime, i: number) => i !== selectedIndex
             );
             setModifyServiceTime(updatedTimeDetails);
+            if (updatedTimeDetails.length === 0) {
+                setIsAddTime(true);
+            } else {
+                setSelectedIndex(updatedTimeDetails.length - 1);
+            }
         } else {
             if (serviceInfo) {
                 const updatedTimeDetails = serviceInfo.bookingSlots.filter(
                     (_item: IServiceEditTime, i: number) => i !== selectedIndex
                 );
                 setModifyServiceTime(updatedTimeDetails);
-                serviceMutate();
+                if (updatedTimeDetails.length === 0) {
+                    setIsAddTime(true);
+                } else {
+                    setSelectedIndex(updatedTimeDetails.length - 1);
+                    serviceMutate();
+                }
             }
         }
     };
@@ -245,6 +257,7 @@ export default function ServiceDetail(props: IParams) {
             }
         }
     };
+
     return (
         <>
             <ConfirmCard
@@ -259,6 +272,7 @@ export default function ServiceDetail(props: IParams) {
             {type ? (
                 isAddTime ? (
                     <AddServiceTime
+                        isClose={isCloseServiceCard}
                         isAddServiceTime={isAddTime}
                         serviceTime={modifyServiceTime ?? []}
                         handleAddTime={handleAddTime}
@@ -271,7 +285,10 @@ export default function ServiceDetail(props: IParams) {
                         isEdit={isEditInfo}
                         handleAddTime={handleAddTime}
                         handleSetServiceInfo={handleSetServiceInfo}
-                        handleClose={handleOpenServiceInfo}
+                        handleClose={() => {
+                            handleOpenServiceInfo();
+                            setIsCloseCard(false);
+                        }}
                     />
                 ) : isOpenPreview ? (
                     <>
@@ -297,8 +314,10 @@ export default function ServiceDetail(props: IParams) {
                         closeTime={businessData?.closeTime ?? ""}
                         editIndex={selectedIndex}
                         isAddTime={isAddTime}
+                        isClose={isCloseServiceCard}
                         handleSetEditTime={handleSetEditTime}
                         handleSetServiceTime={handleSetServiceTime}
+                        handleCloseCreateService={handleOpenServiceInfo}
                     />
                 ) : (
                     <div
@@ -371,7 +390,10 @@ export default function ServiceDetail(props: IParams) {
                                         borderRadius: "8px",
                                         justifyContent: "center",
                                     }}
-                                    onClick={handleAddTime}
+                                    onClick={() => {
+                                        handleAddTime();
+                                        setIsCloseServiceCard(true);
+                                    }}
                                     className=" items-center gap-1 p-1 ">
                                     <AddCircleOutlineIcon
                                         sx={{ fontSize: "13px" }}
@@ -409,29 +431,35 @@ export default function ServiceDetail(props: IParams) {
                     <Loading openLoading={serviceLoading} />
                     {(!ismodifyServiceInfoUndefined() && modifyServiceInfo && serviceInfo) && (
                         (isEditInfo ? (
-                            <EditServiceInfo
-                                serviceName={modifyServiceInfo.serviceName}
-                                serviceDescription={
-                                    modifyServiceInfo.serviceDescription
-                                }
-                                price={modifyServiceInfo.price}
-                                currency={modifyServiceInfo.currency}
-                                handleSetEditInfo={handleSetEditInfo}
-                                serviceMutate={serviceMutate}
-                                handleSetServiceInfo={handleSetServiceInfo}
-                            />
+                            modifyServiceInfo && (
+                                <EditServiceInfo
+                                    serviceName={modifyServiceInfo.serviceName}
+                                    serviceDescription={
+                                        modifyServiceInfo.serviceDescription
+                                    }
+                                    price={modifyServiceInfo.price}
+                                    currency={modifyServiceInfo.currency}
+                                    handleSetEditInfo={handleSetEditInfo}
+                                    serviceMutate={serviceMutate}
+                                    handleSetServiceInfo={handleSetServiceInfo}
+                                />
+                            )
                         ) : isEditTime ? (
-                            <EditServiceTime
-                                serviceTime={modifyServiceTime ?? []}
-                                openTime={serviceInfo.openTime}
-                                closeTime={serviceInfo.closeTime}
-                                editIndex={selectedIndex}
-                                isAddTime={isAddTime}
-                                handleSetEditTime={handleSetEditTime}
-                                handleSetServiceTime={handleSetServiceTime}
-                            />
+                            modifyServiceTime && (
+                                <EditServiceTime
+                                    serviceTime={modifyServiceTime}
+                                    openTime={serviceInfo.openTime}
+                                    closeTime={serviceInfo.closeTime}
+                                    editIndex={selectedIndex}
+                                    isAddTime={isAddTime}
+                                    isClose={true}
+                                    handleSetEditTime={handleSetEditTime}
+                                    handleSetServiceTime={handleSetServiceTime}
+                                />
+                            )
                         ) : isAddTime ? (
                             <AddServiceTime
+                                isClose={true}
                                 isAddServiceTime={false}
                                 serviceTime={serviceInfo.bookingSlots}
                                 handleAddTime={handleAddTime}

@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from "@mui/icons-material/Close";
+
 import {
     IServiceEditTime,
     IBookingSlot,
@@ -13,6 +13,7 @@ import {
 import SlotTimes from "./components/SlotTimes";
 import GuestNumberManually from "./components/GuestNumberManually";
 import GuestNumber from "./components/GuestNumber";
+import Header from "./components/Header";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -20,13 +21,14 @@ interface IParams {
     closeTime: string;
     editIndex: number;
     isAddTime: boolean;
+    isClose: boolean;
     handleSetEditTime: () => void;
     handleSetServiceTime?: (serviceTime: IServiceEditTime[]) => void;
+    handleCloseCreateService?: () => void;
 }
 
 export default function EditServiceTime(props: IParams) {
     const { t } = useTranslation();
-
     const [daysOpen, setDaysOpen] = useState<string[]>(
         props.isAddTime ? [] : props.serviceTime[props.editIndex].daysOpen
     );
@@ -367,7 +369,7 @@ export default function EditServiceTime(props: IParams) {
     return (
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                     <div onClick={props.handleSetEditTime}>
                         <CloseIcon
                             sx={{
@@ -377,15 +379,30 @@ export default function EditServiceTime(props: IParams) {
                             }}
                         />
                     </div>
-
                     <div className="font-bold" style={{ fontSize: "14px" }}>
                         {t("title:serviceTime")}
                     </div>
-
                     <div>
                         <div style={{ width: "20px", height: "20px" }} />
                     </div>
-                </div>
+                </div> */}
+                <Header
+                    isClose={props.isClose}
+                    context={t("title:serviceTime")}
+                    handleClose={() => {
+                        if (props.isClose) {
+                            props.handleSetEditTime();
+                        } else {
+                            if (props.handleCloseCreateService) {
+                                props.handleCloseCreateService();
+                            }
+                            if (props.handleSetServiceTime) {
+                                props.handleSetServiceTime([]);
+                            }
+                            props.handleSetEditTime();
+                        }
+                    }}
+                />
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4 mb-[10vh]">

@@ -1,5 +1,4 @@
 import { alpha, Box } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { truncateContext } from "../../../helper/limitedText";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
@@ -12,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { deleteService } from "../../../api/service";
 import { useNavigate, useParams } from "react-router-dom";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 interface IParams {
     handleSetEditInfo: () => void;
@@ -28,10 +28,13 @@ export default function ServiceCard(props: IParams) {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const queryParams = new URLSearchParams(location.search);
+    const type = queryParams.get("type");
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    const [openConfirm, setOpenConfirm] = useState(false);
     const handleOpenConfirm = () => setOpenConfirm(true);
     const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -73,19 +76,43 @@ export default function ServiceCard(props: IParams) {
                 <div className=" font-bold mb-2" style={{ fontSize: "14px" }}>
                     {props.serviceName}
                 </div>
-                <Box
-                    sx={{
-                        display: "flex",
-                        height: "32px",
-                        padding: "8px",
-                        borderRadius: "8px",
-                        background: `${alpha("#020873", 0.1)}`,
-                        alignContent: "center",
-                        alignItems: "center",
-                    }}
-                    onClick={handleClick}>
-                    <MoreHorizIcon />
-                </Box>
+
+                {type ? (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            height: "32px",
+                            padding: "8px",
+                            borderRadius: "8px",
+                            background: `${alpha("#020873", 0.1)}`,
+                            alignContent: "center",
+                            alignItems: "center",
+                        }}>
+                        <EditOutlinedIcon
+                            onClick={handleEdit}
+                            sx={{
+                                cursor: "pointer",
+                                color: "#020873",
+                                width: "20px",
+                                height: "20px",
+                            }}
+                        />
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            height: "32px",
+                            padding: "8px",
+                            borderRadius: "8px",
+                            background: `${alpha("#020873", 0.1)}`,
+                            alignContent: "center",
+                            alignItems: "center",
+                        }}
+                        onClick={handleClick}>
+                        <MoreHorizIcon />
+                    </Box>
+                )}
                 <Menu
                     anchorEl={anchorEl}
                     open={open}

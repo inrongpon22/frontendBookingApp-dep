@@ -171,12 +171,6 @@ export default function AddServiceInfo(props: IProps) {
                                 onBlur={formik.handleBlur}
                                 maxLength={100}
                             />
-                            {/* {formik.touched.serviceDescription &&
-                                formik.errors.serviceDescription ? (
-                                    <div className="text-red-500 text-sm mt-1">
-                                        {formik.errors.serviceDescription}
-                                    </div>
-                                ) : null} */}
 
                             <p
                                 style={{ fontSize: "14px" }}

@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { currencyList } from "../../helper/currency";
 import CloseIcon from "@mui/icons-material/Close";
-// import { updateServiceInfo } from "../../api/service";
 import { t } from "i18next";
 import { IServiceInfo } from "../../interfaces/services/Iservice";
 import { useState } from "react";
@@ -147,9 +146,9 @@ export default function EditServiceInfo(props: IParams) {
                                 "formValidation:service:create:serviceDesc:serviceDescFill"
                             )}
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
-                                    formik.errors.serviceDescription
-                                    ? "border-red-500"
-                                    : ""
+                                formik.errors.serviceDescription
+                                ? "border-red-500"
+                                : ""
                                 }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
@@ -185,8 +184,8 @@ export default function EditServiceInfo(props: IParams) {
                                 name="price"
                                 type="number"
                                 className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                                        ? "border-red-500"
-                                        : ""
+                                    ? "border-red-500"
+                                    : ""
                                     }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}

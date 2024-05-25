@@ -19,6 +19,7 @@ import { ILocation } from "../../interfaces/business";
 import { supabase } from "../../helper/createSupabase";
 import InsertImages from "./components/InsertImages";
 import { generateUniqueRandomNumber } from "../../helper/generateRandomNumber";
+import Loading from "../../components/dialog/Loading";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
@@ -39,12 +40,12 @@ export default function BusinessInfo() {
         businessId && `${app_api}/business/${businessId ?? ""}`,
         fetcher
     );
-
     const [locationData, setLocationData] = useState<ILocation>({
         lat: 0,
         lng: 0,
         address: "",
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const schema = Yup.object().shape({
@@ -254,6 +255,7 @@ export default function BusinessInfo() {
                     token
                 );
                 setShowDialog(false);
+                setIsLoading(true);
                 if (action === "edit" && action) {
                     toast(t("editSuccess"), {
                         icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
@@ -265,6 +267,7 @@ export default function BusinessInfo() {
                     });
                     navigate(`/service/${business.data.businessId}?type=create`);
                 }
+                setIsLoading(false);
 
             } else {
                 const insertData = {
@@ -282,10 +285,12 @@ export default function BusinessInfo() {
                 };
                 const business = await insertBusiness(insertData, token);
                 setShowDialog(false);
+                setIsLoading(true);
                 toast(t("addBusiness"), {
                     icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
                 });
                 navigate(`/service/${business.data.businessId}?type=create`);
+                setIsLoading(false);
             }
         },
     });
@@ -312,6 +317,7 @@ export default function BusinessInfo() {
 
     return (
         <>
+            <Loading openLoading={isLoading} />
             <div className="flex flex-col mb-[10vh]">
                 <form onSubmit={formik.handleSubmit}>
                     <p

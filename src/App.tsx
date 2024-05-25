@@ -9,7 +9,6 @@ import MyBookingWrapper from "./pages/my-booking/MyBookingWrapper";
 import BusinessAuth from "./pages/auth/BusinessAuth.tsx";
 import BusinessOverview from "./pages/business-overview/BusinessOverview.tsx";
 import BookingApproval from "./pages/booking-approval/BookingApproval.tsx";
-import CreateBusiness from "./pages/business/CreateBusiness";
 import ServiceSetting from "./pages/service/ServiceSetting.tsx";
 import ServiceDetail from "./pages/service/ServiceDetail.tsx";
 import BusinessSetting from "./pages/business/BusinessSetting.tsx";
@@ -62,7 +61,7 @@ function App() {
                     />
                     <Route
                         path="/create-business"
-                        element={<CreateBusiness />}
+                        element={<BusinessSetting />}
                     />
                     <Route
                         path="/business-setting"

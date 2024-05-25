@@ -23,8 +23,8 @@ import SelectOpenDate from "./components/SelectOpenDate";
 interface IParams {
     isAddServiceTime: boolean;
     serviceTime: IServiceEditTime[];
-    handleAddTime?: () => void;
-    handleCloseCard?: () => void;
+    isClose: boolean;
+    handleAddTime: () => void;
     handleCloseCreateService?: () => void;
 }
 
@@ -256,9 +256,9 @@ export default function AddServiceTime(props: IParams) {
                 "serviceTime",
                 JSON.stringify(props.serviceTime)
             );
-            if (props.handleCloseCard) {
-                props.handleCloseCard();
-            }
+            // if (props.handleCloseCard) {
+            //     props.handleCloseCard();
+            // }
         }
     };
 
@@ -331,11 +331,18 @@ export default function AddServiceTime(props: IParams) {
                 <Loading openLoading={businessLoading} />
                 <div className="pr-4 pl-4 pt-6">
                     <Header
-                        isClose={true}
+                        isClose={props.isClose}
                         context={t("title:serviceTime")}
-                        handleClose={props.handleAddTime == undefined
-                            ? props.handleCloseCard
-                            : props.handleAddTime}
+                        handleClose={() => {
+                            if (props.isClose) {
+                                props.handleAddTime();
+                            } else {
+                                if (props.handleCloseCreateService) {
+                                    props.handleCloseCreateService();
+                                }
+                                props.handleAddTime();
+                            }
+                        }}
                     />
                 </div>
                 <Divider sx={{ marginTop: "16px", width: "100%" }} />

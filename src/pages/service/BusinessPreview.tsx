@@ -49,9 +49,6 @@ interface BusinessPreviewProps {
 
 const BusinessPreview = (props: BusinessPreviewProps) => {
     const { t } = useTranslation();
-
-    console.log("props", props);
-
     const [calendar] = useState({
         // handle calendar date
         start: moment(),
