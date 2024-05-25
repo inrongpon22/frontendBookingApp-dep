@@ -10,6 +10,9 @@ import {
     IServiceEditTime,
     IBookingSlot,
 } from "../../interfaces/services/Iservice";
+import SlotTimes from "./components/SlotTimes";
+import GuestNumberManually from "./components/GuestNumberManually";
+import GuestNumber from "./components/GuestNumber";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -141,7 +144,6 @@ export default function EditServiceTime(props: IParams) {
                 prevCapacity.filter((_, index) => index !== indexManual)
             );
         } else {
-            // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
             setManualCapacity((prevCapacity) => {
                 const newCapacity = [
                     ...prevCapacity,
@@ -362,11 +364,7 @@ export default function EditServiceTime(props: IParams) {
         props.handleSetEditTime();
     };
 
-    console.log(manualCapacity);
-
     return (
-        // <>
-        // </>
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
                 <div className="flex items-center justify-between">
@@ -629,177 +627,37 @@ export default function EditServiceTime(props: IParams) {
                         </div>
                     </div>
 
-                    <p
-                        className="font-semibold mt-3"
-                        style={{ fontSize: "14px" }}>
-                        {t("openSlot")}
-                    </p>
-                    <div className="flex justify-between gap-2 w-full flex-wrap mt-3">
-                        {timeSlots.map((slot, index) => (
-                            <div
-                                key={index}
-                                className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }`}
-                                style={{
-                                    width: "48%",
-                                    height: "51px",
-                                    borderColor: selectedSlots.includes(index)
-                                        ? "#020873"
-                                        : `${alpha("#000000", 0.2)}`,
-                                    backgroundColor: selectedSlots.includes(
-                                        index
-                                    )
-                                        ? "rgb(2, 8, 115,0.2)"
-                                        : "white",
-                                }}
-                                onClick={() =>
-                                    toggleSlotSelection(
-                                        index,
-                                        timeSlots[index].startTime,
-                                        timeSlots[index].endTime
-                                    )
-                                }>
-                                {slot.startTime} - {slot.endTime}
-                            </div>
-                        ))}
-                    </div>
+                    {timeSlots && timeSlots.length > 0 &&
+                        <SlotTimes
+                            timeSlots={timeSlots}
+                            selectedSlots={selectedSlots}
+                            toggleSlotSelection={toggleSlotSelection}
+                        />
+                    }
 
                     {isManually == true ? (
-                        <div className="flex flex-col mt-5 border-black-50 border p-3 rounded-lg">
-                            <div className="flex justify-between">
-                                <p className="text-sm">
-                                    {t("Availableguests")}
-                                </p>
-                                <u
-                                    onClick={handleResetGustNumber}
-                                    style={{
-                                        color: "#020873",
-                                        fontSize: "14px",
-                                        cursor: "pointer",
-                                    }}>
-                                    {t("translation:reset")}
-                                </u>
-                            </div>
-                            {selectedSlots
-                                .sort((a, b) => a - b)
-                                .map((element, index) => (
-                                    <div key={index}>
-                                        <div className="flex justify-between">
-                                            <div className="p-3">
-                                                {timeSlots[element].startTime} -{" "}
-                                                {timeSlots[element].endTime}
-                                            </div>
-                                            <div className="flex justify-between gap-3 items-center p-3">
-                                                <button
-                                                    disabled={
-                                                        manualCapacity[element]
-                                                            ?.capacity == 1
-                                                    }
-                                                    onClick={() =>
-                                                        handleDecreaseCapacityManual(
-                                                            timeSlots[element]
-                                                                .startTime,
-                                                            timeSlots[element]
-                                                                .endTime
-                                                        )
-                                                    }
-                                                    style={{
-                                                        cursor: "pointer",
-                                                    }}
-                                                    className={`border flex justify-center items-center w-8 h-8 rounded-md 
-                                                    ${manualCapacity[element]
-                                                            ?.capacity == 1 ? "opacity-40" : ""}`}>
-                                                    <KeyboardArrowDownIcon />
-                                                </button>
-                                                {manualCapacity.find(
-                                                    (item) =>
-                                                        item.startTime ==
-                                                        timeSlots[element]
-                                                            .startTime &&
-                                                        item.endTime ==
-                                                        timeSlots[element]
-                                                            .endTime
-                                                )?.capacity ?? guestNumber}
-                                                <button
-                                                    onClick={() =>
-                                                        handleIncreaseCapacityManual(
-                                                            timeSlots[element]
-                                                                .startTime,
-                                                            timeSlots[element]
-                                                                .endTime,
-                                                            guestNumber
-                                                        )
-                                                    }
-                                                    className="border flex justify-center items-center w-8 h-8 rounded-md"
-                                                    style={{
-                                                        cursor: "pointer",
-                                                        marginRight: "-5px",
-                                                    }}>
-                                                    <KeyboardArrowUpIcon />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <hr
-                                            style={{
-                                                borderColor: `${alpha(
-                                                    "#000000",
-                                                    0.2
-                                                )}`,
-                                            }}
-                                            className="border-1 border-black-50"
-                                        />
-                                    </div>
-                                ))}
-                        </div>
+                        { timeSlots } && timeSlots.length > 0 ? (
+                            <GuestNumberManually
+                                timeSlots={timeSlots}
+                                handleResetGustNumber={handleResetGustNumber}
+                                manualCapacity={manualCapacity}
+                                selectedSlots={selectedSlots}
+                                handleIncreaseCapacityManual={handleIncreaseCapacityManual}
+                                handleDecreaseCapacityManual={handleDecreaseCapacityManual}
+                                guestNumber={guestNumber}
+                            />
+                        ) : null
                     ) : (
-                        <div
-                            style={{
-                                borderColor: `${alpha("#000000", 0.2)}`,
-                            }}
-                            className="flex justify-between border rounded-lg mt-3">
-                            <div className="p-3">
-                                <p
-                                    style={{
-                                        fontSize: "14px",
-                                        color: "#1C1C1C",
-                                    }}>
-                                    {t("fragment:avaiGuest")}
-                                </p>
-                                <button
-                                    onClick={() => setIsManually(true)}
-                                    disabled={
-                                        timeSlots.length == 0 ||
-                                        timeSlots[0].startTime == "" ||
-                                        selectedSlots.length == 0 ||
-                                        manualCapacity.length == 0
-                                    }>
-                                    <u
-                                        style={{
-                                            color: "#020873",
-                                            fontSize: "12px",
-                                        }}>
-                                        {t("fragment:manualAdjust")}
-                                    </u>
-                                </button>
-                            </div>
-                            <div className="flex justify-between gap-3 items-center p-3">
-                                <button
-                                    disabled={guestNumber == 1}
-                                    onClick={decreaseGuest}
-                                    className={`border flex justify-center items-center w-8 h-8 rounded-md ${guestNumber == 1 ? "opacity-40" : ""}`}>
-                                    <KeyboardArrowDownIcon />
-                                </button>
-                                {guestNumber}
-                                <button
-                                    onClick={increaseGuest}
-                                    className="border flex justify-center items-center w-8 h-8 rounded-md">
-                                    <KeyboardArrowUpIcon />
-                                </button>
-                            </div>
-                        </div>
+                        { timeSlots } && timeSlots.length > 0 ? (
+                            <GuestNumber
+                                handleIsManually={() => setIsManually(true)}
+                                timeSlots={timeSlots}
+                                selectedSlots={selectedSlots}
+                                guestNumber={guestNumber}
+                                increaseGuest={increaseGuest}
+                                decreaseGuest={decreaseGuest}
+                            />
+                        ) : null
                     )}
 
                     <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">

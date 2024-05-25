@@ -1,31 +1,32 @@
 // import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
-import { ILocation } from "./interfaces/business";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { alpha } from "@mui/material";
-// import CloseIcon from "@mui/icons-material/Close";
-
 import { useNavigate } from "react-router-dom";
-// import { supabase } from "../../helper/createSupabase";
 import SearchMap from "./SearchMap";
-import { dayOfWeek } from "../../helper/daysOfWeek"; // dataOfWeekEng, dataOfWeekThai,
+import { dayOfWeek } from "../../helper/daysOfWeek";
 import { insertBusiness, updateBusiness } from "../../api/business";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
-// import { getUserIdByAccessToken } from "../../api/user";
+import { getUserIdByAccessToken } from "../../api/user";
 import toast from "react-hot-toast";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { ILocation } from "../../interfaces/business";
+import { supabase } from "../../helper/createSupabase";
+import InsertImages from "./components/InsertImages";
+import { generateUniqueRandomNumber } from "../../helper/generateRandomNumber";
 
 export default function BusinessInfo() {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const businessId = queryParams.get("businessId");
-    const userId = localStorage.getItem("userId");
-
+    const action = queryParams.get("action");
+    const [files, setFiles] = useState<File[]>([]);
+    const [previewImages, setPreviewImages] = useState<string[]>([]);
     const { setShowDialog } = useContext(GlobalContext);
     const {
         t,
@@ -33,39 +34,7 @@ export default function BusinessInfo() {
     } = useTranslation();
 
     const token = localStorage.getItem("token");
-    // const accessToken = localStorage.getItem("accessToken");
-    // const [userId, setUserId] = useState<number | null>(0);
-    // if (accessToken && token) {
-    //     (async () => {
-    //         const res = await getUserIdByAccessToken(accessToken, token);
-    //         setUserId(res);
-    //     })();
-    // }
-
-    // const [file, setFile] = useState<File[]>([]);
-    // const [previewImages, setPreviewImages] = useState<string[]>([]);
-    // const { data: businessData } = useSWR<any>(
-    //     businessId && `${app_api}/business/${businessId ?? ""}`,
-    //     fetcher
-    // );
-    // const businessInfo: IBusinessInfo = {
-    //     title: businessData.title || "",
-    //     daysOpen: businessData.daysOpen || [],
-    //     openTime: businessData.openTime || "",
-    //     closeTime: businessData.closeTime || "",
-    //     location: businessData.address || "",
-    //     description: businessData.description || "",
-    //     phoneNumber: businessData.phoneNumber || "",
-    // };
-    // const [locationData, setLocationData] = useState<ILocation>({
-    //     lat: businessData.latitude || 0,
-    //     lng: businessData.longitude || 0,
-    //     address: businessData.address || "",
-    // });
-    // const [daysOpen, setDaysOpen] = useState<string[]>(
-    //     businessData.daysOpen || []
-    // );
-
+    const accessToken = localStorage.getItem("accessToken");
     const { data: businessData } = useSWR(
         businessId && `${app_api}/business/${businessId ?? ""}`,
         fetcher
@@ -138,7 +107,31 @@ export default function BusinessInfo() {
                 lng: businessData.longitude || 0,
                 address: businessData.address || "",
             });
+            const fetchImageUrls = async () => {
+                try {
+                    const arrayImageUrls: string[] = [];
+                    if (businessData) {
+                        const imageUrls = await Promise.all(
+                            businessData.imagesURL.map(async (element: string) => {
+                                const { data } = supabase.storage
+                                    .from("BookingSystem/images/")
+                                    .getPublicUrl(element);
+                                return data;
+                            })
+                        );
 
+                        imageUrls.forEach((element) => {
+                            if (!arrayImageUrls.includes(element.publicUrl)) {
+                                arrayImageUrls.push(element.publicUrl);
+                            }
+                        });
+                        setPreviewImages(arrayImageUrls);
+                    }
+                } catch (error) {
+                    console.error("Error fetching image URLs:", error);
+                }
+            };
+            fetchImageUrls();
             setDaysOpen(businessData.daysOpen || []);
             formik.setFieldValue("title", businessData.title);
             formik.setFieldValue("openTime", businessData.openTime);
@@ -152,9 +145,49 @@ export default function BusinessInfo() {
                 lng: businessData.longitude,
                 address: businessData.address,
             });
+            formik.isValid = true;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessData]);
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const fileReader = new FileReader();
+            const newFile = e.target.files ? e.target.files[0] : null;
+            if (newFile) {
+                fileReader.onload = () => {
+                    const previewURL = fileReader.result as string;
+                    setPreviewImages((pre) => {
+                        return [...pre, previewURL];
+                    });
+                };
+
+                fileReader.readAsDataURL(newFile);
+            }
+
+            setFiles((prevFiles) => {
+                if (newFile) {
+                    return [...prevFiles, newFile];
+                } else {
+                    return prevFiles;
+                }
+            });
+        }
+    };
+
+    const handleClearImages = (index: number) => {
+        setPreviewImages((prevImages) => {
+            const newImages = [...prevImages];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+        setFiles((prevFiles) => {
+            const newImages = [...prevFiles];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+        businessData?.imagesURL?.splice(index, 1);
+    };
 
     const handleChangeLocation = (inputData: ILocation) => {
         formik.setFieldValue("location", inputData.address);
@@ -173,176 +206,89 @@ export default function BusinessInfo() {
         },
         validationSchema: schema,
         onSubmit: async (values) => {
-            const imagesURL: string[] = [];
-            // const uniqueRandomNumber = generateUniqueRandomNumber();
-            // if (file.length > 0) {
-            //     for (const element of file) {
-            //         const { data, error } = await supabase.storage
-            //             .from("BookingSystem/images")
-            //             .upload(
-            //                 file !== null
-            //                     ? element.name + `${uniqueRandomNumber}`
-            //                     : "",
-            //                 element
-            //             );
-            //         if (error) {
-            //             console.error(error);
-            //         } else {
-            //             console.log(data.path);
-            //             imagesURL.push(data.path);
-            //         }
-            //     }
-
-            //     const insertData = {
-            //         title: values.title,
-            //         imagesURL: imagesURL,
-            //         description: values.description,
-            //         phoneNumber: values.phoneNumber,
-            //         address: locationData.address,
-            //         latitude: locationData.lat,
-            //         longitude: locationData.lng,
-            //         daysOpen: daysOpen,
-            //         openTime: values.openTime,
-            //         closeTime: values.closeTime,
-            //         userId: userId ? Number(userId) : 0,
-            //     };
-
-            //     if (token === null) {
-            //         throw new Error("Token is not found");
-            //     }
-
-            //     const business = await insertBusiness(insertData, token);
-
-            //     localStorage.setItem(
-            //         "businessId",
-            //         String(business.data.businessId)
-            //     );
-            //     navigate(`/service-info/${business.data.businessId}?step=1`);
-            // } else {
-            //     const insertData = {
-            //         title: values.title,
-            //         imagesURL: imagesURL,
-            //         description: values.description,
-            //         phoneNumber: values.phoneNumber,
-            //         address: locationData.address,
-            //         latitude: locationData.lat,
-            //         longitude: locationData.lng,
-            //         daysOpen: daysOpen,
-            //         openTime: values.openTime,
-            //         closeTime: values.closeTime,
-            //         userId: userId ? Number(userId) : 0,
-            //     };
-            //     console.log(insertData);
-
-            //     if (token === null) {
-            //         throw new Error("Token is not found");
-            //     }
-
-            //     const business = await insertBusiness(insertData, token);
-
-            //     localStorage.setItem(
-            //         "businessId",
-            //         String(business.data.businessId)
-            //     );
-            //     navigate(`/service-info/${business.data.businessId}?step=1`);
-            // }
-            const insertData = {
-                title: values.title,
-                imagesURL: imagesURL,
-                description: values.description,
-                phoneNumber: values.phoneNumber,
-                address: locationData.address,
-                latitude: locationData.lat,
-                longitude: locationData.lng,
-                daysOpen: daysOpen,
-                openTime: values.openTime,
-                closeTime: values.closeTime,
-                userId: userId ? Number(userId) : 0,
-            };
-
+            const userId = await getUserIdByAccessToken(accessToken ?? "", token ?? "");
             if (token === null) {
                 throw new Error("Token is not found");
             }
 
             if (businessId) {
+                const imagesURL: string[] = [];
+                const uniqueRandomNumber = generateUniqueRandomNumber();
+                if (files.length > 0) {
+                    for (const element of files) {
+                        const { data, error } = await supabase.storage
+                            .from("BookingSystem/images")
+                            .upload(
+                                files !== null
+                                    ? element.name + `${uniqueRandomNumber}`
+                                    : "",
+                                element
+                            );
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            console.log(data.path);
+                            imagesURL.push(data.path);
+                        }
+                    }
+                }
+
+                const updateData = {
+                    title: values.title,
+                    imagesURL: imagesURL.concat(
+                        businessData?.imagesURL || []
+                    ),
+                    description: values.description,
+                    phoneNumber: values.phoneNumber,
+                    address: locationData.address,
+                    latitude: locationData.lat,
+                    longitude: locationData.lng,
+                    daysOpen: daysOpen,
+                    openTime: values.openTime,
+                    closeTime: values.closeTime,
+                    userId: userId ? Number(userId) : 0,
+                };
                 const business = await updateBusiness(
-                    insertData,
+                    updateData,
                     Number(businessId),
                     token
                 );
-                localStorage.setItem(
-                    "businessId",
-                    String(business.data.businessId)
-                );
                 setShowDialog(false);
-                toast(t("addBusiness"), {
-                    icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
-                });
-                navigate(`/service-info/${business.data.businessId}?step=1`);
+                if (action === "edit" && action) {
+                    toast(t("editSuccess"), {
+                        icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                    });
+                    navigate(`/business-profile/${business.data.businessId}`);
+                } else {
+                    toast(t("addBusiness"), {
+                        icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                    });
+                    navigate(`/service/${business.data.businessId}?type=create`);
+                }
+
             } else {
+                const insertData = {
+                    title: values.title,
+                    imagesURL: [],
+                    description: values.description,
+                    phoneNumber: values.phoneNumber,
+                    address: locationData.address,
+                    latitude: locationData.lat,
+                    longitude: locationData.lng,
+                    daysOpen: daysOpen,
+                    openTime: values.openTime,
+                    closeTime: values.closeTime,
+                    userId: userId ? Number(userId) : 0,
+                };
                 const business = await insertBusiness(insertData, token);
-                localStorage.setItem(
-                    "businessId",
-                    String(business.data.businessId)
-                );
                 setShowDialog(false);
                 toast(t("addBusiness"), {
                     icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
                 });
-                navigate(`/service-info/${business.data.businessId}?step=1`);
+                navigate(`/service/${business.data.businessId}?type=create`);
             }
         },
     });
-
-    // function generateUniqueRandomNumber() {
-    //     let randomNumber;
-    //     const generatedNumbers = new Set();
-
-    //     do {
-    //         randomNumber = Math.floor(10000 + Math.random() * 90000); // Generate a random 5-digit number
-    //     } while (generatedNumbers.has(randomNumber)); // Check if the number has been generated before
-
-    //     generatedNumbers.add(randomNumber); // Add the generated number to the set of generated numbers
-    //     return randomNumber;
-    // }
-
-    // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    //   if (e.target.files && e.target.files.length > 0) {
-    //     const fileReader = new FileReader();
-    //     const newFile = e.target.files ? e.target.files[0] : null;
-    //     if (newFile) {
-    //       fileReader.onload = () => {
-    //         const previewURL = fileReader.result as string;
-    //         setPreviewImages((pre) => {
-    //           return [...pre, previewURL];
-    //         });
-    //       };
-
-    //       fileReader.readAsDataURL(newFile);
-    //     }
-
-    //     setFile((prevFiles) => {
-    //       if (newFile) {
-    //         return [...prevFiles, newFile];
-    //       } else {
-    //         return prevFiles;
-    //       }
-    //     });
-    //   }
-    // };
-
-    // const handleClearImages = (index: number) => {
-    //   setPreviewImages((prevImages) => {
-    //     const newImages = [...prevImages];
-    //     newImages.splice(index, 1);
-    //     return newImages;
-    //   });
-    //   setFile((prevFiles) => {
-    //     const newImages = [...prevFiles];
-    //     newImages.splice(index, 1);
-    //     return newImages;
-    //   });
-    // };
 
     const isDaySelected = (dayValue: string) => {
         return daysOpen.includes(dayValue);
@@ -366,7 +312,7 @@ export default function BusinessInfo() {
 
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col mb-[10vh]">
                 <form onSubmit={formik.handleSubmit}>
                     <p
                         style={{ fontSize: "14px" }}
@@ -382,11 +328,10 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.title
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -428,11 +373,10 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${
-                                isDaySelected(day.value)
-                                    ? "border-custom-color border-2"
-                                    : "border-black-50 border"
-                            }
+                            ${isDaySelected(day.value)
+                                        ? "border-custom-color border-2"
+                                        : "border-black-50 border"
+                                    }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -512,11 +456,11 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
-                            formik.errors?.phoneNumber
-                                ? "border-2 border-rose-500"
-                                : "border border-black-50"
-                        }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
+                            ? "border-2 border-rose-500"
+                            : "border border-black-50"
+                            }`}
+                        maxLength={10}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
                         <div className="text-red-500 mt-1">
@@ -549,73 +493,21 @@ export default function BusinessInfo() {
                             maxLength={150}
                         />
                     </div>
-                    {/* <div className="mt-4 flex">
-            <div className="font-semibold mr-1">
-              {t("form:business:create:images")}
-            </div>
-            <div style={{ color: "gray" }}>({t("fragment:optional")})</div>
-          </div>
-          <div className="flex gap-4 flex-wrap">
-            {previewImages.map((image, index) => (
-              <div key={index} className="mt-3">
-                <Badge
-                  onClick={() => handleClearImages(index)}
-                  badgeContent={
-                    <IconButton
-                      size="small"
-                      sx={{
-                        background: "black",
-                        ":hover": {
-                          background: "black",
-                        },
-                      }}
-                    >
-                      <CloseIcon
-                        sx={{
-                          fontSize: "12px",
-                          color: "white",
-                        }}
-                      />
-                    </IconButton>
-                  }
-                >
-                  <img
-                    src={image}
-                    className="rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Badge>
-              </div>
-            ))}
 
-            <div
-              className="outline-dashed outline-1 outline-offset-1 flex items-center justify-center rounded-lg mt-3"
-              style={{ width: "100px", height: "100px" }}
-            >
-              <label htmlFor={`fileInput`} style={{ cursor: "pointer" }}>
-                <input
-                  id={`fileInput`}
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-                <AddIcon />
-              </label>
-            </div>
-          </div> */}
+                    {action == "edit" && (
+                        <InsertImages
+                            previewImages={previewImages}
+                            handleClearImages={handleClearImages}
+                            handleFileChange={handleFileChange}
+                            setPreviewImages={setPreviewImages}
+                        />
+                    )}
 
-                    <div className="w-full flex justify-center  inset-x-0 gap-2">
+                    <div className="w-full flex justify-center bottom-0 inset-x-0 fixed">
                         <button
                             type="button"
-                            // disabled={!!Object.keys(formik.errors).length}
-                            className={`w-full p-3 my-5 text-white text-[14px] bg-deep-blue rounded-lg font-semibold`}
-                            onClick={() => {
-                                formik.handleSubmit();
-                            }}>
+                            className={`w-[95vw] p-3 my-3 text-white text-[14px] bg-deep-blue rounded-lg font-semibold`}
+                            onClick={() => formik.handleSubmit()}>
                             {t("button:next")}
                         </button>
                     </div>

@@ -1,5 +1,4 @@
 import { Divider } from "@mui/material";
-// import AutocompleteMap from "./AutocompleteMap";
 import BusinessInfo from "./BusinessInfo";
 import Header from "./components/Header";
 import { useTranslation } from "react-i18next";

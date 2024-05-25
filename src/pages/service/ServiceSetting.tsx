@@ -2,13 +2,9 @@ import { useTranslation } from "react-i18next";
 import Header from "./components/Header";
 import { ThemeProvider, alpha, createTheme } from "@mui/material";
 import ListServiceCard from "./components/ListServiceCard";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import React from "react";
-import ServiceInfo from "../business/ServiceInfo";
 import ServiceDetail from "./ServiceDetail";
 import { SwipeableList, SwipeableListItem, Type } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
@@ -31,16 +27,10 @@ const theme = createTheme({
 export default function ServiceSetting() {
     const { businessId } = useParams();
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const { setIsGlobalLoading } = useContext(GlobalContext);
-    // const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<number>(0);
-    const [state, setState] = useState({
-        top: false,
-        left: false,
-        bottom: false,
-        right: false,
-    });
     const [open, setOpen] = useState(false);
     const [isEditService, setIsEditService] = useState(false);
 
@@ -75,39 +65,6 @@ export default function ServiceSetting() {
     };
     const handleCloseConfirm = () => setOpen(false);
 
-    const toggleDrawer =
-        (anchor: Anchor, open: boolean) =>
-        (event: React.KeyboardEvent | React.MouseEvent) => {
-            if (
-                event.type === "keydown" &&
-                ((event as React.KeyboardEvent).key === "Tab" ||
-                    (event as React.KeyboardEvent).key === "Shift")
-            ) {
-                return;
-            }
-
-            setState({ ...state, [anchor]: open });
-        };
-
-    const addService = (anchor: Anchor) => (
-        <Box
-            sx={{
-                width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
-                height: "100vh",
-            }}
-            role="presentation">
-            <ServiceInfo
-                isClose={true}
-                isEdit={false}
-                handleClose={toggleDrawer("bottom", false)}
-                handleCloseFromEdit={() =>
-                    setState({ ...state, [anchor]: false })
-                }
-                serviceMutate={serviceMutate}
-            />
-        </Box>
-    );
-
     const handleSelectService = (serviceId: number) => {
         setSelectedId(serviceId);
         setIsEditService(true);
@@ -129,18 +86,12 @@ export default function ServiceSetting() {
             ) : (
                 <div className=" overflow-y-auto bg-[#F7F7F7] h-dvh">
                     <Loading openLoading={serviceLoading} />
-                    <Drawer
-                        anchor={"bottom"}
-                        open={state["bottom"]}
-                        onClose={toggleDrawer("bottom", false)}>
-                        {addService("bottom")}
-                    </Drawer>
                     <div className="pr-4 pl-4 pt-6">
-                        <Header context={t("title:serviceInformation")} />
+                        <Header context={t("title:serviceInformation")} isClose={false} />
                     </div>
                     <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
                         <button
-                            onClick={toggleDrawer("bottom", true)}
+                            onClick={() => navigate(`/service/${businessId}?type=add`)}
                             style={{
                                 width: "343px",
                                 height: "43px",
@@ -157,12 +108,11 @@ export default function ServiceSetting() {
                     <div>
                         <p className="pr-4 pl-4 pt-3 pb-3">
                             {t("services")}{" "}
-                            {`(${
-                                serviceData &&
+                            {`(${serviceData &&
                                 serviceData.filter(
                                     (item) => item.isDeleted == false
                                 ).length
-                            })`}{" "}
+                                })`}{" "}
                         </p>
                         {serviceData &&
                             serviceData

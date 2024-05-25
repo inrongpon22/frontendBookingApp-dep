@@ -84,10 +84,43 @@ export interface IEditServiceInfo {
     currency: string;
 }
 
+export interface IServiceShowHide {
+    isHidePrice: boolean;
+    isHideEndTime: boolean;
+    isAutoApprove: boolean;
+}
+
+export interface IServiceByServiceId {
+    id: number;
+    availableFromDate: string;
+    availableToDate: string | null;
+    businessId: number;
+    title: string;
+    description: string;
+    price: number;
+    currency: string;
+    isAutoApprove: boolean;
+    isHidePrice: boolean;
+    isHideEndTime: boolean;
+    openTime: string;
+    closeTime: string;
+    isDeleted: boolean;
+    created_at: string;
+    duration: number | null;
+    totalCapacity: number;
+    bookingSlots: {
+        daysOpen: string[];
+        availableFromDate: string;
+        availableToDate: string | null;
+        duration: number;
+        slotsTime: IBookingSlot[];
+    }[];
+}
+
 export interface IServiceEditTime {
     daysOpen: string[];
     availableFromDate: string;
-    availableToDate: string;
+    availableToDate: string | null;
     slotsTime: IBookingSlot[];
     duration: number;
     manualCapacity?: IBookingSlot[];
@@ -95,8 +128,14 @@ export interface IServiceEditTime {
     // closeTime: string;
 }
 
-export interface IServiceShowHide {
+export interface IUpdateService {
+    businessId: number;
+    title: string;
+    description: string;
+    price: number;
+    currency: string;
+    isAutoApprove: boolean;
     isHidePrice: boolean;
     isHideEndTime: boolean;
-    isAutoApprove: boolean;
+    bookingSlots: IServiceEditTime[];
 }

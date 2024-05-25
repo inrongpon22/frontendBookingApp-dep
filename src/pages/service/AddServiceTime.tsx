@@ -5,7 +5,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from "@mui/icons-material/Close";
 import {
     IServiceEditTime,
     IBookingSlot,
@@ -14,29 +13,33 @@ import { useParams } from "react-router";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import Loading from "../../components/dialog/Loading";
+import { IBusinessesById } from "../../interfaces/business";
+import Header from "./components/Header";
+import SlotTimes from "./components/SlotTimes";
+import GuestNumber from "./components/GuestNumber";
+import GuestNumberManually from "./components/GuestNumberManually";
+import SelectOpenDate from "./components/SelectOpenDate";
 
 interface IParams {
+    isAddServiceTime: boolean;
     serviceTime: IServiceEditTime[];
     handleAddTime?: () => void;
     handleCloseCard?: () => void;
+    handleCloseCreateService?: () => void;
 }
 
 export default function AddServiceTime(props: IParams) {
     const { t } = useTranslation();
     const { businessId } = useParams();
-    const { data: businessData, isLoading: businessLoading } = useSWR<any>(
+    const { data: businessData, isLoading: businessLoading } = useSWR<IBusinessesById>(
         businessId && `${app_api}/business/${businessId}`,
         fetcher
     );
     const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
     const [duration, setDuration] = useState(1);
-    const [openTime, setOpenTime] = useState(
-        businessData?.openTime.substring(0, 5) ?? ""
-    );
-    const [closeTime, setCloseTime] = useState(
-        businessData?.closeTime.substring(0, 5) ?? ""
-    );
+    const [openTime, setOpenTime] = useState("");
+    const [closeTime, setCloseTime] = useState("");
     const [guestNumber, setGuestNumber] = useState(1);
     const [isManually, setIsManually] = useState(false);
     const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
@@ -68,8 +71,8 @@ export default function AddServiceTime(props: IParams) {
             const endTimeString = `${endTimeHours
                 .toString()
                 .padStart(2, "0")}:${endTimeMinutes
-                .toString()
-                .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
             if (endTimeString > endTime) {
                 break;
             }
@@ -80,37 +83,39 @@ export default function AddServiceTime(props: IParams) {
         }
     };
 
-    useEffect(() => {
-        if (businessData) {
-            setOpenTime(businessData.openTime.substring(0, 5));
-            setCloseTime(businessData.closeTime.substring(0, 5));
-        }
-    }, [businessData]);
+    const toggleSlotSelection = (
+        index: number,
+        startTime: string,
+        endTime: string
+    ) => {
+        const sortedCapacity = [...manualCapacity].sort((a, b) => {
+            if (a.startTime < b.startTime) return -1;
+            if (a.startTime > b.startTime) return 1;
+            return 0;
+        });
 
-    useEffect(() => {
-        if (props.serviceTime !== undefined && props.serviceTime.length > 0) {
-            if (props.serviceTime[0].daysOpen !== undefined) {
-                const uniqueDays = new Set(); // Create a Set to store unique days
-                props.serviceTime.forEach((element) => {
-                    if (
-                        element.availableFromDate <= availableFromDate &&
-                        (element.availableToDate ?? "") == availableToDate
-                    ) {
-                        element.daysOpen.forEach((day) => uniqueDays.add(day));
-                    }
-                });
-                setDisibleDays(Array.from(uniqueDays) as string[]);
-            } else {
-                setDisibleDays([]);
-            }
+        const indexManual = sortedCapacity.findIndex(
+            (slot) => slot.startTime === startTime && slot.endTime === endTime
+        );
+
+        if (indexManual !== -1) {
+            setManualCapacity((prevCapacity) =>
+                prevCapacity.filter((_, index) => index !== indexManual)
+            );
         } else {
-            setDisibleDays([]);
+            setManualCapacity((prevCapacity) => {
+                const newCapacity = [
+                    ...prevCapacity,
+                    { startTime, endTime, capacity: guestNumber },
+                ];
+                return newCapacity.sort((a, b) => {
+                    if (a.startTime < b.startTime) return -1;
+                    if (a.startTime > b.startTime) return 1;
+                    return 0;
+                });
+            });
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [availableFromDate, availableToDate]);
-
-    const toggleSlotSelection = (index: number) => {
         if (selectedSlots.includes(index)) {
             setSelectedSlots(
                 selectedSlots.filter((slotIndex) => slotIndex !== index)
@@ -241,12 +246,11 @@ export default function AddServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
-            // openTime: openTime,
-            // closeTime: closeTime,
         };
         props.serviceTime.push(insertData);
         if (props.handleAddTime) {
             props.handleAddTime();
+
         } else {
             localStorage.setItem(
                 "serviceTime",
@@ -259,16 +263,61 @@ export default function AddServiceTime(props: IParams) {
     };
 
     useEffect(() => {
+        if (businessData) {
+            setOpenTime(businessData.openTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
+        }
+    }, [businessData]);
+
+    useEffect(() => {
+        if (props.serviceTime !== undefined && props.serviceTime.length > 0) {
+            if (props.serviceTime[0].daysOpen !== undefined) {
+                const uniqueDays = new Set(); // Create a Set to store unique days
+                props.serviceTime.forEach((element) => {
+                    if (
+                        element.availableFromDate <= availableFromDate &&
+                        (element.availableToDate ?? "") == availableToDate
+                    ) {
+                        element.daysOpen.forEach((day) => uniqueDays.add(day));
+                    } else {
+                        setDisibleDays([]);
+                    }
+                    if (
+                        element.daysOpen.some((dayName) => uniqueDays.has(dayName))
+                    ) {
+                        setDisibleDays(Array.from(uniqueDays) as string[]);
+                    }
+                });
+            } else {
+                setDisibleDays([]);
+            }
+        } else {
+            setDisibleDays([]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [availableFromDate, availableToDate]);
+
+    useEffect(() => {
+        if (businessData) {
+            setDaysOpen(businessData.daysOpen.filter((day, index) => day !== disibleDays[index]));
+            setOpenTime(businessData.openTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
+            setCloseTime(businessData.closeTime.substring(0, 5));
+            setOpenTime(businessData.openTime.substring(0, 5));
+        }
+    }, [businessData, disibleDays]);
+
+    useEffect(() => {
         if (timeSlots.length > 0) {
             setManualCapacity([]);
             const uniqueSlots = new Set<number>();
             const newSelectedSlots: number[] = [];
 
-            timeSlots.forEach((_element, index) => {
+            timeSlots.forEach((element, index) => {
                 if (!uniqueSlots.has(index)) {
                     uniqueSlots.add(index);
                     newSelectedSlots.push(index);
-                    toggleSlotSelection(index);
+                    toggleSlotSelection(index, element.startTime, element.endTime);
                 }
             });
             setSelectedSlots(newSelectedSlots);
@@ -281,96 +330,24 @@ export default function AddServiceTime(props: IParams) {
             <div style={{ width: "100vw" }}>
                 <Loading openLoading={businessLoading} />
                 <div className="pr-4 pl-4 pt-6">
-                    <div className="flex items-center justify-between">
-                        <div
-                            onClick={
-                                props.handleAddTime == undefined
-                                    ? props.handleCloseCard
-                                    : props.handleAddTime
-                            }>
-                            <CloseIcon
-                                sx={{
-                                    width: "20px",
-                                    height: "20px",
-                                    cursor: "pointer",
-                                }}
-                            />
-                        </div>
-
-                        <div className="font-bold" style={{ fontSize: "14px" }}>
-                            {t("title:serviceTime")}
-                        </div>
-
-                        <div>
-                            <div style={{ width: "20px", height: "20px" }} />
-                        </div>
-                    </div>
+                    <Header
+                        isClose={true}
+                        context={t("title:serviceTime")}
+                        handleClose={props.handleAddTime == undefined
+                            ? props.handleCloseCard
+                            : props.handleAddTime}
+                    />
                 </div>
                 <Divider sx={{ marginTop: "16px", width: "100%" }} />
                 <div className="flex flex-col pr-4 pl-4">
                     <div className="mt-4 flex flex-col">
-                        <p
-                            className="font-semibold"
-                            style={{ fontSize: "14px" }}>
-                            {t("availableDate")}
-                        </p>
-                        <div className="flex justify-between mt-3">
-                            <div
-                                style={{
-                                    width: "45%",
-                                    height: "51px",
-                                    borderColor: `${alpha("#000000", 0.2)}`,
-                                }}
-                                className="rounded-lg flex items-center gap-4 border p-2 justify-between">
-                                <div
-                                    style={{
-                                        fontSize: "14px",
-                                        marginRight: "-10px",
-                                    }}>
-                                    {t("from")}
-                                </div>
-                                <input
-                                    className="focus:outline-none text-black-500 text-xs"
-                                    type="date"
-                                    style={{ border: "none" }}
-                                    name="availableFromDate"
-                                    min={new Date().toISOString().split("T")[0]}
-                                    value={availableFromDate}
-                                    onChange={(e) =>
-                                        setAvailableFromDate(e.target.value)
-                                    }
-                                />
-                            </div>
-                            <div className="flex justify-center items-center">
-                                -
-                            </div>
-                            <div
-                                style={{
-                                    width: "45%",
-                                    height: "51px",
-                                    borderColor: `${alpha("#000000", 0.2)}`,
-                                }}
-                                className="rounded-lg flex items-center gap-4 border border-black-50 p-2 justify-between">
-                                <div
-                                    style={{
-                                        fontSize: "14px",
-                                        marginRight: "10px",
-                                    }}>
-                                    {t("to")}
-                                </div>
-                                <input
-                                    className="focus:outline-none text-black-500 text-xs"
-                                    type="date"
-                                    style={{ border: "none" }}
-                                    name="availableToDate"
-                                    min={availableFromDate}
-                                    value={availableToDate}
-                                    onChange={(e) =>
-                                        setAvailableToDate(e.target.value)
-                                    }
-                                />
-                            </div>
-                        </div>
+                        <SelectOpenDate
+                            availableFromDate={availableFromDate}
+                            setAvailableFromDate={setAvailableFromDate}
+                            availableToDate={availableToDate}
+                            setAvailableToDate={setAvailableToDate}
+                        />
+
                         <p
                             className="font-semibold mt-3"
                             style={{ fontSize: "14px" }}>
@@ -390,27 +367,22 @@ export default function AddServiceTime(props: IParams) {
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
                                             : `1px solid ${alpha(
-                                                  "#000000",
-                                                  0.2
-                                              )}`,
+                                                "#000000",
+                                                0.2
+                                            )}`,
                                         borderRadius: "8px",
                                         backgroundColor: disibleDays.some(
                                             (item) => item == day.value
                                         )
-                                            ? "#dddddd" // Background color for disabled button
+                                            ? "#dddddd"
                                             : isDaySelected(day.value)
-                                            ? "rgba(2, 8, 115, 0.2)"
-                                            : "white",
+                                                ? "rgba(2, 8, 115, 0.2)"
+                                                : "white",
                                     }}>
                                     {day.name}
                                 </button>
                             ))}
                         </div>
-                        {/* {daysOpen.length < 0 ? (
-                        <div className="text-red-500 text-sm mt-1">
-                            At least one day must be selected
-                        </div>
-                    ) : null} */}
 
                         <p
                             className="font-semibold mt-3"
@@ -436,8 +408,9 @@ export default function AddServiceTime(props: IParams) {
                                     <input
                                         className="font-black-500 focus:outline-none"
                                         value={openTime}
-                                        onChange={(e) =>
-                                            setOpenTime(e.target.value)
+                                        onChange={(e) => {
+                                            setOpenTime(e.target.value);
+                                        }
                                         }
                                         type="time"
                                         style={{
@@ -465,19 +438,19 @@ export default function AddServiceTime(props: IParams) {
                                     <input
                                         min={openTime}
                                         value={closeTime}
-                                        onChange={(e) =>
-                                            handleCloseTime(e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            handleCloseTime(e.target.value);
+                                        }}
                                         type="time"
                                         style={{ border: "none" }}
                                         className="focus:outline-none"
                                         name="closeTime"
-                                        // disabled={openTime == ""}
                                         required
                                     />
                                 </div>
                             </div>
                         </div>
+
                         <div
                             style={{
                                 width: "100%",
@@ -527,177 +500,37 @@ export default function AddServiceTime(props: IParams) {
                             </div>
                         </div>
 
-                        <p
-                            className="font-semibold mt-3"
-                            style={{ fontSize: "14px" }}>
-                            {t("openSlot")}
-                        </p>
-                        <div className="flex justify-between gap-2 w-full flex-wrap mt-3">
-                            {timeSlots.map((slot, index) => (
-                                <div
-                                    key={index}
-                                    className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${
-                                    selectedSlots.includes(index)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                }`}
-                                    style={{
-                                        width: "48%",
-                                        height: "51px",
-                                        borderColor: selectedSlots.includes(
-                                            index
-                                        )
-                                            ? "#020873"
-                                            : `${alpha("#000000", 0.2)}`,
-                                        backgroundColor: selectedSlots.includes(
-                                            index
-                                        )
-                                            ? "rgb(2, 8, 115,0.2)"
-                                            : "white",
-                                    }}
-                                    onClick={() => toggleSlotSelection(index)}>
-                                    {slot.startTime} - {slot.endTime}
-                                </div>
-                            ))}
-                        </div>
+                        {timeSlots && timeSlots.length > 0 &&
+                            <SlotTimes
+                                timeSlots={timeSlots}
+                                selectedSlots={selectedSlots}
+                                toggleSlotSelection={toggleSlotSelection}
+                            />
+                        }
 
                         {isManually == true ? (
-                            <div className="flex flex-col mt-5 border-black-50 border p-3">
-                                <div className="flex justify-between">
-                                    <p className="text-sm">
-                                        {t("Availableguests")}
-                                    </p>
-                                    <u
-                                        onClick={handleResetGustNumber}
-                                        style={{
-                                            color: "#020873",
-                                            fontSize: "14px",
-                                            cursor: "pointer",
-                                        }}>
-                                        {t("translation:reset")}
-                                    </u>
-                                </div>
-                                {selectedSlots
-                                    .sort((a, b) => a - b)
-                                    .map((element) => (
-                                        <div key={element}>
-                                            <div className="flex justify-between">
-                                                <div className="p-3">
-                                                    {
-                                                        timeSlots[element]
-                                                            .startTime
-                                                    }{" "}
-                                                    -{" "}
-                                                    {timeSlots[element].endTime}
-                                                </div>
-                                                <div className="flex justify-between gap-3 items-center p-3">
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDecreaseCapacityManual(
-                                                                timeSlots[
-                                                                    element
-                                                                ].startTime,
-                                                                timeSlots[
-                                                                    element
-                                                                ].endTime
-                                                            )
-                                                        }
-                                                        style={{
-                                                            cursor: "pointer",
-                                                        }}
-                                                        className="border flex justify-center items-center w-8 h-8 rounded-md">
-                                                        <KeyboardArrowDownIcon />
-                                                    </button>
-                                                    {manualCapacity.find(
-                                                        (item) =>
-                                                            item.startTime ==
-                                                                timeSlots[
-                                                                    element
-                                                                ].startTime &&
-                                                            item.endTime ==
-                                                                timeSlots[
-                                                                    element
-                                                                ].endTime
-                                                    )?.capacity ?? guestNumber}
-                                                    <button
-                                                        onClick={() =>
-                                                            handleIncreaseCapacityManual(
-                                                                timeSlots[
-                                                                    element
-                                                                ].startTime,
-                                                                timeSlots[
-                                                                    element
-                                                                ].endTime,
-                                                                guestNumber
-                                                            )
-                                                        }
-                                                        className="border flex justify-center items-center w-8 h-8 rounded-md"
-                                                        style={{
-                                                            cursor: "pointer",
-                                                            marginRight: "-5px",
-                                                        }}>
-                                                        <KeyboardArrowUpIcon />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <hr
-                                                style={{
-                                                    borderColor: `${alpha(
-                                                        "#000000",
-                                                        0.2
-                                                    )}`,
-                                                }}
-                                                className="border-1 border-black-50"
-                                            />
-                                        </div>
-                                    ))}
-                            </div>
+                            { timeSlots } && timeSlots.length > 0 ? (
+                                <GuestNumberManually
+                                    timeSlots={timeSlots}
+                                    handleResetGustNumber={handleResetGustNumber}
+                                    manualCapacity={manualCapacity}
+                                    selectedSlots={selectedSlots}
+                                    handleIncreaseCapacityManual={handleIncreaseCapacityManual}
+                                    handleDecreaseCapacityManual={handleDecreaseCapacityManual}
+                                    guestNumber={guestNumber}
+                                />
+                            ) : null
                         ) : (
-                            <div
-                                style={{
-                                    borderColor: `${alpha("#000000", 0.2)}`,
-                                }}
-                                className="flex justify-between border rounded-lg mt-3">
-                                <div className="p-3">
-                                    <p
-                                        style={{
-                                            fontSize: "14px",
-                                            color: "#1C1C1C",
-                                        }}>
-                                        {t("fragment:avaiGuest")}
-                                    </p>
-                                    <button
-                                        onClick={() => setIsManually(true)}
-                                        disabled={
-                                            timeSlots.length == 0 ||
-                                            timeSlots[0].startTime == "" ||
-                                            selectedSlots.length == 0
-                                        }>
-                                        <u
-                                            style={{
-                                                color: "#020873",
-                                                fontSize: "12px",
-                                            }}>
-                                            {t("fragment:manualAdjust")}
-                                        </u>
-                                    </button>
-                                </div>
-                                <div className="flex justify-between gap-3 items-center p-3">
-                                    <button
-                                        disabled={guestNumber == 1}
-                                        onClick={decreaseGuest}
-                                        className="border flex justify-center items-center w-8 h-8 rounded-md">
-                                        <KeyboardArrowDownIcon />
-                                    </button>
-                                    {guestNumber}
-                                    <button
-                                        onClick={increaseGuest}
-                                        className="border flex justify-center items-center w-8 h-8 rounded-md">
-                                        <KeyboardArrowUpIcon />
-                                    </button>
-                                </div>
-                            </div>
+                            { timeSlots } && timeSlots.length > 0 ? (
+                                <GuestNumber
+                                    handleIsManually={() => setIsManually(true)}
+                                    timeSlots={timeSlots}
+                                    selectedSlots={selectedSlots}
+                                    guestNumber={guestNumber}
+                                    increaseGuest={increaseGuest}
+                                    decreaseGuest={decreaseGuest}
+                                />
+                            ) : null
                         )}
 
                         <div className="w-full flex justify-center bottom-0 inset-x-0 mb-4">

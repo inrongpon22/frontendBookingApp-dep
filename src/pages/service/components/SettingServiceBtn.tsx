@@ -3,19 +3,29 @@ import { t } from 'i18next';
 import { ToggleButton as MuiToggleButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { IServiceInfo, IServiceEditTime } from '../../../interfaces/services/Iservice';
 
 interface IParams {
     isAutoApprove: boolean;
     isHidePrice: boolean;
     isHideEndTime: boolean;
+    modifyServiceInfo?: IServiceInfo;
+    modufyServiceTime?: IServiceEditTime[];
     handleAutoApprove: () => void;
     handleHidePrice: () => void;
     handleHideEndTime: () => void;
+    handleUpdateService: () => void;
+    handleOpenPreview: () => void;
 }
 
 export default function SettingServiceBtn(props: IParams) {
     return (
         <>
+            <p
+                className=" font-bold "
+                style={{ fontSize: "14px" }}>
+                {t("serviceSetting")}
+            </p>
             <div
                 style={{ borderColor: `${alpha("#000000", 0.2)}` }}
                 className="flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
@@ -104,6 +114,22 @@ export default function SettingServiceBtn(props: IParams) {
                     </span>
                 </MuiToggleButton>
             </div> */}
+            <div
+                className={`w-full flex justify-center bottom-0 inset-x-0 gap-2 mb-3 fixed`}>
+                <button
+                    onClick={props.handleOpenPreview}
+                    className="w-[45vw] p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold">
+                    {t("button:preview")}
+                </button>
+                <button
+                    disabled={(props.modifyServiceInfo === undefined) || (props.modufyServiceTime === undefined || props.modufyServiceTime.length === 0)}
+                    onClick={props.handleUpdateService}
+                    type="submit"
+                    className={`w-[45vw] p-3 text-white rounded-lg font-semibold 
+                    ${(props.modifyServiceInfo === undefined) || (props.modufyServiceTime === undefined || props.modufyServiceTime.length === 0) ? 'bg-gray-300' : 'bg-deep-blue'}`}>
+                    {t("button:confirm")}
+                </button>
+            </div>
         </>
     );
 }

@@ -19,7 +19,7 @@ interface IParams {
     serviceDescription: string;
     price: number;
     currency: string;
-    serviceId: number;
+    serviceId?: number;
 }
 
 export default function ServiceCard(props: IParams) {
@@ -45,10 +45,12 @@ export default function ServiceCard(props: IParams) {
     };
 
     const handleDeleteService = async () => {
-        await deleteService(
-            props.serviceId,
-            localStorage.getItem("token") ?? ""
-        );
+        if (props.serviceId) {
+            await deleteService(
+                props.serviceId,
+                localStorage.getItem("token") ?? ""
+            );
+        }
         handleClose();
         setAnchorEl(null);
         navigate(`/service-setting/${businessId}`);
