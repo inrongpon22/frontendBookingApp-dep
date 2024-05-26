@@ -18,6 +18,9 @@ interface IProps {
 }
 
 export default function GuestNumberManually(props: IProps) {
+    console.log(props.manualCapacity);
+    console.log(props.selectedSlots);
+    console.log(props.timeSlots);
     return (
         <div className="flex flex-col mt-5 border-black-50 border p-3">
             <div className="flex justify-between">
@@ -36,21 +39,21 @@ export default function GuestNumberManually(props: IProps) {
             </div>
             {props.selectedSlots
                 .sort((a, b) => a - b)
-                .map((element) => (
-                    <div key={element}>
+                .map((element, index) => (
+                    <div key={index}>
                         <div className="flex justify-between">
                             <div className="p-3">
                                 {
-                                    props.timeSlots[element]
+                                    props.manualCapacity[index]
                                         .startTime
                                 }{" "}
                                 -{" "}
-                                {props.timeSlots[element].endTime}
+                                {props.manualCapacity[index].endTime}
                             </div>
                             <div className="flex justify-between gap-3 items-center p-3">
                                 <button
                                     disabled={
-                                        props.manualCapacity[element].capacity == 1
+                                        props.manualCapacity[index].capacity == 1
                                     }
                                     onClick={() =>
                                         props.handleDecreaseCapacityManual(
@@ -66,7 +69,7 @@ export default function GuestNumberManually(props: IProps) {
                                         cursor: "pointer",
                                     }}
                                     className={`border flex justify-center items-center w-8 h-8 rounded-md 
-                                                    ${props.manualCapacity[element]
+                                                    ${props.manualCapacity[index]
                                             ?.capacity == 1 ? "opacity-40" : ""}`}>
                                     <KeyboardArrowDownIcon />
                                 </button>

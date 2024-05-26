@@ -97,7 +97,6 @@ export default function ServiceDetail(props: IParams) {
     };
     const handleSetEditTime = () => {
         setIsEditTime(!isEditTime);
-        setIsCloseServiceCard(false);
     };
     const handleAddTime = () => {
         setIsAddTime(!isAddTime);
@@ -315,7 +314,10 @@ export default function ServiceDetail(props: IParams) {
                         editIndex={selectedIndex}
                         isAddTime={isAddTime}
                         isClose={isCloseServiceCard}
-                        handleSetEditTime={handleSetEditTime}
+                        handleSetEditTime={() => {
+                            handleSetEditTime();
+                            setIsCloseServiceCard(false);
+                        }}
                         handleSetServiceTime={handleSetServiceTime}
                         handleCloseCreateService={handleOpenServiceInfo}
                     />
@@ -364,9 +366,10 @@ export default function ServiceDetail(props: IParams) {
                                                     }
                                                     slotsTime={item.slotsTime}
                                                     selectedIndex={index}
-                                                    handleSetEditTime={
-                                                        handleSetEditTime
-                                                    }
+                                                    handleSetEditTime={() => {
+                                                        handleSetEditTime();
+                                                        setIsCloseServiceCard(true);
+                                                    }}
                                                     handleSelectIndex={(
                                                         index: number
                                                     ) =>
@@ -504,6 +507,7 @@ export default function ServiceDetail(props: IParams) {
                                             price={modifyServiceInfo.price}
                                             currency={modifyServiceInfo.currency}
                                             handleSetEditInfo={handleSetEditInfo}
+                                            handleCloseAfterDelete={props.handleClose && props.handleClose}
                                         />
 
                                         {modifyServiceTime &&

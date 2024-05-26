@@ -88,6 +88,7 @@ export default function AddServiceTime(props: IParams) {
         startTime: string,
         endTime: string
     ) => {
+        setIsManually(false);
         const sortedCapacity = [...manualCapacity].sort((a, b) => {
             if (a.startTime < b.startTime) return -1;
             if (a.startTime > b.startTime) return 1;
@@ -212,15 +213,18 @@ export default function AddServiceTime(props: IParams) {
 
     const increaseDuration = () => {
         setDuration((prev) => prev + 0.5);
+        setIsManually(false);
     };
     const decreaseDuration = () => {
         setDuration((prev) => prev - 0.5);
+        setIsManually(false);
     };
 
     const handleResetGustNumber = () => {
         manualCapacity.forEach((element) => {
             element.capacity = 1;
         });
+        setGuestNumber(1);
         setIsManually(false);
     };
 
@@ -310,15 +314,13 @@ export default function AddServiceTime(props: IParams) {
     useEffect(() => {
         if (timeSlots.length > 0) {
             setManualCapacity([]);
-            const uniqueSlots = new Set<number>();
             const newSelectedSlots: number[] = [];
-
             timeSlots.forEach((element, index) => {
-                if (!uniqueSlots.has(index)) {
-                    uniqueSlots.add(index);
-                    newSelectedSlots.push(index);
-                    toggleSlotSelection(index, element.startTime, element.endTime);
-                }
+                newSelectedSlots.push(index);
+                setManualCapacity((prevCapacity) => [
+                    ...prevCapacity,
+                    { startTime: element.startTime, endTime: element.endTime, capacity: guestNumber },
+                ]);
             });
             setSelectedSlots(newSelectedSlots);
         }
@@ -327,7 +329,7 @@ export default function AddServiceTime(props: IParams) {
 
     return (
         <>
-            <div style={{ width: "100vw" }}>
+            <div className="mb-[12vh]">
                 <Loading openLoading={businessLoading} />
                 <div className="pr-4 pl-4 pt-6">
                     <Header
@@ -417,6 +419,7 @@ export default function AddServiceTime(props: IParams) {
                                         value={openTime}
                                         onChange={(e) => {
                                             setOpenTime(e.target.value);
+                                            setIsManually(false);
                                         }
                                         }
                                         type="time"
@@ -447,6 +450,7 @@ export default function AddServiceTime(props: IParams) {
                                         value={closeTime}
                                         onChange={(e) => {
                                             handleCloseTime(e.target.value);
+                                            setIsManually(false);
                                         }}
                                         type="time"
                                         style={{ border: "none" }}
@@ -500,6 +504,7 @@ export default function AddServiceTime(props: IParams) {
                                             sx={{
                                                 fontSize: "20px",
                                                 marginTop: "-10px",
+                                                color: duration == 0.5 ? "#cccccc" : "",
                                             }}
                                         />
                                     </button>
@@ -515,18 +520,22 @@ export default function AddServiceTime(props: IParams) {
                             />
                         }
 
-                        {isManually == true ? (
-                            { timeSlots } && timeSlots.length > 0 ? (
-                                <GuestNumberManually
-                                    timeSlots={timeSlots}
-                                    handleResetGustNumber={handleResetGustNumber}
-                                    manualCapacity={manualCapacity}
-                                    selectedSlots={selectedSlots}
-                                    handleIncreaseCapacityManual={handleIncreaseCapacityManual}
-                                    handleDecreaseCapacityManual={handleDecreaseCapacityManual}
-                                    guestNumber={guestNumber}
-                                />
-                            ) : null
+                        {isManually ? (
+                            isManually && (
+                                (timeSlots !== undefined && timeSlots.length > 0) &&
+                                    (selectedSlots.length > 0) &&
+                                    (manualCapacity.length > 0) ? (
+                                    <GuestNumberManually
+                                        timeSlots={timeSlots}
+                                        handleResetGustNumber={handleResetGustNumber}
+                                        manualCapacity={manualCapacity}
+                                        selectedSlots={selectedSlots}
+                                        handleIncreaseCapacityManual={handleIncreaseCapacityManual}
+                                        handleDecreaseCapacityManual={handleDecreaseCapacityManual}
+                                        guestNumber={guestNumber}
+                                    />
+                                ) : null
+                            )
                         ) : (
                             { timeSlots } && timeSlots.length > 0 ? (
                                 <GuestNumber
@@ -540,7 +549,7 @@ export default function AddServiceTime(props: IParams) {
                             ) : null
                         )}
 
-                        <div className="w-full flex justify-center bottom-0 inset-x-0 mb-4">
+                        <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                             <button
                                 disabled={
                                     daysOpen.length == 0 ||

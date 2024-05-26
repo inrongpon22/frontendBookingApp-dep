@@ -9,23 +9,21 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTranslation } from "react-i18next";
 import { deleteService } from "../../../api/service";
-import { useNavigate, useParams } from "react-router-dom";
 import ConfirmCard from "../../../components/dialog/ConfirmCard";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 interface IParams {
-    handleSetEditInfo: () => void;
     serviceName: string;
     serviceDescription: string;
     price: number;
     currency: string;
     serviceId?: number;
+    handleSetEditInfo: () => void;
+    handleCloseAfterDelete?: () => void;
 }
 
 export default function ServiceCard(props: IParams) {
     const { t } = useTranslation();
-    const { businessId } = useParams();
-    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [openConfirm, setOpenConfirm] = useState(false);
@@ -54,9 +52,10 @@ export default function ServiceCard(props: IParams) {
                 localStorage.getItem("token") ?? ""
             );
         }
+        handleCloseConfirm();
         handleClose();
         setAnchorEl(null);
-        navigate(`/service-setting/${businessId}`);
+        props.handleCloseAfterDelete && props.handleCloseAfterDelete();
     };
 
     return (

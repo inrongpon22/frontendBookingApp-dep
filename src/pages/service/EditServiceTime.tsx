@@ -28,6 +28,7 @@ interface IParams {
 }
 
 export default function EditServiceTime(props: IParams) {
+    // console.log(props.serviceTime[props.editIndex].daysOpen);
     const { t } = useTranslation();
     const [daysOpen, setDaysOpen] = useState<string[]>(
         props.isAddTime ? [] : props.serviceTime[props.editIndex].daysOpen
@@ -101,30 +102,6 @@ export default function EditServiceTime(props: IParams) {
                 .padStart(2, "0")}`;
         }
     };
-
-    useEffect(() => {
-        const uniqueDays = new Set();
-        if (props.serviceTime[0].daysOpen !== undefined) {
-            props.serviceTime
-                .filter((_item, index) => index !== props.editIndex)
-                .forEach((element) => {
-                    if (
-                        element.availableFromDate == availableFromDate &&
-                        element.availableToDate == availableToDate
-                    ) {
-                        element.daysOpen.forEach((day) => uniqueDays.add(day));
-                        if (
-                            !daysOpen.some((dayName) => uniqueDays.has(dayName))
-                        ) {
-                            setDisibleDays(Array.from(uniqueDays) as string[]);
-                        }
-                    } else {
-                        setDisibleDays([]);
-                    }
-                });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [availableFromDate, availableToDate]);
 
     const toggleSlotSelection = (
         index: number,
@@ -301,6 +278,30 @@ export default function EditServiceTime(props: IParams) {
 
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [isTwentyFourHour]);
+
+    useEffect(() => {
+        const uniqueDays = new Set();
+        if (props.serviceTime[0].daysOpen !== undefined) {
+            props.serviceTime
+                .filter((_item, index) => index !== props.editIndex)
+                .forEach((element) => {
+                    if (
+                        element.availableFromDate == availableFromDate &&
+                        element.availableToDate == availableToDate
+                    ) {
+                        element.daysOpen.forEach((day) => uniqueDays.add(day));
+                        if (
+                            !daysOpen.some((dayName) => uniqueDays.has(dayName))
+                        ) {
+                            setDisibleDays(Array.from(uniqueDays) as string[]);
+                        }
+                    } else {
+                        setDisibleDays([]);
+                    }
+                });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [availableFromDate, availableToDate]);
 
     useEffect(() => {
         if (
@@ -637,6 +638,7 @@ export default function EditServiceTime(props: IParams) {
                                         sx={{
                                             fontSize: "20px",
                                             marginTop: "-10px",
+                                            color: duration == 0.5 ? "#cccccc" : "",
                                         }}
                                     />
                                 </button>

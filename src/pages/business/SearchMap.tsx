@@ -10,8 +10,8 @@ import { alpha } from "@mui/system";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 // import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useEffect, useState } from "react";
-import { ILocation } from "./interfaces/business";
 import { useTranslation } from "react-i18next";
+import { ILocation } from "../../interfaces/business";
 
 type LocationData = {
     lat: number;
