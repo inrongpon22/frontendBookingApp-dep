@@ -9,9 +9,9 @@ import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { alpha } from "@mui/system";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 // import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { useState } from "react";
-import { ILocation } from "./interfaces/business";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ILocation } from "../../interfaces/business";
 
 type LocationData = {
     lat: number;
@@ -27,7 +27,14 @@ interface IParameter {
 
 export default function SearchMap(props: IParameter) {
     const { t } = useTranslation();
-    const [address, setAddress] = useState(props.oldAddress ?? "");
+    const [address, setAddress] = useState("");
+
+    useEffect(() => {
+        if (props.oldAddress) {
+            setAddress(props.oldAddress);
+        }
+    }, [props.oldAddress]);
+
 
     const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
         const locationData: LocationData = { lat, lng, address };
@@ -112,13 +119,13 @@ export default function SearchMap(props: IParameter) {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                              backgroundColor: "#fafafa",
-                                              cursor: "pointer",
-                                          }
+                                            backgroundColor: "#fafafa",
+                                            cursor: "pointer",
+                                        }
                                         : {
-                                              backgroundColor: "#ffffff",
-                                              cursor: "pointer",
-                                          };
+                                            backgroundColor: "#ffffff",
+                                            cursor: "pointer",
+                                        };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(

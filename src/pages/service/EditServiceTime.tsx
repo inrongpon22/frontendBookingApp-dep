@@ -5,11 +5,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from "@mui/icons-material/Close";
+
 import {
     IServiceEditTime,
     IBookingSlot,
 } from "../../interfaces/services/Iservice";
+import SlotTimes from "./components/SlotTimes";
+import GuestNumberManually from "./components/GuestNumberManually";
+import GuestNumber from "./components/GuestNumber";
+import Header from "./components/Header";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -17,13 +21,14 @@ interface IParams {
     closeTime: string;
     editIndex: number;
     isAddTime: boolean;
+    isClose: boolean;
     handleSetEditTime: () => void;
     handleSetServiceTime?: (serviceTime: IServiceEditTime[]) => void;
+    handleCloseCreateService?: () => void;
 }
 
 export default function EditServiceTime(props: IParams) {
     const { t } = useTranslation();
-
     const [daysOpen, setDaysOpen] = useState<string[]>(
         props.isAddTime ? [] : props.serviceTime[props.editIndex].daysOpen
     );
@@ -55,71 +60,117 @@ export default function EditServiceTime(props: IParams) {
             : props.serviceTime[props.editIndex].availableToDate ?? ""
     );
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
-    const timeSlots: {
-        startTime: string;
-        endTime: string;
-    }[] = [];
-    // const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
+    const [isTwentyFourHour, setIsTwentyFourHour] = useState(
+        props.openTime == "00:00" && props.closeTime == "00:00" ? true : false
+    );
+
+    const generate24HourTimeSlots = (duration: number) => {
+        const timeSlots = [];
+        const durationMinutes = duration * 60; // Convert hours to minutes
+        let currentTimeMinutes = 0; // Start at 00:00
+
+        // Helper function to convert total minutes to time string
+        const minutesToTime = (minutes: number) => {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+        };
+
+        // Generate time slots for 24 hours
+        while (currentTimeMinutes < 1440) { // 1440 minutes in a day
+            const nextTimeMinutes = currentTimeMinutes + durationMinutes;
+            if (nextTimeMinutes > 1440) break; // Stop if next slot exceeds 24:00
+
+            const startTime = minutesToTime(currentTimeMinutes);
+            const endTime = nextTimeMinutes === 1440 ? "00:00" : minutesToTime(nextTimeMinutes);
+
+            timeSlots.push({
+                startTime,
+                endTime
+            });
+
+            currentTimeMinutes = nextTimeMinutes;
+        }
+
+        return timeSlots;
+    };
 
     const generateTimeSlots = (
         startTime: string,
         endTime: string,
         duration: number
     ) => {
-        if (endTime == "23:59") {
-            endTime = "24:00";
-        }
-        duration = duration * 60;
-        let currentTime = startTime;
-        while (currentTime <= endTime) {
-            const [hours, minutes] = currentTime.split(":").map(Number);
-            const totalMinutes = hours * 60 + minutes;
-            const newTotalMinutes = totalMinutes + duration;
-            const newHours = Math.floor(newTotalMinutes / 60);
-            const newMinutes = newTotalMinutes % 60;
-            const endTimeHours = Math.floor(newTotalMinutes / 60);
-            const endTimeMinutes = newTotalMinutes % 60;
-            const endTimeString = `${endTimeHours
-                .toString()
-                .padStart(2, "0")}:${endTimeMinutes
+        const timeSlots = [];
+
+        if (startTime > endTime) {
+            // Helper function to convert time string to total minutes
+            const timeToMinutes = (time: string) => {
+                const [hours, minutes] = time.split(":").map(Number);
+                return hours * 60 + minutes;
+            };
+
+            // Helper function to convert total minutes to time string
+            const minutesToTime = (minutes: number) => {
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+            };
+
+            let currentTimeMinutes = timeToMinutes(startTime);
+            const endTimeMinutes = timeToMinutes(endTime);
+            const durationMinutes = duration * 60;
+
+            // Loop until the current time exceeds the end time on the next day
+            while (currentTimeMinutes < 1440 + endTimeMinutes) {
+                const nextTimeMinutes = currentTimeMinutes + durationMinutes;
+
+                // Calculate endTime string
+                const endTimeString = minutesToTime(nextTimeMinutes % 1440);
+
+                // Break the loop if the next slot starts after the end time and it's past the next day
+                if (currentTimeMinutes >= 1440 + endTimeMinutes) {
+                    break;
+                }
+
+                // Add time slot
+                timeSlots.push({
+                    startTime: minutesToTime(currentTimeMinutes % 1440),
+                    endTime: endTimeString
+                });
+
+                // Update currentTimeMinutes
+                currentTimeMinutes = nextTimeMinutes;
+            }
+        } else {
+            duration = duration * 60;
+            let currentTime = startTime;
+            while (currentTime <= endTime) {
+                const [hours, minutes] = currentTime.split(":").map(Number);
+                const totalMinutes = hours * 60 + minutes;
+                const newTotalMinutes = totalMinutes + duration;
+                const newHours = Math.floor(newTotalMinutes / 60);
+                const newMinutes = newTotalMinutes % 60;
+                const endTimeHours = Math.floor(newTotalMinutes / 60);
+                const endTimeMinutes = newTotalMinutes % 60;
+                const endTimeString = `${endTimeHours
+                    .toString()
+                    .padStart(2, "0")}:${endTimeMinutes
+                        .toString()
+                        .padStart(2, "0")}`;
+                if (endTimeString > endTime) {
+                    break;
+                }
+                timeSlots.push({ startTime: currentTime, endTime: endTimeString });
+                currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
                     .toString()
                     .padStart(2, "0")}`;
-            if (endTimeString > endTime) {
-                break;
             }
-            timeSlots.push({
-                startTime: currentTime,
-                endTime: endTimeString !== "24:00" ? endTimeString : "00:00",
-            });
-            currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
-                .toString()
-                .padStart(2, "0")}`;
         }
+
+        return timeSlots;
     };
 
-    useEffect(() => {
-        const uniqueDays = new Set();
-        if (props.serviceTime[0].daysOpen !== undefined) {
-            props.serviceTime
-                .filter((_item, index) => index !== props.editIndex)
-                .forEach((element) => {
-                    if (
-                        element.availableFromDate == availableFromDate &&
-                        element.availableToDate == availableToDate
-                    ) {
-                        element.daysOpen.forEach((day) => uniqueDays.add(day));
-                        if (
-                            !daysOpen.some((dayName) => uniqueDays.has(dayName))
-                        ) {
-                            setDisibleDays(Array.from(uniqueDays) as string[]);
-                        }
-                    } else {
-                        setDisibleDays([]);
-                    }
-                });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [availableFromDate, availableToDate]);
+    const timeSlots = isTwentyFourHour ? generate24HourTimeSlots(duration) : generateTimeSlots(openTime, closeTime, duration);
 
     const toggleSlotSelection = (
         index: number,
@@ -141,7 +192,6 @@ export default function EditServiceTime(props: IParams) {
                 prevCapacity.filter((_, index) => index !== indexManual)
             );
         } else {
-            // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
             setManualCapacity((prevCapacity) => {
                 const newCapacity = [
                     ...prevCapacity,
@@ -281,22 +331,29 @@ export default function EditServiceTime(props: IParams) {
         setCloseTime(time);
     };
 
-    // const handleSetTwentyFourHour = () => {
-    //     setIsTwentyFourHour(!isTwentyFourHour);
-    // };
-
-    // useEffect(() => {
-    //     if (isTwentyFourHour) {
-    //         setOpenTime("00:00");
-    //         setCloseTime("23:59");
-    //         setSelectedSlots([]);
-    //     } else {
-    //         setOpenTime(props.openTime.substring(0, 5));
-    //         setCloseTime(props.closeTime.substring(0, 5));
-    //     }
-
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [isTwentyFourHour]);
+    useEffect(() => {
+        const uniqueDays = new Set();
+        if (props.serviceTime[0].daysOpen !== undefined) {
+            props.serviceTime
+                .filter((_item, index) => index !== props.editIndex)
+                .forEach((element) => {
+                    if (
+                        element.availableFromDate == availableFromDate &&
+                        element.availableToDate == availableToDate
+                    ) {
+                        element.daysOpen.forEach((day) => uniqueDays.add(day));
+                        if (
+                            !daysOpen.some((dayName) => uniqueDays.has(dayName))
+                        ) {
+                            setDisibleDays(Array.from(uniqueDays) as string[]);
+                        }
+                    } else {
+                        setDisibleDays([]);
+                    }
+                });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [availableFromDate, availableToDate]);
 
     useEffect(() => {
         if (
@@ -319,29 +376,6 @@ export default function EditServiceTime(props: IParams) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    generateTimeSlots(openTime, closeTime, duration);
-    useEffect(() => {
-        if (timeSlots.length > 0 && manualCapacity.length === 0) {
-            setManualCapacity([]);
-            const uniqueSlots = new Set<number>();
-            const newSelectedSlots: number[] = [];
-
-            timeSlots.forEach((element, index) => {
-                if (!uniqueSlots.has(index)) {
-                    uniqueSlots.add(index);
-                    newSelectedSlots.push(index);
-                    toggleSlotSelection(
-                        index,
-                        element.startTime,
-                        element.endTime
-                    );
-                }
-            });
-            setSelectedSlots(newSelectedSlots);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [openTime, closeTime, duration]);
-
     const handleSubmit = async () => {
         const insertData = {
             daysOpen: daysOpen,
@@ -362,32 +396,42 @@ export default function EditServiceTime(props: IParams) {
         props.handleSetEditTime();
     };
 
-    console.log(manualCapacity);
+    useEffect(() => {
+        if (timeSlots.length > 0) {
+            setManualCapacity([]);
+            const newSelectedSlots: number[] = [];
+            timeSlots.forEach((element, index) => {
+                newSelectedSlots.push(index);
+                setManualCapacity((prevCapacity) => [
+                    ...prevCapacity,
+                    { startTime: element.startTime, endTime: element.endTime, capacity: guestNumber },
+                ]);
+            });
+            setSelectedSlots(newSelectedSlots);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openTime, closeTime, duration, isTwentyFourHour]);
 
     return (
-        // <>
-        // </>
         <div className="mb-10">
             <div className="pr-4 pl-4 pt-6">
-                <div className="flex items-center justify-between">
-                    <div onClick={props.handleSetEditTime}>
-                        <CloseIcon
-                            sx={{
-                                width: "20px",
-                                height: "20px",
-                                cursor: "pointer",
-                            }}
-                        />
-                    </div>
-
-                    <div className="font-bold" style={{ fontSize: "14px" }}>
-                        {t("title:serviceTime")}
-                    </div>
-
-                    <div>
-                        <div style={{ width: "20px", height: "20px" }} />
-                    </div>
-                </div>
+                <Header
+                    isClose={props.isClose}
+                    context={t("title:serviceTime")}
+                    handleClose={() => {
+                        if (props.isClose) {
+                            props.handleSetEditTime();
+                        } else {
+                            if (props.handleCloseCreateService) {
+                                props.handleCloseCreateService();
+                            }
+                            if (props.handleSetServiceTime) {
+                                props.handleSetServiceTime([]);
+                            }
+                            props.handleSetEditTime();
+                        }
+                    }}
+                />
             </div>
             <Divider sx={{ marginTop: "16px", width: "100%" }} />
             <div className="flex flex-col pr-4 pl-4 mb-[10vh]">
@@ -484,13 +528,8 @@ export default function EditServiceTime(props: IParams) {
                             </button>
                         ))}
                     </div>
-                    {/* {daysOpen.length < 0 ? (
-                        <div className="text-red-500 text-sm mt-1">
-                            At least one day must be selected
-                        </div>
-                    ) : null} */}
 
-                    {/* <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                         <div
                             className="font-semibold mt-3"
                             style={{ fontSize: "14px" }}>
@@ -503,85 +542,83 @@ export default function EditServiceTime(props: IParams) {
                                     fontSize: "14px",
                                     marginRight: "10px",
                                 }}>
-                                24 hour
+                                24 {t("hr")}
                             </div>
                             <input
                                 type="checkbox"
                                 className="mt-3"
-                                onChange={handleSetTwentyFourHour}
+                                onChange={(e) => { setIsTwentyFourHour(e.target.checked); }}
                                 checked={isTwentyFourHour}
                             />
                         </div>
-                    </div> */}
+                    </div>
 
-                    <p
-                        className="font-semibold mt-3"
-                        style={{ fontSize: "14px" }}>
-                        {t("availableTime")}
-                    </p>
-                    <div className="flex justify-between mt-3">
-                        <div
-                            style={{
-                                width: "156px",
-                                height: "51px",
-                                borderColor: `${alpha("#000000", 0.2)}`,
-                            }}
-                            className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
+                    {!isTwentyFourHour && (
+                        <div className="flex justify-between mt-3">
                             <div
                                 style={{
-                                    fontSize: "14px",
-                                    marginRight: "15px",
-                                }}>
-                                {t("from")}
-                            </div>
-                            <div className="flex">
-                                <input
-                                    className="font-black-500 focus:outline-none"
-                                    value={openTime}
-                                    onChange={(e) => {
-                                        setOpenTime(e.target.value);
-                                        setSelectedSlots([]);
-                                        setManualCapacity([]);
-                                    }}
-                                    type="time"
+                                    width: "156px",
+                                    height: "51px",
+                                    borderColor: `${alpha("#000000", 0.2)}`,
+                                }}
+                                className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
+                                <div
                                     style={{
-                                        border: "none",
-                                    }}
-                                    name="openTime"
-                                    required
-                                />
+                                        fontSize: "14px",
+                                        marginRight: "15px",
+                                    }}>
+                                    {t("from")}
+                                </div>
+                                <div className="flex">
+                                    <input
+                                        className="font-black-500 focus:outline-none"
+                                        value={openTime}
+                                        onChange={(e) => {
+                                            setOpenTime(e.target.value);
+                                            setIsManually(false);
+                                        }
+                                        }
+                                        type="time"
+                                        style={{
+                                            border: "none",
+                                        }}
+                                        name="openTime"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex justify-center items-center">
+                                -
+                            </div>
+                            <div
+                                style={{
+                                    width: "156px",
+                                    height: "51px",
+                                    borderColor: `${alpha("#000000", 0.2)}`,
+                                }}
+                                className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
+                                <div style={{ fontSize: "14px" }}>
+                                    {t("to")}
+                                </div>
+                                <div className="flex">
+                                    <input
+                                        min={openTime}
+                                        value={closeTime}
+                                        onChange={(e) => {
+                                            handleCloseTime(e.target.value);
+                                            setIsManually(false);
+                                        }}
+                                        type="time"
+                                        style={{ border: "none" }}
+                                        className="focus:outline-none"
+                                        name="closeTime"
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div className="flex justify-center items-center">
-                            -
-                        </div>
-                        <div
-                            style={{
-                                width: "156px",
-                                height: "51px",
-                                borderColor: `${alpha("#000000", 0.2)}`,
-                            }}
-                            className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
-                            <div style={{ fontSize: "14px" }}>{t("to")}</div>
-                            <div className="flex">
-                                <input
-                                    min={openTime}
-                                    value={closeTime}
-                                    onChange={(e) => {
-                                        handleCloseTime(e.target.value);
-                                        setSelectedSlots([]);
-                                        setManualCapacity([]);
-                                    }}
-                                    type="time"
-                                    style={{ border: "none" }}
-                                    className="focus:outline-none"
-                                    name="closeTime"
-                                    disabled={openTime == ""}
-                                    required
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    )}
+
                     <div
                         style={{
                             width: "100%",
@@ -622,6 +659,7 @@ export default function EditServiceTime(props: IParams) {
                                         sx={{
                                             fontSize: "20px",
                                             marginTop: "-10px",
+                                            color: duration == 0.5 ? "#cccccc" : "",
                                         }}
                                     />
                                 </button>
@@ -629,177 +667,37 @@ export default function EditServiceTime(props: IParams) {
                         </div>
                     </div>
 
-                    <p
-                        className="font-semibold mt-3"
-                        style={{ fontSize: "14px" }}>
-                        {t("openSlot")}
-                    </p>
-                    <div className="flex justify-between gap-2 w-full flex-wrap mt-3">
-                        {timeSlots.map((slot, index) => (
-                            <div
-                                key={index}
-                                className={`cursor-pointer rounded-lg flex justify-center items-center p-4 border-black-50 border
-                                ${selectedSlots.includes(index)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }`}
-                                style={{
-                                    width: "48%",
-                                    height: "51px",
-                                    borderColor: selectedSlots.includes(index)
-                                        ? "#020873"
-                                        : `${alpha("#000000", 0.2)}`,
-                                    backgroundColor: selectedSlots.includes(
-                                        index
-                                    )
-                                        ? "rgb(2, 8, 115,0.2)"
-                                        : "white",
-                                }}
-                                onClick={() =>
-                                    toggleSlotSelection(
-                                        index,
-                                        timeSlots[index].startTime,
-                                        timeSlots[index].endTime
-                                    )
-                                }>
-                                {slot.startTime} - {slot.endTime}
-                            </div>
-                        ))}
-                    </div>
+                    {timeSlots && timeSlots.length > 0 &&
+                        <SlotTimes
+                            timeSlots={timeSlots}
+                            selectedSlots={selectedSlots}
+                            toggleSlotSelection={toggleSlotSelection}
+                        />
+                    }
 
                     {isManually == true ? (
-                        <div className="flex flex-col mt-5 border-black-50 border p-3 rounded-lg">
-                            <div className="flex justify-between">
-                                <p className="text-sm">
-                                    {t("Availableguests")}
-                                </p>
-                                <u
-                                    onClick={handleResetGustNumber}
-                                    style={{
-                                        color: "#020873",
-                                        fontSize: "14px",
-                                        cursor: "pointer",
-                                    }}>
-                                    {t("translation:reset")}
-                                </u>
-                            </div>
-                            {selectedSlots
-                                .sort((a, b) => a - b)
-                                .map((element, index) => (
-                                    <div key={index}>
-                                        <div className="flex justify-between">
-                                            <div className="p-3">
-                                                {timeSlots[element].startTime} -{" "}
-                                                {timeSlots[element].endTime}
-                                            </div>
-                                            <div className="flex justify-between gap-3 items-center p-3">
-                                                <button
-                                                    disabled={
-                                                        manualCapacity[element]
-                                                            ?.capacity == 1
-                                                    }
-                                                    onClick={() =>
-                                                        handleDecreaseCapacityManual(
-                                                            timeSlots[element]
-                                                                .startTime,
-                                                            timeSlots[element]
-                                                                .endTime
-                                                        )
-                                                    }
-                                                    style={{
-                                                        cursor: "pointer",
-                                                    }}
-                                                    className={`border flex justify-center items-center w-8 h-8 rounded-md 
-                                                    ${manualCapacity[element]
-                                                            ?.capacity == 1 ? "opacity-40" : ""}`}>
-                                                    <KeyboardArrowDownIcon />
-                                                </button>
-                                                {manualCapacity.find(
-                                                    (item) =>
-                                                        item.startTime ==
-                                                        timeSlots[element]
-                                                            .startTime &&
-                                                        item.endTime ==
-                                                        timeSlots[element]
-                                                            .endTime
-                                                )?.capacity ?? guestNumber}
-                                                <button
-                                                    onClick={() =>
-                                                        handleIncreaseCapacityManual(
-                                                            timeSlots[element]
-                                                                .startTime,
-                                                            timeSlots[element]
-                                                                .endTime,
-                                                            guestNumber
-                                                        )
-                                                    }
-                                                    className="border flex justify-center items-center w-8 h-8 rounded-md"
-                                                    style={{
-                                                        cursor: "pointer",
-                                                        marginRight: "-5px",
-                                                    }}>
-                                                    <KeyboardArrowUpIcon />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <hr
-                                            style={{
-                                                borderColor: `${alpha(
-                                                    "#000000",
-                                                    0.2
-                                                )}`,
-                                            }}
-                                            className="border-1 border-black-50"
-                                        />
-                                    </div>
-                                ))}
-                        </div>
+                        { timeSlots } && timeSlots.length > 0 ? (
+                            <GuestNumberManually
+                                timeSlots={timeSlots}
+                                handleResetGustNumber={handleResetGustNumber}
+                                manualCapacity={manualCapacity}
+                                selectedSlots={selectedSlots}
+                                handleIncreaseCapacityManual={handleIncreaseCapacityManual}
+                                handleDecreaseCapacityManual={handleDecreaseCapacityManual}
+                                guestNumber={guestNumber}
+                            />
+                        ) : null
                     ) : (
-                        <div
-                            style={{
-                                borderColor: `${alpha("#000000", 0.2)}`,
-                            }}
-                            className="flex justify-between border rounded-lg mt-3">
-                            <div className="p-3">
-                                <p
-                                    style={{
-                                        fontSize: "14px",
-                                        color: "#1C1C1C",
-                                    }}>
-                                    {t("fragment:avaiGuest")}
-                                </p>
-                                <button
-                                    onClick={() => setIsManually(true)}
-                                    disabled={
-                                        timeSlots.length == 0 ||
-                                        timeSlots[0].startTime == "" ||
-                                        selectedSlots.length == 0 ||
-                                        manualCapacity.length == 0
-                                    }>
-                                    <u
-                                        style={{
-                                            color: "#020873",
-                                            fontSize: "12px",
-                                        }}>
-                                        {t("fragment:manualAdjust")}
-                                    </u>
-                                </button>
-                            </div>
-                            <div className="flex justify-between gap-3 items-center p-3">
-                                <button
-                                    disabled={guestNumber == 1}
-                                    onClick={decreaseGuest}
-                                    className={`border flex justify-center items-center w-8 h-8 rounded-md ${guestNumber == 1 ? "opacity-40" : ""}`}>
-                                    <KeyboardArrowDownIcon />
-                                </button>
-                                {guestNumber}
-                                <button
-                                    onClick={increaseGuest}
-                                    className="border flex justify-center items-center w-8 h-8 rounded-md">
-                                    <KeyboardArrowUpIcon />
-                                </button>
-                            </div>
-                        </div>
+                        { timeSlots } && timeSlots.length > 0 ? (
+                            <GuestNumber
+                                handleIsManually={() => setIsManually(true)}
+                                timeSlots={timeSlots}
+                                selectedSlots={selectedSlots}
+                                guestNumber={guestNumber}
+                                increaseGuest={increaseGuest}
+                                decreaseGuest={decreaseGuest}
+                            />
+                        ) : null
                     )}
 
                     <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">

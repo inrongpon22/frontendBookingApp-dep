@@ -6,7 +6,6 @@ interface IProps {
     isClose: boolean;
     isTyping?: boolean;
     isEdit?: boolean;
-    // handleClose?: (event: React.KeyboardEvent | React.MouseEvent) => void;
     handleClose?: () => void;
 }
 

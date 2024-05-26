@@ -1,7 +1,8 @@
 import axios from "axios";
-import { IaddBusiness } from "../pages/business/interfaces/business";
+
 import useSWR from "swr";
 import { app_api } from "../helper/url";
+import { IaddBusiness } from "../interfaces/business";
 
 export const insertBusiness = async (
     businessData: IaddBusiness,
@@ -47,6 +48,7 @@ export const updateBusiness = async (
 };
 
 export const getBusinessId = (businessId: number) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error, isLoading } = useSWR(
         `${app_api}/business/${businessId}`,
         (url: string) =>

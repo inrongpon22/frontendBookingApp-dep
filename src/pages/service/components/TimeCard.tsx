@@ -47,6 +47,7 @@ export default function TimeCard(props: IParams) {
 
     const handleDeleteSlot = () => {
         props.handleDeleteServiceTime();
+        handleCloseConfirm();
         handleClose();
         setAnchorEl(null);
     };
@@ -70,7 +71,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                        props.availableToDate == null
+                            props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -134,9 +135,9 @@ export default function TimeCard(props: IParams) {
                         const dayName =
                             lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === day)
-                                      ?.thaiName
+                                    ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === day)
-                                      ?.name;
+                                    ?.name;
                         const isSecondLast =
                             index === props.daysOpen.length - 2;
                         const isLast = index === props.daysOpen.length - 1;

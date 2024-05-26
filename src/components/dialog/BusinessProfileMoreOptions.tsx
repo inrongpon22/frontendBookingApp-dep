@@ -28,7 +28,7 @@ const BusinessProfileMoreOptions = () => {
     const handleLogout = async () => {
         // reset dialog state
         setShowDialog(false);
-        setDialogState("phone-input")
+        setDialogState("phone-input");
         // reset dialog state
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
@@ -59,7 +59,7 @@ const BusinessProfileMoreOptions = () => {
             {
                 icon: <StoreIcon />,
                 label: t("button:businessSetting"),
-                url: `/business-setting/${businessId}`,
+                url: `/business-setting?businessId=${businessId}&action=edit`,
             },
             {
                 icon: <SettingsIcon />,

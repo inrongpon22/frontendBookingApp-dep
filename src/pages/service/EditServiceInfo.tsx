@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { currencyList } from "../../helper/currency";
 import CloseIcon from "@mui/icons-material/Close";
-// import { updateServiceInfo } from "../../api/service";
 import { t } from "i18next";
 import { IServiceInfo } from "../../interfaces/services/Iservice";
 import { useState } from "react";
@@ -45,17 +44,6 @@ export default function EditServiceInfo(props: IParams) {
         },
         validationSchema: validationSchema,
         onSubmit: async (values: IServiceInfo) => {
-            // Handle form submission here
-            // await updateServiceInfo(
-            //     {
-            //         title: values.serviceName,
-            //         description: values.serviceDescription,
-            //         price: values.price,
-            //         currency: values.currency,
-            //     },
-            //     localStorage.getItem("token") || "",
-            //     props.serviceId
-            // );
             if (props.handleSetServiceInfo) {
                 props.handleSetServiceInfo(values);
             } else {
@@ -139,7 +127,7 @@ export default function EditServiceInfo(props: IParams) {
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
                         {formik.touched.serviceName &&
-                        formik.errors.serviceName ? (
+                            formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
@@ -157,18 +145,17 @@ export default function EditServiceInfo(props: IParams) {
                             placeholder={t(
                                 "formValidation:service:create:serviceDesc:serviceDescFill"
                             )}
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
-                                formik.touched.serviceDescription &&
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                    ? "border-red-500"
-                                    : ""
-                            }`}
+                                ? "border-red-500"
+                                : ""
+                                }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                        formik.errors.serviceDescription ? (
+                            formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
@@ -196,11 +183,10 @@ export default function EditServiceInfo(props: IParams) {
                                 style={{ textAlign: "right" }}
                                 name="price"
                                 type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${
-                                    formik.touched.price && formik.errors.price
-                                        ? "border-red-500"
-                                        : ""
-                                }`}
+                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
+                                    ? "border-red-500"
+                                    : ""
+                                    }`}
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
