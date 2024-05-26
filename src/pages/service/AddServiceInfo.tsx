@@ -94,10 +94,6 @@ export default function AddServiceInfo(props: IProps) {
         }
     };
 
-    const handleCloseFrom = () => {
-        handleCloseConfirm();
-    };
-
     return (
         <div>
             <>
@@ -108,8 +104,7 @@ export default function AddServiceInfo(props: IProps) {
                     bntConfirm={t("button:discard")}
                     bntBack={t("button:back")}
                     handleClose={handleCloseConfirm}
-                    handleConfirm={handleCloseFrom}
-                />
+                    handleConfirm={() => navigate(-1)} />
 
                 <div className="pr-4 pl-4 pt-6">
                     <Header
@@ -217,8 +212,9 @@ export default function AddServiceInfo(props: IProps) {
 
                             <div className="w-full flex justify-center fixed bottom-0 inset-x-0">
                                 <button
+                                    disabled={!formik.isValid}
                                     type="submit"
-                                    className="text-white mt-4 my-3 rounded-lg font-semibold w-[90vw] h-[51px] bg-[#020873] cursor-pointer text-[14px]"
+                                    className={`text-white mt-4 my-2 rounded-lg font-semibold w-[90vw] h-[51px] cursor-pointer text-[14px] ${!formik.isValid ? "bg-gray-300" : "bg-[#020873]"}`}
                                 >
                                     {t("button:next")}
                                 </button>

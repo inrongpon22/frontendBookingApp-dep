@@ -257,6 +257,12 @@ export default function ServiceDetail(props: IParams) {
         }
     };
 
+    const mergeDayOpen = (dayOpen: string[]) => {
+        return dayOpen.join(",");
+    };
+
+    const dayOfOpenLength = modifyServiceTime?.flatMap((time) => mergeDayOpen(time.daysOpen).split(",")).length;
+
     return (
         <>
             <ConfirmCard
@@ -307,20 +313,22 @@ export default function ServiceDetail(props: IParams) {
                         />
                     </>
                 ) : isEditTime ? (
-                    <EditServiceTime
-                        serviceTime={modifyServiceTime ?? []}
-                        openTime={businessData?.openTime ?? ""}
-                        closeTime={businessData?.closeTime ?? ""}
-                        editIndex={selectedIndex}
-                        isAddTime={isAddTime}
-                        isClose={isCloseServiceCard}
-                        handleSetEditTime={() => {
-                            handleSetEditTime();
-                            setIsCloseServiceCard(false);
-                        }}
-                        handleSetServiceTime={handleSetServiceTime}
-                        handleCloseCreateService={handleOpenServiceInfo}
-                    />
+                    modifyServiceTime && (
+                        <EditServiceTime
+                            serviceTime={modifyServiceTime}
+                            openTime={modifyServiceTime[selectedIndex].slotsTime[0].startTime}
+                            closeTime={modifyServiceTime[selectedIndex].slotsTime[modifyServiceTime[selectedIndex].slotsTime.length - 1].endTime}
+                            editIndex={selectedIndex}
+                            isAddTime={isAddTime}
+                            isClose={isCloseServiceCard}
+                            handleSetEditTime={() => {
+                                handleSetEditTime();
+                                setIsCloseServiceCard(false);
+                            }}
+                            handleSetServiceTime={handleSetServiceTime}
+                            handleCloseCreateService={handleOpenServiceInfo}
+                        />
+                    )
                 ) : (
                     <div
                         className={`w-full sm:w-auto md:w-full lg:w-auto xl:w-full overflow-x-hidden`}
@@ -384,20 +392,22 @@ export default function ServiceDetail(props: IParams) {
                                     )}
 
                                 <button
+                                    disabled={dayOfOpenLength === 7}
                                     style={{
                                         display: "flex",
-                                        background: `${alpha("#020873", 0.1)}`,
+                                        background: dayOfOpenLength === 7 ? `${alpha("#CCCCCC", 0.3)}` : `${alpha("#020873", 0.1)}`,
                                         width: "135px",
                                         height: "27px",
                                         fontSize: "14px",
                                         borderRadius: "8px",
                                         justifyContent: "center",
+                                        color: dayOfOpenLength === 7 ? `${alpha("#020873", 0.3)}` : `${alpha("#020873", 1)}`,
                                     }}
                                     onClick={() => {
                                         handleAddTime();
                                         setIsCloseServiceCard(true);
                                     }}
-                                    className=" items-center gap-1 p-1 ">
+                                    className={`items-center gap-1 p-1`}>
                                     <AddCircleOutlineIcon
                                         sx={{ fontSize: "13px" }}
                                     />
@@ -451,8 +461,8 @@ export default function ServiceDetail(props: IParams) {
                             modifyServiceTime && (
                                 <EditServiceTime
                                     serviceTime={modifyServiceTime}
-                                    openTime={serviceInfo.openTime}
-                                    closeTime={serviceInfo.closeTime}
+                                    openTime={modifyServiceTime[selectedIndex].slotsTime[0].startTime}
+                                    closeTime={modifyServiceTime[selectedIndex].slotsTime[modifyServiceTime[selectedIndex].slotsTime.length - 1].endTime}
                                     editIndex={selectedIndex}
                                     isAddTime={isAddTime}
                                     isClose={true}

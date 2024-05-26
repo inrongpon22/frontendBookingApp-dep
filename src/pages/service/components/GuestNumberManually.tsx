@@ -18,9 +18,6 @@ interface IProps {
 }
 
 export default function GuestNumberManually(props: IProps) {
-    console.log(props.manualCapacity);
-    console.log(props.selectedSlots);
-    console.log(props.timeSlots);
     return (
         <div className="flex flex-col mt-5 border-black-50 border p-3">
             <div className="flex justify-between">

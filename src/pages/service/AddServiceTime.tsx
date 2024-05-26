@@ -48,40 +48,115 @@ export default function AddServiceTime(props: IParams) {
     );
     const [availableToDate, setAvailableToDate] = useState("");
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
-    const timeSlots: {
-        startTime: string;
-        endTime: string;
-    }[] = [];
+    const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
+
+    const generate24HourTimeSlots = (duration: number) => {
+        const timeSlots = [];
+        const durationMinutes = duration * 60; // Convert hours to minutes
+        let currentTimeMinutes = 0; // Start at 00:00
+
+        // Helper function to convert total minutes to time string
+        const minutesToTime = (minutes: number) => {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+        };
+
+        // Generate time slots for 24 hours
+        while (currentTimeMinutes < 1440) { // 1440 minutes in a day
+            const nextTimeMinutes = currentTimeMinutes + durationMinutes;
+            if (nextTimeMinutes > 1440) break; // Stop if next slot exceeds 24:00
+
+            const startTime = minutesToTime(currentTimeMinutes);
+            const endTime = nextTimeMinutes === 1440 ? "00:00" : minutesToTime(nextTimeMinutes);
+
+            timeSlots.push({
+                startTime,
+                endTime
+            });
+
+            currentTimeMinutes = nextTimeMinutes;
+        }
+
+        return timeSlots;
+    };
 
     const generateTimeSlots = (
         startTime: string,
         endTime: string,
         duration: number
     ) => {
-        duration = duration * 60;
-        let currentTime = startTime;
-        while (currentTime <= endTime) {
-            const [hours, minutes] = currentTime.split(":").map(Number);
-            const totalMinutes = hours * 60 + minutes;
-            const newTotalMinutes = totalMinutes + duration;
-            const newHours = Math.floor(newTotalMinutes / 60);
-            const newMinutes = newTotalMinutes % 60;
-            const endTimeHours = Math.floor(newTotalMinutes / 60);
-            const endTimeMinutes = newTotalMinutes % 60;
-            const endTimeString = `${endTimeHours
-                .toString()
-                .padStart(2, "0")}:${endTimeMinutes
+        const timeSlots = [];
+
+        if (startTime > endTime) {
+            // Helper function to convert time string to total minutes
+            const timeToMinutes = (time: string) => {
+                const [hours, minutes] = time.split(":").map(Number);
+                return hours * 60 + minutes;
+            };
+
+            // Helper function to convert total minutes to time string
+            const minutesToTime = (minutes: number) => {
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+            };
+
+            let currentTimeMinutes = timeToMinutes(startTime);
+            const endTimeMinutes = timeToMinutes(endTime);
+            const durationMinutes = duration * 60;
+
+            // Loop until the current time exceeds the end time on the next day
+            while (currentTimeMinutes < 1440 + endTimeMinutes) {
+                const nextTimeMinutes = currentTimeMinutes + durationMinutes;
+
+                // Calculate endTime string
+                const endTimeString = minutesToTime(nextTimeMinutes % 1440);
+
+                // Break the loop if the next slot starts after the end time and it's past the next day
+                if (currentTimeMinutes >= 1440 + endTimeMinutes) {
+                    break;
+                }
+
+                // Add time slot
+                timeSlots.push({
+                    startTime: minutesToTime(currentTimeMinutes % 1440),
+                    endTime: endTimeString
+                });
+
+                // Update currentTimeMinutes
+                currentTimeMinutes = nextTimeMinutes;
+            }
+        } else {
+            duration = duration * 60;
+            let currentTime = startTime;
+            while (currentTime <= endTime) {
+                const [hours, minutes] = currentTime.split(":").map(Number);
+                const totalMinutes = hours * 60 + minutes;
+                const newTotalMinutes = totalMinutes + duration;
+                const newHours = Math.floor(newTotalMinutes / 60);
+                const newMinutes = newTotalMinutes % 60;
+                const endTimeHours = Math.floor(newTotalMinutes / 60);
+                const endTimeMinutes = newTotalMinutes % 60;
+                const endTimeString = `${endTimeHours
+                    .toString()
+                    .padStart(2, "0")}:${endTimeMinutes
+                        .toString()
+                        .padStart(2, "0")}`;
+                if (endTimeString > endTime) {
+                    break;
+                }
+                timeSlots.push({ startTime: currentTime, endTime: endTimeString });
+                currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
                     .toString()
                     .padStart(2, "0")}`;
-            if (endTimeString > endTime) {
-                break;
             }
-            timeSlots.push({ startTime: currentTime, endTime: endTimeString });
-            currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
-                .toString()
-                .padStart(2, "0")}`;
         }
+
+        return timeSlots;
     };
+
+    const timeSlots = isTwentyFourHour ? generate24HourTimeSlots(duration) : generateTimeSlots(openTime, closeTime, duration);
 
     const toggleSlotSelection = (
         index: number,
@@ -232,8 +307,6 @@ export default function AddServiceTime(props: IParams) {
         setCloseTime(time);
     };
 
-    generateTimeSlots(openTime, closeTime, duration);
-
     const handleSubmit = async () => {
         if (manualCapacity.length == 0) {
             selectedSlots.forEach((element) => {
@@ -325,7 +398,7 @@ export default function AddServiceTime(props: IParams) {
             setSelectedSlots(newSelectedSlots);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [openTime, closeTime, duration]);
+    }, [openTime, closeTime, duration, isTwentyFourHour]);
 
     return (
         <>
@@ -393,74 +466,95 @@ export default function AddServiceTime(props: IParams) {
                             ))}
                         </div>
 
-                        <p
-                            className="font-semibold mt-3"
-                            style={{ fontSize: "14px" }}>
-                            {t("availableTime")}
-                        </p>
-                        <div className="flex justify-between mt-3">
+                        <div className="flex justify-between items-center">
                             <div
-                                style={{
-                                    width: "156px",
-                                    height: "51px",
-                                    borderColor: `${alpha("#000000", 0.2)}`,
-                                }}
-                                className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
+                                className="font-semibold mt-3"
+                                style={{ fontSize: "14px" }}>
+                                {t("availableTime")}
+                            </div>
+                            <div className="flex">
                                 <div
+                                    className="mt-3"
                                     style={{
                                         fontSize: "14px",
-                                        marginRight: "15px",
+                                        marginRight: "10px",
                                     }}>
-                                    {t("from")}
+                                    24 {t("hr")}
                                 </div>
-                                <div className="flex">
-                                    <input
-                                        className="font-black-500 focus:outline-none"
-                                        value={openTime}
-                                        onChange={(e) => {
-                                            setOpenTime(e.target.value);
-                                            setIsManually(false);
-                                        }
-                                        }
-                                        type="time"
-                                        style={{
-                                            border: "none",
-                                        }}
-                                        name="openTime"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex justify-center items-center">
-                                -
-                            </div>
-                            <div
-                                style={{
-                                    width: "156px",
-                                    height: "51px",
-                                    borderColor: `${alpha("#000000", 0.2)}`,
-                                }}
-                                className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
-                                <div style={{ fontSize: "14px" }}>
-                                    {t("to")}
-                                </div>
-                                <div className="flex">
-                                    <input
-                                        min={openTime}
-                                        value={closeTime}
-                                        onChange={(e) => {
-                                            handleCloseTime(e.target.value);
-                                            setIsManually(false);
-                                        }}
-                                        type="time"
-                                        style={{ border: "none" }}
-                                        className="focus:outline-none"
-                                        name="closeTime"
-                                        required
-                                    />
-                                </div>
+                                <input
+                                    type="checkbox"
+                                    className="mt-3"
+                                    onChange={(e) => { setIsTwentyFourHour(e.target.checked); setIsManually(false); }}
+                                    checked={isTwentyFourHour}
+                                />
                             </div>
                         </div>
+
+                        {!isTwentyFourHour && (
+                            <div className="flex justify-between mt-3">
+                                <div
+                                    style={{
+                                        width: "156px",
+                                        height: "51px",
+                                        borderColor: `${alpha("#000000", 0.2)}`,
+                                    }}
+                                    className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
+                                    <div
+                                        style={{
+                                            fontSize: "14px",
+                                            marginRight: "15px",
+                                        }}>
+                                        {t("from")}
+                                    </div>
+                                    <div className="flex">
+                                        <input
+                                            className="font-black-500 focus:outline-none"
+                                            value={openTime}
+                                            onChange={(e) => {
+                                                setOpenTime(e.target.value);
+                                                setIsManually(false);
+                                            }
+                                            }
+                                            type="time"
+                                            style={{
+                                                border: "none",
+                                            }}
+                                            name="openTime"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex justify-center items-center">
+                                    -
+                                </div>
+                                <div
+                                    style={{
+                                        width: "156px",
+                                        height: "51px",
+                                        borderColor: `${alpha("#000000", 0.2)}`,
+                                    }}
+                                    className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
+                                    <div style={{ fontSize: "14px" }}>
+                                        {t("to")}
+                                    </div>
+                                    <div className="flex">
+                                        <input
+                                            min={openTime}
+                                            value={closeTime}
+                                            onChange={(e) => {
+                                                handleCloseTime(e.target.value);
+                                                setIsManually(false);
+                                            }}
+                                            type="time"
+                                            style={{ border: "none" }}
+                                            className="focus:outline-none"
+                                            name="closeTime"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div
                             style={{
@@ -567,7 +661,16 @@ export default function AddServiceTime(props: IParams) {
                                     width: "343px",
                                     height: "51px",
                                     cursor: "pointer",
-                                    backgroundColor: "#020873",
+                                    backgroundColor:
+                                        daysOpen.length == 0 ||
+                                            !openTime ||
+                                            !closeTime ||
+                                            !duration ||
+                                            !guestNumber ||
+                                            !availableFromDate ||
+                                            selectedSlots.length == 0
+                                            ? "#cccccc"
+                                            : "#020873",
                                     fontSize: "14px",
                                 }}>
                                 {t("button:next")}
