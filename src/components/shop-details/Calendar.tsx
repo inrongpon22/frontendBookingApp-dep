@@ -6,7 +6,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 import { useTranslation } from "react-i18next";
-import { dayOfWeek } from "../../helper/daysOfWeek";
+import { dayOfWeek, dayOfWeekFullName } from "../../helper/daysOfWeek";
 import toast from "react-hot-toast";
 
 interface CalendarProps {
@@ -133,7 +133,13 @@ const Calendar = ({
                                     setSelectedDate({ date: item });
                                 } else {
                                     toast.error(
-                                        `วันที่ ${item.format("D")} ${
+                                        `วัน${
+                                            dayOfWeekFullName(language)?.find(
+                                                (ii) =>
+                                                    ii.value ===
+                                                    item.format("dddd")
+                                            )?.name ?? ""
+                                        } ${item.format("D")} ${
                                             monthsOfYearFullName(
                                                 language
                                             )?.find(

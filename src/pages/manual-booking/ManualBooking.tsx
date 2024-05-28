@@ -184,7 +184,7 @@ const ManualBooking = () => {
                         )
                             ? "bg-gray-300"
                             : "bg-[#020873]"
-                    }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
+                    } w-full text-white text-[14px] font-semibold rounded-md py-3`}
                     onClick={() => {
                         localStorage.setItem(
                             "bookingDetail",
