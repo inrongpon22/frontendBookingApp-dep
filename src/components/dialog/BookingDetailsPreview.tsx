@@ -74,7 +74,7 @@ const BookingDetailsPreview = () => {
 
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-    
+
     const { formik } = useContext<any>(DialogContext);
 
     const { setIsGlobalLoading, setShowDialog, setDialogState } =
@@ -89,8 +89,6 @@ const BookingDetailsPreview = () => {
         t,
         i18n: { language },
     } = useTranslation();
-
-    
 
     const slotArrays = JSON.parse(bookingDetail)?.serviceById.bookingSlots.find(
         (item: any) =>
@@ -116,8 +114,8 @@ const BookingDetailsPreview = () => {
                         Authorization: `${token}`,
                     },
                 })
-                .then((res:any) => {
-                    console.log(res.data)
+                .then((res: any) => {
+                    console.log(res.data);
                     formik.setValues({
                         userId: Number(res.data.id),
                         username: res.data.name ?? "",
@@ -146,7 +144,9 @@ const BookingDetailsPreview = () => {
             }),
             status: "pending",
             by: pathname.includes("business") ? "business" : "customer",
-            userName: formik.values.isBusinessOnly ? "โดยร้านค้า" : formik.values.username,
+            userName: formik.values.isBusinessOnly
+                ? "โดยร้านค้า"
+                : formik.values.username,
             bookingDate: moment(
                 JSON.parse(bookingDetail).selectedDate.date
             ).format("YYYY-MM-DD"),
@@ -157,7 +157,11 @@ const BookingDetailsPreview = () => {
             .post(
                 `${app_api}/${
                     pathname.includes("business")
-                        ? `makeMutiReservationByBus/${language}/${formik.values.isSendSMS}`
+                        ? `makeMutiReservationByBus/${language}/${
+                              formik.values.isBusinessOnly
+                                  ? false
+                                  : formik.values.isSendSMS
+                          }`
                         : `makeMutiReservation/${language}`
                 }`,
                 body,
@@ -181,9 +185,9 @@ const BookingDetailsPreview = () => {
                 }
             })
             .catch((err) => {
-                console.log(err.response.data.message)
+                console.log(err.response.data.message);
                 setIsGlobalLoading(false);
-                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
             });
     };
 

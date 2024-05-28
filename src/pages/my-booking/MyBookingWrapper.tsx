@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
@@ -13,6 +13,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 const MyBookingWrapper = () => {
     const navigate = useNavigate();
@@ -21,6 +22,8 @@ const MyBookingWrapper = () => {
     const userId = localStorage.getItem("userId");
 
     const { t } = useTranslation();
+
+    const { setShowDialog } = useContext(GlobalContext);
 
     const { data: myReservDatas } = useSWR(
         token &&
@@ -36,14 +39,16 @@ const MyBookingWrapper = () => {
                 })
                 .then((res) => res.data)
                 .catch((err) => {
-                    console.log(err)
-                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
-                }),
-        { revalidateOnFocus: false }
+                    console.log(err);
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                })
     );
 
     useEffect(() => {
         document.title = t("title:myBookings");
+        if (!token) {
+            setShowDialog(true);
+        }
     }, []);
 
     return (
@@ -83,7 +88,7 @@ const MyBookingWrapper = () => {
                                                 }`}
                                             >
                                                 {item.status === "pending"
-                                                    ? t('pending')
+                                                    ? t("pending")
                                                     : item.status === "approval"
                                                     ? t("approved")
                                                     : t("cancelled")}
