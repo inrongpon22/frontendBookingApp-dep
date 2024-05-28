@@ -157,6 +157,7 @@ const ManualBooking = () => {
                     setDateArr={setDateArr}
                     selectedDate={selectedDate}
                     setSelectedDate={setSelectedDate}
+                    serviceById={serviceById}
                 />
 
                 <TimeSlots
