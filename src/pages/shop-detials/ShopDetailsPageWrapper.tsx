@@ -24,7 +24,6 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
 import { GlobalContext } from "../../contexts/BusinessContext";
-import { getUserIdByAccessToken } from "../../api/user";
 
 const theme = createTheme({
     palette: {
@@ -230,10 +229,10 @@ const ShopDetailsPageWrapper = () => {
                                 : "bg-[#020873]"
                         }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
                         onClick={async () => {
-                            const userId = await getUserIdByAccessToken(
-                                accessToken ?? "",
-                                token ?? ""
-                            );
+                            // const userId = await getUserIdByAccessToken(
+                            //     accessToken ?? "",
+                            //     token ?? ""
+                            // );
                             localStorage.setItem(
                                 "bookingDetail",
                                 JSON.stringify({
@@ -254,7 +253,7 @@ const ShopDetailsPageWrapper = () => {
                                     (item: any) => item.isSelected
                                 )
                             ) {
-                                if (token && userId) {
+                                if (token && accessToken) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");
                                 } else {
