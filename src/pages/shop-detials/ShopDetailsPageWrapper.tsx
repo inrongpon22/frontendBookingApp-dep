@@ -201,6 +201,7 @@ const ShopDetailsPageWrapper = () => {
                         setDateArr={setDateArr}
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
+                        serviceById={serviceById}
                     />
 
                     <TimeSlots
@@ -228,7 +229,7 @@ const ShopDetailsPageWrapper = () => {
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
                         }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
-                        onClick={async() => {
+                        onClick={async () => {
                             const userId = await getUserIdByAccessToken(
                                 accessToken ?? "",
                                 token ?? ""
