@@ -9,6 +9,7 @@ import { GlobalContext } from "../../contexts/BusinessContext";
 import moment from "moment";
 import { Switch, SwitchProps, styled } from "@mui/material";
 import { getReservationByBusinessId } from "../../api/booking";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const IOSSwitch = styled((props: SwitchProps) => (
     <Switch
@@ -73,7 +74,9 @@ const BookingDetailsPreview = () => {
     const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
+
+    // const [userId, setUserId] = useState<number>(0)
 
     const { formik } = useContext<any>(DialogContext);
 
@@ -107,25 +110,29 @@ const BookingDetailsPreview = () => {
     );
 
     useEffect(() => {
+        // setUserId(res)
         if (token && formik.values.userId === 0) {
-            axios
-                .get(`${app_api}/user/${userId}`, {
-                    headers: {
-                        Authorization: `${token}`,
-                    },
-                })
-                .then((res: any) => {
-                    console.log(res.data);
-                    formik.setValues({
-                        userId: Number(res.data.id),
-                        username: res.data.name ?? "",
-                        phoneNumbers: res.data.phoneNumber,
-                        otp: "",
-                        additionalNotes: "",
-                        isSendSMS: true,
-                        isBusinessOnly: false,
-                    });
-                });
+            getUserIdByAccessToken(accessToken ?? "", token ?? "").then(
+                (userId) =>
+                    axios
+                        .get(`${app_api}/user/${userId}`, {
+                            headers: {
+                                Authorization: `${token}`,
+                            },
+                        })
+                        .then((res: any) => {
+                            console.log(res.data);
+                            formik.setValues({
+                                userId: Number(res.data.id),
+                                username: res.data.name ?? "",
+                                phoneNumbers: res.data.phoneNumber,
+                                otp: "",
+                                additionalNotes: "",
+                                isSendSMS: true,
+                                isBusinessOnly: false,
+                            });
+                        })
+            );
         }
     }, []);
 
