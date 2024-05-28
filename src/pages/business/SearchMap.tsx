@@ -35,7 +35,6 @@ export default function SearchMap(props: IParameter) {
         }
     }, [props.oldAddress]);
 
-
     const handleChangeAddress = ({ lat, lng, address }: LocationData): void => {
         const locationData: LocationData = { lat, lng, address };
         props.handleChangeLocation(locationData);
@@ -43,6 +42,13 @@ export default function SearchMap(props: IParameter) {
 
     const handleChange = (address: string) => {
         setAddress(address);
+        if (address == "") {
+            handleChangeAddress({
+                lat: 0,
+                lng: 0,
+                address: "",
+            });
+        }
     };
 
     const handleSelect = (address: string) => {
@@ -119,13 +125,13 @@ export default function SearchMap(props: IParameter) {
                                         : "suggestion-item";
                                     const style = suggestion.active
                                         ? {
-                                            backgroundColor: "#fafafa",
-                                            cursor: "pointer",
-                                        }
+                                              backgroundColor: "#fafafa",
+                                              cursor: "pointer",
+                                          }
                                         : {
-                                            backgroundColor: "#ffffff",
-                                            cursor: "pointer",
-                                        };
+                                              backgroundColor: "#ffffff",
+                                              cursor: "pointer",
+                                          };
                                     return (
                                         <div
                                             {...getSuggestionItemProps(
