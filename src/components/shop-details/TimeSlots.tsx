@@ -133,7 +133,7 @@ const TimeSlots = ({
                     slotArrays
                         ? slotArrays?.slotsTime.length === 1
                             ? "grid-cols-1"
-                            : "grid-cols-2"
+                            : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         : ""
                 }`}
             >

@@ -5,21 +5,26 @@ import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { getBusinessByUserId } from "../../api/business";
 import { useNavigate } from "react-router";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const BusinessAuth = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token") ?? "";
-    const userId = localStorage.getItem("userId") ?? "";
+    const accessToken = localStorage.getItem("accessToken") ?? "";
 
     const { setShowDialog } = useContext(GlobalContext);
 
     useEffect(() => {
         document.title = t("title:bussRootTitle");
         if (token) {
-            getBusinessByUserId(userId, token).then((res) =>
-                navigate(`/business-profile/${res[0].id}`)
+            getUserIdByAccessToken(accessToken ?? "", token ?? "").then(
+                (userId) => {
+                    getBusinessByUserId(userId, token).then((res) =>
+                        navigate(`/business-profile/${res[0].id}`)
+                    );
+                }
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

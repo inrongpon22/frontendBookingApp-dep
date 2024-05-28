@@ -24,6 +24,7 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const theme = createTheme({
     palette: {
@@ -38,7 +39,7 @@ const ShopDetailsPageWrapper = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
 
     const { setShowDialog, setDialogState, setIsGlobalLoading } =
         useContext(GlobalContext);
@@ -227,7 +228,11 @@ const ShopDetailsPageWrapper = () => {
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
                         }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
-                        onClick={() => {
+                        onClick={async() => {
+                            const userId = await getUserIdByAccessToken(
+                                accessToken ?? "",
+                                token ?? ""
+                            );
                             localStorage.setItem(
                                 "bookingDetail",
                                 JSON.stringify({
