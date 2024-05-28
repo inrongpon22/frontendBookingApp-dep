@@ -113,12 +113,14 @@ export default function BusinessInfo() {
                     const arrayImageUrls: string[] = [];
                     if (businessData) {
                         const imageUrls = await Promise.all(
-                            businessData.imagesURL.map(async (element: string) => {
-                                const { data } = supabase.storage
-                                    .from("BookingSystem/images/")
-                                    .getPublicUrl(element);
-                                return data;
-                            })
+                            businessData.imagesURL.map(
+                                async (element: string) => {
+                                    const { data } = supabase.storage
+                                        .from("BookingSystem/images/")
+                                        .getPublicUrl(element);
+                                    return data;
+                                }
+                            )
                         );
 
                         imageUrls.forEach((element) => {
@@ -207,7 +209,10 @@ export default function BusinessInfo() {
         },
         validationSchema: schema,
         onSubmit: async (values) => {
-            const userId = await getUserIdByAccessToken(accessToken ?? "", token ?? "");
+            const userId = await getUserIdByAccessToken(
+                accessToken ?? "",
+                token ?? ""
+            );
             if (token === null) {
                 throw new Error("Token is not found");
             }
@@ -236,9 +241,7 @@ export default function BusinessInfo() {
 
                 const updateData = {
                     title: values.title,
-                    imagesURL: imagesURL.concat(
-                        businessData?.imagesURL || []
-                    ),
+                    imagesURL: imagesURL.concat(businessData?.imagesURL || []),
                     description: values.description,
                     phoneNumber: values.phoneNumber,
                     address: locationData.address,
@@ -258,17 +261,22 @@ export default function BusinessInfo() {
                 setIsLoading(true);
                 if (action === "edit" && action) {
                     toast(t("editSuccess"), {
-                        icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                        icon: (
+                            <CheckCircleOutlineIcon sx={{ color: "green" }} />
+                        ),
                     });
                     navigate(`/business-profile/${business.data.businessId}`);
                 } else {
                     toast(t("addBusiness"), {
-                        icon: <CheckCircleOutlineIcon sx={{ color: "green" }} />,
+                        icon: (
+                            <CheckCircleOutlineIcon sx={{ color: "green" }} />
+                        ),
                     });
-                    navigate(`/service/${business.data.businessId}?type=create`);
+                    navigate(
+                        `/service/${business.data.businessId}?type=create`
+                    );
                 }
                 setIsLoading(false);
-
             } else {
                 const insertData = {
                     title: values.title,
@@ -334,10 +342,11 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:shopName")}
-                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.errors?.title
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.title
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                     />
                     {formik.touched.title && formik.errors.title ? (
                         <div className="text-red-500 mt-1">
@@ -379,10 +388,11 @@ export default function BusinessInfo() {
                                         : "white",
                                 }}
                                 className={`
-                            ${isDaySelected(day.value)
-                                        ? "border-custom-color border-2"
-                                        : "border-black-50 border"
-                                    }
+                            ${
+                                isDaySelected(day.value)
+                                    ? "border-custom-color border-2"
+                                    : "border-black-50 border"
+                            }
                             flex items-center justify-center rounded-lg`}>
                                 {day.name}
                             </div>
@@ -462,10 +472,11 @@ export default function BusinessInfo() {
                             borderColor: `${alpha("#000000", 0.2)}`,
                         }}
                         placeholder={t("placeholder:businessNumber")}
-                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${formik.errors?.phoneNumber
-                            ? "border-2 border-rose-500"
-                            : "border border-black-50"
-                            }`}
+                        className={`mt-1 w-full p-4 text-sm border rounded-lg focus:outline-none ${
+                            formik.errors?.phoneNumber
+                                ? "border-2 border-rose-500"
+                                : "border border-black-50"
+                        }`}
                         maxLength={10}
                     />
                     {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
