@@ -33,26 +33,26 @@ const FirstTimeAddMoreService = ({
             <p className="py-2">
                 เพิ่มตัวเลือกบริการเพิ่มเติมเพื่อตอบสนองความต้องการของลูกค้าของคุณได้ดียิ่งขึ้น
             </p>
-            <div className="border-2 rounded-lg p-5">
-                <div className="">
+            {data?.length > 0 && (
+                <div className="border-2 rounded-lg p-5">
                     <p className="flex justify-between">
                         <span className="font-bold text-[14px]">
-                            {data ? data[0].title : ""}
+                            {data ? data[0]?.title : ""}
                         </span>
                         <span className="text-end">
                             <span className="font-bold text-[14px]">
-                                {data ? data[0].price : ""}฿
+                                {data ? data[0]?.price : ""}฿
                             </span>
                             <span className="font-normal"> / คน</span>
                         </span>
                     </p>
                     <div className="">
                         <p className="font-normal text-[14px]">
-                            {data ? data[0].description : ""}{" "}
+                            {data ? data[0]?.description : ""}{" "}
                         </p>
                     </div>
                 </div>
-            </div>
+            )}
             <button
                 type="button"
                 className="w-full bg-deep-blue bg-opacity-10 p-3 mt-3 text-[14px] font-semibold text-deep-blue rounded-lg"
