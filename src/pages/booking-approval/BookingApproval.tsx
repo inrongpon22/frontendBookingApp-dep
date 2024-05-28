@@ -330,7 +330,13 @@ const BookingApproval = (): React.ReactElement => {
                                                             : null}
                                                     </span>
                                                 </AccordionSummary>
-                                                <AccordionDetails>
+                                                <AccordionDetails
+                                                    className={
+                                                        item.children.length > 1
+                                                            ? "grid md:grid-cols-2 gap-2"
+                                                            : ""
+                                                    }
+                                                >
                                                     {item.children.map(
                                                         (
                                                             ii: any,
