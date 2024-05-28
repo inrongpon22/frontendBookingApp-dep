@@ -19,6 +19,7 @@ import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import NotFound from "./pages/errors/404NotFound.tsx";
 import Unauthorized from "./pages/errors/401Unauthorized.tsx";
 import Forbidden from "./pages/errors/403Forbidden.tsx";
+import CallBack from "./pages/auth/CallBack.tsx";
 
 function App() {
     useEffect(() => {
@@ -92,6 +93,11 @@ function App() {
                         path="/dayoff-setting/:businessId/add-new"
                         element={<AddNewDayOff />}
                     />
+                    {/* day off */}
+
+                    {/* login from line */}
+                    <Route path="/line-login" element={<CallBack />} />
+                    {/* login from line */}
 
                     {/* 401 unauthorize */}
                     <Route path="/401" element={<Unauthorized />} />
