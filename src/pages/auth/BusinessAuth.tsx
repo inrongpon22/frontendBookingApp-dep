@@ -38,15 +38,15 @@ const BusinessAuth = () => {
                         <img
                             src={"./smallLogo.svg"}
                             alt="logo"
-                            className="w-[50vw]"
+                            className="w-[40vw]"
                         />
                     </div>
                 </div>
                 <div className=" flex flex-col items-center mb-[10vw]">
-                    <div className="text-[3rem] font-bold text-center">
+                    <div className="text-[32px] font-bold text-center">
                         {t("title:conceptWord")}
                     </div>
-                    <div className="text-center text-[2rem]">
+                    <div className="text-center text-[14px]">
                         {t("desc:desConceptWord")}
                     </div>
                 </div>
@@ -54,7 +54,7 @@ const BusinessAuth = () => {
             <button
                 type="button"
                 style={{ marginBottom: "10%" }}
-                className="py-4 px-12 bg-[#35398F] text-white text-[1rem] rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
+                className="py-4 px-12 bg-[#35398F] text-white text-[14px] rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
                 onClick={() => setShowDialog(true)}
             >
                 {t("button:getStartedButton")}
