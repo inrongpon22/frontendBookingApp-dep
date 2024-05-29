@@ -89,7 +89,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     setIsGlobalLoading(true);
                     await CheckOTP(values.phoneNumbers, values.otp)
                         .then(async (res) => {
-                            console.log(res, userSide, query.get("accessCode"));
                             if (res.status === 200) {
                                 localStorage.setItem("token", res.data.token);
                                 localStorage.setItem("userId", res.data.userId);

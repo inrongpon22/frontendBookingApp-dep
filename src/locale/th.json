@@ -58,7 +58,9 @@
         "addBusiness": "เพิ่มธุรกิจใหม่",
         "editSuccess": "แก้ไขสำเร็จ",
         "deleteSuccess": "ลบสำเร็จ",
-        "maximumallowed": "จำนวนผู้ใช้บริการสูงสุดที่อนุญาต"
+        "maximumallowed": "จำนวนผู้ใช้บริการสูงสุดที่อนุญาต",
+        "or": "หรือ",
+        "ContinueWithLINEAccount": "ดำเนินการต่อด้วยบัญชีไลน์"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -116,12 +118,12 @@
         "confirm": "ยืนยัน",
         "approve": "ยืนยันการจอง",
         "reject": "ยกเลิกการจอง",
-        "next": "ถัดไป",
+        "next": "ดำเนินการต่อ",
         "backToMyBooking": "กลับไปที่การจองของฉัน",
         "rebook": "จองอีกครั้ง",
         "goToMyBookingButton": "ไปยังการจองของฉัน",
         "confirmBookingButton": "ยืนยันการจอง",
-        "continueButton": "ถัดไป",
+        "continueButton": "ดำเนินการต่อ",
         "cancelBookingButton": "ยกเลิกการจอง",
         "bookingFailedBackButton": "กลับไปที่หน้าหลัก",
         "bookingFailedTryAgainButton": "ลองอีกครั้ง",
@@ -231,13 +233,13 @@
             },
             "auth": {
                 "phoneNumber": {
-                    "phoneNumberReq": "หมายเลขโทรศัพท์ไม่สามารถเว้นว่างได้",
+                    "phoneNumberReq": "กรุณากรอกหมายเลขโทรศัพท์",
                     "phoneNumberMatch": "หมายเลขโทรศัพท์ไม่ถูกต้อง",
                     "phoneNumberMin": "หมายเลขโทรศัพท์ต้องมีความยาวอย่างน้อย 10 ตัวเลข",
                     "phoneNumberMax": "หมายเลขโทรศัพท์ต้องมีความยาวไม่เกิน 10 ตัวเลข"
                 },
                 "otp": {
-                    "otpReq": "รหัส OTP ไม่สามารถเว้นว่างได้",
+                    "otpReq": "กรุณากรอกรหัส OTP",
                     "otpMatch": "รหัส OTP ต้องมีความยาว 6 ตัวอักษร",
                     "otpMin": "รหัส OTP ต้องมีความยาว 6 ตัวอักษร",
                     "otpMax": "รหัส OTP ต้องมีความยาว 6 ตัวอักษร"

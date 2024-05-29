@@ -35,7 +35,7 @@ const RequestCards = ({ data }: cardTypes): React.ReactElement => {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white flex flex-col mb-2 border border-gray-300 rounded-lg">
+    <div className="bg-white flex flex-col border border-gray-300 rounded-lg">
       <div className="flex justify-between items-center pt-4 px-4">
         <p className="text-[14px] font-semibold">
           <span>

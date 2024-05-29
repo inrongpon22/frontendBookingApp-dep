@@ -38,7 +38,7 @@ const ShopDetailsPageWrapper = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
 
     const { setShowDialog, setDialogState, setIsGlobalLoading } =
         useContext(GlobalContext);
@@ -204,6 +204,7 @@ const ShopDetailsPageWrapper = () => {
                         setDateArr={setDateArr}
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
+                        serviceById={serviceById}
                     />
 
                     <TimeSlots
@@ -218,7 +219,7 @@ const ShopDetailsPageWrapper = () => {
                     />
                 </div>
 
-                <div className="flex flex-col justify-center items-center my-5">
+                <div className="flex flex-col justify-center items-center my-5 px-5">
                     <button
                         type="button"
                         disabled={
@@ -232,8 +233,12 @@ const ShopDetailsPageWrapper = () => {
                             )
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
-                        }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
-                        onClick={() => {
+                        }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
+                        onClick={async () => {
+                            // const userId = await getUserIdByAccessToken(
+                            //     accessToken ?? "",
+                            //     token ?? ""
+                            // );
                             localStorage.setItem(
                                 "bookingDetail",
                                 JSON.stringify({
@@ -254,7 +259,7 @@ const ShopDetailsPageWrapper = () => {
                                     (item: any) => item.isSelected
                                 )
                             ) {
-                                if (token && userId) {
+                                if (token && accessToken) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");
                                 } else {

@@ -94,7 +94,7 @@ const AddNewDayOff = () => {
     <div className="flex flex-col h-dvh">
       {/* headers */}
       <div className="pr-4 pl-4 pt-6">
-        <Header context={t("title:addDayOff")} />
+        <Header context={t("title:addDayOff")} isClose={false} />
       </div>
       <Divider sx={{ marginTop: "16px", width: "100%" }} />
       {/* headers */}
