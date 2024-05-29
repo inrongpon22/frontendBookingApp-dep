@@ -11,13 +11,13 @@ const OtpVerify = () => {
 
   return (
     <section>
-      <p className="text-[1.5rem] font-semibold mb-1">
+      <p className="text-[17px] font-semibold mb-5">
         {t("otpVerification")}
         {formik.values.phoneNumbers.slice(-4)}
       </p>
       <input
         type="text"
-        className={`w-full p-4 rounded-lg ${
+        className={`w-full p-4 rounded-lg text-[14px] ${
           formik.errors?.phoneNumbers
             ? "border-2 border-rose-500"
             : "border border-black"
@@ -33,11 +33,11 @@ const OtpVerify = () => {
         }}
       />
       {formik.touched.otp && formik.errors.otp && (
-        <p className="mt-1 text-[1rem] text-rose-500">{formik.errors?.otp}</p>
+        <p className="mt-1 text-[14px] text-rose-500">{formik.errors?.otp}</p>
       )}
       <button
         type="button"
-        className="bg-gray-200 rounded-lg text-[1rem] p-2 my-5"
+        className="bg-gray-200 rounded-lg text-[14px] p-2 my-5"
         onClick={async () => {
           await axios
             .post(`${app_api}/requestOTP/${formik.values.phoneNumbers}/${language}`)
@@ -57,7 +57,7 @@ const OtpVerify = () => {
 
       <button
         type="button"
-        className="bg-[#35398F] w-full text-white p-4 rounded-lg"
+        className="bg-[#35398F] w-full text-white text-[14px] p-4 rounded-lg"
         onClick={() => formik.handleSubmit()}
       >
         {t("button:continueButton")}
