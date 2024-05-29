@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
@@ -14,12 +14,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const MyBookingWrapper = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    // const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
+
+    const [userId, setUserId] = useState<number>(0);
 
     const { t } = useTranslation();
 
@@ -27,8 +31,9 @@ const MyBookingWrapper = () => {
 
     const { data: myReservDatas } = useSWR(
         token &&
+            userId !== 0 &&
             `${app_api}/getReservationByUserId/${
-                userId ? userId : location.state.userId
+                userId !== 0 ? userId : location.state.userId
             }?page=1&limit=1000`,
         (url: string) =>
             axios
@@ -49,6 +54,9 @@ const MyBookingWrapper = () => {
         if (!token) {
             setShowDialog(true);
         }
+        getUserIdByAccessToken(accessToken ?? "", token ?? "").then((res) =>
+            setUserId(res)
+        );
     }, []);
 
     return (
@@ -58,7 +66,7 @@ const MyBookingWrapper = () => {
                     {t("title:myBookings")}
                     {/* <SearchRoundedIcon /> */}
                 </span>
-                <div className="flex flex-col gap-4 px-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-3">
                     {myReservDatas ? (
                         myReservDatas.map((item: any, index: number) => {
                             const start: string = `${moment(

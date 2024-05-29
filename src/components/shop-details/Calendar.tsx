@@ -6,7 +6,8 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 import { useTranslation } from "react-i18next";
-import { dayOfWeek } from "../../helper/daysOfWeek";
+import { dayOfWeek, dayOfWeekFullName } from "../../helper/daysOfWeek";
+import toast from "react-hot-toast";
 
 interface CalendarProps {
     calendar: any;
@@ -15,6 +16,7 @@ interface CalendarProps {
     setDateArr: Function;
     selectedDate: any;
     setSelectedDate: Function;
+    serviceById: any;
 }
 
 const Calendar = ({
@@ -24,6 +26,7 @@ const Calendar = ({
     setDateArr,
     selectedDate,
     setSelectedDate,
+    serviceById,
 }: CalendarProps) => {
     const {
         i18n: { language },
@@ -108,9 +111,10 @@ const Calendar = ({
 
             <div className="mt-5 grid grid-cols-5 gap-2">
                 {dateArr.map((item: any, index: number) => {
-                    // const isOpen: boolean = services
-                    //   ?.find((item: any) => item.isSelected)
-                    //   ?.daysOpen.includes(item.format("dddd"));
+                    const isOpen: boolean =
+                        serviceById?.bookingSlots[0]?.daysOpen.includes(
+                            item.format("dddd")
+                        );
                     return (
                         <div
                             key={index}
@@ -119,18 +123,37 @@ const Calendar = ({
                       moment(selectedDate?.date).isSame(item, "day")
                           ? "border-2 border-[#003B95] bg-[#006CE31A] text-[#003B95]"
                           : ""
-                  }`}
-                            // ${
-                            //   isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
-                            // }
-                            onClick={
-                                () => setSelectedDate({ date: item })
-                                //   {
-                                //   if (isOpen) {
-                                //     setSelectedDate({ date: item });
-                                //   }
-                                // }
-                            }
+                  } ${
+                                isOpen
+                                    ? ""
+                                    : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
+                            }`}
+                            onClick={() => {
+                                if (isOpen) {
+                                    setSelectedDate({ date: item });
+                                } else {
+                                    toast.error(
+                                        `วัน${
+                                            dayOfWeekFullName(language)?.find(
+                                                (ii) =>
+                                                    ii.value ===
+                                                    item.format("dddd")
+                                            )?.name ?? ""
+                                        } ${item.format("D")} ${
+                                            monthsOfYearFullName(
+                                                language
+                                            )?.find(
+                                                (ii) =>
+                                                    ii.value ===
+                                                    item.format("MMMM")
+                                            )?.name ?? ""
+                                        } ร้านไม่เปิดให้บริการ`,
+                                        {
+                                            icon: "⚠️",
+                                        }
+                                    );
+                                }
+                            }}
                         >
                             <p className="text-[14px] font-thin">
                                 {dayOfWeek(language)?.find(

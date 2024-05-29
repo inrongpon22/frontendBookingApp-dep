@@ -5,10 +5,10 @@ import { useQuery } from "../../helper/url";
 import axios from "axios";
 
 const PhoneInput = () => {
-  const { t } = useTranslation();
-  const query = useQuery();
+    const { t } = useTranslation();
+    const query = useQuery();
 
-  const { formik, isLoading } = useContext<any>(DialogContext);
+    const { formik, isLoading } = useContext<any>(DialogContext);
 
   const handleLoginWithLine = async () => {
     console.log("login with line");

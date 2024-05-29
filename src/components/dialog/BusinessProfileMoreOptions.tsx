@@ -30,8 +30,7 @@ const BusinessProfileMoreOptions = () => {
         setShowDialog(false);
         setDialogState("phone-input");
         // reset dialog state
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
+        localStorage.clear()
         navigate("/");
     };
 

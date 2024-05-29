@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dataOfWeekThai } from "../../helper/daysOfWeek";
+import { dataOfWeekEng, dataOfWeekThai } from "../../helper/daysOfWeek";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
@@ -31,10 +31,11 @@ interface IParams {
 export default function AddServiceTime(props: IParams) {
     const { t } = useTranslation();
     const { businessId } = useParams();
-    const { data: businessData, isLoading: businessLoading } = useSWR<IBusinessesById>(
-        businessId && `${app_api}/business/${businessId}`,
-        fetcher
-    );
+    const { data: businessData, isLoading: businessLoading } =
+        useSWR<IBusinessesById>(
+            businessId && `${app_api}/business/${businessId}`,
+            fetcher
+        );
     const [daysOpen, setDaysOpen] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
     const [duration, setDuration] = useState(1);
@@ -59,20 +60,26 @@ export default function AddServiceTime(props: IParams) {
         const minutesToTime = (minutes: number) => {
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
-            return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+            return `${hours.toString().padStart(2, "0")}:${mins
+                .toString()
+                .padStart(2, "0")}`;
         };
 
         // Generate time slots for 24 hours
-        while (currentTimeMinutes < 1440) { // 1440 minutes in a day
+        while (currentTimeMinutes < 1440) {
+            // 1440 minutes in a day
             const nextTimeMinutes = currentTimeMinutes + durationMinutes;
             if (nextTimeMinutes > 1440) break; // Stop if next slot exceeds 24:00
 
             const startTime = minutesToTime(currentTimeMinutes);
-            const endTime = nextTimeMinutes === 1440 ? "00:00" : minutesToTime(nextTimeMinutes);
+            const endTime =
+                nextTimeMinutes === 1440
+                    ? "00:00"
+                    : minutesToTime(nextTimeMinutes);
 
             timeSlots.push({
                 startTime,
-                endTime
+                endTime,
             });
 
             currentTimeMinutes = nextTimeMinutes;
@@ -99,7 +106,9 @@ export default function AddServiceTime(props: IParams) {
             const minutesToTime = (minutes: number) => {
                 const hours = Math.floor(minutes / 60);
                 const mins = minutes % 60;
-                return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+                return `${hours.toString().padStart(2, "0")}:${mins
+                    .toString()
+                    .padStart(2, "0")}`;
             };
 
             let currentTimeMinutes = timeToMinutes(startTime);
@@ -121,7 +130,7 @@ export default function AddServiceTime(props: IParams) {
                 // Add time slot
                 timeSlots.push({
                     startTime: minutesToTime(currentTimeMinutes % 1440),
-                    endTime: endTimeString
+                    endTime: endTimeString,
                 });
 
                 // Update currentTimeMinutes
@@ -141,13 +150,18 @@ export default function AddServiceTime(props: IParams) {
                 const endTimeString = `${endTimeHours
                     .toString()
                     .padStart(2, "0")}:${endTimeMinutes
-                        .toString()
-                        .padStart(2, "0")}`;
+                    .toString()
+                    .padStart(2, "0")}`;
                 if (endTimeString > endTime) {
                     break;
                 }
-                timeSlots.push({ startTime: currentTime, endTime: endTimeString });
-                currentTime = `${newHours.toString().padStart(2, "0")}:${newMinutes
+                timeSlots.push({
+                    startTime: currentTime,
+                    endTime: endTimeString,
+                });
+                currentTime = `${newHours
+                    .toString()
+                    .padStart(2, "0")}:${newMinutes
                     .toString()
                     .padStart(2, "0")}`;
             }
@@ -156,7 +170,9 @@ export default function AddServiceTime(props: IParams) {
         return timeSlots;
     };
 
-    const timeSlots = isTwentyFourHour ? generate24HourTimeSlots(duration) : generateTimeSlots(openTime, closeTime, duration);
+    const timeSlots = isTwentyFourHour
+        ? generate24HourTimeSlots(duration)
+        : generateTimeSlots(openTime, closeTime, duration);
 
     const toggleSlotSelection = (
         index: number,
@@ -205,11 +221,20 @@ export default function AddServiceTime(props: IParams) {
         return daysOpen.includes(dayValue);
     };
 
+    const dayOrder = dataOfWeekEng.map((day) => day.value);
     const toggleDay = (dayValue: string) => {
         if (isDaySelected(dayValue)) {
-            setDaysOpen(daysOpen.filter((day) => day !== dayValue));
+            setDaysOpen((prevDays) =>
+                prevDays
+                    .filter((day) => day !== dayValue)
+                    .sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b))
+            );
         } else {
-            setDaysOpen([...daysOpen, dayValue]);
+            setDaysOpen((prevDays) =>
+                [...prevDays, dayValue].sort(
+                    (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
+                )
+            );
         }
     };
 
@@ -327,7 +352,6 @@ export default function AddServiceTime(props: IParams) {
         props.serviceTime.push(insertData);
         if (props.handleAddTime) {
             props.handleAddTime();
-
         } else {
             localStorage.setItem(
                 "serviceTime",
@@ -360,7 +384,9 @@ export default function AddServiceTime(props: IParams) {
                         setDisibleDays([]);
                     }
                     if (
-                        element.daysOpen.some((dayName) => uniqueDays.has(dayName))
+                        element.daysOpen.some((dayName) =>
+                            uniqueDays.has(dayName)
+                        )
                     ) {
                         setDisibleDays(Array.from(uniqueDays) as string[]);
                     }
@@ -376,7 +402,11 @@ export default function AddServiceTime(props: IParams) {
 
     useEffect(() => {
         if (businessData) {
-            setDaysOpen(businessData.daysOpen.filter((day, index) => day !== disibleDays[index]));
+            setDaysOpen(
+                businessData.daysOpen.filter(
+                    (day, index) => day !== disibleDays[index]
+                )
+            );
             setOpenTime(businessData.openTime.substring(0, 5));
             setCloseTime(businessData.closeTime.substring(0, 5));
             setCloseTime(businessData.closeTime.substring(0, 5));
@@ -392,7 +422,11 @@ export default function AddServiceTime(props: IParams) {
                 newSelectedSlots.push(index);
                 setManualCapacity((prevCapacity) => [
                     ...prevCapacity,
-                    { startTime: element.startTime, endTime: element.endTime, capacity: guestNumber },
+                    {
+                        startTime: element.startTime,
+                        endTime: element.endTime,
+                        capacity: guestNumber,
+                    },
                 ]);
             });
             setSelectedSlots(newSelectedSlots);
@@ -449,17 +483,17 @@ export default function AddServiceTime(props: IParams) {
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
                                             : `1px solid ${alpha(
-                                                "#000000",
-                                                0.2
-                                            )}`,
+                                                  "#000000",
+                                                  0.2
+                                              )}`,
                                         borderRadius: "8px",
                                         backgroundColor: disibleDays.some(
                                             (item) => item == day.value
                                         )
                                             ? "#dddddd"
                                             : isDaySelected(day.value)
-                                                ? "rgba(2, 8, 115, 0.2)"
-                                                : "white",
+                                            ? "rgba(2, 8, 115, 0.2)"
+                                            : "white",
                                     }}>
                                     {day.name}
                                 </button>
@@ -484,7 +518,10 @@ export default function AddServiceTime(props: IParams) {
                                 <input
                                     type="checkbox"
                                     className="mt-3"
-                                    onChange={(e) => { setIsTwentyFourHour(e.target.checked); setIsManually(false); }}
+                                    onChange={(e) => {
+                                        setIsTwentyFourHour(e.target.checked);
+                                        setIsManually(false);
+                                    }}
                                     checked={isTwentyFourHour}
                                 />
                             </div>
@@ -513,8 +550,7 @@ export default function AddServiceTime(props: IParams) {
                                             onChange={(e) => {
                                                 setOpenTime(e.target.value);
                                                 setIsManually(false);
-                                            }
-                                            }
+                                            }}
                                             type="time"
                                             style={{
                                                 border: "none",
@@ -598,7 +634,10 @@ export default function AddServiceTime(props: IParams) {
                                             sx={{
                                                 fontSize: "20px",
                                                 marginTop: "-10px",
-                                                color: duration == 0.5 ? "#cccccc" : "",
+                                                color:
+                                                    duration == 0.5
+                                                        ? "#cccccc"
+                                                        : "",
                                             }}
                                         />
                                     </button>
@@ -606,42 +645,46 @@ export default function AddServiceTime(props: IParams) {
                             </div>
                         </div>
 
-                        {timeSlots && timeSlots.length > 0 &&
+                        {timeSlots && timeSlots.length > 0 && (
                             <SlotTimes
                                 timeSlots={timeSlots}
                                 selectedSlots={selectedSlots}
                                 toggleSlotSelection={toggleSlotSelection}
                             />
-                        }
+                        )}
 
                         {isManually ? (
-                            isManually && (
-                                (timeSlots !== undefined && timeSlots.length > 0) &&
-                                    (selectedSlots.length > 0) &&
-                                    (manualCapacity.length > 0) ? (
-                                    <GuestNumberManually
-                                        timeSlots={timeSlots}
-                                        handleResetGustNumber={handleResetGustNumber}
-                                        manualCapacity={manualCapacity}
-                                        selectedSlots={selectedSlots}
-                                        handleIncreaseCapacityManual={handleIncreaseCapacityManual}
-                                        handleDecreaseCapacityManual={handleDecreaseCapacityManual}
-                                        guestNumber={guestNumber}
-                                    />
-                                ) : null
-                            )
-                        ) : (
-                            { timeSlots } && timeSlots.length > 0 ? (
-                                <GuestNumber
-                                    handleIsManually={() => setIsManually(true)}
+                            isManually &&
+                            (timeSlots !== undefined &&
+                            timeSlots.length > 0 &&
+                            selectedSlots.length > 0 &&
+                            manualCapacity.length > 0 ? (
+                                <GuestNumberManually
                                     timeSlots={timeSlots}
+                                    handleResetGustNumber={
+                                        handleResetGustNumber
+                                    }
+                                    manualCapacity={manualCapacity}
                                     selectedSlots={selectedSlots}
+                                    handleIncreaseCapacityManual={
+                                        handleIncreaseCapacityManual
+                                    }
+                                    handleDecreaseCapacityManual={
+                                        handleDecreaseCapacityManual
+                                    }
                                     guestNumber={guestNumber}
-                                    increaseGuest={increaseGuest}
-                                    decreaseGuest={decreaseGuest}
                                 />
-                            ) : null
-                        )}
+                            ) : null)
+                        ) : { timeSlots } && timeSlots.length > 0 ? (
+                            <GuestNumber
+                                handleIsManually={() => setIsManually(true)}
+                                timeSlots={timeSlots}
+                                selectedSlots={selectedSlots}
+                                guestNumber={guestNumber}
+                                increaseGuest={increaseGuest}
+                                decreaseGuest={decreaseGuest}
+                            />
+                        ) : null}
 
                         <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                             <button
@@ -663,12 +706,12 @@ export default function AddServiceTime(props: IParams) {
                                     cursor: "pointer",
                                     backgroundColor:
                                         daysOpen.length == 0 ||
-                                            !openTime ||
-                                            !closeTime ||
-                                            !duration ||
-                                            !guestNumber ||
-                                            !availableFromDate ||
-                                            selectedSlots.length == 0
+                                        !openTime ||
+                                        !closeTime ||
+                                        !duration ||
+                                        !guestNumber ||
+                                        !availableFromDate ||
+                                        selectedSlots.length == 0
                                             ? "#cccccc"
                                             : "#020873",
                                     fontSize: "14px",
