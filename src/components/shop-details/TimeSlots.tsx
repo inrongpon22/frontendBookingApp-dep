@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 import toast from "react-hot-toast";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-
 interface TimeSlotsProps {
     selectedDate: any;
     setServiceById: Function;
@@ -86,7 +85,10 @@ const TimeSlots = ({
                     }),
                 });
             } else {
-                if (selectedIndices.size == 1 && selectedIndices.has(index)) {
+                if (
+                    selectedIndices.size == maximumAllow &&
+                    selectedIndices.has(index)
+                ) {
                     setSelectedIndices((prevSelectedIndices: any) => {
                         const newSelectedIndices = new Set(prevSelectedIndices);
 
