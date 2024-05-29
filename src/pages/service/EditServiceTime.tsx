@@ -14,6 +14,7 @@ import SlotTimes from "./components/SlotTimes";
 import GuestNumberManually from "./components/GuestNumberManually";
 import GuestNumber from "./components/GuestNumber";
 import Header from "./components/Header";
+import LimitBooking from "./components/LimitBooking";
 
 interface IParams {
     serviceTime: IServiceEditTime[];
@@ -29,6 +30,15 @@ interface IParams {
 
 export default function EditServiceTime(props: IParams) {
     const { t } = useTranslation();
+    const [isLimitBooking, setIsLimitBooking] = useState(
+        props.isAddTime
+            ? false
+            : props.serviceTime[props.editIndex].isLimitBooking
+    );
+    const [maximumAllow, setMaximumAllow] = useState(
+        props.isAddTime ? 1 : props.serviceTime[props.editIndex].maximumAllow
+    );
+
     const [daysOpen, setDaysOpen] = useState<string[]>(
         props.isAddTime ? [] : props.serviceTime[props.editIndex].daysOpen
     );
@@ -346,6 +356,35 @@ export default function EditServiceTime(props: IParams) {
         setCloseTime(time);
     };
 
+    const handleIncreateMaximumAllow = () => {
+        setMaximumAllow((prev) => prev + 1);
+    };
+    const handleDecreaseMaximumAllow = () => {
+        setMaximumAllow((prev) => prev - 1);
+    };
+
+    const handleSubmit = async () => {
+        const insertData = {
+            daysOpen: daysOpen,
+            availableFromDate: availableFromDate,
+            availableToDate: availableToDate,
+            slotsTime: manualCapacity,
+            duration: duration,
+            isLimitBooking: isLimitBooking,
+            maximumAllow: maximumAllow,
+        };
+        props.serviceTime[props.editIndex] = insertData;
+        if (props.handleSetServiceTime) {
+            props.handleSetServiceTime(props.serviceTime);
+        } else {
+            localStorage.setItem(
+                "serviceTime",
+                JSON.stringify(props.serviceTime)
+            );
+        }
+        props.handleSetEditTime();
+    };
+
     useEffect(() => {
         const uniqueDays = new Set();
         if (props.serviceTime[0].daysOpen !== undefined) {
@@ -390,26 +429,6 @@ export default function EditServiceTime(props: IParams) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const handleSubmit = async () => {
-        const insertData = {
-            daysOpen: daysOpen,
-            availableFromDate: availableFromDate,
-            availableToDate: availableToDate,
-            slotsTime: manualCapacity,
-            duration: duration,
-        };
-        props.serviceTime[props.editIndex] = insertData;
-        if (props.handleSetServiceTime) {
-            props.handleSetServiceTime(props.serviceTime);
-        } else {
-            localStorage.setItem(
-                "serviceTime",
-                JSON.stringify(props.serviceTime)
-            );
-        }
-        props.handleSetEditTime();
-    };
 
     useEffect(() => {
         if (timeSlots.length > 0) {
@@ -724,6 +743,16 @@ export default function EditServiceTime(props: IParams) {
                             decreaseGuest={decreaseGuest}
                         />
                     ) : null}
+
+                    <LimitBooking
+                        maximumAllow={maximumAllow}
+                        isLimitBooking={isLimitBooking}
+                        handleIsLimitBooking={() =>
+                            setIsLimitBooking(!isLimitBooking)
+                        }
+                        handleIncreateMaximumAllow={handleIncreateMaximumAllow}
+                        handleDecreaseMaximumAllow={handleDecreaseMaximumAllow}
+                    />
 
                     <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                         <button

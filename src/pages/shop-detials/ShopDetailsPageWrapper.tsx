@@ -73,6 +73,8 @@ const ShopDetailsPageWrapper = () => {
     const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
         new Set()
     );
+    const [isLimitedSlot, setIsLimitedSlot] = useState(false);
+    const [maximumAllow, setMaximumAllow] = useState(0);
 
     const slotArrays = serviceById?.bookingSlots.find(
         (item: any) =>
@@ -132,6 +134,8 @@ const ShopDetailsPageWrapper = () => {
                 setServiceById({
                     ...res.data,
                     bookingSlots: res.data.bookingSlots.map((item: any) => {
+                        setIsLimitedSlot(item.isLimitBooking);
+                        setMaximumAllow(item.maximumAllow);
                         return {
                             ...item,
                             slotsTime: item.slotsTime
@@ -210,6 +214,8 @@ const ShopDetailsPageWrapper = () => {
                         quantities={quantities}
                         selectedIndices={selectedIndices}
                         setSelectedIndices={setSelectedIndices}
+                        isLimitedSlot={isLimitedSlot}
+                        maximumAllow={maximumAllow}
                     />
                 </div>
 
@@ -260,8 +266,7 @@ const ShopDetailsPageWrapper = () => {
                                     setShowDialog(true);
                                 }
                             }
-                        }}
-                    >
+                        }}>
                         {t("button:confirmBookingButton")}
                     </button>
                     <span className="text-[12px] py-2">
