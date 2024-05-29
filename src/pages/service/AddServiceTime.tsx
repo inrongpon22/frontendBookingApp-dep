@@ -19,6 +19,7 @@ import SlotTimes from "./components/SlotTimes";
 import GuestNumber from "./components/GuestNumber";
 import GuestNumberManually from "./components/GuestNumberManually";
 import SelectOpenDate from "./components/SelectOpenDate";
+import LimitBooking from "./components/LimitBooking";
 
 interface IParams {
     isAddServiceTime: boolean;
@@ -50,6 +51,8 @@ export default function AddServiceTime(props: IParams) {
     const [availableToDate, setAvailableToDate] = useState("");
     const [disibleDays, setDisibleDays] = useState<string[]>([]);
     const [isTwentyFourHour, setIsTwentyFourHour] = useState(false);
+    const [isLimitBooking, setIsLimitBooking] = useState(false);
+    const [maximumAllow, setMaximumAllow] = useState(1);
 
     const generate24HourTimeSlots = (duration: number) => {
         const timeSlots = [];
@@ -328,6 +331,13 @@ export default function AddServiceTime(props: IParams) {
         setIsManually(false);
     };
 
+    const handleIncreateMaximumAllow = () => {
+        setMaximumAllow((prev) => prev + 1);
+    };
+    const handleDecreaseMaximumAllow = () => {
+        setMaximumAllow((prev) => prev - 1);
+    };
+
     const handleCloseTime = (time: string) => {
         setCloseTime(time);
     };
@@ -348,19 +358,22 @@ export default function AddServiceTime(props: IParams) {
             availableToDate: availableToDate,
             slotsTime: manualCapacity,
             duration: duration,
+            isLimitBooking: isLimitBooking,
+            maximumAllow: isLimitBooking ? maximumAllow : 0,
         };
         props.serviceTime.push(insertData);
         if (props.handleAddTime) {
             props.handleAddTime();
-        } else {
-            localStorage.setItem(
-                "serviceTime",
-                JSON.stringify(props.serviceTime)
-            );
-            // if (props.handleCloseCard) {
-            //     props.handleCloseCard();
-            // }
         }
+        // else {
+        //     localStorage.setItem(
+        //         "serviceTime",
+        //         JSON.stringify(props.serviceTime)
+        //     );
+        //     // if (props.handleCloseCard) {
+        //     //     props.handleCloseCard();
+        //     // }
+        // }
     };
 
     useEffect(() => {
@@ -685,6 +698,20 @@ export default function AddServiceTime(props: IParams) {
                                 decreaseGuest={decreaseGuest}
                             />
                         ) : null}
+
+                        <LimitBooking
+                            maximumAllow={maximumAllow}
+                            isLimitBooking={isLimitBooking}
+                            handleIsLimitBooking={() =>
+                                setIsLimitBooking(!isLimitBooking)
+                            }
+                            handleIncreateMaximumAllow={
+                                handleIncreateMaximumAllow
+                            }
+                            handleDecreaseMaximumAllow={
+                                handleDecreaseMaximumAllow
+                            }
+                        />
 
                         <div className="w-full flex justify-center bottom-0 inset-x-0 fixed mb-2">
                             <button
