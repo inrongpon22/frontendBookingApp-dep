@@ -79,7 +79,7 @@ const ShopDetailsPageWrapper = () => {
     const slotArrays = serviceById?.bookingSlots.find(
         (item: any) =>
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
-            selectedDate.date.isAfter(item.availableFromDate)
+            selectedDate.date.isSameOrAfter(item.availableFromDate)
     );
 
     // get business by businessId from params
