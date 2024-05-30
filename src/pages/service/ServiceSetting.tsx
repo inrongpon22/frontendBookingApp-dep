@@ -86,10 +86,10 @@ export default function ServiceSetting() {
             ) : (
                 <div className=" overflow-y-auto bg-[#F7F7F7] h-dvh">
                     <Loading openLoading={serviceLoading} />
-                    <div className="pr-4 pl-4 pt-6">
+                    <div className="pr-4 pl-4 py-6 bg-[#ffffff]">
                         <Header context={t("title:serviceInformation")} isClose={false} />
                     </div>
-                    <div className="flex pr-4 pl-4 pt-3 pb-3 mb-4 justify-center">
+                    <div className="flex pb-6 justify-center bg-[#ffffff]">
                         <button
                             onClick={() => navigate(`/service/${businessId}?type=add`)}
                             style={{
