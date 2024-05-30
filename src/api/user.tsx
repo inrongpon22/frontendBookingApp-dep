@@ -57,8 +57,26 @@ export const getUserIdByAccessToken = async (
 export const getLineProfile = async (accessToken: string) => {
     try {
         const lineProfile = await axios.get(
-            `${import.meta.env.VITE_APP_API}/get-line-profile?accessToken=${accessToken}`);
+            `${
+                import.meta.env.VITE_APP_API
+            }/get-line-profile?accessToken=${accessToken}`
+        );
         return lineProfile.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const checkTokenValidity = async (token: string) => {
+    try {
+        const response = await axios.get(`${app_api}/auth/status`, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        return response;
     } catch (error) {
         console.error(error);
         throw error;

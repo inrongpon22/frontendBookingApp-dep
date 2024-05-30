@@ -169,7 +169,7 @@ const BookingDetailsPreview = () => {
                                   ? false
                                   : formik.values.isSendSMS
                           }`
-                        : `makeMutiReservation/${language}`
+                        : `makeMutiReservation/${language}/line`
                 }`,
                 body,
                 {
@@ -247,8 +247,7 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-5`}
-            >
+                } flex justify-between items-center border rounded-lg p-5`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         จองไว้สำหรับร้านค้าเท่านั้น
@@ -308,8 +307,7 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-5 mt-2`}
-                    >
+                        } flex justify-between items-center border rounded-lg p-5 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 ส่งข้อความ SMS
@@ -356,8 +354,7 @@ const BookingDetailsPreview = () => {
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}
-            >
+                onClick={createReservation}>
                 {t("button:confirmBookingButton")}
             </button>
         </div>
