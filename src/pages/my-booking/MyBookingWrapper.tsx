@@ -103,7 +103,7 @@ const MyBookingWrapper = () => {
 								<div key={index} className='relative'>
 									<div className='flex'>
 										<CustomDivider status={item.status} />
-										<div className='flex flex-col w-[340px] rounded-r-md p-5 bg-white w-[340px]'>
+										<div className='flex flex-col w-[100vw] rounded-r-md p-5 bg-white'>
 											<div className='flex justify-between'>
 												<span className='text-[14px] font-bold'>
 													{item.businessName}

@@ -1,3 +1,5 @@
+/** @format */
+
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -19,91 +21,82 @@ import BusinessProfile from "./pages/business-profile/BusinessProfile.tsx";
 import NotFound from "./pages/errors/404NotFound.tsx";
 import Unauthorized from "./pages/errors/401Unauthorized.tsx";
 import Forbidden from "./pages/errors/403Forbidden.tsx";
+import Noti from "./pages/notification/Noti.tsx";
 
 function App() {
-    useEffect(() => {
-        localStorage.setItem("lang", "th");
-    }, []);
+	useEffect(() => {
+		localStorage.setItem("lang", "th");
+	}, []);
 
-    return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    {/* customer */}
-                    <Route
-                        path="/details/:businessId"
-                        element={<ShopDetailsPageWrapper />}
-                    />
+	return (
+		<>
+			<BrowserRouter>
+				<Routes>
+					<Route path='/noti/:businessId' element={<Noti />} />
 
-                    <Route
-                        path="/booking-success"
-                        element={<BookingSummaryWrapper />}
-                    />
-                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
-                    <Route
-                        path="/booking/:bookingId"
-                        element={<BookingSummaryWrapper />}
-                    />
+					{/* customer */}
+					<Route
+						path='/details/:businessId'
+						element={<ShopDetailsPageWrapper />}
+					/>
 
-                    {/* business */}
-                    <Route path="/" element={<BusinessAuth />} />
-                    <Route
-                        path="/business-profile/:businessId"
-                        element={<BusinessProfile />}
-                    />
-                    <Route
-                        path="/booking-approval/:businessId"
-                        element={<BookingApproval />}
-                    />
-                    <Route
-                        path="/business-overview"
-                        element={<BusinessOverview />}
-                    />
-                    <Route
-                        path="/create-business"
-                        element={<BusinessSetting />}
-                    />
-                    <Route
-                        path="/business-setting"
-                        element={<BusinessSetting />}
-                    />
+					<Route path='/booking-success' element={<BookingSummaryWrapper />} />
+					<Route path='/my-bookings' element={<MyBookingWrapper />} />
+					<Route
+						path='/booking/:bookingId'
+						element={<BookingSummaryWrapper />}
+					/>
 
-                    {/* service */}
-                    <Route
-                        path="/service/:businessId"
-                        element={<ServiceDetail serviceId={0} />}
-                    />
+					{/* business */}
+					<Route path='/' element={<BusinessAuth />} />
+					<Route
+						path='/business-profile/:businessId'
+						element={<BusinessProfile />}
+					/>
+					<Route
+						path='/booking-approval/:businessId'
+						element={<BookingApproval />}
+					/>
+					<Route path='/business-overview' element={<BusinessOverview />} />
+					<Route path='/create-business' element={<BusinessSetting />} />
+					<Route path='/business-setting' element={<BusinessSetting />} />
 
-                    <Route
-                        path="/service-setting/:businessId"
-                        element={<ServiceSetting />}
-                    />
-                    <Route
-                        path="/service-detail/:businessId/:serviceId"
-                        element={<ServiceDetail serviceId={0} />}
-                    />
+					{/* service */}
+					<Route
+						path='/service/:businessId'
+						element={<ServiceDetail serviceId={0} />}
+					/>
 
-                    {/* day off */}
-                    <Route
-                        path="/dayoff-setting/:businessId"
-                        element={<DayOffSetting />}
-                    />
-                    <Route
-                        path="/dayoff-setting/:businessId/add-new"
-                        element={<AddNewDayOff />}
-                    />
+					<Route
+						path='/service-setting/:businessId'
+						element={<ServiceSetting />}
+					/>
+					<Route
+						path='/service-detail/:businessId/:serviceId'
+						element={<ServiceDetail serviceId={0} />}
+					/>
 
-                    {/* 401 unauthorize */}
-                    <Route path="/401" element={<Unauthorized />} />
-                    {/* 401 unauthorize */}
-                    <Route path="/403" element={<Forbidden />} />
-                    {/* 404 not found */}
-                    <Route path="*" element={<Navigate to="/404" />} />
-                    <Route path="/404" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
-            <Toaster />
-        </>
-    );
+					{/* day off */}
+					<Route
+						path='/dayoff-setting/:businessId'
+						element={<DayOffSetting />}
+					/>
+					<Route
+						path='/dayoff-setting/:businessId/add-new'
+						element={<AddNewDayOff />}
+					/>
+
+					{/* 401 unauthorize */}
+					<Route path='/401' element={<Unauthorized />} />
+					{/* 401 unauthorize */}
+					<Route path='/403' element={<Forbidden />} />
+					{/* 404 not found */}
+					<Route path='*' element={<Navigate to='/404' />} />
+					<Route path='/404' element={<NotFound />} />
+				</Routes>
+			</BrowserRouter>
+			<Toaster />
+		</>
+	);
 }
 export default App;
