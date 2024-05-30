@@ -1,6 +1,6 @@
 /** @format */
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import moment from "moment";
@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { Divider } from "@mui/material";
+import { Divider, styled } from "@mui/material";
 
 const MyBookingWrapper = () => {
 	const navigate = useNavigate();
@@ -26,6 +26,9 @@ const MyBookingWrapper = () => {
 	const { t } = useTranslation();
 
 	const { setShowDialog } = useContext(GlobalContext);
+
+	// State for loading
+	const [isLoading, setIsLoading] = useState(true);
 
 	const { data: myReservDatas } = useSWR(
 		token &&
@@ -46,12 +49,31 @@ const MyBookingWrapper = () => {
 				})
 	);
 
+	// Custom Divider Component with status prop
+	const CustomDivider = styled(Divider)<{ status: string }>(({ status }) => ({
+		height: "100%",
+		width: 4,
+		backgroundColor:
+			status === "pending"
+				? "#F0AD4E"
+				: status === "approval"
+				? "#2E7CF6"
+				: "#A1A1A1",
+		margin: "0 0 0 -5px",
+		position: "absolute", // Position the divider absolutely within its container
+		left: 0,
+		borderRadius: "10px",
+	}));
+
 	useEffect(() => {
 		document.title = t("title:myBookings");
 		if (!token) {
 			setShowDialog(true);
+		} else {
+			// Set loading state to false when data is fetched
+			setIsLoading(false);
 		}
-	}, []);
+	}, [setShowDialog, t, token]); // Include dependencies for useEffect
 
 	return (
 		<>
@@ -61,7 +83,9 @@ const MyBookingWrapper = () => {
 					{/* <SearchRoundedIcon /> */}
 				</span>
 				<div className='flex flex-col gap-4 px-3'>
-					{myReservDatas ? (
+					{isLoading ? (
+						<>Loading...</>
+					) : myReservDatas ? (
 						myReservDatas.map((item: any, index: number) => {
 							const start: string = `${moment(item.bookingDate).format(
 								"YYYY-MM-DD"
@@ -69,44 +93,54 @@ const MyBookingWrapper = () => {
 							const end: string = `${moment(item.bookingDate).format(
 								"YYYY-MM-DD"
 							)}T${item.endTime}Z`;
+
+							// Calculate the duration in hours
+							const durationHours = moment
+								.duration(moment(end).diff(moment(start)))
+								.asHours();
+
 							return (
 								<div key={index} className='relative'>
-									<Divider orientation='vertical' flexItem />
-									<div className='flex flex-col rounded-lg p-5 bg-white w-[340px]'>
-										<div className='flex justify-between'>
-											<span className='text-[14px] font-bold'>
-												{item.businessName}
-											</span>
-											<span
-												className={`text-end text-[14px] font-bold ${
-													item.status === "pending"
-														? "text-[#F0AD4E] bg-[#FFF1E0] rounded-md"
+									<div className='flex'>
+										<CustomDivider status={item.status} />
+										<div className='flex flex-col w-[340px] rounded-r-md p-5 bg-white w-[340px]'>
+											<div className='flex justify-between'>
+												<span className='text-[14px] font-bold'>
+													{item.businessName}
+												</span>
+												<span
+													className={`text-end text-[14px] font-bold ${
+														item.status === "pending"
+															? "text-[#F0AD4E] bg-[#FFF1E0] rounded-md"
+															: item.status === "approval"
+															? "text-[#2E7CF6] bg-[#F3F8FF] rounded-md"
+															: "text-[#A1A1A1] bg-[#F1F1F1] rounded-md"
+													}`}
+												>
+													{item.status === "pending"
+														? t("pending")
 														: item.status === "approval"
-														? "text-[#2E7CF6] bg-[#F2F2F8] rounded-md"
-														: "text-[#A1A1A1]"
-												}`}
-											>
-												{item.status === "pending"
-													? t("pending")
-													: item.status === "approval"
-													? t("approved")
-													: t("cancelled")}
-											</span>
-										</div>
-										<div className='flex justify-between mt-2'>
-											<span className='text-[14px] font-normal'>
-												{moment(item.bookingDate).format("D MMM")}{" "}
-												<FiberManualRecordIcon sx={{ fontSize: "10px" }} />{" "}
-												{moment(start).format("HH:mm")} -{" "}
-												{moment(end).format("HH:mm")}
-											</span>
-										</div>
-										<div className='flex justify-between mt-2'>
-											<span className='text-[14px] font-normal'>
-												{item.title}
-											</span>
-
+														? t("approved")
+														: t("cancelled")}
+												</span>
+											</div>
 											<div className='flex justify-between mt-2'>
+												<span className='text-[14px] font-normal'>
+													{moment(item.bookingDate).format("D MMM")}{" "}
+													<FiberManualRecordIcon sx={{ fontSize: "5px" }} />{" "}
+													{moment(start).format("HH:mm")} -{" "}
+													{moment(end).format("HH:mm")}
+												</span>
+											</div>
+											<div className='flex justify-between mt-2'>
+												<div className='flex items-center gap-2'>
+													<span className='text-[14px] font-normal'>
+														{item.title}
+													</span>
+													<span className='text-[14px] font-normal'>
+														{durationHours} hrs
+													</span>
+												</div>
 												<div className='flex items-center gap-2'>
 													<span className='text-[12px] font-normal'>
 														฿ {item.price}
@@ -118,16 +152,6 @@ const MyBookingWrapper = () => {
 												</div>
 											</div>
 										</div>
-										<p className='flex gap-5 text-[12px] font-normal mt-5'>
-											{/* <span className="flex items-center cursor-pointer hover:text-deep-blue">
-                                            Call
-                                            <NavigateNextRoundedIcon fontSize="small" />
-                                        </span> */}
-											<span
-												className='flex items-center cursor-pointer hover:text-deep-blue'
-												onClick={() => navigate(`/booking/${item.id}`)}
-											></span>
-										</p>
 									</div>
 								</div>
 							);
