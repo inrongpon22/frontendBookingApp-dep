@@ -139,6 +139,19 @@ function App() {
                             {/* login from line */}
                             <Route path="/line-login" element={<CallBack />} />
                             {/* login from line */}
+                            <Route
+                                path="/details/:businessId"
+                                element={<ShopDetailsPageWrapper />}
+                            />
+                            <Route
+                                path="/booking-approval/:businessId"
+                                element={<BookingApproval />}
+                            />
+                            <Route
+                                path="/booking/:bookingId"
+                                element={<BookingSummaryWrapper />}
+                            />
+
 
                             {/* 401 unauthorize */}
                             <Route path="/401" element={<Unauthorized />} />
