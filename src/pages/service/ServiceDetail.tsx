@@ -56,8 +56,9 @@ export default function ServiceDetail(props: IParams) {
     const [isCloseServiceCard, setIsCloseServiceCard] = useState(false);
     const [isCloseCard, setIsCloseCard] = useState(false);
     const [modifyServiceInfo, setModifyServiceInfo] = useState<IServiceInfo>(); // for update service info
-    const [modifyServiceTime, setModifyServiceTime] =
-        useState<IServiceEditTime[]>([]); // for update service time
+    const [modifyServiceTime, setModifyServiceTime] = useState<
+        IServiceEditTime[]
+    >([]); // for update service time
     const [openConfirm, setOpenConfirm] = useState(false);
     const {
         data: serviceInfo,
@@ -90,7 +91,8 @@ export default function ServiceDetail(props: IParams) {
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [serviceLoading]);
+        [serviceLoading]
+    );
 
     const handleSetEditInfo = () => {
         setIsEditInfo(!isEditInfo);
@@ -192,7 +194,13 @@ export default function ServiceDetail(props: IParams) {
     };
 
     const handleCreateUpdateService = async () => {
-        if (type && modifyServiceInfo && modifyServiceTime && token && businessData) {
+        if (
+            type &&
+            modifyServiceInfo &&
+            modifyServiceTime &&
+            token &&
+            businessData
+        ) {
             const insertData = {
                 businessId: Number(businessId ?? ""),
                 title: modifyServiceInfo.serviceName,
@@ -206,9 +214,13 @@ export default function ServiceDetail(props: IParams) {
                     daysOpen: time.daysOpen,
                     availableFromDate: time.availableFromDate,
                     availableToDate:
-                        time.availableToDate === "" ? null : time.availableToDate,
+                        time.availableToDate === ""
+                            ? null
+                            : time.availableToDate,
                     slotsTime: time.slotsTime,
                     duration: time.duration,
+                    isLimitBooking: time.isLimitBooking,
+                    maximumAllow: time.isLimitBooking ? time.maximumAllow : 0,
                 })),
                 availableFromDate: modifyServiceTime[0].availableFromDate,
                 availableToDate:
@@ -232,7 +244,13 @@ export default function ServiceDetail(props: IParams) {
                 }
             });
         } else {
-            if (serviceInfo && modifyServiceInfo && modifyServiceTime && token && businessData) {
+            if (
+                serviceInfo &&
+                modifyServiceInfo &&
+                modifyServiceTime &&
+                token &&
+                businessData
+            ) {
                 const insertData = {
                     title: modifyServiceInfo?.serviceName,
                     description: modifyServiceInfo?.serviceDescription,
@@ -261,7 +279,9 @@ export default function ServiceDetail(props: IParams) {
         return dayOpen.join(",");
     };
 
-    const dayOfOpenLength = modifyServiceTime?.flatMap((time) => mergeDayOpen(time.daysOpen).split(",")).length;
+    const dayOfOpenLength = modifyServiceTime?.flatMap((time) =>
+        mergeDayOpen(time.daysOpen).split(",")
+    ).length;
 
     return (
         <>
@@ -300,7 +320,9 @@ export default function ServiceDetail(props: IParams) {
                         <BusinessPreview
                             businessId={Number(businessId)}
                             title={modifyServiceInfo?.serviceName ?? ""}
-                            description={modifyServiceInfo?.serviceDescription ?? ""}
+                            description={
+                                modifyServiceInfo?.serviceDescription ?? ""
+                            }
                             price={modifyServiceInfo?.price ?? 0}
                             isAutoApprove={isAutoApprove}
                             currency={modifyServiceInfo?.currency ?? ""}
@@ -316,8 +338,16 @@ export default function ServiceDetail(props: IParams) {
                     modifyServiceTime && (
                         <EditServiceTime
                             serviceTime={modifyServiceTime}
-                            openTime={modifyServiceTime[selectedIndex].slotsTime[0].startTime}
-                            closeTime={modifyServiceTime[selectedIndex].slotsTime[modifyServiceTime[selectedIndex].slotsTime.length - 1].endTime}
+                            openTime={
+                                modifyServiceTime[selectedIndex].slotsTime[0]
+                                    .startTime
+                            }
+                            closeTime={
+                                modifyServiceTime[selectedIndex].slotsTime[
+                                    modifyServiceTime[selectedIndex].slotsTime
+                                        .length - 1
+                                ].endTime
+                            }
                             editIndex={selectedIndex}
                             isAddTime={isAddTime}
                             isClose={isCloseServiceCard}
@@ -343,9 +373,11 @@ export default function ServiceDetail(props: IParams) {
                         <Divider sx={{ marginTop: "16px", width: "100%" }} />
                         <div className="flex flex-col pr-4 pl-4 mb-[80px]">
                             <div className="mt-4 flex flex-col gap-3">
-                                {modifyServiceInfo &&
+                                {modifyServiceInfo && (
                                     <ServiceCard
-                                        serviceName={modifyServiceInfo.serviceName}
+                                        serviceName={
+                                            modifyServiceInfo.serviceName
+                                        }
                                         serviceDescription={
                                             modifyServiceInfo.serviceDescription
                                         }
@@ -356,7 +388,8 @@ export default function ServiceDetail(props: IParams) {
                                             setIsEditInfo(true);
                                             setIsCloseCard(true);
                                         }}
-                                    />}
+                                    />
+                                )}
                                 {modifyServiceTime &&
                                     modifyServiceTime.map(
                                         (
@@ -370,13 +403,16 @@ export default function ServiceDetail(props: IParams) {
                                                         item.availableFromDate
                                                     }
                                                     availableToDate={
-                                                        item.availableToDate ?? ""
+                                                        item.availableToDate ??
+                                                        ""
                                                     }
                                                     slotsTime={item.slotsTime}
                                                     selectedIndex={index}
                                                     handleSetEditTime={() => {
                                                         handleSetEditTime();
-                                                        setIsCloseServiceCard(true);
+                                                        setIsCloseServiceCard(
+                                                            true
+                                                        );
                                                     }}
                                                     handleSelectIndex={(
                                                         index: number
@@ -395,13 +431,19 @@ export default function ServiceDetail(props: IParams) {
                                     disabled={dayOfOpenLength === 7}
                                     style={{
                                         display: "flex",
-                                        background: dayOfOpenLength === 7 ? `${alpha("#CCCCCC", 0.3)}` : `${alpha("#020873", 0.1)}`,
+                                        background:
+                                            dayOfOpenLength === 7
+                                                ? `${alpha("#CCCCCC", 0.3)}`
+                                                : `${alpha("#020873", 0.1)}`,
                                         width: "135px",
                                         height: "27px",
                                         fontSize: "14px",
                                         borderRadius: "8px",
                                         justifyContent: "center",
-                                        color: dayOfOpenLength === 7 ? `${alpha("#020873", 0.3)}` : `${alpha("#020873", 1)}`,
+                                        color:
+                                            dayOfOpenLength === 7
+                                                ? `${alpha("#020873", 0.3)}`
+                                                : `${alpha("#020873", 1)}`,
                                     }}
                                     onClick={() => {
                                         handleAddTime();
@@ -411,8 +453,7 @@ export default function ServiceDetail(props: IParams) {
                                     <AddCircleOutlineIcon
                                         sx={{ fontSize: "13px" }}
                                     />
-                                    <div
-                                        className=" font-medium ">
+                                    <div className=" font-medium ">
                                         {t("button:addServiceTime")}
                                     </div>
                                 </button>
@@ -432,7 +473,9 @@ export default function ServiceDetail(props: IParams) {
                                     handleHideEndTime={() =>
                                         setIsHideEndTime(!isHideEndTime)
                                     }
-                                    handleUpdateService={handleCreateUpdateService}
+                                    handleUpdateService={
+                                        handleCreateUpdateService
+                                    }
                                     handleOpenPreview={handleOpenPreview}
                                 />
                             </div>
@@ -442,7 +485,9 @@ export default function ServiceDetail(props: IParams) {
             ) : (
                 <>
                     <Loading openLoading={serviceLoading} />
-                    {(!ismodifyServiceInfoUndefined() && modifyServiceInfo && serviceInfo) && (
+                    {!ismodifyServiceInfoUndefined() &&
+                        modifyServiceInfo &&
+                        serviceInfo &&
                         (isEditInfo ? (
                             modifyServiceInfo && (
                                 <EditServiceInfo
@@ -461,8 +506,17 @@ export default function ServiceDetail(props: IParams) {
                             modifyServiceTime && (
                                 <EditServiceTime
                                     serviceTime={modifyServiceTime}
-                                    openTime={modifyServiceTime[selectedIndex].slotsTime[0].startTime}
-                                    closeTime={modifyServiceTime[selectedIndex].slotsTime[modifyServiceTime[selectedIndex].slotsTime.length - 1].endTime}
+                                    openTime={
+                                        modifyServiceTime[selectedIndex]
+                                            .slotsTime[0].startTime
+                                    }
+                                    closeTime={
+                                        modifyServiceTime[selectedIndex]
+                                            .slotsTime[
+                                            modifyServiceTime[selectedIndex]
+                                                .slotsTime.length - 1
+                                        ].endTime
+                                    }
                                     editIndex={selectedIndex}
                                     isAddTime={isAddTime}
                                     isClose={true}
@@ -482,7 +536,10 @@ export default function ServiceDetail(props: IParams) {
                                 <BusinessPreview
                                     businessId={Number(businessId)}
                                     title={modifyServiceInfo?.serviceName ?? ""}
-                                    description={modifyServiceInfo?.serviceDescription ?? ""}
+                                    description={
+                                        modifyServiceInfo?.serviceDescription ??
+                                        ""
+                                    }
                                     price={modifyServiceInfo?.price ?? 0}
                                     isAutoApprove={isAutoApprove}
                                     currency={modifyServiceInfo?.currency ?? ""}
@@ -505,19 +562,30 @@ export default function ServiceDetail(props: IParams) {
                                         handleClose={handleCloseCardDetail}
                                     />
                                 </div>
-                                <Divider sx={{ marginTop: "16px", width: "100%" }} />
+                                <Divider
+                                    sx={{ marginTop: "16px", width: "100%" }}
+                                />
                                 <div className="flex flex-col pr-4 pl-4 mb-[80px]">
                                     <div className="mt-4 flex flex-col gap-3">
                                         <ServiceCard
                                             serviceId={serviceInfo.id}
-                                            serviceName={modifyServiceInfo.serviceName}
+                                            serviceName={
+                                                modifyServiceInfo.serviceName
+                                            }
                                             serviceDescription={
                                                 modifyServiceInfo.serviceDescription
                                             }
                                             price={modifyServiceInfo.price}
-                                            currency={modifyServiceInfo.currency}
-                                            handleSetEditInfo={handleSetEditInfo}
-                                            handleCloseAfterDelete={props.handleClose && props.handleClose}
+                                            currency={
+                                                modifyServiceInfo.currency
+                                            }
+                                            handleSetEditInfo={
+                                                handleSetEditInfo
+                                            }
+                                            handleCloseAfterDelete={
+                                                props.handleClose &&
+                                                props.handleClose
+                                            }
                                         />
 
                                         {modifyServiceTime &&
@@ -528,22 +596,31 @@ export default function ServiceDetail(props: IParams) {
                                                 ) => (
                                                     <div key={index}>
                                                         <TimeCard
-                                                            daysOpen={item.daysOpen}
+                                                            daysOpen={
+                                                                item.daysOpen
+                                                            }
                                                             availableFromDate={
                                                                 item.availableFromDate
                                                             }
                                                             availableToDate={
-                                                                item.availableToDate ?? ""
+                                                                item.availableToDate ??
+                                                                ""
                                                             }
-                                                            slotsTime={item.slotsTime}
-                                                            selectedIndex={index}
+                                                            slotsTime={
+                                                                item.slotsTime
+                                                            }
+                                                            selectedIndex={
+                                                                index
+                                                            }
                                                             handleSetEditTime={
                                                                 handleSetEditTime
                                                             }
                                                             handleSelectIndex={(
                                                                 index: number
                                                             ) =>
-                                                                setSelectedIndex(index)
+                                                                setSelectedIndex(
+                                                                    index
+                                                                )
                                                             }
                                                             handleDeleteServiceTime={
                                                                 handleDeleteServiceTime
@@ -556,7 +633,10 @@ export default function ServiceDetail(props: IParams) {
                                         <button
                                             style={{
                                                 display: "flex",
-                                                background: `${alpha("#020873", 0.1)}`,
+                                                background: `${alpha(
+                                                    "#020873",
+                                                    0.1
+                                                )}`,
                                                 width: "135px",
                                                 height: "27px",
                                                 fontSize: "14px",
@@ -568,15 +648,18 @@ export default function ServiceDetail(props: IParams) {
                                             <AddCircleOutlineIcon
                                                 sx={{ fontSize: "13px" }}
                                             />
-                                            <div
-                                                className=" font-medium ">
+                                            <div className=" font-medium ">
                                                 {t("button:addServiceTime")}
                                             </div>
                                         </button>
 
                                         <SettingServiceBtn
-                                            modifyServiceInfo={modifyServiceInfo}
-                                            modufyServiceTime={modifyServiceTime}
+                                            modifyServiceInfo={
+                                                modifyServiceInfo
+                                            }
+                                            modufyServiceTime={
+                                                modifyServiceTime
+                                            }
                                             isAutoApprove={isAutoApprove}
                                             isHidePrice={isHidePrice}
                                             isHideEndTime={isHideEndTime}
@@ -589,14 +672,17 @@ export default function ServiceDetail(props: IParams) {
                                             handleHideEndTime={() =>
                                                 setIsHideEndTime(!isHideEndTime)
                                             }
-                                            handleUpdateService={handleCreateUpdateService}
-                                            handleOpenPreview={handleOpenPreview}
+                                            handleUpdateService={
+                                                handleCreateUpdateService
+                                            }
+                                            handleOpenPreview={
+                                                handleOpenPreview
+                                            }
                                         />
-
                                     </div>
                                 </div>
                             </div>
-                        )))}
+                        ))}
                 </>
             )}
         </>

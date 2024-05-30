@@ -8,7 +8,7 @@ import { SWRConfig } from "swr";
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <SWRConfig value={{
-            revalidateOnFocus: false,
+            revalidateOnFocus: true,
         }}>
             <BusinessContext>
                 <App />

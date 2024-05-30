@@ -9,6 +9,7 @@ import { GlobalContext } from "../../contexts/BusinessContext";
 import moment from "moment";
 import { Switch, SwitchProps, styled } from "@mui/material";
 import { getReservationByBusinessId } from "../../api/booking";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const IOSSwitch = styled((props: SwitchProps) => (
     <Switch
@@ -73,7 +74,9 @@ const BookingDetailsPreview = () => {
     const bookingDetail = localStorage.getItem("bookingDetail") ?? "";
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
+
+    // const [userId, setUserId] = useState<number>(0)
 
     const { formik } = useContext<any>(DialogContext);
 
@@ -107,25 +110,29 @@ const BookingDetailsPreview = () => {
     );
 
     useEffect(() => {
+        // setUserId(res)
         if (token && formik.values.userId === 0) {
-            axios
-                .get(`${app_api}/user/${userId}`, {
-                    headers: {
-                        Authorization: `${token}`,
-                    },
-                })
-                .then((res: any) => {
-                    console.log(res.data);
-                    formik.setValues({
-                        userId: Number(res.data.id),
-                        username: res.data.name ?? "",
-                        phoneNumbers: res.data.phoneNumber,
-                        otp: "",
-                        additionalNotes: "",
-                        isSendSMS: true,
-                        isBusinessOnly: false,
-                    });
-                });
+            getUserIdByAccessToken(accessToken ?? "", token ?? "").then(
+                (userId) =>
+                    axios
+                        .get(`${app_api}/user/${userId}`, {
+                            headers: {
+                                Authorization: `${token}`,
+                            },
+                        })
+                        .then((res: any) => {
+                            console.log(res.data);
+                            formik.setValues({
+                                userId: Number(res.data.id),
+                                username: res.data.name ?? "",
+                                phoneNumbers: res.data.phoneNumber,
+                                otp: "",
+                                additionalNotes: "",
+                                isSendSMS: true,
+                                isBusinessOnly: false,
+                            });
+                        })
+            );
         }
     }, []);
 
@@ -162,7 +169,7 @@ const BookingDetailsPreview = () => {
                                   ? false
                                   : formik.values.isSendSMS
                           }`
-                        : `makeMutiReservation/${language}`
+                        : `makeMutiReservation/${language}/line`
                 }`,
                 body,
                 {
@@ -195,21 +202,21 @@ const BookingDetailsPreview = () => {
     const getLast = filterSelected[filterSelected?.length - 1];
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
             <div className="">
                 <p className="text-[14px] font-semibold">
                     {t("bookingDetails")}
                 </p>
-                <div className="flex flex-col gap-3 border rounded-md p-3 mt-1">
+                <div className="flex flex-col gap-4 border rounded-md p-3 mt-1">
                     <p className="flex justify-between">
                         <span>{t("services")}:</span>
-                        <span className="text-[14px] font-bold">
+                        <span className="text-[1rem] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById.title}
                         </span>
                     </p>
                     <p className="flex justify-between">
                         <span>{t("date")}:</span>
-                        <span className="text-[14px] font-bold">
+                        <span className="text-[1rem] font-bold">
                             {moment(
                                 JSON.parse(bookingDetail).selectedDate.date
                             ).format("MMMM DD, YYYY")}
@@ -217,19 +224,19 @@ const BookingDetailsPreview = () => {
                     </p>
                     <p className="flex justify-between">
                         <span>{t("time")}:</span>
-                        <span className="text-[14px] font-bold">
+                        <span className="text-[1rem] font-bold">
                             {`${getFirst?.startTime} - ${getLast?.endTime}`}
                         </span>
                     </p>
                     <p className="flex justify-between">
                         <span>{t("guests")}:</span>
-                        <span className="text-[14px] font-bold">
+                        <span className="text-[.9rem] font-bold">
                             {JSON.parse(bookingDetail).guestNumber}
                         </span>
                     </p>
                     <p className="flex justify-between">
                         <span>{t("price")}:</span>
-                        <span className="text-[14px] font-bold">
+                        <span className="text-[1rem] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById?.price}{" "}
                             {JSON.parse(bookingDetail)?.serviceById?.currency}
                         </span>
@@ -240,8 +247,7 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-5`}
-            >
+                } flex justify-between items-center border rounded-lg p-3`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         จองไว้สำหรับร้านค้าเท่านั้น
@@ -257,27 +263,33 @@ const BookingDetailsPreview = () => {
                     }
                 />
             </div>
-            <div className={formik.values.isBusinessOnly ? "hidden" : "mt-5"}>
-                <p className="flex justify-between items-center text-[14px] font-semibold">
-                    <span>{t("bookingName")}</span>
-                </p>
-                <input
-                    type="text"
-                    {...formik.getFieldProps("username")}
-                    className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
-                        formik.touched.username && formik.errors.username
-                            ? "border-2 border-rose-500"
-                            : "border"
-                    }`}
-                    placeholder="สมชาย"
-                />
-                {formik.touched.username && formik.errors.username && (
-                    <span className="text-[14px] text-rose-500">
-                        {formik.errors?.username}
-                    </span>
-                )}
-
-                <div className="mt-2">
+            <div
+                className={
+                    formik.values.isBusinessOnly
+                        ? "hidden"
+                        : "mt-0 flex flex-col gap-3"
+                }>
+                <div>
+                    <p className="flex justify-between items-center text-[14px] font-semibold">
+                        <span>{t("bookingName")}</span>
+                    </p>
+                    <input
+                        type="text"
+                        {...formik.getFieldProps("username")}
+                        className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
+                            formik.touched.username && formik.errors.username
+                                ? "border-2 border-rose-500"
+                                : "border"
+                        }`}
+                        placeholder="ชื่อที่ต้องการใช้จอง"
+                    />
+                    {formik.touched.username && formik.errors.username && (
+                        <span className="text-[14px] text-rose-500">
+                            {formik.errors?.username}
+                        </span>
+                    )}
+                </div>
+                <div className="mt-0">
                     <p className="flex justify-between items-center text-[14px] font-semibold">
                         <span>{t("bookingNumbers")}</span>
                     </p>
@@ -290,7 +302,7 @@ const BookingDetailsPreview = () => {
                                 ? "border-2 border-rose-500"
                                 : "border"
                         }`}
-                        placeholder="012 345 6789"
+                        placeholder="เบอร์โทรศัพท์ที่ต้องการใช้จอง"
                     />
                     {formik.touched.phoneNumbers &&
                         formik.errors.phoneNumbers && (
@@ -301,8 +313,7 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-5 mt-2`}
-                    >
+                        } flex justify-between items-center border rounded-lg p-3 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 ส่งข้อความ SMS
@@ -323,16 +334,16 @@ const BookingDetailsPreview = () => {
                         />
                     </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-0">
                     <p className="text-[14px] font-semibold">{t("notes")}</p>
                     <textarea
                         rows={3}
                         {...formik.getFieldProps("additionalNotes")}
                         className="w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal"
-                        placeholder="ตัวอย่าง ตัดผมโดยสปาและทรีทเมนท์"
+                        placeholder="รายละเอียดที่ต้องการเพิ่มเติม"
                     />
                 </div>
-                <div className="flex flex-col py-2">
+                <div className="flex flex-col py-0">
                     <label htmlFor="" className="text-[12px] text-[#5C5C5C]">
                         {t("termsAndprivacy")}
                     </label>
@@ -345,12 +356,11 @@ const BookingDetailsPreview = () => {
                     formik.errors?.username
                         ? "bg-gray-400"
                         : "bg-deep-blue"
-                } w-full text-white p-2 rounded-lg`}
+                } w-full text-white p-3 rounded-lg`}
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}
-            >
+                onClick={createReservation}>
                 {t("button:confirmBookingButton")}
             </button>
         </div>

@@ -21,6 +21,7 @@ import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 // components
 import FirstTimeCongrat from "./FirstTimeCongrat";
 import FirstTimeAddMoreService from "./FirstTimeAddMoreService";
+import { dayOfWeekFullName } from "../../helper/daysOfWeek";
 
 const BusinessProfile = () => {
     const { businessId } = useParams();
@@ -76,11 +77,10 @@ const BusinessProfile = () => {
     }, [getReservationByBusinessIdLoading]);
 
     useEffect(() => {
-      if(!token){
-        navigate('/')
-      }
-    }, [])
-    
+        if (!token) {
+            navigate("/");
+        }
+    }, []);
 
     return (
         <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
@@ -104,7 +104,8 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}>
+                        }}
+                    >
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -207,7 +208,22 @@ const BusinessProfile = () => {
             {/* today section */}
             <div className="text-[14px] bg-white p-5 mt-2">
                 <div className="flex justify-between items-center">
-                    <p className="font-bold text-zinc-400">วันนี้</p>
+                    <p className="font-bold text-zinc-400">
+                        {`วันนี้ 
+                        วัน${
+                            dayOfWeekFullName(language)?.find(
+                                (ii) => ii.value === moment().format("dddd")
+                            )?.name ?? ""
+                        }, ${moment().format("D")} ${
+                            monthsOfYearFullName(language)?.find(
+                                (ii) => ii.value === moment().format("MMMM")
+                            )?.name ?? ""
+                        } ${
+                            language === "th"
+                                ? Number(moment().format("YYYY")) + 543
+                                : moment().format("YYYY")
+                        }`}
+                    </p>
                     <p
                         className="font-bold text-[10px] text-deep-blue text-opacity-60 underline"
                         onClick={() =>

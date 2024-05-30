@@ -38,7 +38,7 @@ const ShopDetailsPageWrapper = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
 
     const { setShowDialog, setDialogState, setIsGlobalLoading } =
         useContext(GlobalContext);
@@ -73,11 +73,13 @@ const ShopDetailsPageWrapper = () => {
     const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
         new Set()
     );
+    const [isLimitedSlot, setIsLimitedSlot] = useState(false);
+    const [maximumAllow, setMaximumAllow] = useState(0);
 
     const slotArrays = serviceById?.bookingSlots.find(
         (item: any) =>
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
-            selectedDate.date.isAfter(item.availableFromDate)
+            selectedDate.date.isSameOrAfter(item.availableFromDate)
     );
 
     // get business by businessId from params
@@ -132,6 +134,8 @@ const ShopDetailsPageWrapper = () => {
                 setServiceById({
                     ...res.data,
                     bookingSlots: res.data.bookingSlots.map((item: any) => {
+                        setIsLimitedSlot(item.isLimitBooking);
+                        setMaximumAllow(item.maximumAllow);
                         return {
                             ...item,
                             slotsTime: item.slotsTime
@@ -200,6 +204,7 @@ const ShopDetailsPageWrapper = () => {
                         setDateArr={setDateArr}
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
+                        serviceById={serviceById}
                     />
 
                     <TimeSlots
@@ -209,10 +214,12 @@ const ShopDetailsPageWrapper = () => {
                         quantities={quantities}
                         selectedIndices={selectedIndices}
                         setSelectedIndices={setSelectedIndices}
+                        isLimitedSlot={isLimitedSlot}
+                        maximumAllow={maximumAllow}
                     />
                 </div>
 
-                <div className="flex flex-col justify-center items-center my-5">
+                <div className="flex flex-col justify-center items-center my-5 px-5">
                     <button
                         type="button"
                         disabled={
@@ -226,8 +233,12 @@ const ShopDetailsPageWrapper = () => {
                             )
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
-                        }  text-white text-[14px] font-semibold w-11/12 rounded-md py-3`}
-                        onClick={() => {
+                        }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
+                        onClick={async () => {
+                            // const userId = await getUserIdByAccessToken(
+                            //     accessToken ?? "",
+                            //     token ?? ""
+                            // );
                             localStorage.setItem(
                                 "bookingDetail",
                                 JSON.stringify({
@@ -248,15 +259,14 @@ const ShopDetailsPageWrapper = () => {
                                     (item: any) => item.isSelected
                                 )
                             ) {
-                                if (token && userId) {
+                                if (token && accessToken) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");
                                 } else {
                                     setShowDialog(true);
                                 }
                             }
-                        }}
-                    >
+                        }}>
                         {t("button:confirmBookingButton")}
                     </button>
                     <span className="text-[12px] py-2">

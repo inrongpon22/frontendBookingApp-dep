@@ -10,7 +10,7 @@ import { app_api } from "../../helper/url";
 // import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { GlobalContext } from "../../contexts/BusinessContext";
@@ -18,7 +18,6 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Divider, styled } from "@mui/material";
 
 const MyBookingWrapper = () => {
-	const navigate = useNavigate();
 	const location = useLocation();
 	const token = localStorage.getItem("token");
 	const userId = localStorage.getItem("userId");

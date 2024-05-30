@@ -326,7 +326,8 @@ export default function BusinessInfo() {
     return (
         <>
             <Loading openLoading={isLoading} />
-            <div className="flex flex-col mb-[10vh]">
+            <div className="flex flex-col ">
+                {/* mb-[10vh] */}
                 <form onSubmit={formik.handleSubmit}>
                     <p
                         style={{ fontSize: "14px" }}
@@ -372,13 +373,13 @@ export default function BusinessInfo() {
                         className="mt-4 font-semibold">
                         {t("form:business:create:openTime")}
                     </p>
-                    <div className="flex justify-between mt-1">
+                    <div className="flex justify-between mt-1 gap-2">
                         {dayOfWeek(language)?.map((day, index) => (
                             <div
                                 onClick={() => toggleDay(day.value)}
                                 key={index}
                                 style={{
-                                    width: "45px",
+                                    // width: "45px",
                                     height: "47px",
                                     borderColor: isDaySelected(day.value)
                                         ? "#020873"
@@ -387,7 +388,7 @@ export default function BusinessInfo() {
                                         ? "rgb(2, 8, 115,0.2)"
                                         : "white",
                                 }}
-                                className={`
+                                className={`flex-1
                             ${
                                 isDaySelected(day.value)
                                     ? "border-custom-color border-2"
@@ -406,11 +407,11 @@ export default function BusinessInfo() {
                     <div className="flex justify-between mt-2">
                         <div
                             style={{
-                                width: "156px",
-                                height: "51px",
+                                // width: "156px",
+                                // height: "51px",
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
-                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            className="flex-1 rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
                             <div
                                 style={{
                                     fontSize: "14px",
@@ -430,16 +431,16 @@ export default function BusinessInfo() {
                                 />
                             </div>
                         </div>
-                        <div className="flex justify-center items-center">
+                        <div className="flex-1 flex justify-center items-center">
                             -
                         </div>
                         <div
                             style={{
-                                width: "156px",
-                                height: "51px",
+                                // width: "156px",
+                                // height: "51px",
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
-                            className="rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
+                            className="flex-1 rounded-lg focus:outline-none flex gap-1 border-black-50 border justify-between items-center p-4">
                             <div style={{ fontSize: "14px" }}>{t("to")}</div>
                             <div className="flex">
                                 <input
@@ -520,7 +521,8 @@ export default function BusinessInfo() {
                         />
                     )}
 
-                    <div className="w-full flex justify-center bottom-0 inset-x-0 fixed">
+                    <div className="w-full flex justify-center bottom-0 ">
+                        {/* inset-x-0 fixed */}
                         <button
                             type="button"
                             className={`w-[95vw] p-3 my-3 text-white text-[14px] bg-deep-blue rounded-lg font-semibold`}
