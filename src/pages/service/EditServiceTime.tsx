@@ -217,7 +217,7 @@ export default function EditServiceTime(props: IParams) {
                 prevCapacity.filter((_, index) => index !== indexManual)
             );
         } else {
-            setManualCapacity((prevCapacity) => {
+            setManualCapacity((prevCapacity:any) => {
                 const newCapacity = [
                     ...prevCapacity,
                     { startTime, endTime, capacity: guestNumber },
@@ -271,8 +271,8 @@ export default function EditServiceTime(props: IParams) {
         );
         // If the slot already exists, update its capacity
         if (index !== -1) {
-            setManualCapacity((prevCapacity) => {
-                const updatedCapacity = [...prevCapacity];
+            setManualCapacity((prevCapacity:any) => {
+                const updatedCapacity:any = [...prevCapacity];
                 updatedCapacity[index] = {
                     startTime,
                     endTime,
@@ -282,7 +282,7 @@ export default function EditServiceTime(props: IParams) {
             });
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
-            setManualCapacity((prevCapacity) => [
+            setManualCapacity((prevCapacity:any) => [
                 ...prevCapacity,
                 { startTime, endTime, capacity: capacity + 1 },
             ]);
@@ -299,8 +299,8 @@ export default function EditServiceTime(props: IParams) {
 
         // If the slot exists and its capacity is greater than 0, decrease its capacity
         if (index !== -1) {
-            setManualCapacity((prevCapacity) => {
-                const updatedCapacity = [...prevCapacity];
+            setManualCapacity((prevCapacity:any) => {
+                const updatedCapacity:any = [...prevCapacity];
                 updatedCapacity[index] = {
                     startTime,
                     endTime,
@@ -313,7 +313,7 @@ export default function EditServiceTime(props: IParams) {
             });
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
-            setManualCapacity((prevCapacity) => [
+            setManualCapacity((prevCapacity:any) => [
                 ...prevCapacity,
                 { startTime, endTime, capacity: guestNumber - 1 },
             ]);
@@ -434,9 +434,9 @@ export default function EditServiceTime(props: IParams) {
         if (timeSlots.length > 0) {
             setManualCapacity([]);
             const newSelectedSlots: number[] = [];
-            timeSlots.forEach((element, index) => {
+            timeSlots.forEach((element:any, index:number) => {
                 newSelectedSlots.push(index);
-                setManualCapacity((prevCapacity) => [
+                setManualCapacity((prevCapacity:any) => [
                     ...prevCapacity,
                     {
                         startTime: element.startTime,

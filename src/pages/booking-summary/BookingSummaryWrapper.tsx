@@ -14,7 +14,6 @@ import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { cancelBooking } from "../../api/booking";
-import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import SendMessageOption from "../../components/dialog/SendMessageOption";
 

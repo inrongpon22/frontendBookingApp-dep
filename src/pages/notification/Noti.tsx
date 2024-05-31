@@ -1,6 +1,5 @@
 /** @format */
 
-import React from "react";
 import Header from "./components/Header";
 import NotiCard from "./components/NotiCard";
 import { useNavigate } from "react-router-dom";

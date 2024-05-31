@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { alpha, Modal, Typography } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
@@ -119,7 +119,7 @@ export default function SendMessageOption(props: IProps) {
                     <div className='pr-3'></div>
                  </div>
 
-                    {/* <div 
+                    { false && <div 
                         className="font-normal rounded-lg px-3 py-3 flex items-center justify-between border-2 mt-3" 
                         onClick={handleLineClick} // Add onClick to the div
                         style={{
@@ -131,7 +131,7 @@ export default function SendMessageOption(props: IProps) {
                     {lineChecked ? <CheckCircleIcon style={{ color: '#35398F', width:"20px", height:"20px" }} /> : <RadioButtonUncheckedIcon style={{ color: '#ddd', width:"20px", height:"20px" }} />}
                     {props.btnLINE}
                     <div className='pr-3'></div>
-                    </div> */}
+                    </div>}
                 </div>
 
                 <div className="flex justify-between gap-2 mt-4">
