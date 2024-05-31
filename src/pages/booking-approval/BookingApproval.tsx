@@ -20,9 +20,11 @@ import { dayOfWeekFullName } from "../../helper/daysOfWeek";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import CustomTabs from "./CustomTabs";
+import { getUserIdByAccessToken } from "../../api/user";
 
 const BookingApproval = (): React.ReactElement => {
     const { businessId } = useParams();
+    const accessToken = localStorage.getItem("accessToken");
     const navigate = useNavigate();
     const location = useLocation();
     const query = useQuery();
@@ -125,6 +127,10 @@ const BookingApproval = (): React.ReactElement => {
         serviceId: string
     ) => {
         if (token) {
+            const userId = await getUserIdByAccessToken(
+                accessToken ?? "",
+                token ?? ""
+            );
             axios
                 .post(
                     `${app_api}/approveReservation/${
@@ -135,7 +141,7 @@ const BookingApproval = (): React.ReactElement => {
                         query.get("accessCode")
                             ? getReservByAccessCode.serviceId
                             : serviceId
-                    }/${lang}`,
+                    }/${lang}/${userId}`,
                     undefined,
                     {
                         headers: {
@@ -234,16 +240,14 @@ const BookingApproval = (): React.ReactElement => {
                 rejectRequested,
                 bookingDatas,
                 setBookingDatas,
-            }}
-        >
+            }}>
             <div className="h-dvh flex flex-col">
                 <div className="flex drop-shadow-lg p-4 font-semibold text-[14px]">
                     <button
                         type="button"
                         onClick={() =>
                             navigate(`/business-profile/${businessId}`)
-                        }
-                    >
+                        }>
                         <ArrowBackIosIcon fontSize="small" />
                     </button>
                     <span className="mx-auto">
@@ -278,8 +282,7 @@ const BookingApproval = (): React.ReactElement => {
                                             <Accordion
                                                 defaultExpanded={
                                                     index === 0 ? true : false
-                                                }
-                                            >
+                                                }>
                                                 <AccordionSummary
                                                     expandIcon={
                                                         <ExpandMoreIcon />
@@ -289,8 +292,7 @@ const BookingApproval = (): React.ReactElement => {
                                                     }-content`}
                                                     id={`panel${
                                                         index + 1
-                                                    }-header`}
-                                                >
+                                                    }-header`}>
                                                     <span className="w-3/4">
                                                         {`${date} ${
                                                             monthsOfYearFullName(
@@ -319,8 +321,7 @@ const BookingApproval = (): React.ReactElement => {
                                                                 case 1:
                                                                     return "bg-green-500";
                                                             }
-                                                        })()}`}
-                                                    >
+                                                        })()}`}>
                                                         {item.children?.length}{" "}
                                                         {tabStatus == 0
                                                             ? t("pending")
@@ -334,8 +335,7 @@ const BookingApproval = (): React.ReactElement => {
                                                         item.children.length > 1
                                                             ? "grid md:grid-cols-2 gap-2"
                                                             : ""
-                                                    }
-                                                >
+                                                    }>
                                                     {item.children.map(
                                                         (
                                                             ii: any,
