@@ -133,15 +133,10 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                     }
                                                 )
                                                 .then((resp) => {
-                                                    if (resp.data.length > 0) {
-                                                        login();
+                                                    if (resp.status === 200) {
                                                         setShowDialog(false);
                                                         navigate(
                                                             `/business-profile/${resp.data[0].id}`
-                                                        );
-                                                    } else {
-                                                        navigate(
-                                                            "/create-business"
                                                         );
                                                     }
                                                 })

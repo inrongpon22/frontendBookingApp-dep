@@ -27,13 +27,11 @@ export default function CallBack() {
                             },
                         })
                         .then((resp) => {
-                            if (resp.data.length > 0) {
+                            if (resp.status === 200) {
                                 setIsLoading(false);
                                 navigate(
                                     `/business-profile/${resp.data[0].id}`
                                 );
-                            } else {
-                                navigate("/create-business");
                             }
                         })
                         .catch((err) => {
