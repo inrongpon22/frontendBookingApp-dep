@@ -15,12 +15,12 @@ const useAuth = () => {
                     setIsAuthenticated(response.status === 200);
                 } else {
                     setIsAuthenticated(false);
-                    navigate("/login");
+                    navigate("/");
                 }
             } catch (error) {
                 console.error("Error checking authentication:", error);
                 setIsAuthenticated(false);
-                navigate("/login");
+                navigate("/");
             }
         };
 
