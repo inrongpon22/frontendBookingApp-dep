@@ -137,6 +137,10 @@ const BookingDetailsPreview = () => {
     }, []);
 
     const createReservation = async () => {
+        const userId = await getUserIdByAccessToken(
+            accessToken ?? "",
+            token ?? ""
+        );
         setIsGlobalLoading(true);
         const selectedArr = slotArrays?.slotsTime.filter(
             (item: any) => item.isSelected
@@ -169,7 +173,7 @@ const BookingDetailsPreview = () => {
                                   ? false
                                   : formik.values.isSendSMS
                           }`
-                        : `makeMutiReservation/${language}/line`
+                        : `makeMutiReservation/${language}/${userId}`
                 }`,
                 body,
                 {
