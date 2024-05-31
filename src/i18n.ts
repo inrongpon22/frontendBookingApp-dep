@@ -2,10 +2,10 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import enJSON from './locale/en.json'
 import thJSON from './locale/th.json'
-import LanguageDetector from 'i18next-browser-languagedetector';
+// import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
-.use(LanguageDetector)
+// .use(LanguageDetector)
 .use(initReactI18next).init({
  resources: {
   en:{...enJSON},

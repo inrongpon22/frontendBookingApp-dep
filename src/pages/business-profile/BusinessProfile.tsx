@@ -26,7 +26,7 @@ import { dayOfWeekFullName } from "../../helper/daysOfWeek";
 const BusinessProfile = () => {
     const { businessId } = useParams();
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
     const {
         t,
         i18n: { language },
