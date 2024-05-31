@@ -26,6 +26,7 @@ import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import BookingApproveResult from "./BookingApproveResult";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -40,6 +41,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
     const navigate = useNavigate();
     const query = useQuery();
     const { t } = useTranslation();
+
+    const { login } = useAuth();
 
     const {
         setIsGlobalLoading,
@@ -131,6 +134,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                 )
                                                 .then((resp) => {
                                                     if (resp.status === 200) {
+                                                        login()
                                                         setShowDialog(false);
                                                         navigate(
                                                             `/business-profile/${resp.data[0].id}`

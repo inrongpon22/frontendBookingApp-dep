@@ -76,11 +76,11 @@ const BusinessProfile = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getReservationByBusinessIdLoading]);
 
-    useEffect(() => {
-        if (!token) {
-            navigate("/");
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigate("/");
+    //     }
+    // }, []);
 
     return (
         <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
