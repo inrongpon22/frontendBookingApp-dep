@@ -1,6 +1,4 @@
 /** @format */
-
-import * as React from "react";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 

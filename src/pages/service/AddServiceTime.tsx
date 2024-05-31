@@ -5,10 +5,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { alpha } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import {
-    IServiceEditTime,
-    IBookingSlot,
-} from "../../interfaces/services/Iservice";
+import { IServiceEditTime } from "../../interfaces/services/Iservice";
 import { useParams } from "react-router";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
@@ -44,7 +41,7 @@ export default function AddServiceTime(props: IParams) {
     const [closeTime, setCloseTime] = useState("");
     const [guestNumber, setGuestNumber] = useState(1);
     const [isManually, setIsManually] = useState(false);
-    const [manualCapacity, setManualCapacity] = useState<IBookingSlot[]>([]);
+    const [manualCapacity, setManualCapacity] = useState<any>([]);
     const [availableFromDate, setAvailableFromDate] = useState(
         new Date().toISOString().split("T")[0]
     );
@@ -194,11 +191,13 @@ export default function AddServiceTime(props: IParams) {
         );
 
         if (indexManual !== -1) {
-            setManualCapacity((prevCapacity) =>
-                prevCapacity.filter((_, index) => index !== indexManual)
+            setManualCapacity((prevCapacity: any) =>
+                prevCapacity.filter(
+                    (_: any, index: number) => index !== indexManual
+                )
             );
         } else {
-            setManualCapacity((prevCapacity) => {
+            setManualCapacity((prevCapacity: any) => {
                 const newCapacity = [
                     ...prevCapacity,
                     { startTime, endTime, capacity: guestNumber },
@@ -248,12 +247,13 @@ export default function AddServiceTime(props: IParams) {
     ) => {
         // Find the index of the slot in manualCapacity array
         const index = manualCapacity.findIndex(
-            (slot) => slot.startTime === startTime && slot.endTime === endTime
+            (slot: any) =>
+                slot.startTime === startTime && slot.endTime === endTime
         );
         // If the slot already exists, update its capacity
         if (index !== -1) {
-            setManualCapacity((prevCapacity) => {
-                const updatedCapacity = [...prevCapacity];
+            setManualCapacity((prevCapacity: any) => {
+                const updatedCapacity: any = [...prevCapacity];
                 updatedCapacity[index] = {
                     startTime,
                     endTime,
@@ -263,7 +263,7 @@ export default function AddServiceTime(props: IParams) {
             });
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
-            setManualCapacity((prevCapacity) => [
+            setManualCapacity((prevCapacity: any) => [
                 ...prevCapacity,
                 { startTime, endTime, capacity: capacity + 1 },
             ]);
@@ -275,13 +275,14 @@ export default function AddServiceTime(props: IParams) {
         endTime: string
     ) => {
         const index = manualCapacity.findIndex(
-            (slot) => slot.startTime === startTime && slot.endTime === endTime
+            (slot: any) =>
+                slot.startTime === startTime && slot.endTime === endTime
         );
 
         // If the slot exists and its capacity is greater than 0, decrease its capacity
         if (index !== -1) {
-            setManualCapacity((prevCapacity) => {
-                const updatedCapacity = [...prevCapacity];
+            setManualCapacity((prevCapacity: any) => {
+                const updatedCapacity: any = [...prevCapacity];
                 updatedCapacity[index] = {
                     startTime,
                     endTime,
@@ -294,7 +295,7 @@ export default function AddServiceTime(props: IParams) {
             });
         } else {
             // If the slot doesn't exist, add it to the manualCapacity array with capacity 1
-            setManualCapacity((prevCapacity) => [
+            setManualCapacity((prevCapacity: any) => [
                 ...prevCapacity,
                 { startTime, endTime, capacity: guestNumber - 1 },
             ]);
@@ -302,14 +303,14 @@ export default function AddServiceTime(props: IParams) {
     };
 
     const increaseGuest = () => {
-        setGuestNumber((prev) => prev + 1);
-        manualCapacity.forEach((element) => {
+        setGuestNumber((prev: any) => prev + 1);
+        manualCapacity.forEach((element: any) => {
             element.capacity = guestNumber + 1;
         });
     };
     const decreaseGuest = () => {
-        setGuestNumber((prev) => prev - 1);
-        manualCapacity.forEach((element) => {
+        setGuestNumber((prev: any) => prev - 1);
+        manualCapacity.forEach((element: any) => {
             element.capacity = guestNumber - 1;
         });
     };
@@ -324,7 +325,7 @@ export default function AddServiceTime(props: IParams) {
     };
 
     const handleResetGustNumber = () => {
-        manualCapacity.forEach((element) => {
+        manualCapacity.forEach((element: any) => {
             element.capacity = 1;
         });
         setGuestNumber(1);
@@ -344,7 +345,7 @@ export default function AddServiceTime(props: IParams) {
 
     const handleSubmit = async () => {
         if (manualCapacity.length == 0) {
-            selectedSlots.forEach((element) => {
+            selectedSlots.forEach((element: any) => {
                 manualCapacity.push({
                     startTime: timeSlots[element].startTime,
                     endTime: timeSlots[element].endTime,
@@ -431,9 +432,9 @@ export default function AddServiceTime(props: IParams) {
         if (timeSlots.length > 0) {
             setManualCapacity([]);
             const newSelectedSlots: number[] = [];
-            timeSlots.forEach((element, index) => {
+            timeSlots.forEach((element: any, index: number) => {
                 newSelectedSlots.push(index);
-                setManualCapacity((prevCapacity) => [
+                setManualCapacity((prevCapacity: any) => [
                     ...prevCapacity,
                     {
                         startTime: element.startTime,
@@ -479,7 +480,8 @@ export default function AddServiceTime(props: IParams) {
 
                         <p
                             className="font-semibold mt-3"
-                            style={{ fontSize: "14px" }}>
+                            style={{ fontSize: "14px" }}
+                        >
                             {t("activeDays")}
                         </p>
                         <div className="flex justify-between mt-3">
@@ -507,7 +509,8 @@ export default function AddServiceTime(props: IParams) {
                                             : isDaySelected(day.value)
                                             ? "rgba(2, 8, 115, 0.2)"
                                             : "white",
-                                    }}>
+                                    }}
+                                >
                                     {day.name}
                                 </button>
                             ))}
@@ -516,7 +519,8 @@ export default function AddServiceTime(props: IParams) {
                         <div className="flex justify-between items-center">
                             <div
                                 className="font-semibold mt-3"
-                                style={{ fontSize: "14px" }}>
+                                style={{ fontSize: "14px" }}
+                            >
                                 {t("availableTime")}
                             </div>
                             <div className="flex">
@@ -525,7 +529,8 @@ export default function AddServiceTime(props: IParams) {
                                     style={{
                                         fontSize: "14px",
                                         marginRight: "10px",
-                                    }}>
+                                    }}
+                                >
                                     24 {t("hr")}
                                 </div>
                                 <input
@@ -548,12 +553,14 @@ export default function AddServiceTime(props: IParams) {
                                         height: "51px",
                                         borderColor: `${alpha("#000000", 0.2)}`,
                                     }}
-                                    className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4">
+                                    className="rounded-lg flex gap-1 border-black-50 border justify-between items-center p-4"
+                                >
                                     <div
                                         style={{
                                             fontSize: "14px",
                                             marginRight: "15px",
-                                        }}>
+                                        }}
+                                    >
                                         {t("from")}
                                     </div>
                                     <div className="flex">
@@ -582,7 +589,8 @@ export default function AddServiceTime(props: IParams) {
                                         height: "51px",
                                         borderColor: `${alpha("#000000", 0.2)}`,
                                     }}
-                                    className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4">
+                                    className="rounded-lg  flex gap-1 border-black-50 border justify-between items-center p-4"
+                                >
                                     <div style={{ fontSize: "14px" }}>
                                         {t("to")}
                                     </div>
@@ -611,7 +619,8 @@ export default function AddServiceTime(props: IParams) {
                                 height: "51px",
                                 borderColor: `${alpha("#000000", 0.2)}`,
                             }}
-                            className="rounded-lg flex border-black-50 border justify-between items-center p-4 mt-3">
+                            className="rounded-lg flex border-black-50 border justify-between items-center p-4 mt-3"
+                        >
                             <div style={{ fontSize: "14px" }}>
                                 {t("duration")}
                             </div>
@@ -642,7 +651,8 @@ export default function AddServiceTime(props: IParams) {
                                     </button>
                                     <button
                                         disabled={duration == 0.5}
-                                        onClick={decreaseDuration}>
+                                        onClick={decreaseDuration}
+                                    >
                                         <KeyboardArrowDownIcon
                                             sx={{
                                                 fontSize: "20px",
@@ -742,7 +752,8 @@ export default function AddServiceTime(props: IParams) {
                                             ? "#cccccc"
                                             : "#020873",
                                     fontSize: "14px",
-                                }}>
+                                }}
+                            >
                                 {t("button:next")}
                             </button>
                         </div>

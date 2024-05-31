@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { alpha, Modal, Typography } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,15 +24,15 @@ interface IProps {
 export default function SendMessageOption(props: IProps) {
     console.log(props.noticeType)
     const [smsChecked, setSmsChecked] = useState(true); // Default SMS checked
-    const [lineChecked, setLineChecked] = useState(false);
+    const [lineChecked] = useState(false);//setLineChecked
 
     const handleSmsClick = () => {
         setSmsChecked(!smsChecked); // Toggle SMS checked state
     };
     
-    const handleLineClick = () => {
-        setLineChecked(!lineChecked); // Toggle LINE checked state
-    };
+    // const handleLineClick = () => {
+    //     setLineChecked(!lineChecked); // Toggle LINE checked state
+    // };
 
     useEffect(() => {
         if (smsChecked && lineChecked) {

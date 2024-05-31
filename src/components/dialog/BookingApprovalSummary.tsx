@@ -10,7 +10,6 @@ import useSWR from "swr";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
-import ConfirmCard from "./ConfirmCard";
 import SendMessageOption from "./SendMessageOption";
 
 const BookingApprovalSummary = () => {
