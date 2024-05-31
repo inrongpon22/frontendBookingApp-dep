@@ -11,6 +11,7 @@ import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import ConfirmCard from "./ConfirmCard";
+import SendMessageOption from "./SendMessageOption";
 
 const BookingApprovalSummary = () => {
     const { businessId } = useParams();
@@ -100,9 +101,15 @@ const BookingApprovalSummary = () => {
         },
     ];
 
+    // const handleConfirmBooking = () => {
+    //       approveRequested(bookingDatas?.id, bookingDatas?.serviceId);  // Call your existing logic
+    //     };
+
+    // const handleCancelBooking = () => {};
+
     return (
         <div className="flex flex-col h-full">
-            <ConfirmCard
+            {/* <ConfirmCard
                 open={showConfirmation}
                 title={t("noti:booking:approve:confirmation")}
                 description={t("noti:booking:approve:confirmationDesc")}
@@ -112,6 +119,20 @@ const BookingApprovalSummary = () => {
                 handleConfirm={() =>
                     approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
                 }
+            /> */}
+            <SendMessageOption 
+            open={showConfirmation}
+            title={t("noti:booking:approve:confirmation")}
+            description={t("noti:booking:approve:confirmationDesc")}
+            sendMessageOption={t("sendMessageOption")}
+            btnSMS={t("button:btnSMS")}
+            btnLINE={t("button:btnLINE")}
+            bntConfirm={t("button:confirm")}
+            bntBack={t("button:cancel")}
+            imageSrc="../approvedIcon.png"
+            handleClose={() => setShowConfirmation(false)}
+            handleConfirm={() => approveRequested(bookingDatas?.id, bookingDatas?.serviceId)}
+            // handleCancelBooking={handleCancelBooking}
             />
             <div className="flex flex-col gap-3">
                 {BookingDataLists?.map((item: any, index: number) => {
@@ -174,3 +195,4 @@ const BookingApprovalSummary = () => {
 };
 
 export default BookingApprovalSummary;
+

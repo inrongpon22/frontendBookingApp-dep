@@ -169,7 +169,7 @@ const BookingDetailsPreview = () => {
                                   ? false
                                   : formik.values.isSendSMS
                           }`
-                        : `makeMutiReservation/${language}`
+                        : `makeMutiReservation/${language}/line`
                 }`,
                 body,
                 {

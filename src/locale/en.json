@@ -57,7 +57,8 @@
         "addService": "Add Service",
         "addBusiness": "Add Business",
         "editSuccess": "Edit successfully",
-        "deleteSuccess": "Delete successfully"
+        "deleteSuccess": "Delete successfully",
+        "sendMessageOption": "Choose how to send your notice"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
