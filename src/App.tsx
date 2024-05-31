@@ -55,7 +55,7 @@ function App() {
             setIsAuthenticated(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location, isAuthenticated]);
+    }, [location]);
 
     return (
         <>
@@ -147,7 +147,7 @@ function App() {
 
                             {/* 401 unauthorize */}
                             <Route path='/401' element={<Unauthorized />} />
-                            {/* 401 unauthorize */}
+                            {/* 403 unauthorize */}
                             <Route path='/403' element={<Forbidden />} />
                         </>
                     )}

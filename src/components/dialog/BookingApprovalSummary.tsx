@@ -114,7 +114,7 @@ const BookingApprovalSummary = () => {
                 }
             />
             <div className="flex flex-col gap-3">
-                {BookingDataLists?.map((item: any, index: number) => {
+                {BookingDataLists?.map((item: { label: string; text: string }, index: number) => {
                     return (
                         <div key={index} className="flex justify-between">
                             <span className="text-gray-500">{item.label}</span>
@@ -128,7 +128,7 @@ const BookingApprovalSummary = () => {
 
             <div className="flex flex-col gap-3 mt-5">
                 <Divider />
-                {GuestDataLists?.map((item: any, index: number) => {
+                {GuestDataLists?.map((item: { label: string; text: string }, index: number) => {
                     return (
                         <div key={index} className="flex justify-between">
                             <span className="text-gray-500">{item.label}</span>

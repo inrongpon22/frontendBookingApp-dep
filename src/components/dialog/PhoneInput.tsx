@@ -8,14 +8,13 @@ const PhoneInput = () => {
     const { t } = useTranslation();
     const query = useQuery();
 
-    const { formik, isLoading } = useContext<any>(DialogContext);
+    const { formik, isLoading } = useContext(DialogContext);
 
   const handleLoginWithLine = async () => {
     console.log("login with line");
     await axios
         .get(`${import.meta.env.VITE_APP_API}/line-request-code`)
         .then((res) => {
-            console.log(res);
             window.location.replace(res.data.loginUrl);
         });
 };

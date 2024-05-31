@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-export const ShopContext = createContext<any>(null); //create context to store all the data
+export const ShopContext = createContext(null); //create context to store all the data
 import moment from "moment";
 import "moment/locale/th";
 // styled
@@ -24,6 +24,11 @@ import TimeSlots from "../../components/shop-details/TimeSlots";
 import DialogWrapper from "../../components/dialog/DialogWrapper";
 import ShopInformation from "../../components/shop-details/ShopInformation";
 import { GlobalContext } from "../../contexts/BusinessContext";
+// types
+import {
+    IServiceEditTime,
+    InsertService,
+} from "../../interfaces/services/Iservice";
 
 const theme = createTheme({
     palette: {
@@ -61,23 +66,24 @@ const ShopDetailsPageWrapper = () => {
 
     const [dateArr, setDateArr] = useState<object[]>([]); // get calendar date for custom render
 
-    const [selectedDate, setSelectedDate] = useState<any>({
+    const [selectedDate, setSelectedDate] = useState({
         // handle select date on calendar
         date: moment(),
+        uniqueKey: 0,
     });
 
     // handle services state
     const [services, setServices] = useState<serviceTypes[]>([]);
-    const [serviceById, setServiceById] = useState<any>();
+    const [serviceById, setServiceById] = useState<InsertService>();
 
     const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
         new Set()
     );
-    const [isLimitedSlot, setIsLimitedSlot] = useState(false);
-    const [maximumAllow, setMaximumAllow] = useState(0);
+    const [isLimitedSlot, setIsLimitedSlot] = useState<boolean>(false);
+    const [maximumAllow, setMaximumAllow] = useState<number>(0);
 
     const slotArrays = serviceById?.bookingSlots.find(
-        (item: any) =>
+        (item: { daysOpen: string | any[]; availableFromDate: any }) =>
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
             selectedDate.date.isSameOrAfter(item.availableFromDate)
     );
@@ -85,8 +91,7 @@ const ShopDetailsPageWrapper = () => {
     // get business by businessId from params
     const { error: bussDataError } = useSWR(
         `${app_api}/business/${businessId}`,
-        (url: string) => axios.get(url).then((res) => setShopDetail(res.data)),
-        { revalidateOnFocus: false }
+        (url: string) => axios.get(url).then((res) => setShopDetail(res.data))
     );
 
     // get services by business businessId
@@ -95,26 +100,22 @@ const ShopDetailsPageWrapper = () => {
         (url: string) =>
             axios.get(url).then((res) =>
                 setServices(
-                    res.data.map((item: any, index: number) => {
+                    res.data.map((item: InsertService, index: number) => {
                         if (index === 0) {
                             return {
                                 ...item,
                                 isSelected: true,
-                                bookingSlots: item.bookingSlots.map(
-                                    (ii: any) => {
-                                        return { ...ii, isSelected: false };
-                                    }
-                                ),
+                                bookingSlots: item.bookingSlots.map((ii) => {
+                                    return { ...ii, isSelected: false };
+                                }),
                             };
                         } else {
                             return {
                                 ...item,
                                 isSelected: false,
-                                bookingSlots: item.bookingSlots.map(
-                                    (ii: any) => {
-                                        return { ...ii, isSelected: false };
-                                    }
-                                ),
+                                bookingSlots: item.bookingSlots.map((ii) => {
+                                    return { ...ii, isSelected: false };
+                                }),
                             };
                         }
                     })
@@ -125,41 +126,47 @@ const ShopDetailsPageWrapper = () => {
     // get time slots by service businessId
     const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
         () =>
-            services.find((item: any) => item.isSelected) &&
+            services.find((item) => item.isSelected) &&
             `${app_api}/service/${
-                services.find((item: any) => item.isSelected)?.id
-            }/${selectedDate.date.format("YYYY-MM-DD")}`,
+                services.find((item: serviceTypes) => item.isSelected)?.id
+            }/${selectedDate.date.format("YYYY-MM-DD")}?${
+                selectedDate.uniqueKey
+            }`,
         (url: string) =>
             axios.get(url).then((res) => {
                 setServiceById({
                     ...res.data,
-                    bookingSlots: res.data.bookingSlots.map((item: any) => {
-                        setIsLimitedSlot(item.isLimitBooking);
-                        setMaximumAllow(item.maximumAllow);
-                        return {
-                            ...item,
-                            slotsTime: item.slotsTime
-                                .filter((item: any) =>
-                                    moment().isBefore(
-                                        selectedDate?.date.format(
-                                            `D MMMM YYYY ${item.startTime}`
+                    bookingSlots: res.data.bookingSlots.map(
+                        (item: IServiceEditTime) => {
+                            setIsLimitedSlot(item.isLimitBooking);
+                            setMaximumAllow(item.maximumAllow);
+                            return {
+                                ...item,
+                                slotsTime: item.slotsTime
+                                    .filter((item) =>
+                                        moment().isBefore(
+                                            selectedDate?.date.format(
+                                                `D MMMM YYYY ${item.startTime}`
+                                            )
                                         )
                                     )
-                                )
-                                .map((ii: any) => {
-                                    return {
-                                        ...ii,
-                                        isSelected: false,
-                                    };
-                                }),
-                        };
-                    }),
+                                    .map((ii) => {
+                                        return {
+                                            ...ii,
+                                            isSelected: false,
+                                        };
+                                    }),
+                            };
+                        }
+                    ),
                 });
                 setSelectedIndices(new Set());
             })
     );
 
     useEffect(() => {
+        // console.log(selectedDate.date.format("YYYY-MM-DD"));
+        // console.log(serviceById);
         setIsGlobalLoading(servByIdLoading);
     }, [servByIdLoading]);
 
@@ -187,6 +194,7 @@ const ShopDetailsPageWrapper = () => {
                     <ServiceOptions
                         services={services}
                         setServices={setServices}
+                        setSelectedDate={setSelectedDate}
                     />
 
                     <Quantity
@@ -224,27 +232,24 @@ const ShopDetailsPageWrapper = () => {
                         type="button"
                         disabled={
                             !slotArrays?.slotsTime.find(
-                                (item: any) => item.isSelected
+                                (item) => item.isSelected
                             )
                         }
                         className={`${
                             !slotArrays?.slotsTime.find(
-                                (item: any) => item.isSelected
+                                (item) => item.isSelected
                             )
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
                         }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
                         onClick={async () => {
-                            // const userId = await getUserIdByAccessToken(
-                            //     accessToken ?? "",
-                            //     token ?? ""
-                            // );
                             localStorage.setItem(
                                 "bookingDetail",
                                 JSON.stringify({
                                     serviceId: Number(
                                         services.find(
-                                            (item: any) => item.isSelected
+                                            (item: serviceTypes) =>
+                                                item.isSelected
                                         )?.id
                                     ),
                                     serviceById: serviceById,
@@ -256,7 +261,7 @@ const ShopDetailsPageWrapper = () => {
                             );
                             if (
                                 slotArrays?.slotsTime.filter(
-                                    (item: any) => item.isSelected
+                                    (item) => item.isSelected
                                 )
                             ) {
                                 if (token && accessToken) {
@@ -266,7 +271,8 @@ const ShopDetailsPageWrapper = () => {
                                     setShowDialog(true);
                                 }
                             }
-                        }}>
+                        }}
+                    >
                         {t("button:confirmBookingButton")}
                     </button>
                     <span className="text-[12px] py-2">

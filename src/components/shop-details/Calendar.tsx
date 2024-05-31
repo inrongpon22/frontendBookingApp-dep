@@ -130,7 +130,10 @@ const Calendar = ({
                             }`}
                             onClick={() => {
                                 if (isOpen) {
-                                    setSelectedDate({ date: item });
+                                    setSelectedDate({
+                                        date: item,
+                                        uniqueKey: new Date().getTime(),
+                                    });
                                 } else {
                                     toast.error(
                                         `วัน${

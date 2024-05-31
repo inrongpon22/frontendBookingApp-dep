@@ -76,9 +76,7 @@ const BookingDetailsPreview = () => {
     const token = localStorage.getItem("token");
     const accessToken = localStorage.getItem("accessToken");
 
-    // const [userId, setUserId] = useState<number>(0)
-
-    const { formik } = useContext<any>(DialogContext);
+    const { formik } = useContext(DialogContext);
 
     const { setIsGlobalLoading, setShowDialog, setDialogState } =
         useContext(GlobalContext);
@@ -94,7 +92,10 @@ const BookingDetailsPreview = () => {
     } = useTranslation();
 
     const slotArrays = JSON.parse(bookingDetail)?.serviceById.bookingSlots.find(
-        (item: any) =>
+        (item: {
+            daysOpen: string | string[];
+            availableFromDate: moment.MomentInput;
+        }) =>
             item.daysOpen?.includes(
                 moment(JSON.parse(bookingDetail).selectedDate.date).format(
                     "dddd"
@@ -106,11 +107,10 @@ const BookingDetailsPreview = () => {
     );
 
     const filterSelected = slotArrays?.slotsTime.filter(
-        (item: any) => item.isSelected
+        (item: { isSelected: boolean }) => item.isSelected
     );
 
     useEffect(() => {
-        // setUserId(res)
         if (token && formik.values.userId === 0) {
             getUserIdByAccessToken(accessToken ?? "", token ?? "").then(
                 (userId) =>
@@ -120,7 +120,7 @@ const BookingDetailsPreview = () => {
                                 Authorization: `${token}`,
                             },
                         })
-                        .then((res: any) => {
+                        .then((res) => {
                             console.log(res.data);
                             formik.setValues({
                                 userId: Number(res.data.id),
@@ -139,16 +139,18 @@ const BookingDetailsPreview = () => {
     const createReservation = async () => {
         setIsGlobalLoading(true);
         const selectedArr = slotArrays?.slotsTime.filter(
-            (item: any) => item.isSelected
+            (item: { isSelected: boolean }) => item.isSelected
         );
         const body = {
             userId: formik.values.userId,
             serviceId: Number(JSON.parse(bookingDetail)?.serviceId),
             phoneNumber: formik.values.phoneNumbers,
             remark: formik.values.additionalNotes,
-            slotTimes: selectedArr.map((item: any) => {
-                return { startTime: item.startTime, endTime: item.endTime };
-            }),
+            slotTimes: selectedArr.map(
+                (item: { startTime: string; endTime: string }) => {
+                    return { startTime: item.startTime, endTime: item.endTime };
+                }
+            ),
             status: "pending",
             by: pathname.includes("business") ? "business" : "customer",
             userName: formik.values.isBusinessOnly
@@ -247,7 +249,8 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-3`}>
+                } flex justify-between items-center border rounded-lg p-3`}
+            >
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         จองไว้สำหรับร้านค้าเท่านั้น
@@ -268,7 +271,8 @@ const BookingDetailsPreview = () => {
                     formik.values.isBusinessOnly
                         ? "hidden"
                         : "mt-0 flex flex-col gap-3"
-                }>
+                }
+            >
                 <div>
                     <p className="flex justify-between items-center text-[14px] font-semibold">
                         <span>{t("bookingName")}</span>
@@ -313,7 +317,8 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-3 mt-2`}>
+                        } flex justify-between items-center border rounded-lg p-3 mt-2`}
+                    >
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 ส่งข้อความ SMS
@@ -360,7 +365,8 @@ const BookingDetailsPreview = () => {
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}>
+                onClick={createReservation}
+            >
                 {t("button:confirmBookingButton")}
             </button>
         </div>

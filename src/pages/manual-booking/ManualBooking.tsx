@@ -16,6 +16,10 @@ import moment from "moment";
 import Loading from "../../components/dialog/Loading";
 import { useTranslation } from "react-i18next";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import {
+    IServiceEditTime,
+    InsertService,
+} from "../../interfaces/services/Iservice";
 
 const ManualBooking = () => {
     const { businessId } = useParams();
@@ -23,9 +27,9 @@ const ManualBooking = () => {
 
     const token = localStorage.getItem("token");
 
-    const {setDialogState} = useContext(GlobalContext);
+    const { setDialogState } = useContext(GlobalContext);
 
-    const [selectedDate, setSelectedDate] = useState<any>({
+    const [selectedDate, setSelectedDate] = useState({
         // handle select date on calendar
         date: moment(),
     });
@@ -48,14 +52,14 @@ const ManualBooking = () => {
 
     // handle services state
     const [services, setServices] = useState<serviceTypes[]>([]);
-    const [serviceById, setServiceById] = useState<any>();
+    const [serviceById, setServiceById] = useState<InsertService>();
 
     const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
         new Set()
     );
 
     const slotArrays = serviceById?.bookingSlots.find(
-        (item: any) =>
+        (item: { daysOpen: string | any[]; availableFromDate: any }) =>
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
             selectedDate.date.isAfter(item.availableFromDate)
     );
@@ -66,26 +70,22 @@ const ManualBooking = () => {
         (url: string) =>
             axios.get(url).then((res) =>
                 setServices(
-                    res.data.map((item: any, index: number) => {
+                    res.data.map((item: InsertService, index: number) => {
                         if (index === 0) {
                             return {
                                 ...item,
                                 isSelected: true,
-                                bookingSlots: item.bookingSlots.map(
-                                    (ii: any) => {
-                                        return { ...ii, isSelected: false };
-                                    }
-                                ),
+                                bookingSlots: item.bookingSlots.map((ii) => {
+                                    return { ...ii, isSelected: false };
+                                }),
                             };
                         } else {
                             return {
                                 ...item,
                                 isSelected: false,
-                                bookingSlots: item.bookingSlots.map(
-                                    (ii: any) => {
-                                        return { ...ii, isSelected: false };
-                                    }
-                                ),
+                                bookingSlots: item.bookingSlots.map((ii) => {
+                                    return { ...ii, isSelected: false };
+                                }),
                             };
                         }
                     })
@@ -97,41 +97,39 @@ const ManualBooking = () => {
     // get time slots by service businessId
     const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
         () =>
-            services.find((item: any) => item.isSelected) &&
+            services.find((item) => item.isSelected) &&
             `${app_api}/service/${
-                services.find((item: any) => item.isSelected)?.id
+                services.find((item: serviceTypes) => item.isSelected)?.id
             }/${selectedDate.date.format("YYYY-MM-DD")}`,
         (url: string) =>
             axios.get(url).then((res) => {
                 setServiceById({
                     ...res.data,
-                    bookingSlots: res.data.bookingSlots.map((item: any) => {
-                        return {
-                            ...item,
-                            slotsTime: item.slotsTime
-                                .filter((item: any) =>
-                                    moment().isBefore(
-                                        selectedDate?.date.format(
-                                            `D MMMM YYYY ${item.startTime}`
+                    bookingSlots: res.data.bookingSlots.map(
+                        (item: IServiceEditTime) => {
+                            return {
+                                ...item,
+                                slotsTime: item.slotsTime
+                                    .filter((item) =>
+                                        moment().isBefore(
+                                            selectedDate?.date.format(
+                                                `D MMMM YYYY ${item.startTime}`
+                                            )
                                         )
                                     )
-                                )
-                                .map((ii: any) => {
-                                    return {
-                                        ...ii,
-                                        isSelected: false,
-                                    };
-                                }),
-                        };
-                    }),
+                                    .map((ii) => {
+                                        return {
+                                            ...ii,
+                                            isSelected: false,
+                                        };
+                                    }),
+                            };
+                        }
+                    ),
                 });
                 setSelectedIndices(new Set());
-            }),
-        {
-            revalidateOnFocus: false,
-            loadingTimeout: 0,
-        }
-    );     
+            })
+    );
 
     if (servicesDataError || serviceByIdError) return <>API error...</>;
 
@@ -140,7 +138,11 @@ const ManualBooking = () => {
             <Loading openLoading={servByIdLoading} />
 
             <div className={`flex flex-col gap-5`}>
-                <ServiceOptions services={services} setServices={setServices} />
+                <ServiceOptions
+                    services={services}
+                    setServices={setServices}
+                    setSelectedDate={setSelectedDate}
+                />
 
                 <Quantity
                     quantities={quantities}
@@ -174,14 +176,10 @@ const ManualBooking = () => {
                 <button
                     type="button"
                     disabled={
-                        !slotArrays?.slotsTime.find(
-                            (item: any) => item.isSelected
-                        )
+                        !slotArrays?.slotsTime.find((item) => item.isSelected)
                     }
                     className={`${
-                        !slotArrays?.slotsTime.find(
-                            (item: any) => item.isSelected
-                        )
+                        !slotArrays?.slotsTime.find((item) => item.isSelected)
                             ? "bg-gray-300"
                             : "bg-[#020873]"
                     } w-full text-white text-[14px] font-semibold rounded-md py-3`}
@@ -191,19 +189,19 @@ const ManualBooking = () => {
                             JSON.stringify({
                                 serviceId: Number(
                                     services.find(
-                                        (item: any) => item.isSelected
+                                        (item: serviceTypes) => item.isSelected
                                     )?.id
                                 ),
                                 serviceById: serviceById,
-                                selectedDate:selectedDate,
+                                selectedDate: selectedDate,
                                 bookingDate:
                                     selectedDate.date.format("YYYY-MM-DD"),
                                 guestNumber: quantities.quantities,
                             })
-                        )
+                        );
                         if (
                             slotArrays?.slotsTime.filter(
-                                (item: any) => item.isSelected
+                                (item) => item.isSelected
                             )
                         ) {
                             if (token) {
