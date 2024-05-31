@@ -138,9 +138,11 @@ const BookingSummaryWrapper = () => {
     const bookingDatas = bookingFromAccessCode
         ? bookingFromAccessCode
         : bookingById;
+    const [noticeType, setNoticeType] = useState("")
+    console.log(noticeType)
 
     const handleCancelBooking = async () => {
-        await cancelBooking(token, bookingId, bookingById.serviceId, language)
+        await cancelBooking(token, bookingId, bookingById.serviceId, language, noticeType)
             .then(() => {
                 setShowDialog(false);
                 setDialogState("phone-input");
@@ -225,6 +227,8 @@ const BookingSummaryWrapper = () => {
             handleClose={() => setShowConfirmation(false)}
             imageSrc="../Cancelicon.png"
             handleCancelBooking={handleCancelBooking} 
+            handleNoticeType={(e:string) => setNoticeType(e)}
+            noticeType={noticeType}
             />
             
             <div className="flex flex-col h-dvh p-5">

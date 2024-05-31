@@ -107,6 +107,8 @@ const BookingApprovalSummary = () => {
 
     // const handleCancelBooking = () => {};
 
+    const [noticeType, setNoticeType] = useState("")
+
     return (
         <div className="flex flex-col h-full">
             {/* <ConfirmCard
@@ -132,6 +134,8 @@ const BookingApprovalSummary = () => {
             imageSrc="../approvedIcon.png"
             handleClose={() => setShowConfirmation(false)}
             handleConfirm={() => approveRequested(bookingDatas?.id, bookingDatas?.serviceId)}
+            handleNoticeType={(e:string) => setNoticeType(e)}
+            noticeType={noticeType}
             // handleCancelBooking={handleCancelBooking}
             />
             <div className="flex flex-col gap-3">

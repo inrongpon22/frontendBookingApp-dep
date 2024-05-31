@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { alpha, Modal, Typography } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,20 +16,36 @@ interface IProps {
     handleClose: () => void;
     handleConfirm?: () => void;
     handleCancelBooking?: () => void;
+    handleNoticeType: (e:string) => void;
     imageSrc: string; // Add imageSrc prop
+    noticeType: string
 }
 
 export default function SendMessageOption(props: IProps) {
+    console.log(props.noticeType)
     const [smsChecked, setSmsChecked] = useState(true); // Default SMS checked
     const [lineChecked, setLineChecked] = useState(false);
 
     const handleSmsClick = () => {
         setSmsChecked(!smsChecked); // Toggle SMS checked state
     };
-
+    
     const handleLineClick = () => {
         setLineChecked(!lineChecked); // Toggle LINE checked state
     };
+
+    useEffect(() => {
+        if (smsChecked && lineChecked) {
+            props.handleNoticeType("all"); 
+        } else if (smsChecked) { 
+            props.handleNoticeType("sms"); 
+        } else if(lineChecked) {
+            props.handleNoticeType("line"); // If SMS is unchecked, LINE is the only option
+        } else {
+            props.handleNoticeType("")
+        }
+
+    }, [smsChecked, lineChecked])
 
     return (
         <Modal onClose={props.handleClose} open={props.open}>
@@ -103,7 +119,7 @@ export default function SendMessageOption(props: IProps) {
                     <div className='pr-3'></div>
                  </div>
 
-                    <div 
+                    {/* <div 
                         className="font-normal rounded-lg px-3 py-3 flex items-center justify-between border-2 mt-3" 
                         onClick={handleLineClick} // Add onClick to the div
                         style={{
@@ -115,7 +131,7 @@ export default function SendMessageOption(props: IProps) {
                     {lineChecked ? <CheckCircleIcon style={{ color: '#35398F', width:"20px", height:"20px" }} /> : <RadioButtonUncheckedIcon style={{ color: '#ddd', width:"20px", height:"20px" }} />}
                     {props.btnLINE}
                     <div className='pr-3'></div>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="flex justify-between gap-2 mt-4">
@@ -133,7 +149,8 @@ export default function SendMessageOption(props: IProps) {
                         className="text-[#000] rounded-lg px-6 py-2 transition duration-300 ease-in-out">
                         {props.bntBack}
                     </button>
-                    <button
+                    <button 
+                    disabled = {props.noticeType == ""}
                         // onClick={() => props.handleConfirm()}
                         onClick={() => {
                             if (props.handleCancelBooking) {
@@ -142,12 +159,12 @@ export default function SendMessageOption(props: IProps) {
                                 props.handleConfirm(); // Call handleConfirm if it exists
                             }
                         }}
-                        className="p-3 rounded-lg text-white px-6 py-2 transition duration-300 ease-in-out"
+                        className="p-3 rounded-lg text-white px-6 py-2 transition duration-100 ease-in-out"
                         style={{
                             width: "151px",
                             height: "51px",
                             fontWeight: "bold",
-                            background: "#35398F",
+                            background: props.noticeType == "" ? "#ddd" : "#35398F",
                             fontSize: "14px",
                         }}>
                         {props.bntConfirm}
