@@ -137,6 +137,10 @@ const BookingDetailsPreview = () => {
     }, []);
 
     const createReservation = async () => {
+        const userId = await getUserIdByAccessToken(
+            accessToken ?? "",
+            token ?? ""
+        );
         setIsGlobalLoading(true);
         const selectedArr = slotArrays?.slotsTime.filter(
             (item: any) => item.isSelected
@@ -169,7 +173,7 @@ const BookingDetailsPreview = () => {
                                   ? false
                                   : formik.values.isSendSMS
                           }`
-                        : `makeMutiReservation/${language}/line`
+                        : `makeMutiReservation/${language}/${userId}`
                 }`,
                 body,
                 {
@@ -247,8 +251,7 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-3`}
-            >
+                } flex justify-between items-center border rounded-lg p-3`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         จองไว้สำหรับร้านค้าเท่านั้น
@@ -264,26 +267,31 @@ const BookingDetailsPreview = () => {
                     }
                 />
             </div>
-            <div className={formik.values.isBusinessOnly ? "hidden" : "mt-0 flex flex-col gap-3"}>
+            <div
+                className={
+                    formik.values.isBusinessOnly
+                        ? "hidden"
+                        : "mt-0 flex flex-col gap-3"
+                }>
                 <div>
-                <p className="flex justify-between items-center text-[14px] font-semibold">
-                    <span>{t("bookingName")}</span>
-                </p>
-                <input
-                    type="text"
-                    {...formik.getFieldProps("username")}
-                    className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
-                        formik.touched.username && formik.errors.username
-                            ? "border-2 border-rose-500"
-                            : "border"
-                    }`}
-                    placeholder="ชื่อที่ต้องการใช้จอง"
-                />
-                {formik.touched.username && formik.errors.username && (
-                    <span className="text-[14px] text-rose-500">
-                        {formik.errors?.username}
-                    </span>
-                )}
+                    <p className="flex justify-between items-center text-[14px] font-semibold">
+                        <span>{t("bookingName")}</span>
+                    </p>
+                    <input
+                        type="text"
+                        {...formik.getFieldProps("username")}
+                        className={`w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal ${
+                            formik.touched.username && formik.errors.username
+                                ? "border-2 border-rose-500"
+                                : "border"
+                        }`}
+                        placeholder="ชื่อที่ต้องการใช้จอง"
+                    />
+                    {formik.touched.username && formik.errors.username && (
+                        <span className="text-[14px] text-rose-500">
+                            {formik.errors?.username}
+                        </span>
+                    )}
                 </div>
                 <div className="mt-0">
                     <p className="flex justify-between items-center text-[14px] font-semibold">
@@ -309,8 +317,7 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-3 mt-2`}
-                    >
+                        } flex justify-between items-center border rounded-lg p-3 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 ส่งข้อความ SMS
@@ -357,8 +364,7 @@ const BookingDetailsPreview = () => {
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}
-            >
+                onClick={createReservation}>
                 {t("button:confirmBookingButton")}
             </button>
         </div>

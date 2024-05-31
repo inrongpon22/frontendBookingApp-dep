@@ -58,7 +58,8 @@
         "addBusiness": "Add Business",
         "editSuccess": "Edit successfully",
         "deleteSuccess": "Delete successfully",
-        "sendMessageOption": "Choose how to send your notice"
+        "sendMessageOption": "Choose how to send your notice",
+        "maximumallowed": "Maximum allowed"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -87,7 +88,8 @@
         "discardChanges": "Discard Changes?",
         "conceptWord": "Make bookings easy",
         "UpdateSuccessful": "Update Successful",
-        "alldone": "All done"
+        "alldone": "All done",
+        "limitGuest": "Limit Guest"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -106,7 +108,8 @@
         "desConceptWord": "Fast and friendly, anywhere, anytime.",
         "autoApprove": "Customer's booking does not require your confirmation.",
         "desUpdate": "Your update has been successfully completed!",
-        "desAllDone": "You've successfully created your business."
+        "desAllDone": "You've successfully created your business.",
+        "desLimitGuest": "Limits number of time slot that can book in one booking."
     },
     "button": {
         "cancel": "Cancel",

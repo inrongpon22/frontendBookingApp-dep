@@ -14,7 +14,7 @@ export const cancelBooking = async (
     token = token.replace(/"/g, "");
     try {
         const booking = await axios.post(
-            `${app_api}/cancelReservation/${bookingId}/${serviceId}/${lang}/customer`,
+            `${app_api}/cancelReservation/${bookingId}/${serviceId}/${lang}/customer/line`,
             {},
             {
                 headers: {
@@ -88,7 +88,7 @@ export const getReservationByServiceId = (
                         date,
                         children: filtered[date],
                     }));
-                }),
+                })
     );
 
     return {

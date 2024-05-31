@@ -114,6 +114,8 @@ export interface IServiceByServiceId {
         availableToDate: string | null;
         duration: number;
         slotsTime: IBookingSlot[];
+        isLimitBooking: boolean;
+        maximumAllow: number;
     }[];
 }
 
@@ -124,8 +126,8 @@ export interface IServiceEditTime {
     slotsTime: IBookingSlot[];
     duration: number;
     manualCapacity?: IBookingSlot[];
-    // openTime: string;
-    // closeTime: string;
+    isLimitBooking: boolean;
+    maximumAllow: number;
 }
 
 export interface IUpdateService {

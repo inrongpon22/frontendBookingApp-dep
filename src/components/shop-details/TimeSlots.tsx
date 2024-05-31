@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 // import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
-
+import toast from "react-hot-toast";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 interface TimeSlotsProps {
     selectedDate: any;
     setServiceById: Function;
@@ -12,6 +13,8 @@ interface TimeSlotsProps {
     quantities: any;
     selectedIndices: any;
     setSelectedIndices: Function;
+    isLimitedSlot?: boolean;
+    maximumAllow?: number;
 }
 
 const TimeSlots = ({
@@ -21,6 +24,8 @@ const TimeSlots = ({
     quantities,
     selectedIndices,
     setSelectedIndices,
+    isLimitedSlot,
+    maximumAllow,
 }: TimeSlotsProps) => {
     const {
         t,
@@ -38,35 +43,146 @@ const TimeSlots = ({
     );
 
     const handleSelectTime = (item: any, index: number) => {
-        setSelectedIndices((prevSelectedIndices: any) => {
-            const newSelectedIndices = new Set(prevSelectedIndices);
+        if (isLimitedSlot) {
+            if (selectedIndices.size < (maximumAllow ?? 0)) {
+                setSelectedIndices((prevSelectedIndices: any) => {
+                    const newSelectedIndices = new Set(prevSelectedIndices);
 
-            if (newSelectedIndices.has(index)) {
-                newSelectedIndices.delete(index);
+                    if (newSelectedIndices.has(index)) {
+                        newSelectedIndices.delete(index);
+                    } else {
+                        newSelectedIndices.add(index);
+                    }
+                    return newSelectedIndices;
+                });
+                setServiceById({
+                    ...serviceById,
+                    bookingSlots: serviceById?.bookingSlots.map((kk: any) => {
+                        if (
+                            kk.daysOpen.includes(
+                                selectedDate.date.format("dddd")
+                            )
+                        ) {
+                            return {
+                                ...kk,
+                                slotsTime: kk.slotsTime?.map((mm: any) => {
+                                    if (mm.startTime === item.startTime) {
+                                        return {
+                                            ...mm,
+                                            isSelected: !mm.isSelected,
+                                        };
+                                    } else {
+                                        return {
+                                            ...mm,
+                                            isSelected: mm.isSelected,
+                                        };
+                                    }
+                                }),
+                            };
+                        } else {
+                            return kk;
+                        }
+                    }),
+                });
             } else {
-                newSelectedIndices.add(index);
-            }
-            return newSelectedIndices;
-        });
-        setServiceById({
-            ...serviceById,
-            bookingSlots: serviceById?.bookingSlots.map((kk: any) => {
-                if (kk.daysOpen.includes(selectedDate.date.format("dddd"))) {
-                    return {
-                        ...kk,
-                        slotsTime: kk.slotsTime?.map((mm: any) => {
-                            if (mm.startTime === item.startTime) {
-                                return { ...mm, isSelected: !mm.isSelected };
-                            } else {
-                                return { ...mm, isSelected: mm.isSelected };
+                if (
+                    selectedIndices.size == maximumAllow &&
+                    selectedIndices.has(index)
+                ) {
+                    setSelectedIndices((prevSelectedIndices: any) => {
+                        const newSelectedIndices = new Set(prevSelectedIndices);
+
+                        if (newSelectedIndices.has(index)) {
+                            newSelectedIndices.delete(index);
+                        } else {
+                            newSelectedIndices.add(index);
+                        }
+                        return newSelectedIndices;
+                    });
+                    setServiceById({
+                        ...serviceById,
+                        bookingSlots: serviceById?.bookingSlots.map(
+                            (kk: any) => {
+                                if (
+                                    kk.daysOpen.includes(
+                                        selectedDate.date.format("dddd")
+                                    )
+                                ) {
+                                    return {
+                                        ...kk,
+                                        slotsTime: kk.slotsTime?.map(
+                                            (mm: any) => {
+                                                if (
+                                                    mm.startTime ===
+                                                    item.startTime
+                                                ) {
+                                                    return {
+                                                        ...mm,
+                                                        isSelected:
+                                                            !mm.isSelected,
+                                                    };
+                                                } else {
+                                                    return {
+                                                        ...mm,
+                                                        isSelected:
+                                                            mm.isSelected,
+                                                    };
+                                                }
+                                            }
+                                        ),
+                                    };
+                                } else {
+                                    return kk;
+                                }
                             }
-                        }),
-                    };
+                        ),
+                    });
                 } else {
-                    return kk;
+                    toast(`Allow only a user per ${maximumAllow} slot`, {
+                        icon: (
+                            <ErrorOutlineOutlinedIcon
+                                sx={{ color: "orange" }}
+                            />
+                        ),
+                    });
                 }
-            }),
-        });
+            }
+        } else {
+            setSelectedIndices((prevSelectedIndices: any) => {
+                const newSelectedIndices = new Set(prevSelectedIndices);
+
+                if (newSelectedIndices.has(index)) {
+                    newSelectedIndices.delete(index);
+                } else {
+                    newSelectedIndices.add(index);
+                }
+                return newSelectedIndices;
+            });
+            setServiceById({
+                ...serviceById,
+                bookingSlots: serviceById?.bookingSlots.map((kk: any) => {
+                    if (
+                        kk.daysOpen.includes(selectedDate.date.format("dddd"))
+                    ) {
+                        return {
+                            ...kk,
+                            slotsTime: kk.slotsTime?.map((mm: any) => {
+                                if (mm.startTime === item.startTime) {
+                                    return {
+                                        ...mm,
+                                        isSelected: !mm.isSelected,
+                                    };
+                                } else {
+                                    return { ...mm, isSelected: mm.isSelected };
+                                }
+                            }),
+                        };
+                    } else {
+                        return kk;
+                    }
+                }),
+            });
+        }
     };
 
     useEffect(() => {
@@ -122,8 +238,7 @@ const TimeSlots = ({
                             ),
                         });
                         setSelectedIndices(new Set());
-                    }}
-                >
+                    }}>
                     ล้างข้อมูล
                 </span>
             </p>
@@ -134,8 +249,7 @@ const TimeSlots = ({
                             ? "grid-cols-1"
                             : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         : ""
-                }`}
-            >
+                }`}>
                 {slotArrays?.slotsTime.length > 0 ? (
                     slotArrays?.slotsTime.map((ii: any, jj: number) => {
                         // check if the time slot is available, not full
@@ -188,8 +302,7 @@ const TimeSlots = ({
                                     ) {
                                         handleSelectTime(ii, jj);
                                     }
-                                }}
-                            >
+                                }}>
                                 <span>
                                     {ii.startTime} - {ii.endTime}
                                 </span>
@@ -202,8 +315,7 @@ const TimeSlots = ({
                                                     ? "bg-[#9C9C9C]"
                                                     : "bg-[#FEC84B]"
                                                 : "bg-[#12B76A]"
-                                        }`}
-                                    ></div>
+                                        }`}></div>
                                     {ii?.capacity !== 0
                                         ? `${ii?.capacity} ${t("available")}`
                                         : t("full")}
