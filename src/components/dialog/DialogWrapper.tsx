@@ -68,7 +68,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                 case "phone-input":
                     setIsGlobalLoading(true);
                     await ReqOtp(values.phoneNumbers)
-                        .then((res: any) => {
+                        .then((res) => {
+                            console.log(res)
                             if (res.status === 200) {
                                 setIsGlobalLoading(false);
                                 setDialogState("otp-verify");
@@ -289,8 +290,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     <Toolbar className="grid grid-cols-4">
                         <span
                             className={`w-[24px] h-[24px] cursor-pointer ${
-                                query.get("accessCode") &&
-                                dialogState !== "booking-approval-reject"
+                                // query.get("accessCode") &&
+                                dialogState === "booking-approval-reject"
                                     ? "hidden"
                                     : ""
                             }`}

@@ -119,8 +119,7 @@ const BookingApproval = (): React.ReactElement => {
                         date,
                         children: filtered[date],
                     }));
-                }),
-        { revalidateOnFocus: false }
+                })
     );
 
     const approveRequested = async (

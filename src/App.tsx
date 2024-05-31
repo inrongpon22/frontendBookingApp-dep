@@ -28,6 +28,8 @@ import Noti from "./pages/notification/Noti.tsx";
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    const token = localStorage.getItem("token");
+
     useEffect(() => {
         localStorage.setItem("lang", "th");
 
@@ -36,7 +38,7 @@ function App() {
             try {
                 // Make a request to your backend to check authentication status
                 const response = await checkTokenValidity(
-                    localStorage.getItem("token") ?? ""
+                    token ?? ""
                 );
                 if (response.status === 200) {
                     setIsAuthenticated(true);
@@ -49,13 +51,11 @@ function App() {
             }
         };
 
-        if (localStorage.getItem("token")) {
+        if (token) {
             checkAuth();
-        } else {
-            setIsAuthenticated(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location]);
+    }, []);
 
     return (
         <>
@@ -160,9 +160,9 @@ function App() {
                             />
 
                             {/* 401 unauthorize */}
-                            <Route path="/401" element={<Unauthorized />} />
+                            <Route path='/401' element={<Unauthorized />} />
                             {/* 401 unauthorize */}
-                            <Route path="/403" element={<Forbidden />} />
+                            <Route path='/403' element={<Forbidden />} />
                         </>
                     )}
                 </Routes>

@@ -35,6 +35,8 @@ const BookingApprovalSummary = () => {
         { revalidateOnFocus: false }
     );
 
+    console.log(bookingDetailFromSMS?.status === "cancel");
+
     const BookingDataLists: { label: string; text: string }[] = [
         {
             label: `${t("services")}:`,
@@ -114,36 +116,45 @@ const BookingApprovalSummary = () => {
                 }
             />
             <div className="flex flex-col gap-3">
-                {BookingDataLists?.map((item: any, index: number) => {
-                    return (
-                        <div key={index} className="flex justify-between">
-                            <span className="text-gray-500">{item.label}</span>
-                            <span className="text-[14px] font-semibold">
-                                {item.text}
-                            </span>
-                        </div>
-                    );
-                })}
+                {BookingDataLists?.map(
+                    (item: { label: string; text: string }, index: number) => {
+                        return (
+                            <div key={index} className="flex justify-between">
+                                <span className="text-gray-500">
+                                    {item.label}
+                                </span>
+                                <span className="text-[14px] font-semibold">
+                                    {item.text}
+                                </span>
+                            </div>
+                        );
+                    }
+                )}
             </div>
 
             <div className="flex flex-col gap-3 mt-5">
                 <Divider />
-                {GuestDataLists?.map((item: any, index: number) => {
-                    return (
-                        <div key={index} className="flex justify-between">
-                            <span className="text-gray-500">{item.label}</span>
-                            <span className="text-[14px] font-semibold text-end">
-                                {item.text}
-                            </span>
-                        </div>
-                    );
-                })}
+                {GuestDataLists?.map(
+                    (item: { label: string; text: string }, index: number) => {
+                        return (
+                            <div key={index} className="flex justify-between">
+                                <span className="text-gray-500">
+                                    {item.label}
+                                </span>
+                                <span className="text-[14px] font-semibold text-end">
+                                    {item.text}
+                                </span>
+                            </div>
+                        );
+                    }
+                )}
             </div>
 
             <div
                 className={`${
                     bookingDatas?.status === "pending" ||
-                    query.get("accessCode")
+                    (query.get("accessCode") &&
+                        bookingDetailFromSMS?.status !== "cancel")
                         ? "flex flex-col gap-3"
                         : "hidden"
                 } mt-auto`}
