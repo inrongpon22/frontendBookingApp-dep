@@ -290,8 +290,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     <Toolbar className="grid grid-cols-4">
                         <span
                             className={`w-[24px] h-[24px] cursor-pointer ${
-                                query.get("accessCode") &&
-                                dialogState !== "booking-approval-reject"
+                                // query.get("accessCode") &&
+                                dialogState === "booking-approval-reject"
                                     ? "hidden"
                                     : ""
                             }`}

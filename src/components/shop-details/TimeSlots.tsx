@@ -27,7 +27,6 @@ const TimeSlots = ({
     isLimitedSlot,
     maximumAllow,
 }: TimeSlotsProps) => {
-
     const {
         t,
         i18n: { language },
@@ -158,13 +157,16 @@ const TimeSlots = ({
                         ),
                     });
                 } else {
-                    toast(`อนุญาตให้ผู้ใช้งานจองได้จำนวน ${maximumAllow} ต่อ 1 ครั้ง`, {
-                        icon: (
-                            <ErrorOutlineOutlinedIcon
-                                sx={{ color: "orange" }}
-                            />
-                        ),
-                    });
+                    toast(
+                        `อนุญาตให้ผู้ใช้งานจองได้จำนวน ${maximumAllow} ต่อ 1 ครั้ง`,
+                        {
+                            icon: (
+                                <ErrorOutlineOutlinedIcon
+                                    sx={{ color: "orange" }}
+                                />
+                            ),
+                        }
+                    );
                 }
             }
         } else {
@@ -298,14 +300,29 @@ const TimeSlots = ({
                             const isPrevious = selectedIndices.has(jj + 1);
                             const isNext = selectedIndices.has(jj - 1);
 
+                            // check if the time slot is the first selected time slot
+                            const selectLimited =
+                                isLimitedSlot &&
+                                selectedIndices.size === maximumAllow;
+
                             let className = "";
                             if (isSelected) {
                                 className =
                                     "bg-[#006CE31A] border-[#003B95] text-[#003B95]";
                             } else if (isPrevious && isAvailiable) {
-                                className = "border-dashed border-green-500";
+                                if (selectLimited) {
+                                    className = "";
+                                } else {
+                                    className =
+                                        "border-dashed border-green-500";
+                                }
                             } else if (isNext && isAvailiable) {
-                                className = "border-dashed border-green-500";
+                                if (selectLimited) {
+                                    className = "";
+                                } else {
+                                    className =
+                                        "border-dashed border-green-500";
+                                }
                             } else if (!isAvailiable) {
                                 className = "text-[#8C8C8C] bg-[#8B8B8B33]";
                             } else if (
