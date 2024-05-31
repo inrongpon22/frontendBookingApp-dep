@@ -64,7 +64,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         },
         validationSchema:
             confirmationDialogSchemas[
-                dialogState as keyof typeof confirmationDialogSchemas
+            dialogState as keyof typeof confirmationDialogSchemas
             ],
         onSubmit: async (values) => {
             switch (dialogState) {
@@ -72,7 +72,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     setIsGlobalLoading(true);
                     await ReqOtp(values.phoneNumbers)
                         .then((res) => {
-                            console.log(res)
+                            console.log(res);
                             if (res.status === 200) {
                                 setIsGlobalLoading(false);
                                 setDialogState("otp-verify");
@@ -112,8 +112,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                         query.get("accessCode")
                                             ? setShowDialog(false)
                                             : setDialogState(
-                                                  "booking-detail-preview"
-                                              );
+                                                "booking-detail-preview"
+                                            );
                                         break;
 
                                     case "business":
@@ -133,11 +133,15 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                                     }
                                                 )
                                                 .then((resp) => {
-                                                    if (resp.status === 200) {
-                                                        login()
+                                                    if (resp.data.length > 0) {
+                                                        login();
                                                         setShowDialog(false);
                                                         navigate(
                                                             `/business-profile/${resp.data[0].id}`
+                                                        );
+                                                    } else {
+                                                        navigate(
+                                                            "/create-business"
                                                         );
                                                     }
                                                 })
@@ -298,7 +302,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                 dialogState === "booking-approval-reject"
                                     ? "hidden"
                                     : ""
-                            }`}
+                                }`}
                             onClick={handleBackButton}>
                             {[
                                 "phone-input",
