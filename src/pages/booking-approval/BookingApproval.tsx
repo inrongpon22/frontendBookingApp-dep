@@ -185,7 +185,7 @@ const BookingApproval = (): React.ReactElement => {
                         query.get("accessCode")
                             ? getReservByAccessCode.serviceId
                             : serviceId
-                    }/${lang}/business/line`,
+                    }/${lang}/business/all`,
                     {
                         rejectNote: rejectNote,
                     },
