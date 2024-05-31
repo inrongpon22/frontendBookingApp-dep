@@ -23,13 +23,9 @@ import Forbidden from "./pages/errors/403Forbidden.tsx";
 import CallBack from "./pages/auth/CallBack.tsx";
 import Noti from "./pages/notification/Noti.tsx";
 import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
-import { useEffect } from "react";
 
 function App() {
 
-    useEffect(() => {
-      localStorage.setItem("lang", "th")
-    }, [])
 
     return (
         <>
