@@ -14,39 +14,43 @@ export default function CallBack() {
 
     useEffect(() => {
         setIsLoading(true);
-        console.log(accessToken);
+        let userId: string;
+        let token: string;
         const fetchData = async () => {
             await getLineProfile(accessToken ?? "")
                 .then((res) => {
                     localStorage.setItem("token", res.token);
                     localStorage.setItem("accessToken", res.sessionToken);
-                    axios
-                        .get(`${app_api}/getBusinessByUserId/${res.userId}`, {
-                            headers: {
-                                Authorization: res.token,
-                            },
-                        })
-                        .then((resp) => {
-                            if (resp.status === 200) {
-                                setIsLoading(false);
-                                navigate(
-                                    `/business-profile/${resp.data[0].id}`
-                                );
-                            }
-                        })
-                        .catch((err) => {
-                            if (err.response.status === 404) {
-                                navigate("/create-business");
-                            } else {
-                                console.log(err.message);
-                                toast.error(
-                                    "มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง"
-                                );
-                            }
-                        });
+                    userId = res.userId;
+                    token = res.token;
                 })
                 .catch((err) => {
                     console.log(err);
+                });
+            await axios
+                .get(`${app_api}/getBusinessByUserId/${userId}`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
+                .then((resp) => {
+                    setTimeout(() => {
+                        if (resp.status === 200) {
+                            setIsLoading(false);
+                            navigate(`/business-profile/${resp.data[0].id}`);
+                        }
+                    }, 5000);
+                })
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        setTimeout(() => {
+                            setIsLoading(false);
+                            navigate("/create-business");
+                        }, 5000);
+                    } else {
+                        console.log(err.message);
+                        toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                    }
                 });
         };
         if (accessToken) {

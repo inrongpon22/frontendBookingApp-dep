@@ -22,11 +22,9 @@ import Unauthorized from "./pages/errors/401Unauthorized.tsx";
 import Forbidden from "./pages/errors/403Forbidden.tsx";
 import CallBack from "./pages/auth/CallBack.tsx";
 import Noti from "./pages/notification/Noti.tsx";
-import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
+// import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
 
 function App() {
-
-
     return (
         <>
             <BrowserRouter>
@@ -45,10 +43,7 @@ function App() {
                         path="/booking-approval/:businessId"
                         element={<BookingApproval />}
                     />
-                    <Route
-                        path="/my-bookings"
-                        element={<MyBookingWrapper />}
-                    />
+                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
                     <Route
                         path="/booking/:bookingId"
                         element={<BookingSummaryWrapper />}

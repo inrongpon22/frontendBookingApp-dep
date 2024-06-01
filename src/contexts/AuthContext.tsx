@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const logout = () => setIsAuthenticated(false);
 
     useEffect(() => {
+        console.log(token);
         if (token) {
             setIsAuthenticated(true);
         }
