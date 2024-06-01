@@ -60,8 +60,9 @@
         "deleteSuccess": "ลบสำเร็จ",
         "maximumallowed": "จำนวนผู้ใช้บริการสูงสุดที่อนุญาต",
         "or": "หรือ",
-        "ContinueWithLINEAccount": "ดำเนินการต่อด้วยบัญชีไลน์",
-        "sendMessageOption": "เลือกวิธีส่งการแจ้งเตือน"
+        "continueWithLINEAccount": "ดำเนินการต่อด้วยบัญชีไลน์",
+        "sendMessageOption": "เลือกวิธีส่งการแจ้งเตือน",
+        "ัyourPhoneNumber":"หมายเลขโทรศัพท์ของคุณ"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",

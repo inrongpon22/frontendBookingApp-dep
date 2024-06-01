@@ -59,7 +59,9 @@
         "editSuccess": "Edit successfully",
         "deleteSuccess": "Delete successfully",
         "sendMessageOption": "Choose how to send your notice",
-        "maximumallowed": "Maximum allowed"
+        "maximumallowed": "Maximum allowed",
+        "ัyourPhoneNumber":"Your phone number",
+        "continueWithLINEAccount": "Continue with LINE account"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
