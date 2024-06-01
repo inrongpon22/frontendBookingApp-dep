@@ -39,14 +39,14 @@ export default function CallBack() {
                             setIsLoading(false);
                             navigate(`/business-profile/${resp.data[0].id}`);
                         }
-                    }, 5000);
+                    }, 3000);
                 })
                 .catch((err) => {
                     if (err.response.status === 404) {
                         setTimeout(() => {
                             setIsLoading(false);
                             navigate("/create-business");
-                        }, 5000);
+                        }, 3000);
                     } else {
                         console.log(err.message);
                         toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
