@@ -637,7 +637,7 @@ export default function ServiceDetail(props: IParams) {
                                                     "#020873",
                                                     0.1
                                                 )}`,
-                                                width: "135px",
+                                                width: "40vw",
                                                 height: "27px",
                                                 fontSize: "14px",
                                                 borderRadius: "8px",

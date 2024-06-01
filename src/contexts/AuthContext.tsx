@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         if (token) {
             setIsAuthenticated(true);
         }
-    }, []);
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

@@ -22,9 +22,13 @@ import Unauthorized from "./pages/errors/401Unauthorized.tsx";
 import Forbidden from "./pages/errors/403Forbidden.tsx";
 import CallBack from "./pages/auth/CallBack.tsx";
 import Noti from "./pages/notification/Noti.tsx";
+import { useAuth } from "./contexts/AuthContext.tsx";
 // import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
 
 function App() {
+    const { isAuthenticated } = useAuth();
+    console.log(isAuthenticated);
+
     return (
         <>
             <BrowserRouter>
