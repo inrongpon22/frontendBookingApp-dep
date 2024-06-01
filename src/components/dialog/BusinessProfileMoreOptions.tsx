@@ -16,6 +16,13 @@ import ConfirmCard from "./ConfirmCard";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
 
+interface IOptionsTypes {
+    icon: any;
+    label: string;
+    url?: string | undefined;
+    function?: Function | undefined;
+}
+
 const BusinessProfileMoreOptions = () => {
     const navigate = useNavigate();
     const { businessId } = useParams();
@@ -30,7 +37,7 @@ const BusinessProfileMoreOptions = () => {
         setShowDialog(false);
         setDialogState("phone-input");
         // reset dialog state
-        localStorage.clear()
+        localStorage.clear();
         navigate("/");
     };
 
@@ -91,9 +98,9 @@ const BusinessProfileMoreOptions = () => {
                 handleClose={() => setShowConfirmation(false)}
                 handleConfirm={handleLogout}
             />
-            {Object.values(moreOptions).map((options: any, index: number) => (
+            {Object.values(moreOptions).map((options, index: number) => (
                 <div key={index} className="rounded-lg bg-white">
-                    {options.map((item: any, index: number) => (
+                    {options.map((item: IOptionsTypes, index: number) => (
                         <button
                             key={index}
                             type="button"

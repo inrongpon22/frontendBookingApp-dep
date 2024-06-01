@@ -14,8 +14,9 @@ import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { cancelBooking } from "../../api/booking";
-import ConfirmCard from "../../components/dialog/ConfirmCard";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import SendMessageOption from "../../components/dialog/SendMessageOption";
+
 
 const BookingSummaryWrapper = () => {
     const navigate = useNavigate();
@@ -136,9 +137,11 @@ const BookingSummaryWrapper = () => {
     const bookingDatas = bookingFromAccessCode
         ? bookingFromAccessCode
         : bookingById;
+    const [noticeType, setNoticeType] = useState("")
+    console.log(noticeType)
 
     const handleCancelBooking = async () => {
-        await cancelBooking(token, bookingId, bookingById.serviceId, language)
+        await cancelBooking(token, bookingId, bookingById.serviceId, language, noticeType)
             .then(() => {
                 setShowDialog(false);
                 setDialogState("phone-input");
@@ -197,9 +200,11 @@ const BookingSummaryWrapper = () => {
         ]);
     }, [bookingById, bookingFromAccessCode]);
 
+    // const handleConfirm = () => {};
+
     return (
         <>
-            <ConfirmCard
+            {/* <ConfirmCard
                 open={showConfirmation}
                 title={t("noti:booking:cancel:confirmation")}
                 description={t("noti:booking:cancel:confirmationDesc")}
@@ -207,7 +212,24 @@ const BookingSummaryWrapper = () => {
                 bntBack={t("button:cancel")}
                 handleClose={() => setShowConfirmation(false)}
                 handleConfirm={handleCancelBooking}
+            /> */}
+
+        <SendMessageOption 
+            open={showConfirmation}
+            title={t("noti:booking:cancel:confirmation")}
+            description={t("noti:booking:cancel:confirmationDesc")}
+            sendMessageOption={t("sendMessageOption")}
+            btnSMS={t("button:btnSMS")}
+            btnLINE={t("button:btnLINE")}
+            bntConfirm={t("button:confirm")}
+            bntBack={t("button:cancel")}
+            handleClose={() => setShowConfirmation(false)}
+            imageSrc="../Cancelicon.png"
+            handleCancelBooking={handleCancelBooking} 
+            handleNoticeType={(e:string) => setNoticeType(e)}
+            noticeType={noticeType}
             />
+            
             <div className="flex flex-col h-dvh p-5">
                 <p className="flex flex-col justify-center items-center text-[25px] font-semibold mb-3">
                     <span className="my-6">

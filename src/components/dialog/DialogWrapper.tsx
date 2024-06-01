@@ -26,6 +26,7 @@ import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import BookingApproveResult from "./BookingApproveResult";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -40,6 +41,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
     const navigate = useNavigate();
     const query = useQuery();
     const { t } = useTranslation();
+
+    const { login } = useAuth();
 
     const {
         setIsGlobalLoading,
@@ -61,14 +64,15 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         },
         validationSchema:
             confirmationDialogSchemas[
-                dialogState as keyof typeof confirmationDialogSchemas
+            dialogState as keyof typeof confirmationDialogSchemas
             ],
         onSubmit: async (values) => {
             switch (dialogState) {
                 case "phone-input":
                     setIsGlobalLoading(true);
                     await ReqOtp(values.phoneNumbers)
-                        .then((res: any) => {
+                        .then((res) => {
+                            console.log(res);
                             if (res.status === 200) {
                                 setIsGlobalLoading(false);
                                 setDialogState("otp-verify");
@@ -108,8 +112,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                         query.get("accessCode")
                                             ? setShowDialog(false)
                                             : setDialogState(
-                                                  "booking-detail-preview"
-                                              );
+                                                "booking-detail-preview"
+                                            );
                                         break;
 
                                     case "business":
@@ -289,11 +293,11 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     <Toolbar className="grid grid-cols-4">
                         <span
                             className={`w-[24px] h-[24px] cursor-pointer ${
-                                query.get("accessCode") &&
-                                dialogState !== "booking-approval-reject"
+                                // query.get("accessCode") &&
+                                dialogState === "booking-approval-reject"
                                     ? "hidden"
                                     : ""
-                            }`}
+                                }`}
                             onClick={handleBackButton}>
                             {[
                                 "phone-input",

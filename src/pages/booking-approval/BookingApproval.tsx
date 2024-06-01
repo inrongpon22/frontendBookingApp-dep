@@ -119,8 +119,7 @@ const BookingApproval = (): React.ReactElement => {
                         date,
                         children: filtered[date],
                     }));
-                }),
-        { revalidateOnFocus: false }
+                })
     );
 
     const approveRequested = async (
@@ -186,7 +185,7 @@ const BookingApproval = (): React.ReactElement => {
                         query.get("accessCode")
                             ? getReservByAccessCode.serviceId
                             : serviceId
-                    }/${lang}/business/line`,
+                    }/${lang}/business/all`,
                     {
                         rejectNote: rejectNote,
                     },

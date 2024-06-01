@@ -1,4 +1,5 @@
 export interface IBookingSlot {
+    isSelected: unknown;
     startTime: string;
     endTime: string;
     capacity: number;
@@ -140,4 +141,17 @@ export interface IUpdateService {
     isHidePrice: boolean;
     isHideEndTime: boolean;
     bookingSlots: IServiceEditTime[];
+}
+
+export interface IBookingSlot {
+    daysOpen: string[];
+    availableFromDate: string;
+    availableToDate: string | null;
+    duration: number;
+    slotsTime: {
+        startTime: string;
+        endTime: string;
+        capacity: number;
+        isSelected: boolean;
+    }[];
 }

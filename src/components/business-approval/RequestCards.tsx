@@ -30,7 +30,7 @@ interface cardTypes {
 const RequestCards = ({ data }: cardTypes): React.ReactElement => {
   const { setBookingDatas } = useContext(ApproveContext);
 
-  const {setShowDialog} = useContext(GlobalContext);
+  const {setShowDialog,setDialogState} = useContext(GlobalContext);
 
   const { t } = useTranslation();
 
@@ -59,6 +59,7 @@ const RequestCards = ({ data }: cardTypes): React.ReactElement => {
           type="button"
           className="px-6 py-2 text-[14px] font-semibold text-white rounded-lg bg-deep-blue bg-opacity-80"
           onClick={() => {
+            setDialogState("booking-approval-summary")
             setShowDialog(true);
             setBookingDatas(data);
           }}

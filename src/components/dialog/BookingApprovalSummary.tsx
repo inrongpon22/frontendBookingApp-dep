@@ -10,7 +10,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
 import { GlobalContext } from "../../contexts/BusinessContext";
-import ConfirmCard from "./ConfirmCard";
+import SendMessageOption from "./SendMessageOption";
 
 const BookingApprovalSummary = () => {
     const { businessId } = useParams();
@@ -34,6 +34,8 @@ const BookingApprovalSummary = () => {
                 .then((res) => res.data[0]),
         { revalidateOnFocus: false }
     );
+
+    console.log(bookingDetailFromSMS?.status === "cancel");
 
     const BookingDataLists: { label: string; text: string }[] = [
         {
@@ -100,9 +102,17 @@ const BookingApprovalSummary = () => {
         },
     ];
 
+    // const handleConfirmBooking = () => {
+    //       approveRequested(bookingDatas?.id, bookingDatas?.serviceId);  // Call your existing logic
+    //     };
+
+    // const handleCancelBooking = () => {};
+
+    const [noticeType, setNoticeType] = useState("")
+
     return (
         <div className="flex flex-col h-full">
-            <ConfirmCard
+            {/* <ConfirmCard
                 open={showConfirmation}
                 title={t("noti:booking:approve:confirmation")}
                 description={t("noti:booking:approve:confirmationDesc")}
@@ -112,38 +122,63 @@ const BookingApprovalSummary = () => {
                 handleConfirm={() =>
                     approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
                 }
+            /> */}
+            <SendMessageOption 
+            open={showConfirmation}
+            title={t("noti:booking:approve:confirmation")}
+            description={t("noti:booking:approve:confirmationDesc")}
+            sendMessageOption={t("sendMessageOption")}
+            btnSMS={t("button:btnSMS")}
+            btnLINE={t("button:btnLINE")}
+            bntConfirm={t("button:confirm")}
+            bntBack={t("button:cancel")}
+            imageSrc="../approvedIcon.png"
+            handleClose={() => setShowConfirmation(false)}
+            handleConfirm={() => approveRequested(bookingDatas?.id, bookingDatas?.serviceId)}
+            handleNoticeType={(e:string) => setNoticeType(e)}
+            noticeType={noticeType}
+            // handleCancelBooking={handleCancelBooking}
             />
             <div className="flex flex-col gap-3">
-                {BookingDataLists?.map((item: any, index: number) => {
-                    return (
-                        <div key={index} className="flex justify-between">
-                            <span className="text-gray-500">{item.label}</span>
-                            <span className="text-[14px] font-semibold">
-                                {item.text}
-                            </span>
-                        </div>
-                    );
-                })}
+                {BookingDataLists?.map(
+                    (item: { label: string; text: string }, index: number) => {
+                        return (
+                            <div key={index} className="flex justify-between">
+                                <span className="text-gray-500">
+                                    {item.label}
+                                </span>
+                                <span className="text-[14px] font-semibold">
+                                    {item.text}
+                                </span>
+                            </div>
+                        );
+                    }
+                )}
             </div>
 
             <div className="flex flex-col gap-3 mt-5">
                 <Divider />
-                {GuestDataLists?.map((item: any, index: number) => {
-                    return (
-                        <div key={index} className="flex justify-between">
-                            <span className="text-gray-500">{item.label}</span>
-                            <span className="text-[14px] font-semibold text-end">
-                                {item.text}
-                            </span>
-                        </div>
-                    );
-                })}
+                {GuestDataLists?.map(
+                    (item: { label: string; text: string }, index: number) => {
+                        return (
+                            <div key={index} className="flex justify-between">
+                                <span className="text-gray-500">
+                                    {item.label}
+                                </span>
+                                <span className="text-[14px] font-semibold text-end">
+                                    {item.text}
+                                </span>
+                            </div>
+                        );
+                    }
+                )}
             </div>
 
             <div
                 className={`${
                     bookingDatas?.status === "pending" ||
-                    query.get("accessCode")
+                    (query.get("accessCode") &&
+                        bookingDetailFromSMS?.status !== "cancel")
                         ? "flex flex-col gap-3"
                         : "hidden"
                 } mt-auto`}
@@ -174,3 +209,4 @@ const BookingApprovalSummary = () => {
 };
 
 export default BookingApprovalSummary;
+

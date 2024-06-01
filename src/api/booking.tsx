@@ -9,12 +9,13 @@ export const cancelBooking = async (
     token: string,
     bookingId: number | string | undefined,
     serviceId: string | number,
-    lang: string
+    lang: string, 
+    noticeType: string
 ) => {
     token = token.replace(/"/g, "");
     try {
         const booking = await axios.post(
-            `${app_api}/cancelReservation/${bookingId}/${serviceId}/${lang}/customer/line`,
+            `${app_api}/cancelReservation/${bookingId}/${serviceId}/${lang}/customer/${noticeType}`, // line or sms or all
             {},
             {
                 headers: {
