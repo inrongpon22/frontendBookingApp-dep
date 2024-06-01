@@ -39,6 +39,7 @@ const BusinessProfile = () => {
     const [addMoreService, setAddMoreService] = useState<boolean>(true);
 
     const { businessData } = getBusinessId(Number(businessId)); // get business data
+    console.log(businessData);
 
     const {
         getReservationByBusinessIdData,
@@ -104,8 +105,7 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}
-                    >
+                        }}>
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -144,8 +144,7 @@ const BusinessProfile = () => {
                                                     state: item,
                                                 }
                                             )
-                                        }
-                                    >
+                                        }>
                                         <div className="flex flex-col">
                                             <p className="flex items-center gap-1">
                                                 <span className="text-[14px] font-semibold">
@@ -228,8 +227,7 @@ const BusinessProfile = () => {
                         className="font-bold text-[10px] text-deep-blue text-opacity-60 underline"
                         onClick={() =>
                             navigate(`/booking-approval/${businessId}`)
-                        }
-                    >
+                        }>
                         View all
                     </p>
                 </div>
@@ -246,16 +244,14 @@ const BusinessProfile = () => {
                                 return (
                                     <div
                                         key={index}
-                                        className="flex justify-between"
-                                    >
+                                        className="flex justify-between">
                                         <div className="flex gap-2">
                                             <p
                                                 className={`${
                                                     item.status === "approval"
                                                         ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                         : "bg-zinc-200 text-zinc-400"
-                                                } px-1 rounded`}
-                                            >
+                                                } px-1 rounded`}>
                                                 {item.startTime.slice(0, -3)}
                                             </p>
                                             <p
@@ -263,8 +259,7 @@ const BusinessProfile = () => {
                                                     item.status === "approval"
                                                         ? ""
                                                         : "text-zinc-400"
-                                                } font-semibold`}
-                                            >
+                                                } font-semibold`}>
                                                 {item.title}
                                             </p>
                                         </div>
@@ -273,8 +268,7 @@ const BusinessProfile = () => {
                                                 item.status === "approval"
                                                     ? ""
                                                     : "text-zinc-400"
-                                            }`}
-                                        >
+                                            }`}>
                                             <span>
                                                 {item.status === "approval"
                                                     ? item.userName

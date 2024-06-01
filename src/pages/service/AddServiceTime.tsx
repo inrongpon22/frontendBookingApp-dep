@@ -150,8 +150,8 @@ export default function AddServiceTime(props: IParams) {
                 const endTimeString = `${endTimeHours
                     .toString()
                     .padStart(2, "0")}:${endTimeMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                        .toString()
+                        .padStart(2, "0")}`;
                 if (endTimeString > endTime) {
                     break;
                 }
@@ -162,8 +162,8 @@ export default function AddServiceTime(props: IParams) {
                 currentTime = `${newHours
                     .toString()
                     .padStart(2, "0")}:${newMinutes
-                    .toString()
-                    .padStart(2, "0")}`;
+                        .toString()
+                        .padStart(2, "0")}`;
             }
         }
 
@@ -379,6 +379,7 @@ export default function AddServiceTime(props: IParams) {
 
     useEffect(() => {
         if (businessData) {
+            console.log(businessData);
             setOpenTime(businessData.openTime.substring(0, 5));
             setCloseTime(businessData.closeTime.substring(0, 5));
         }
@@ -498,17 +499,17 @@ export default function AddServiceTime(props: IParams) {
                                         border: isDaySelected(day.value)
                                             ? "2px solid #020873"
                                             : `1px solid ${alpha(
-                                                  "#000000",
-                                                  0.2
-                                              )}`,
+                                                "#000000",
+                                                0.2
+                                            )}`,
                                         borderRadius: "8px",
                                         backgroundColor: disibleDays.some(
                                             (item) => item == day.value
                                         )
                                             ? "#dddddd"
                                             : isDaySelected(day.value)
-                                            ? "rgba(2, 8, 115, 0.2)"
-                                            : "white",
+                                                ? "rgba(2, 8, 115, 0.2)"
+                                                : "white",
                                     }}
                                 >
                                     {day.name}
@@ -679,9 +680,9 @@ export default function AddServiceTime(props: IParams) {
                         {isManually ? (
                             isManually &&
                             (timeSlots !== undefined &&
-                            timeSlots.length > 0 &&
-                            selectedSlots.length > 0 &&
-                            manualCapacity.length > 0 ? (
+                                timeSlots.length > 0 &&
+                                selectedSlots.length > 0 &&
+                                manualCapacity.length > 0 ? (
                                 <GuestNumberManually
                                     timeSlots={timeSlots}
                                     handleResetGustNumber={
@@ -743,12 +744,12 @@ export default function AddServiceTime(props: IParams) {
                                     cursor: "pointer",
                                     backgroundColor:
                                         daysOpen.length == 0 ||
-                                        !openTime ||
-                                        !closeTime ||
-                                        !duration ||
-                                        !guestNumber ||
-                                        !availableFromDate ||
-                                        selectedSlots.length == 0
+                                            !openTime ||
+                                            !closeTime ||
+                                            !duration ||
+                                            !guestNumber ||
+                                            !availableFromDate ||
+                                            selectedSlots.length == 0
                                             ? "#cccccc"
                                             : "#020873",
                                     fontSize: "14px",
