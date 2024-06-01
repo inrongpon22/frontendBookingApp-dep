@@ -26,7 +26,7 @@ import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import BookingApproveResult from "./BookingApproveResult";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
-import { useAuth } from "../../contexts/AuthContext";
+// import { useAuth } from "../../contexts/AuthContext";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -42,7 +42,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
     const query = useQuery();
     const { t } = useTranslation();
 
-    const { login } = useAuth();
+    // const { login } = useAuth();
 
     const {
         setIsGlobalLoading,
