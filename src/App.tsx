@@ -35,63 +35,63 @@ function App() {
                     <Route path="/" element={<BusinessAuth />} />
 
                     {/* protected route */}
-                    <Route element={<ProtectedRoute />}>
-                        {/* protected business routes */}
-                        <Route
-                            path="/business-profile/:businessId"
-                            element={<BusinessProfile />}
-                        />
-                        <Route
-                            path="/booking-approval/:businessId"
-                            element={<BookingApproval />}
-                        />
-                        <Route
-                            path="/my-bookings"
-                            element={<MyBookingWrapper />}
-                        />
-                        <Route
-                            path="/booking/:bookingId"
-                            element={<BookingSummaryWrapper />}
-                        />
-                        <Route
-                            path="/business-overview"
-                            element={<BusinessOverview />}
-                        />
-                        <Route
-                            path="/create-business"
-                            element={<BusinessSetting />}
-                        />
-                        <Route
-                            path="/business-setting"
-                            element={<BusinessSetting />}
-                        />
+                    {/* <Route element={<ProtectedRoute />}> */}
+                    {/* protected business routes */}
+                    <Route
+                        path="/business-profile/:businessId"
+                        element={<BusinessProfile />}
+                    />
+                    <Route
+                        path="/booking-approval/:businessId"
+                        element={<BookingApproval />}
+                    />
+                    <Route
+                        path="/my-bookings"
+                        element={<MyBookingWrapper />}
+                    />
+                    <Route
+                        path="/booking/:bookingId"
+                        element={<BookingSummaryWrapper />}
+                    />
+                    <Route
+                        path="/business-overview"
+                        element={<BusinessOverview />}
+                    />
+                    <Route
+                        path="/create-business"
+                        element={<BusinessSetting />}
+                    />
+                    <Route
+                        path="/business-setting"
+                        element={<BusinessSetting />}
+                    />
 
-                        {/* service */}
-                        <Route
-                            path="/service/:businessId"
-                            element={<ServiceDetail serviceId={0} />}
-                        />
-                        <Route
-                            path="/service-setting/:businessId"
-                            element={<ServiceSetting />}
-                        />
-                        <Route
-                            path="/service-detail/:businessId/:serviceId"
-                            element={<ServiceDetail serviceId={0} />}
-                        />
-                        <Route path="/noti/:businessId" element={<Noti />} />
+                    {/* service */}
+                    <Route
+                        path="/service/:businessId"
+                        element={<ServiceDetail serviceId={0} />}
+                    />
+                    <Route
+                        path="/service-setting/:businessId"
+                        element={<ServiceSetting />}
+                    />
+                    <Route
+                        path="/service-detail/:businessId/:serviceId"
+                        element={<ServiceDetail serviceId={0} />}
+                    />
+                    <Route path="/noti/:businessId" element={<Noti />} />
 
-                        {/* day off */}
-                        <Route
-                            path="/dayoff-setting/:businessId"
-                            element={<DayOffSetting />}
-                        />
-                        <Route
-                            path="/dayoff-setting/:businessId/add-new"
-                            element={<AddNewDayOff />}
-                        />
-                        {/* day off */}
-                    </Route>
+                    {/* day off */}
+                    <Route
+                        path="/dayoff-setting/:businessId"
+                        element={<DayOffSetting />}
+                    />
+                    <Route
+                        path="/dayoff-setting/:businessId/add-new"
+                        element={<AddNewDayOff />}
+                    />
+                    {/* day off */}
+                    {/* </Route> */}
 
                     {/* customer */}
 
