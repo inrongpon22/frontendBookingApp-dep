@@ -46,11 +46,13 @@ _axiosInstance.interceptors.response.use(
             setTimeout(() => {
                 toast.error("403 Forbidden");
             });
-        } else if (error.response.status === 404) {
-            setTimeout(() => {
-                toast.error("404 Not Found");
-            });
-        } else if (error.response.status === 500) {
+        }
+        // else if (error.response.status === 404) {
+        //     setTimeout(() => {
+        //         toast.error("404 Not Found");
+        //     });
+        // } 
+        else if (error.response.status === 500) {
             setTimeout(() => {
                 toast.error("500 Internal Server Error");
             });
