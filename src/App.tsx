@@ -21,9 +21,8 @@ import Forbidden from "./pages/errors/403Forbidden.tsx";
 import CallBack from "./pages/auth/CallBack.tsx";
 import Noti from "./pages/notification/Noti.tsx";
 import { useEffect, useState } from "react";
-import { app_api } from "./helper/url.ts";
-import axios from "axios";
 import Loading from "./components/dialog/Loading.tsx";
+import { checkTokenValidity } from "./api/user.tsx";
 
 function App() {
     const [isLoadding, setIsLoading] = useState<boolean>(false);
@@ -34,13 +33,9 @@ function App() {
         useEffect(() => {
             setIsLoading(true);
             const token = localStorage.getItem("token");
-            const checkTokenValidity = async () => {
+            const checkToken = async () => {
                 try {
-                    const response = await axios.get(`${app_api}/auth/status`, {
-                        headers: {
-                            Authorization: token,
-                        },
-                    });
+                    const response = await checkTokenValidity();
                     return response;
                 } catch (error) {
                     console.error("Token validation error:", error);
@@ -50,7 +45,7 @@ function App() {
             };
 
             if (token) {
-                checkTokenValidity();
+                checkToken();
                 setIsLoading(false);
             } else {
                 console.log("Token is not valid");

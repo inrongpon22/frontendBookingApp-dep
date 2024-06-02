@@ -3,6 +3,7 @@ import axios from "axios";
 import useSWR from "swr";
 import { app_api } from "../helper/url";
 import { IaddBusiness } from "../interfaces/business";
+import { axiosInstance } from "../helper/apiProtecter";
 
 export const insertBusiness = async (
     businessData: IaddBusiness,
@@ -68,16 +69,10 @@ export const getBusinessId = (businessId: number) => {
     };
 };
 
-export const getBusinessByUserId = async (userId: string, token: string) => {
-    token = token.replace(/"/g, "");
+export const getBusinessByUserId = async (userId: string) => {
     try {
-        const business = await axios.get(
-            `${import.meta.env.VITE_APP_API}/getBusinessByUserId/${userId}`,
-            {
-                headers: {
-                    Authorization: token,
-                },
-            }
+        const business = await axiosInstance.get(
+            `/getBusinessByUserId/${userId}`
         );
         return business.data;
     } catch (error) {
