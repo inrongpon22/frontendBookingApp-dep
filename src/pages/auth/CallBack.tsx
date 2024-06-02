@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getLineProfile } from "../../api/user";
 import Loading from "../../components/dialog/Loading";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getBusinessByUserId } from "../../api/business";
+import { GlobalContext } from "../../contexts/BusinessContext";
 
 export default function CallBack() {
     const queryParams = new URLSearchParams(location.search);
@@ -11,6 +12,8 @@ export default function CallBack() {
     const requestBy = queryParams.get("requestBy");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { setShowDialog, setDialogState } =
+        useContext(GlobalContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -48,6 +51,8 @@ export default function CallBack() {
                 setTimeout(() => {
                     setIsLoading(false);
                     navigate("/details/12");
+                    setShowDialog(true);
+                    setDialogState("booking-detail-preview");
                 }, 5000);
             }
         };
