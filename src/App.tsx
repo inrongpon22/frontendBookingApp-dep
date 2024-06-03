@@ -27,7 +27,6 @@ import { useAuth } from "./contexts/AuthContext.tsx";
 
 function App() {
     const { isAuthenticated } = useAuth();
-    console.log(isAuthenticated);
 
     return (
         <>

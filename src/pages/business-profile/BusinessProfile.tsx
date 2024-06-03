@@ -39,7 +39,6 @@ const BusinessProfile = () => {
     const [addMoreService, setAddMoreService] = useState<boolean>(true);
 
     const { businessData } = getBusinessId(Number(businessId)); // get business data
-    console.log(businessData);
 
     const {
         getReservationByBusinessIdData,
@@ -224,11 +223,11 @@ const BusinessProfile = () => {
                         }`}
                     </p>
                     <p
-                        className="font-bold text-[10px] text-deep-blue text-opacity-60 underline"
+                        className="font-bold text-[10px] text-deep-blue text-opacity-60 underline cursor-pointer"
                         onClick={() =>
                             navigate(`/booking-approval/${businessId}`)
                         }>
-                        View all
+                        ดูทั้งหมด
                     </p>
                 </div>
 

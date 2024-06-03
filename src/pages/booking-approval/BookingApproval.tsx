@@ -9,7 +9,13 @@ import useSWR from "swr";
 import axios from "axios";
 import { app_api, useQuery } from "../../helper/url";
 // styled
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Divider,
+} from "@mui/material";
 // icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -19,8 +25,10 @@ import DialogWrapper from "../../components/dialog/DialogWrapper";
 import { dayOfWeekFullName } from "../../helper/daysOfWeek";
 import { monthsOfYearFullName } from "../../helper/monthsOfYear";
 import { GlobalContext } from "../../contexts/BusinessContext";
-import CustomTabs from "./CustomTabs";
+import CustomStatusTabs from "./CustomStatusTabs";
 import { getUserIdByAccessToken } from "../../api/user";
+import CustomDateTabs from "./CustomDateTabs";
+import { Ireservation } from "../../interfaces/reservation";
 
 const BookingApproval = (): React.ReactElement => {
     const { businessId } = useParams();
@@ -40,38 +48,32 @@ const BookingApproval = (): React.ReactElement => {
     const { setIsGlobalLoading, setShowDialog, setDialogState } =
         useContext(GlobalContext);
 
-    const [bookingDatas, setBookingDatas] = useState<any>();
+    const [bookingDatas, setBookingDatas] = useState();
+
+    // handle tab state
     const [tabStatus, setTabStatus] = useState<number>(0);
+    const [tabDate, setTabDate] = useState<number>(0);
 
     const converted = (): string => {
         switch (tabStatus) {
             case 0:
-                return "pending";
+                return "all";
 
             case 1:
-                return "approval";
+                return "pending";
 
             case 2:
+                return "approval";
+
+            case 3:
                 return "cancel";
 
             default:
-                return "pending";
+                return "all";
         }
     };
 
-    // const {
-    //     getReservServiceIdData,
-    //     getReservServiceIdError,
-    //     getReservServiceIdLoading,
-    //     mutateReservServiceId,
-    // } = getReservationByServiceId(
-    //     Number(businessId),
-    //     Number(serviceId),
-    //     converted()
-    // );
-
-    // console.log(getReservServiceIdData);
-
+    // get booking from access code
     const { data: getReservByAccessCode } = useSWR(
         token &&
             query.get("accessCode") &&
@@ -91,7 +93,7 @@ const BookingApproval = (): React.ReactElement => {
     } = useSWR(
         businessId &&
             token &&
-            `${app_api}/getReservationByBusinessId/${businessId}/${converted()}?page=1&limit=100`,
+            `${app_api}/getReservationByBusinessId/${businessId}/${converted()}?page=1&limit=1000`,
         (url: string) =>
             axios
                 .get(url, {
@@ -100,26 +102,15 @@ const BookingApproval = (): React.ReactElement => {
                     },
                 })
                 .then(async (res) => {
-                    const filtered = res?.data
-                        .sort(
-                            (a: any, b: any) =>
-                                moment(a.bookingDate).valueOf() -
-                                moment(b.bookingDate).valueOf()
-                        )
-                        .reduce((prev: any, curr: any) => {
-                            const date: any = moment(curr.bookingDate); //.format("DD-MM-YYYY");
-                            if (!prev[date]) {
-                                prev[date] = [];
-                            }
-                            prev[date].push(curr);
-                            return prev;
-                        }, []);
-
-                    return Object?.keys(filtered)?.map((date) => ({
-                        date,
-                        children: filtered[date],
-                    }));
+                    return res.data.filter((ii: any) => {
+                        if (moment(ii.bookingDate).isSame(moment(), "day")) {
+                            return ii;
+                        }
+                    });
                 })
+                .catch(() =>
+                    toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง")
+                )
     );
 
     const approveRequested = async (
@@ -240,117 +231,85 @@ const BookingApproval = (): React.ReactElement => {
                 rejectRequested,
                 bookingDatas,
                 setBookingDatas,
-            }}>
-            <div className="h-dvh flex flex-col">
-                <div className="flex drop-shadow-lg p-4 font-semibold text-[14px]">
+            }}
+        >
+            <div className="h-dvh flex flex-col overflow-x-hidden">
+                <div className="flex drop-shadow-lg p-4 font-semibold text-[14px] border-b">
                     <button
                         type="button"
                         onClick={() =>
                             navigate(`/business-profile/${businessId}`)
-                        }>
+                        }
+                    >
                         <ArrowBackIosIcon fontSize="small" />
                     </button>
-                    <span className="mx-auto">
-                        {location.state && location.state.title}
-                    </span>
+                    <span className="mx-auto">Booking lists</span>
                     {/* invisible button for balance */}
                     <button type="button" className="invisible">
                         <ArrowBackIosIcon fontSize="small" />
                     </button>
                     {/* invisible button for balance */}
                 </div>
-                <CustomTabs
+
+                <CustomDateTabs tabDate={tabDate} setTabDate={setTabDate} />
+                <CustomStatusTabs
                     tabStatus={tabStatus}
                     setTabStatus={setTabStatus}
                     tabData={getReservByBusiId}
                 />
-                <div className="bg-gray-100">
-                    <div className="py-1" />
-                    <div className="">
-                        {getReservByBusiId && getReservByBusiId.length > 0 ? (
-                            getReservByBusiId?.map(
-                                (item: any, index: number) => {
-                                    const date = moment(item.date).format("DD");
-                                    const day = moment(item.date).format(
-                                        "dddd"
-                                    );
-                                    const month = moment(item.date).format(
-                                        "MMMM"
-                                    );
-                                    return (
-                                        <div key={index} className="my-2">
-                                            <Accordion
-                                                defaultExpanded={
-                                                    index === 0 ? true : false
-                                                }>
-                                                <AccordionSummary
-                                                    expandIcon={
-                                                        <ExpandMoreIcon />
-                                                    }
-                                                    aria-controls={`panel${
-                                                        index + 1
-                                                    }-content`}
-                                                    id={`panel${
-                                                        index + 1
-                                                    }-header`}>
-                                                    <span className="w-3/4">
-                                                        {`${date} ${
-                                                            monthsOfYearFullName(
-                                                                language
-                                                            )?.find(
-                                                                (ii) =>
-                                                                    ii.value ===
-                                                                    month
-                                                            )?.name ?? ""
-                                                        }, ${
-                                                            dayOfWeekFullName(
-                                                                language
-                                                            )?.find(
-                                                                (ii) =>
-                                                                    ii.value ===
-                                                                    day
-                                                            )?.name ?? ""
-                                                        }`}
-                                                    </span>
-                                                    <span
-                                                        className={`w-1/4 text-white text-center rounded-lg ${(() => {
-                                                            switch (tabStatus) {
-                                                                case 0:
-                                                                    return "bg-[#F0AD4E]";
 
-                                                                case 1:
-                                                                    return "bg-green-500";
-                                                            }
-                                                        })()}`}>
-                                                        {item.children?.length}{" "}
-                                                        {tabStatus == 0
-                                                            ? t("pending")
-                                                            : tabStatus == 1
-                                                            ? t("approved")
-                                                            : null}
-                                                    </span>
-                                                </AccordionSummary>
-                                                <AccordionDetails
-                                                    className={
-                                                        item.children.length > 1
-                                                            ? "grid md:grid-cols-2 gap-2"
-                                                            : ""
-                                                    }>
-                                                    {item.children.map(
-                                                        (
-                                                            ii: any,
-                                                            jj: number
-                                                        ) => {
-                                                            return (
-                                                                <RequestCards
-                                                                    key={jj}
-                                                                    data={ii}
-                                                                />
-                                                            );
-                                                        }
+                {/* time indicator */}
+                <Divider className="w-75">
+                    <span className="text-gray-400">
+                        {moment().format("MMM D, YYYY")}
+                    </span>
+                </Divider>
+                {/* time indicator */}
+
+                <Box sx={{ bgcolor: "#fff" }}>
+                    <div className="px-5">
+                        {getReservByBusiId && getReservByBusiId?.length > 0 ? (
+                            getReservByBusiId?.map(
+                                (item: Ireservation, index: number) => {
+
+                                    function getStatusClass(status: string) {
+                                        switch (status) {
+                                          case 'approval':
+                                            return 'bg-deep-blue bg-opacity-10 text-deep-blue';
+
+                                          case 'pending':
+                                            return 'bg-[#F0AD4E] bg-opacity-20 text-[#F0AD4E]';
+
+                                          case 'cancel':
+                                            return 'bg-zinc-200 text-zinc-400';
+                                        }
+                                      }
+
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="flex justify-between"
+                                        >
+                                            <div className="flex gap-2">
+                                                <p
+                                                    className={`${getStatusClass(item.status)} px-1 rounded`}
+                                                >
+                                                    {item.startTime.slice(
+                                                        0,
+                                                        -3
                                                     )}
-                                                </AccordionDetails>
-                                            </Accordion>
+                                                </p>
+                                                <p
+                                                    // className={`${
+                                                    //     item.status ===
+                                                    //     "approval"
+                                                    //         ? ""
+                                                    //         : "text-zinc-400"
+                                                    // } font-semibold`}
+                                                >
+                                                    {item.title}
+                                                </p>
+                                            </div>
                                         </div>
                                     );
                                 }
@@ -361,7 +320,7 @@ const BookingApproval = (): React.ReactElement => {
                             </p>
                         )}
                     </div>
-                </div>
+                </Box>
                 <DialogWrapper userSide="business" />
             </div>
         </ApproveContext.Provider>
