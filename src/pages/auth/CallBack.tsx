@@ -30,23 +30,28 @@ export default function CallBack() {
                 });
 
             if (requestBy == "business") {
-                await getBusinessByUserId(userId).then((res) => {
+                const business = await getBusinessByUserId(userId);
+                if (business) {
                     setTimeout(() => {
                         setIsLoading(false);
-                        navigate(`/business-profile/${res[0].id}`);
+                        navigate(`/business-profile/${business.businessData?.id}`);
                     }, 5000);
-                })
-                    .catch((err) => {
-                        if (err.response.status === 404) {
-                            setTimeout(() => {
-                                setIsLoading(false);
-                                navigate("/create-business");
-                            }, 5000);
-                        } else {
-                            console.log(err.message);
-                            toast.error("มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                        }
-                    });
+                } else {
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        navigate("/create-business");
+                    }, 5000);
+                }
+
+                // setTimeout(() => {
+                //     setIsLoading(false);
+                //     navigate("/create-business");
+                // }, 5000);
+
+                // setTimeout(() => {
+                //     setIsLoading(false);
+                //     navigate(`/business-profile/${res[0].id}`);
+                // }, 5000);
             } else if (requestBy === "customer") {
                 setTimeout(() => {
                     setIsLoading(false);
