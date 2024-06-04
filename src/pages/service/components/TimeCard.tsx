@@ -25,7 +25,7 @@ interface IParams {
 
 export default function TimeCard(props: IParams) {
     const { t } = useTranslation();
-    const lan = localStorage.getItem("lang");
+    const lan = localStorage.getItem("i18nextLng");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [openConfirm, setOpenConfirm] = useState(false);
@@ -71,7 +71,7 @@ export default function TimeCard(props: IParams) {
                     <div style={{ fontSize: "14px" }}>
                         {props.availableFromDate} -{" "}
                         {props.availableToDate == "" ||
-                            props.availableToDate == null
+                        props.availableToDate == null
                             ? t("present")
                             : props.availableToDate}
                     </div>
@@ -135,9 +135,9 @@ export default function TimeCard(props: IParams) {
                         const dayName =
                             lan === "th"
                                 ? dataOfWeekThai.find((x) => x.value === day)
-                                    ?.thaiName
+                                      ?.thaiName
                                 : dataOfWeekEng.find((x) => x.value === day)
-                                    ?.name;
+                                      ?.name;
                         const isSecondLast =
                             index === props.daysOpen.length - 2;
                         const isLast = index === props.daysOpen.length - 1;

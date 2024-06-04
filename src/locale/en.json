@@ -114,6 +114,7 @@
         "desUpdate": "Your update has been successfully completed!",
         "desAllDone": "You've successfully created your business.",
         "desLimitGuest": "Limits number of time slot that can book in one booking.",
+        "desScanMe": "Scan this QR code and start booking!",
         "firstCongrat": "You've successfully created your business. Let's share your business."
     },
     "button": {
@@ -150,7 +151,10 @@
         "discard": "Discard",
         "addServiceTime": "Add Service Time",
         "done": "Done",
-        "shareBookingWeb": "Share Booking Website"
+        "btnSMS": "Message SMS",
+        "btnLINE": "Message LINE",
+        "shareBookingWeb": "Share Booking Website",
+        "saveQRcode": "Save QR code"
     },
     "noti": {
         "business": {

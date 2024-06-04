@@ -38,7 +38,7 @@ const BusinessProfile = () => {
     const [congAlert, setCongAlert] = useState<boolean>(true);
     const [addMoreService, setAddMoreService] = useState<boolean>(true);
 
-    const { businessData } = getBusinessId(Number(businessId)); // get business data
+    const { businessData } = getBusinessId(Number(businessId));
 
     const {
         getReservationByBusinessIdData,
@@ -105,17 +105,14 @@ const BusinessProfile = () => {
                 </div>
             </div>
             {/* headers */}
-
             {getReservationByBusinessIdData?.length === 0 && congAlert && (
                 <FirstTimeCongrat handleClose={() => setCongAlert(false)} />
             )}
-
             {getReservationByBusinessIdData?.length === 0 && addMoreService && (
                 <FirstTimeAddMoreService
                     handleClose={() => setAddMoreService(false)}
                 />
             )}
-
             <div className="w-full bg-white">
                 <div className="text-[14px] text-[#A1A1A1] font-bold px-5 pt-5">
                     {t("pending")}
@@ -178,6 +175,17 @@ const BusinessProfile = () => {
                                                                 ).format("MMMM")
                                                         )?.name ?? ""
                                                     }`}
+                                                    ).format("D")} ${
+                                                        monthsOfYearFullName(
+                                                            language
+                                                        )?.find(
+                                                            (ii) =>
+                                                                ii.value ===
+                                                                moment(
+                                                                    item.bookingDate
+                                                                ).format("MMMM")
+                                                        )?.name ?? ""
+                                                    }`}
                                                 </span>
                                                 <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                                 <span>{item.userName}</span>
@@ -198,7 +206,6 @@ const BusinessProfile = () => {
                 </div>
                 {/* pending section */}
             </div>
-
             {/* today section */}
             <div className="text-[14px] bg-white p-5 mt-2">
                 <div className="flex justify-between items-center">
@@ -246,6 +253,8 @@ const BusinessProfile = () => {
                                             <p
                                                 className={`${
                                                     item.status === "approval"
+                                                className={`${
+                                                    item.status === "approval"
                                                         ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                         : "bg-zinc-200 text-zinc-400"
                                                 } px-1 rounded`}
@@ -253,6 +262,8 @@ const BusinessProfile = () => {
                                                 {item.startTime.slice(0, -3)}
                                             </p>
                                             <p
+                                                className={`${
+                                                    item.status === "approval"
                                                 className={`${
                                                     item.status === "approval"
                                                         ? ""
@@ -300,7 +311,6 @@ const BusinessProfile = () => {
                 </div>
             </div>
             {/* today section */}
-
             <DialogWrapper userSide="business" />
         </div>
     );

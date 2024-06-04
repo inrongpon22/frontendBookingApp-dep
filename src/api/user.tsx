@@ -58,7 +58,8 @@ export const getUserIdByAccessToken = async (
 export const getLineProfile = async (accessToken: string) => {
     try {
         const lineProfile = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/get-line-profile?accessToken=${accessToken}`
         );
         return lineProfile.data;

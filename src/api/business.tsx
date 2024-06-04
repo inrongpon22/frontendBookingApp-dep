@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { app_api } from "../helper/url";
 import { IaddBusiness } from "../interfaces/business";
 import { axiosInstance } from "../helper/apiProtecter";
+// import { getUserIdByAccessToken } from "./user";
 
 export const insertBusiness = async (
     businessData: IaddBusiness,
@@ -68,6 +69,34 @@ export const getBusinessId = (businessId: number) => {
         businessLoading: isLoading,
     };
 };
+
+// export const getBusinessIdByBusinessSide = async (businessId: number) => {
+//     const token = localStorage.getItem("token");
+//     const accessToken = localStorage.getItem("accessToken");
+//     let userId;
+//     await getUserIdByAccessToken(accessToken ?? "", token ?? "").then((res) => {
+//         userId = res;
+//     });
+
+//     // eslint-disable-next-line react-hooks/rules-of-hooks
+//     const { data, error, isLoading } = useSWR(
+//         `${app_api}/businessByBusiness/${businessId}/${userId}`,
+//         (url: string) =>
+//             axios
+//                 .get(url, {
+//                     headers: {
+//                         authorization: localStorage.getItem("token"),
+//                     },
+//                 })
+//                 .then((res) => res.data)
+//     );
+
+//     return {
+//         businessData: data,
+//         businessError: error,
+//         businessLoading: isLoading,
+//     };
+// };
 
 export const getBusinessByUserId = async (userId: string) => {
     try {
