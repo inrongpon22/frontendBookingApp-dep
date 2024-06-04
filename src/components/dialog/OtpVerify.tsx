@@ -16,7 +16,7 @@ const OtpVerify = () => {
         <section>
             <p className="text-[17px] font-semibold mb-5">
                 {t("otpVerification")}
-                {formik.values.phoneNumbers.slice(-4)}
+                {/* {formik.values.phoneNumbers.slice(-4)} */}
             </p>
             <input
                 type="text"

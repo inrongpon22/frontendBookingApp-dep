@@ -278,7 +278,7 @@ const BookingSummaryWrapper = () => {
                 >
                     <button
                         type="button"
-                        className={`w-full p-2 mt-5 rounded-lg ${
+                        className={`w-full py-3 mt-5 font-semibold rounded-lg ${
                             bookingDatas?.status === "cancel" ||
                             bookingDatas?.status === "declinded"
                                 ? "border-2 border-deep-blue text-deep-blue"
@@ -332,7 +332,7 @@ const BookingSummaryWrapper = () => {
                             : "flex justify-center"
                     }
                 >
-                    <span className="py-5 w-2/3 text-center">
+                    <span className="py-5 w-2/3 text-center text-[12px]">
                         {t("fragment:needTo")}{" "}
                         <button
                             type="button"

@@ -3,6 +3,7 @@ import { t } from "i18next";
 
 export interface DialogTypes {
     userSide: "user" | "business";
+    headerTitle?: string;
 }
 
 // Define your validation schemas

@@ -295,7 +295,7 @@ const BookingApproval = (): React.ReactElement => {
                         }>
                         <ArrowBackIosIcon fontSize="small" />
                     </button>
-                    <span className="mx-auto">Booking lists</span>
+                    {/* <span className="mx-auto">Booking lists</span> */}
                     {/* invisible button for balance */}
                     <button type="button" className="invisible">
                         <ArrowBackIosIcon fontSize="small" />
