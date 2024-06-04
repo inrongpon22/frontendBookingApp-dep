@@ -253,8 +253,7 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-3`}
-            >
+                } flex justify-between items-center border rounded-lg p-3`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         {t("form:booking:create:isBusinessOnly:label")}
@@ -275,8 +274,7 @@ const BookingDetailsPreview = () => {
                     formik.values.isBusinessOnly
                         ? "hidden"
                         : "mt-0 flex flex-col gap-3"
-                }
-            >
+                }>
                 <div>
                     <p className="flex justify-between items-center text-[14px] font-semibold">
                         <span>{t("bookingName")}</span>
@@ -325,8 +323,7 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-3 mt-2`}
-                    >
+                        } flex justify-between items-center border rounded-lg p-3 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 {t("form:booking:create:isSendSMS:label")}
@@ -374,8 +371,7 @@ const BookingDetailsPreview = () => {
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}
-            >
+                onClick={createReservation}>
                 {t("button:confirmBookingButton")}
             </button>
         </div>

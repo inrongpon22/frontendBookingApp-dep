@@ -306,9 +306,8 @@ const ShopDetailsPageWrapper = () => {
                                     setShowDialog(true);
                                 }
                             }
-                        }}
-                    >
-                        {t("button:confirmBookingButton")}
+                        }}>
+                        {t("button:bookingButton")}
                     </button>
                     <span className="text-[12px] py-2">
                         {t("reviewDetails")}
