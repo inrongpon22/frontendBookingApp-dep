@@ -67,12 +67,12 @@ const MyBookingWrapper = () => {
                 <div className="flex flex-col gap-4 px-3">
                     {myReservDatas ? (
                         myReservDatas.map((item: any, index: number) => {
-                            const start: string = `${moment(
-                                item.bookingDate
-                            ).format("YYYY-MM-DD")}T${item.startTime}Z`;
-                            const end: string = `${moment(
-                                item.bookingDate
-                            ).format("YYYY-MM-DD")}T${item.endTime}Z`;
+                            // const start: string = `${moment(
+                            //     item.bookingDate
+                            // ).format("YYYY-MM-DD")}T${item.startTime}Z`;
+                            // const end: string = `${moment(
+                            //     item.bookingDate
+                            // ).format("YYYY-MM-DD")}T${item.endTime}Z`;
 
                             return (
                                 <div
@@ -113,8 +113,10 @@ const MyBookingWrapper = () => {
                                     <p className="flex gap-1 text-[12px] font-normal">
                                         <AccessTimeRoundedIcon fontSize="small" />
                                         <span>
-                                            {moment(start).format("HH:mm")} -{" "}
-                                            {moment(end).format("HH:mm")},{" "}
+                                            {item.startTime.slice(0,-3)} - {item.endTime.slice(0,-3)}
+                                            {/* {moment(start).format("HH:mm")} -{" "}
+                                            {moment(end).format("HH:mm")} */}
+                                            ,{" "}
                                             {moment(item.bookingDate).format(
                                                 "D MMM"
                                             )}
