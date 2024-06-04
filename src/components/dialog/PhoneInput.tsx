@@ -23,7 +23,7 @@ const PhoneInput = () => {
             )
             .then((res) => {
                 localStorage.setItem("businessId", businessId ?? "0");
-                window.location.replace(res.data.loginUrl); 
+                window.location.replace(res.data.loginUrl);
             });
     };
 
@@ -78,20 +78,25 @@ const PhoneInput = () => {
                     } ms-3`}
                 ></span>
             </button>
-            <div className=" my-3 text-center ">
-                <span className="text-[14px]">{t("or")}</span>
-            </div>
-            <button
-                onClick={handleLoginWithLine}
-                className="w-full  bg-[#06C755] text-center mb-5 hover:bg-[#06C755]-500 hover-opacity p-0.5 rounded-lg text-[#FFFFFF]"
-            >
-                <div className="flex items-center gap-2 justify-center text-[14px]">
-                    <img src="/LINE_logo.png" className="w-12 h-12 " />
-                    <div className=" font-bold text-center">
-                        {t("continueWithLINEAccount")}
+
+            {false && (
+                <>
+                    <div className=" my-3 text-center ">
+                        <span className="text-[14px]">{t("or")}</span>
                     </div>
-                </div>
-            </button>
+                    <button
+                        onClick={handleLoginWithLine}
+                        className="w-full  bg-[#06C755] text-center mb-5 hover:bg-[#06C755]-500 hover-opacity p-0.5 rounded-lg text-[#FFFFFF]"
+                    >
+                        <div className="flex items-center gap-2 justify-center text-[14px]">
+                            <img src="/LINE_logo.png" className="w-12 h-12 " />
+                            <div className=" font-bold text-center">
+                                {t("continueWithLINEAccount")}
+                            </div>
+                        </div>
+                    </button>
+                </>
+            )}
         </section>
     );
 };

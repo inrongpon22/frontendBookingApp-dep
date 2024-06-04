@@ -60,7 +60,7 @@
         "deleteSuccess": "Delete successfully",
         "sendMessageOption": "Choose how to send your notice",
         "maximumallowed": "Maximum allowed",
-        "ัyourPhoneNumber":"Your phone number",
+        "ัyourPhoneNumber": "Your phone number",
         "continueWithLINEAccount": "Continue with LINE account"
     },
     "title": {
@@ -203,6 +203,18 @@
                 "shortDescribe": "Short Describe",
                 "images": "Images"
             }
+        },
+        "booking": {
+            "create": {
+                "isBusinessOnly": {
+                    "label": "Business only",
+                    "desc": "This booking is for business only"
+                },
+                "isSendSMS": {
+                    "label": "Send SMS",
+                    "desc": "We will send SMS for reservation's details to customer"
+                }
+            }
         }
     },
     "formValidation": {
@@ -277,11 +289,16 @@
                 "username": {
                     "usernameReq": "Username is required",
                     "usernamesMin": "Username must be at least 2 characters",
-                    "usernameMax": "Username must be less than 50 characters"
+                    "usernameMax": "Username must be less than 50 characters",
+                    "placeholder": "Enter your name"
                 },
                 "phoneNumbers": {
                     "phoneNumberMin": "Phone number must be at least 10 digits",
-                    "phoneNumberMax": "Phone number must be less than 10 digits"
+                    "phoneNumberMax": "Phone number must be less than 10 digits",
+                    "placeholder": "Enter your phone number"
+                },
+                "notes": {
+                    "placeholder": "Add a note to the business"
                 }
             }
         }
