@@ -21,7 +21,7 @@ const BusinessAuth = () => {
         if (token) {
             getUserIdByAccessToken(accessToken ?? "", token ?? "").then(
                 (userId) => {
-                    getBusinessByUserId(userId, token).then((res) =>
+                    getBusinessByUserId(userId).then((res) =>
                         navigate(`/business-profile/${res[0].id}`)
                     );
                 }

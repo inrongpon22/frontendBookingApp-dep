@@ -149,7 +149,8 @@
         "addServiceTime": "เพิ่มเวลาบริการ",
         "done": "เสร็จสิ้น",
         "btnSMS":"ข้อความ SMS",
-        "btnLINE": "ข้อความ LINE"
+        "btnLINE": "ข้อความ LINE",
+        "shareBookingWeb": "แชร์เว็บไซต์การจอง"
     },
     "noti": {
         "business": {

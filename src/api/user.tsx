@@ -1,5 +1,6 @@
 import axios from "axios";
 import { app_api } from "../helper/url";
+import { axiosInstance } from "../helper/apiProtecter";
 
 const language = localStorage.getItem("lang");
 
@@ -57,8 +58,7 @@ export const getUserIdByAccessToken = async (
 export const getLineProfile = async (accessToken: string) => {
     try {
         const lineProfile = await axios.get(
-            `${
-                import.meta.env.VITE_APP_API
+            `${import.meta.env.VITE_APP_API
             }/get-line-profile?accessToken=${accessToken}`
         );
         return lineProfile.data;
@@ -69,13 +69,9 @@ export const getLineProfile = async (accessToken: string) => {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const checkTokenValidity = async (token: string) => {
+export const checkTokenValidity = async () => {
     try {
-        const response = await axios.get(`${app_api}/auth/status`, {
-            headers: {
-                Authorization: token,
-            },
-        });
+        const response = await axiosInstance.get(`/auth/status`);
         return response;
     } catch (error) {
         console.error(error);
