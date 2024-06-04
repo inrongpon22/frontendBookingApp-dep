@@ -44,7 +44,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 
 export default function ListServiceCard(props: IProps) {
     const token = localStorage.getItem("token") ?? "";
-    const lan = localStorage.getItem("lang");
+    const lan = localStorage.getItem("i18nextLng");
 
     const handleDeleteService = async () => {
         try {

@@ -1,5 +1,11 @@
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useNavigate,
+} from "react-router-dom";
 import "./i18n.ts";
 // components
 import ShopDetailsPageWrapper from "./pages/shop-detials/ShopDetailsPageWrapper";
@@ -49,27 +55,45 @@ function App() {
                 setIsLoading(false);
             } else {
                 console.log("Token is not valid");
-                navigate('/');
+                navigate("/");
                 setIsLoading(false);
             }
-
         }, [navigate]);
 
         return (
             <Routes>
-                <Route path="/business-profile/:businessId" element={<BusinessProfile />} />
-                <Route path="/booking-approval/:businessId" element={<BookingApproval />} />
+                <Route
+                    path="/business-profile/:businessId"
+                    element={<BusinessProfile />}
+                />
                 <Route path="/my-bookings" element={<MyBookingWrapper />} />
-                <Route path="/booking/:bookingId" element={<BookingSummaryWrapper />} />
-                <Route path="/business-overview" element={<BusinessOverview />} />
+                <Route
+                    path="/business-overview"
+                    element={<BusinessOverview />}
+                />
                 <Route path="/create-business" element={<BusinessSetting />} />
                 <Route path="/business-setting" element={<BusinessSetting />} />
-                <Route path="/service/:businessId" element={<ServiceDetail serviceId={0} />} />
-                <Route path="/service-setting/:businessId" element={<ServiceSetting />} />
-                <Route path="/service-detail/:businessId/:serviceId" element={<ServiceDetail serviceId={0} />} />
+                <Route
+                    path="/service/:businessId"
+                    element={<ServiceDetail serviceId={0} />}
+                />
+                <Route
+                    path="/service-setting/:businessId"
+                    element={<ServiceSetting />}
+                />
+                <Route
+                    path="/service-detail/:businessId/:serviceId"
+                    element={<ServiceDetail serviceId={0} />}
+                />
                 <Route path="/noti/:businessId" element={<Noti />} />
-                <Route path="/dayoff-setting/:businessId" element={<DayOffSetting />} />
-                <Route path="/dayoff-setting/:businessId/add-new" element={<AddNewDayOff />} />
+                <Route
+                    path="/dayoff-setting/:businessId"
+                    element={<DayOffSetting />}
+                />
+                <Route
+                    path="/dayoff-setting/:businessId/add-new"
+                    element={<AddNewDayOff />}
+                />
                 <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
         );
@@ -85,6 +109,14 @@ function App() {
                     <Route
                         path="/details/:businessId"
                         element={<ShopDetailsPageWrapper />}
+                    />
+                    <Route
+                        path="/booking-approval/:businessId"
+                        element={<BookingApproval />}
+                    />
+                    <Route
+                        path="/booking/:bookingId"
+                        element={<BookingSummaryWrapper />}
                     />
                     <Route
                         path="/booking-success"
