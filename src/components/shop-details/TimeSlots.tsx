@@ -270,7 +270,7 @@ const TimeSlots = ({
                         setSelectedIndices(new Set());
                     }}
                 >
-                    ล้างข้อมูล
+                    {t('fragment:clear')}
                 </span>
             </p>
             <div

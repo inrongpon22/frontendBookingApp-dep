@@ -295,7 +295,8 @@
         "noBookingReq": "No booking request",
         "noTimeSlots": "No time slots available",
         "noServicesYet": "Your business doesn't have any service, create service frist",
-        "tooManyRequest": "Too many requests. Please try again after 60 seconds."
+        "tooManyRequest": "Too many requests. Please try again after 60 seconds.",
+        "noPendingBooking": "No pending booking"
     },
     "fragment": {
         "needTo": "Need to",
@@ -305,7 +306,10 @@
         "manualAdjust": "Manually adjust",
         "optional": "optional",
         "amount": "amount",
-        "people": "people"
+        "people": "people",
+        "today": "Today",
+        "viewAll": "View all",
+        "clear": "Clear"
     },
     "placeholder": {
         "bookingReject": "Ex. The service is not available at the requested time.",
