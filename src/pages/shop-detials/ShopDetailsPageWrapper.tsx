@@ -76,7 +76,7 @@ const ShopDetailsPageWrapper = () => {
 
     // handle services state
     const [services, setServices] = useState<serviceTypes[]>([]);
-    const [serviceById, setServiceById] = useState<InsertService>();
+    const [serviceById, setServiceById] = useState<any>();
 
     const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
         new Set()
@@ -87,9 +87,19 @@ const ShopDetailsPageWrapper = () => {
 
     const slotArrays = serviceById?.bookingSlots.find(
         (item: { daysOpen: string | any[]; availableFromDate: any }) =>
-            item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
-            selectedDate.date.isSameOrAfter(item.availableFromDate)
+            item.daysOpen?.includes(selectedDate.date.format("dddd"))
+        // &&
+        // selectedDate.date.isSameOrAfter(item.availableFromDate)
     );
+
+    const isConfirmable =
+        slotArrays?.slotsTime
+            ?.filter((ii: any) => ii.isSelected)
+            .reduce(
+                (min: any, current: any) =>
+                    current.capacity < min.capacity ? current : min,
+                slotArrays?.slotsTime[0]
+            )?.capacity >= quantities.quantities;
 
     // get business by businessId from params
     const { error: bussDataError } = useSWR(
@@ -220,8 +230,6 @@ const ShopDetailsPageWrapper = () => {
                         quantities={quantities}
                         setQuantities={setQuantities}
                         serviceById={serviceById}
-                        selectedDate={selectedDate}
-                        setServiceById={setServiceById}
                     />
 
                     <Calendar
@@ -250,14 +258,26 @@ const ShopDetailsPageWrapper = () => {
                     <button
                         type="button"
                         disabled={
-                            !slotArrays?.slotsTime.find(
-                                (item) => item.isSelected
-                            )
+                            slotArrays?.slotsTime
+                                ?.filter((ii: any) => ii.isSelected)
+                                .reduce(
+                                    (min: any, current: any) =>
+                                        current.capacity < min.capacity
+                                            ? current
+                                            : min,
+                                    slotArrays?.slotsTime[0]
+                                )?.capacity < quantities.quantities
                         }
                         className={`${
-                            !slotArrays?.slotsTime.find(
-                                (item) => item.isSelected
-                            )
+                            slotArrays?.slotsTime
+                                ?.filter((ii: any) => ii.isSelected)
+                                .reduce(
+                                    (min: any, current: any) =>
+                                        current.capacity < min.capacity
+                                            ? current
+                                            : min,
+                                    slotArrays?.slotsTime[0]
+                                )?.capacity < quantities.quantities
                                 ? "bg-gray-300"
                                 : "bg-[#020873]"
                         }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
@@ -278,11 +298,7 @@ const ShopDetailsPageWrapper = () => {
                                     guestNumber: quantities.quantities,
                                 })
                             );
-                            if (
-                                slotArrays?.slotsTime.filter(
-                                    (item) => item.isSelected
-                                )
-                            ) {
+                            if (isConfirmable) {
                                 if (isTokenValid) {
                                     setShowDialog(true);
                                     setDialogState("booking-detail-preview");

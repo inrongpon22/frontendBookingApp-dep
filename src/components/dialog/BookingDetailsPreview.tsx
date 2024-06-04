@@ -121,7 +121,6 @@ const BookingDetailsPreview = () => {
                             },
                         })
                         .then((res: any) => {
-                            console.log(res.data);
                             formik.setValues({
                                 userId: Number(res.data.id),
                                 username: res.data.name ?? "",
@@ -191,7 +190,7 @@ const BookingDetailsPreview = () => {
                     mutateReservationByBusinessId();
                     setDialogState("business-more-options");
                     setShowDialog(false);
-                    toast.success("การสร้างการจองด้วยตัวเองสำเร็จ");
+                    toast.success(t("noti:booking:create:success"));
                     localStorage.removeItem("bookingDetail");
                     formik.resetForm();
                 } else {
@@ -257,10 +256,10 @@ const BookingDetailsPreview = () => {
                 } flex justify-between items-center border rounded-lg p-3`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
-                        จองไว้สำหรับร้านค้าเท่านั้น
+                        {t("form:booking:create:isBusinessOnly:label")}
                     </span>
                     <span className="text-[12px] font-normal">
-                        ลูกค้าจะไม่สามารถใช้บริการในวันและเวลาที่ร้านสำรองไว้ได้
+                        {t("form:booking:create:isBusinessOnly:desc")}
                     </span>
                 </p>
                 <IOSSwitch
@@ -288,7 +287,9 @@ const BookingDetailsPreview = () => {
                                 ? "border-2 border-rose-500"
                                 : "border"
                         }`}
-                        placeholder="ชื่อที่ต้องการใช้จอง"
+                        placeholder={t(
+                            "formValidation:booking:create:username:placeholder"
+                        )}
                     />
                     {formik.touched.username && formik.errors.username && (
                         <span className="text-[14px] text-rose-500">
@@ -309,7 +310,9 @@ const BookingDetailsPreview = () => {
                                 ? "border-2 border-rose-500"
                                 : "border"
                         }`}
-                        placeholder="เบอร์โทรศัพท์ที่ต้องการใช้จอง"
+                        placeholder={t(
+                            "formValidation:booking:create:phoneNumbers:placeholder"
+                        )}
                     />
                     {formik.touched.phoneNumbers &&
                         formik.errors.phoneNumbers && (
@@ -323,11 +326,10 @@ const BookingDetailsPreview = () => {
                         } flex justify-between items-center border rounded-lg p-3 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
-                                ส่งข้อความ SMS
+                                {t("form:booking:create:isSendSMS:label")}
                             </span>
                             <span className="text-[12px] font-normal">
-                                เราจะส่งข้อความ SMS รายละเอียดการจองเช่น วันที่
-                                เวลา ประเภทของบริการ และอื่นๆ
+                                {t("form:booking:create:isSendSMS:desc")}
                             </span>
                         </p>
                         <IOSSwitch
@@ -347,7 +349,9 @@ const BookingDetailsPreview = () => {
                         rows={3}
                         {...formik.getFieldProps("additionalNotes")}
                         className="w-full py-3 px-3 mt-1 border rounded-lg text-[14px] font-normal"
-                        placeholder="รายละเอียดที่ต้องการเพิ่มเติม"
+                        placeholder={t(
+                            "formValidation:booking:create:notes:placeholder"
+                        )}
                     />
                 </div>
                 <div className="flex flex-col py-0">

@@ -9,47 +9,21 @@ interface QuantityProps {
   quantities: any;
   setQuantities: Function;
   serviceById: any;
-  selectedDate: any;
-  setServiceById: Function;
 }
 
 const Quantity = ({
   quantities,
   setQuantities,
   serviceById,
-  selectedDate,
-  setServiceById,
 }: QuantityProps) => {
 
   // i18n
   const { t } = useTranslation();
 
-  // find available time slots from daysOpen and availableFromDate
-  // const slotArrays = serviceById?.bookingSlots.find(
-  //   (item: any) =>
-  //     item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
-  //     selectedDate.date.isAfter(item.availableFromDate)
-  // );
-
   // handle quantity chage
   const quantityChanges = (type: string) => {
     switch (type) {
       case "increase":
-        setServiceById({
-          ...serviceById,
-          bookingSlots: serviceById?.bookingSlots.map((item: any) => {
-            if (item.daysOpen.includes(selectedDate.date.format("dddd"))) {
-              return {
-                ...item,
-                slotsTime: item.slotsTime?.map((mm: any) => {
-                  return { ...mm, isSelected: false };
-                }),
-              };
-            } else {
-              return item;
-            }
-          }),
-        });
         setQuantities({
           ...quantities,
           quantities:

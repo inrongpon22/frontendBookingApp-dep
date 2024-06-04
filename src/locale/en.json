@@ -208,6 +208,18 @@
                 "shortDescribe": "Short Describe",
                 "images": "Images"
             }
+        },
+        "booking": {
+            "create": {
+                "isBusinessOnly": {
+                    "label": "Business only",
+                    "desc": "This booking is for business only"
+                },
+                "isSendSMS": {
+                    "label": "Send SMS",
+                    "desc": "We will send SMS for reservation's details to customer"
+                }
+            }
         }
     },
     "formValidation": {
@@ -282,11 +294,16 @@
                 "username": {
                     "usernameReq": "Username is required",
                     "usernamesMin": "Username must be at least 2 characters",
-                    "usernameMax": "Username must be less than 50 characters"
+                    "usernameMax": "Username must be less than 50 characters",
+                    "placeholder": "Enter your name"
                 },
                 "phoneNumbers": {
                     "phoneNumberMin": "Phone number must be at least 10 digits",
-                    "phoneNumberMax": "Phone number must be less than 10 digits"
+                    "phoneNumberMax": "Phone number must be less than 10 digits",
+                    "placeholder": "Enter your phone number"
+                },
+                "notes": {
+                    "placeholder": "Add a note to the business"
                 }
             }
         }
@@ -300,7 +317,8 @@
         "noBookingReq": "No booking request",
         "noTimeSlots": "No time slots available",
         "noServicesYet": "Your business doesn't have any service, create service frist",
-        "tooManyRequest": "Too many requests. Please try again after 60 seconds."
+        "tooManyRequest": "Too many requests. Please try again after 60 seconds.",
+        "noPendingBooking": "No pending booking"
     },
     "fragment": {
         "needTo": "Need to",
@@ -310,7 +328,10 @@
         "manualAdjust": "Manually adjust",
         "optional": "optional",
         "amount": "amount",
-        "people": "people"
+        "people": "people",
+        "today": "Today",
+        "viewAll": "View all",
+        "clear": "Clear"
     },
     "placeholder": {
         "bookingReject": "Ex. The service is not available at the requested time.",
