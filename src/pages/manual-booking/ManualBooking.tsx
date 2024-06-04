@@ -148,8 +148,6 @@ const ManualBooking = () => {
                     quantities={quantities}
                     setQuantities={setQuantities}
                     serviceById={serviceById}
-                    selectedDate={selectedDate}
-                    setServiceById={setServiceById}
                 />
 
                 <Calendar
