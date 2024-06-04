@@ -38,7 +38,7 @@ const BookingApproval = (): React.ReactElement => {
     const query = useQuery();
 
     const token: string | null = localStorage.getItem("token");
-    const lang: string | null = localStorage.getItem("lang");
+    const lang: string | null = localStorage.getItem("i18nextLng");
 
     const {
         t,
@@ -285,16 +285,14 @@ const BookingApproval = (): React.ReactElement => {
                 rejectRequested,
                 bookingDatas,
                 setBookingDatas,
-            }}
-        >
+            }}>
             <div className="h-dvh flex flex-col overflow-x-hidden">
                 <div className="flex drop-shadow-lg p-4 font-semibold text-[14px] border-b">
                     <button
                         type="button"
                         onClick={() =>
                             navigate(`/business-profile/${businessId}`)
-                        }
-                    >
+                        }>
                         <ArrowBackIosIcon fontSize="small" />
                     </button>
                     <span className="mx-auto">Booking lists</span>
@@ -393,8 +391,7 @@ const BookingApproval = (): React.ReactElement => {
                                             <Accordion
                                                 defaultExpanded={
                                                     index === 0 ? true : false
-                                                }
-                                            >
+                                                }>
                                                 <AccordionSummary
                                                     expandIcon={
                                                         <ExpandMoreIcon />
@@ -404,8 +401,7 @@ const BookingApproval = (): React.ReactElement => {
                                                     }-content`}
                                                     id={`panel${
                                                         index + 1
-                                                    }-header`}
-                                                >
+                                                    }-header`}>
                                                     <span className="w-3/4">
                                                         {`${date} ${
                                                             monthsOfYearFullName(
@@ -434,8 +430,7 @@ const BookingApproval = (): React.ReactElement => {
                                                                 case 1:
                                                                     return "bg-green-500";
                                                             }
-                                                        })()}`}
-                                                    >
+                                                        })()}`}>
                                                         {item.children?.length}{" "}
                                                         {tabStatus == 0
                                                             ? t("pending")
@@ -449,8 +444,7 @@ const BookingApproval = (): React.ReactElement => {
                                                         item.children.length > 1
                                                             ? "grid md:grid-cols-2 gap-2"
                                                             : ""
-                                                    }
-                                                >
+                                                    }>
                                                     {item.children.map(
                                                         (
                                                             ii: any,

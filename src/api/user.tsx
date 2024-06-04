@@ -2,7 +2,7 @@ import axios from "axios";
 import { app_api } from "../helper/url";
 import { axiosInstance } from "../helper/apiProtecter";
 
-const language = localStorage.getItem("lang");
+const language = localStorage.getItem("i18nextLng");
 
 export const ReqOtp = async (phoneNumber: string) => {
     try {
@@ -58,7 +58,8 @@ export const getUserIdByAccessToken = async (
 export const getLineProfile = async (accessToken: string) => {
     try {
         const lineProfile = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/get-line-profile?accessToken=${accessToken}`
         );
         return lineProfile.data;

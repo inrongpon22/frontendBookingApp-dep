@@ -151,6 +151,8 @@
         "discard": "Discard",
         "addServiceTime": "Add Service Time",
         "done": "Done",
+        "btnSMS": "Message SMS",
+        "btnLINE": "Message LINE",
         "shareBookingWeb": "Share Booking Website",
         "saveQRcode": "Save QR code"
     },
