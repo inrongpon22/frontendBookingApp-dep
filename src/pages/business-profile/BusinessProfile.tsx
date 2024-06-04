@@ -290,7 +290,7 @@ const BusinessProfile = () => {
                         )
                     ) : (
                         <span className="flex justify-center text-[#A1A1A1] text-[12px] font-normal py-3">
-                            คุณยังไม่มีรายการที่เข้ามารับบริการในวันนี้
+                            {t("error:noComingBookingToday")}
                         </span>
                     )}
                 </div>
