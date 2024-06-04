@@ -37,7 +37,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogWrapper = ({ userSide }: DialogTypes) => {
+const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
     const navigate = useNavigate();
     const query = useQuery();
     const { t } = useTranslation();
@@ -64,7 +64,7 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         },
         validationSchema:
             confirmationDialogSchemas[
-            dialogState as keyof typeof confirmationDialogSchemas
+                dialogState as keyof typeof confirmationDialogSchemas
             ],
         onSubmit: async (values) => {
             switch (dialogState) {
@@ -111,8 +111,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                         query.get("accessCode")
                                             ? setShowDialog(false)
                                             : setDialogState(
-                                                "booking-detail-preview"
-                                            );
+                                                  "booking-detail-preview"
+                                              );
                                         break;
 
                                     case "business":
@@ -180,18 +180,22 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
     });
 
     const DialogHeader = (): string => {
-        switch (dialogState) {
-            case "booking-detail-preview":
-                return t("title:confirmBookingDialogHeader");
+        if (headerTitle) {
+            return headerTitle;
+        } else {
+            switch (dialogState) {
+                case "booking-detail-preview":
+                    return t("title:confirmBookingDialogHeader");
 
-            case "booking-approval-summary":
-                return t("title:bookingApproval");
+                case "booking-approval-summary":
+                    return t("title:bookingApproval");
 
-            case "booking-approval-reject":
-                return t("title:bookingReject");
+                case "booking-approval-reject":
+                    return t("title:bookingReject");
 
-            default:
-                return "";
+                default:
+                    return "";
+            }
         }
     };
 
@@ -273,7 +277,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
         <DialogContext.Provider
             value={{
                 formik,
-            }}>
+            }}
+        >
             <Dialog
                 maxWidth="xl"
                 fullWidth
@@ -287,7 +292,8 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                             : "",
                 }}
                 TransitionComponent={Transition}
-                onClose={() => setShowDialog(false)}>
+                onClose={() => setShowDialog(false)}
+            >
                 {dialogState !== "business-more-options" && (
                     <Toolbar className="grid grid-cols-4">
                         <span
@@ -296,8 +302,9 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                                 dialogState === "booking-approval-reject"
                                     ? "hidden"
                                     : ""
-                                }`}
-                            onClick={handleBackButton}>
+                            }`}
+                            onClick={handleBackButton}
+                        >
                             {[
                                 "phone-input",
                                 "booking-approval-summary",
