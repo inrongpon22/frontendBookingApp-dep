@@ -62,7 +62,7 @@
         "or": "หรือ",
         "continueWithLINEAccount": "ดำเนินการต่อด้วยบัญชีไลน์",
         "sendMessageOption": "เลือกวิธีส่งการแจ้งเตือน",
-        "ัyourPhoneNumber":"หมายเลขโทรศัพท์ของคุณ"
+        "ัyourPhoneNumber": "หมายเลขโทรศัพท์ของคุณ"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -113,7 +113,8 @@
         "autoApprove": "การจองของลูกค้าไม่ต้องการการยืนยันจากคุณ",
         "desUpdate": "การอัปเดตของคุณเสร็จสมบูรณ์แล้ว!",
         "desAllDone": "คุณสร้างธุรกิจของคุณสำเร็จแล้ว",
-        "desLimitGuest": "จำกัดจำนวนช่วงเวลาที่สามารถจองได้ในการจองหนึ่งครั้ง"
+        "desLimitGuest": "จำกัดจำนวนช่วงเวลาที่สามารถจองได้ในการจองหนึ่งครั้ง",
+        "desScanMe": "สแกนรหัส QR นี้และเริ่มจอง"
     },
     "button": {
         "cancel": "ไม่ใช่ตอนนี้",
@@ -148,9 +149,10 @@
         "discard": "ทิ้ง",
         "addServiceTime": "เพิ่มเวลาบริการ",
         "done": "เสร็จสิ้น",
-        "btnSMS":"ข้อความ SMS",
+        "btnSMS": "ข้อความ SMS",
         "btnLINE": "ข้อความ LINE",
-        "shareBookingWeb": "แชร์เว็บไซต์การจอง"
+        "shareBookingWeb": "แชร์เว็บไซต์การจอง",
+        "saveQRcode": "บันทึก QR code"
     },
     "noti": {
         "business": {
