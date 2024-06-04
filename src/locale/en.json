@@ -91,7 +91,9 @@
         "conceptWord": "Make bookings easy",
         "UpdateSuccessful": "Update Successful",
         "alldone": "All done",
-        "limitGuest": "Limit Guest"
+        "limitGuest": "Limit Guest",
+        "addMoreService": "Add More Service",
+        "firstCongrat": "Congratulations!"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -111,7 +113,8 @@
         "autoApprove": "Customer's booking does not require your confirmation.",
         "desUpdate": "Your update has been successfully completed!",
         "desAllDone": "You've successfully created your business.",
-        "desLimitGuest": "Limits number of time slot that can book in one booking."
+        "desLimitGuest": "Limits number of time slot that can book in one booking.",
+        "firstCongrat": "You've successfully created your business. Let's share your business."
     },
     "button": {
         "cancel": "Cancel",

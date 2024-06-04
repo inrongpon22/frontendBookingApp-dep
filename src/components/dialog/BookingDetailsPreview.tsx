@@ -120,12 +120,12 @@ const BookingDetailsPreview = () => {
                                 Authorization: `${token}`,
                             },
                         })
-                        .then((res) => {
+                        .then((res:any) => {
                             console.log(res.data);
                             formik.setValues({
                                 userId: Number(res.data.id),
                                 username: res.data.name ?? "",
-                                phoneNumbers: res.data.phoneNumber,
+                                phoneNumbers: res.data.phoneNumber ?? "",
                                 otp: "",
                                 additionalNotes: "",
                                 isSendSMS: true,
@@ -185,6 +185,7 @@ const BookingDetailsPreview = () => {
                 }
             )
             .then((res) => {
+                localStorage.removeItem("bookingDetail");
                 setIsGlobalLoading(false);
                 if (pathname.includes("business")) {
                     mutateReservationByBusinessId();

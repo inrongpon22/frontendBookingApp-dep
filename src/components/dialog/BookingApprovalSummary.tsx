@@ -35,8 +35,6 @@ const BookingApprovalSummary = () => {
         { revalidateOnFocus: false }
     );
 
-    console.log(bookingDetailFromSMS?.status === "cancel");
-
     const BookingDataLists: { label: string; text: string }[] = [
         {
             label: `${t("services")}:`,
@@ -108,7 +106,7 @@ const BookingApprovalSummary = () => {
 
     // const handleCancelBooking = () => {};
 
-    const [noticeType, setNoticeType] = useState("")
+    const [noticeType, setNoticeType] = useState("");
 
     return (
         <div className="flex flex-col h-full">

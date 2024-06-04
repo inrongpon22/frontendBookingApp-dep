@@ -2,6 +2,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import useSWR from "swr";
 import { app_api, fetcher } from "../../helper/url";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface FirstTimeAddMoreServiceProps {
     handleClose: Function;
@@ -13,6 +14,8 @@ const FirstTimeAddMoreService = ({
     const { businessId } = useParams();
     const navigate = useNavigate();
 
+    const { t } = useTranslation();
+
     const { data } = useSWR(
         businessId && `${app_api}/serviceByBusinessId/${businessId}`,
         fetcher
@@ -22,7 +25,7 @@ const FirstTimeAddMoreService = ({
         <div className="bg-white mb-2 p-5">
             <p className="flex justify-between items-center">
                 <span className="text-[17px] font-bold">
-                    เพิ่มบริการของร้านคุณ
+                    {t("title:addMoreService")}
                 </span>
                 <CloseRoundedIcon
                     fontSize="small"
@@ -30,9 +33,7 @@ const FirstTimeAddMoreService = ({
                     onClick={(e) => handleClose(e)}
                 />
             </p>
-            <p className="py-2">
-                เพิ่มตัวเลือกบริการเพิ่มเติมเพื่อตอบสนองความต้องการของลูกค้าของคุณได้ดียิ่งขึ้น
-            </p>
+            <p className="py-2">{t("desc:addMoreService")}</p>
             {data?.length > 0 && (
                 <div className="border-2 rounded-lg p-5">
                     <p className="flex justify-between">
@@ -43,7 +44,10 @@ const FirstTimeAddMoreService = ({
                             <span className="font-bold text-[14px]">
                                 {data ? data[0]?.price : ""}฿
                             </span>
-                            <span className="font-normal"> / คน</span>
+                            <span className="font-normal">
+                                {" "}
+                                / {t("person")}
+                            </span>
                         </span>
                     </p>
                     <div className="">
@@ -58,7 +62,7 @@ const FirstTimeAddMoreService = ({
                 className="w-full bg-deep-blue bg-opacity-10 p-3 mt-3 text-[14px] font-semibold text-deep-blue rounded-lg"
                 onClick={() => navigate(`/service-setting/${businessId}`)}
             >
-                สร้างการบริการใหม่
+                {t("button:createNewService")}
             </button>
         </div>
     );

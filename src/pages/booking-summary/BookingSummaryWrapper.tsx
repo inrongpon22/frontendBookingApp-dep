@@ -138,7 +138,7 @@ const BookingSummaryWrapper = () => {
         ? bookingFromAccessCode
         : bookingById;
     const [noticeType, setNoticeType] = useState("")
-    console.log(noticeType)
+    
 
     const handleCancelBooking = async () => {
         await cancelBooking(token, bookingId, bookingById.serviceId, language, noticeType)
