@@ -22,7 +22,7 @@ interface IProps {
 }
 
 export default function SendMessageOption(props: IProps) {
-    console.log(props.noticeType)
+    // console.log(props.noticeType)
     const [smsChecked, setSmsChecked] = useState(true); // Default SMS checked
     const [lineChecked, setLineChecked] = useState(false);
 

@@ -16,6 +16,7 @@ import ConfirmCard from "./ConfirmCard";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import ShareQR from "./ShareQR";
+import { shareBookingLink } from "../../helper/alerts";
 
 interface IOptionsTypes {
     icon: any;
@@ -49,8 +50,8 @@ const BusinessProfileMoreOptions = () => {
                 icon: <LinkIcon />,
                 label: t("button:shareBookingWeb"),
                 url: undefined,
-                // function: () => shareBookingLink(businessId),
-                function: () => setOpenShareQR(true),
+                function: () => shareBookingLink(businessId),
+                // function: () => setOpenShareQR(true),
             },
         ],
         setting: [

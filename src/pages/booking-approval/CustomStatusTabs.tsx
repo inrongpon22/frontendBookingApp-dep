@@ -18,25 +18,45 @@ const CustomStatusTabs = (
         },
     });
 
+    // const AntTab = styled((props: any) => <Tab disableRipple {...props} />)(
+    //     ({ theme }) => ({
+    //         minWidth: "auto", // Add this line
+    //         fontWeight: theme.typography.fontWeightRegular,
+    //         fontSize: "14px !important",
+    //         padding: theme.spacing(1, 2),
+    //         margin: theme.spacing(1.5, 1),
+    //         color: "rgba(0, 0, 0, 0.85)",
+    //         background: "#f1f1f1d9",
+    //         borderRadius: "4px",
+    //         "&:hover": {
+    //             opacity: 1,
+    //             color: "#40a9ff",
+    //             background: "#F1F1F1",
+    //         },
+    //         "&.Mui-selected": {
+    //             color: "white",
+    //             fontWeight: theme.typography.fontWeightBold,
+    //             background: "rgba(2, 8, 115, 0.8)",
+    //         },
+    //     })
+    // );
+
     const AntTab = styled((props: any) => <Tab disableRipple {...props} />)(
         ({ theme }) => ({
-            minWidth: "auto", // Add this line
             fontWeight: theme.typography.fontWeightRegular,
-            fontSize: "14px !important",
-            padding: theme.spacing(1, 2),
-            margin: theme.spacing(1.5, 1),
+            margin: theme.spacing(1),
+            padding: "8px 16px !important",
             color: "rgba(0, 0, 0, 0.85)",
-            background: "#f1f1f1d9",
-            borderRadius: "4px",
             "&:hover": {
-                opacity: 1,
                 color: "#40a9ff",
-                background: "#F1F1F1",
+                opacity: 1,
             },
             "&.Mui-selected": {
-                color: "white",
-                fontWeight: theme.typography.fontWeightBold,
-                background: "rgba(2, 8, 115, 0.8)",
+                color: "#020873",
+                background: "#E6E7F1",
+                border: "1px solid #020873 !important",
+                fontWeight: theme.typography.fontWeightMedium,
+                borderRadius: "66px",
             },
         })
     );
@@ -44,13 +64,13 @@ const CustomStatusTabs = (
     return (
         <Box sx={{ bgcolor: "#fff" }}>
             <AntTabs
-            className="px-5"
+            className=""
                 value={tabStatus}
                 onChange={(_, newValue: number) => setTabStatus(newValue)}
             >
-                <AntTab
+                {/* <AntTab
                     label={`${t("all")} `}
-                />
+                /> */}
                 <AntTab
                     label={`${t("pending")} `}
                 />
