@@ -208,41 +208,41 @@ const BookingDetailsPreview = () => {
     const getLast = filterSelected[filterSelected?.length - 1];
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 ">
             <div className="">
-                <p className="text-[14px] font-semibold">
+                <p className="text-[14px] font-semibold ms-3">
                     {t("bookingDetails")}
                 </p>
-                <div className="flex flex-col gap-4 border rounded-md p-3 mt-1">
+                <div className="bg-[#F7F7F7] flex flex-col gap-4 border rounded-md p-3 mt-1">
                     <p className="flex justify-between">
-                        <span>{t("services")}:</span>
-                        <span className="text-[1rem] font-bold">
+                        <span className="text-[14px]">{t("services")}:</span>
+                        <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById.title}
                         </span>
                     </p>
                     <p className="flex justify-between">
-                        <span>{t("date")}:</span>
-                        <span className="text-[1rem] font-bold">
+                        <span className="text-[14px]">{t("date")}:</span>
+                        <span className="text-[14px] font-bold">
                             {moment(
                                 JSON.parse(bookingDetail).selectedDate.date
                             ).format("MMMM DD, YYYY")}
                         </span>
                     </p>
                     <p className="flex justify-between">
-                        <span>{t("time")}:</span>
-                        <span className="text-[1rem] font-bold">
+                        <span className="text-[14px]">{t("time")}:</span>
+                        <span className="text-[14px] font-bold">
                             {`${getFirst?.startTime} - ${getLast?.endTime}`}
                         </span>
                     </p>
                     <p className="flex justify-between">
-                        <span>{t("guests")}:</span>
-                        <span className="text-[.9rem] font-bold">
+                        <span className="text-[14px]">{t("guests")}:</span>
+                        <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail).guestNumber}
                         </span>
                     </p>
                     <p className="flex justify-between">
-                        <span>{t("price")}:</span>
-                        <span className="text-[1rem] font-bold">
+                        <span className="text-[14px]">{t("price")}:</span>
+                        <span className="text-[14px] font-bold">
                             {JSON.parse(bookingDetail)?.serviceById?.price}{" "}
                             {JSON.parse(bookingDetail)?.serviceById?.currency}
                         </span>
@@ -269,6 +269,7 @@ const BookingDetailsPreview = () => {
                     }
                 />
             </div>
+
             <div
                 className={
                     formik.values.isBusinessOnly
@@ -277,7 +278,7 @@ const BookingDetailsPreview = () => {
                 }>
                 <div>
                     <p className="flex justify-between items-center text-[14px] font-semibold">
-                        <span>{t("bookingName")}</span>
+                        <span className="ms-3">{t("bookingName")}</span>
                     </p>
                     <input
                         type="text"
@@ -299,7 +300,7 @@ const BookingDetailsPreview = () => {
                 </div>
                 <div className="mt-0">
                     <p className="flex justify-between items-center text-[14px] font-semibold">
-                        <span>{t("bookingNumbers")}</span>
+                        <span className="ms-3">{t("bookingNumbers")}</span>
                     </p>
                     <input
                         type="text"
@@ -344,7 +345,7 @@ const BookingDetailsPreview = () => {
                     </div>
                 </div>
                 <div className="mt-0">
-                    <p className="text-[14px] font-semibold">{t("notes")}</p>
+                    <p className="text-[14px] font-semibold ms-3">{t("notes")}</p>
                     <textarea
                         rows={3}
                         {...formik.getFieldProps("additionalNotes")}
@@ -354,11 +355,11 @@ const BookingDetailsPreview = () => {
                         )}
                     />
                 </div>
-                <div className="flex flex-col py-0">
+                {/* <div className="flex flex-col py-0">
                     <label htmlFor="" className="text-[12px] text-[#5C5C5C]">
                         {t("termsAndprivacy")}
                     </label>
-                </div>
+                </div> */}
             </div>
             <button
                 type="button"

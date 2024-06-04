@@ -9,8 +9,8 @@
         "full": "Full",
         "reviewDetails": "Please review details carefully",
         "verifyPhoneNumber": "Verify Phone Number",
-        "verifyPhoneNumberDesc": "We will send a code - it help us keep yours account secure.",
-        "otpVerification": "Enter the 6-digit security code we send to you at ******",
+        "verifyPhoneNumberDesc": "We will send you a OTP code.",
+        "otpVerification": "Enter the 6-digit OTP code we sent to",
         "dontReceiveCode": "I didn’t receive a code",
         "bookingDetails": "Booking Details",
         "services": "Service",
@@ -104,7 +104,7 @@
         "bookingHasCancelled": "This appointment has been canceled. You can make a new appointment.",
         "bookingHasDeclined": "Sorry for the inconvenience. Your reservation has been declined.",
         "bookingHasExpired": "The available time has already passed. This appointment has expired.",
-        "waitingForApproval": "We’ve submitted it to the store. We’ll send you the details via SMS once booking is confirmed.",
+        "waitingForApproval": "We’ll send you the details via SMS once booking is confirmed.",
         "busineessApprovedSuccessful": "The system will send an SMS to the customer to notify them of this approval.",
         "busineessRejectedSuccessful": "The system will send an SMS to the customer to notify them of this rejection.",
         "discardChanges": "Are you sure you want to discard the changes?",
@@ -126,8 +126,8 @@
         "backToMyBooking": "Back to My Booking",
         "rebook": "Rebook",
         "goToMyBookingButton": "Go to My Booking",
-        "bookingButton": "Booking",
-        "confirmBookingButton": "Booking",
+        "bookingButton": "Book",
+        "confirmBookingButton": "Confirm",
         "continueButton": "Continue",
         "cancelBookingButton": "Cancel",
         "bookingFailedBackButton": "Back to main",
@@ -292,9 +292,9 @@
         "booking": {
             "create": {
                 "username": {
-                    "usernameReq": "Username is required",
-                    "usernamesMin": "Username must be at least 2 characters",
-                    "usernameMax": "Username must be less than 50 characters",
+                    "usernameReq": "Name is required",
+                    "usernamesMin": "Name must be at least 2 characters",
+                    "usernameMax": "Name must be less than 50 characters",
                     "placeholder": "Enter your name"
                 },
                 "phoneNumbers": {
@@ -316,9 +316,10 @@
         "bookingFailedMessage": "booking",
         "noBookingReq": "No booking request",
         "noTimeSlots": "No time slots available",
-        "noServicesYet": "Your business doesn't have any service, create service frist",
+        "noServicesYet": "Your business doesn't have any service, create service first",
         "tooManyRequest": "Too many requests. Please try again after 60 seconds.",
-        "noPendingBooking": "No pending booking"
+        "noPendingBooking": "No pending booking",
+        "noComingBookingToday": "No coming booking today"
     },
     "fragment": {
         "needTo": "Need to",

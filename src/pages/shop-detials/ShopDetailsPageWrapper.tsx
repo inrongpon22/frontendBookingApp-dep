@@ -309,13 +309,13 @@ const ShopDetailsPageWrapper = () => {
                         }}>
                         {t("button:bookingButton")}
                     </button>
-                    <span className="text-[12px] py-2">
+                    {/* <span className="text-[12px] py-2">
                         {t("reviewDetails")}
-                    </span>
+                    </span> */}
                 </div>
 
                 {/* Starts:: dialog */}
-                <DialogWrapper userSide="user" />
+                <DialogWrapper userSide="user" headerTitle={shopDetail?.title} />
                 {/* Ends:: dialog */}
             </div>
         </ThemeProvider>
