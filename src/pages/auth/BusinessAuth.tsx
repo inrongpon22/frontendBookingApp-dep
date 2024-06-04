@@ -31,10 +31,10 @@ const BusinessAuth = () => {
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen">
+        <div className="flex flex-col justify-center items-center h-screen overflow-hidden">
             <div className="flex flex-col justify-between items-center h-full w-5/6">
                 <div className="flex flex-col flex-grow justify-center">
-                    <div className="flex justify-center mt-50px">
+                    <div className="flex justify-center my-auto">
                         <img
                             src={"./smallLogo.svg"}
                             alt="logo"
