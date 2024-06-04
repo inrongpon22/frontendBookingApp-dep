@@ -10,10 +10,11 @@ export default function CallBack() {
     const queryParams = new URLSearchParams(location.search);
     const accessToken = queryParams.get("accessToken");
     const requestBy = queryParams.get("requestBy");
+    const businessId = localStorage.getItem("businessId");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { setShowDialog, setDialogState } =
-        useContext(GlobalContext);
+
+    const { setShowDialog, setDialogState } = useContext(GlobalContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -30,11 +31,14 @@ export default function CallBack() {
                 });
 
             if (requestBy == "business") {
+                console.log("business", requestBy);
                 const business = await getBusinessByUserId(userId);
                 if (business) {
                     setTimeout(() => {
                         setIsLoading(false);
-                        navigate(`/business-profile/${business.businessData?.id}`);
+                        navigate(
+                            `/business-profile/${business.businessData?.id}`
+                        );
                     }, 5000);
                 } else {
                     setTimeout(() => {
@@ -42,23 +46,10 @@ export default function CallBack() {
                         navigate("/create-business");
                     }, 5000);
                 }
-
-                // setTimeout(() => {
-                //     setIsLoading(false);
-                //     navigate("/create-business");
-                // }, 5000);
-
-                // setTimeout(() => {
-                //     setIsLoading(false);
-                //     navigate(`/business-profile/${res[0].id}`);
-                // }, 5000);
             } else if (requestBy === "customer") {
-                setTimeout(() => {
-                    setIsLoading(false);
-                    navigate("/details/12");
-                    setShowDialog(true);
-                    setDialogState("booking-detail-preview");
-                }, 5000);
+                console.log("customer", requestBy, businessId);
+                setIsLoading(false);
+                navigate(`/details/${businessId}`);
             }
         };
         if (accessToken) {
