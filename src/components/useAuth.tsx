@@ -11,7 +11,7 @@ const useAuth = () => {
             try {
                 const token = localStorage.getItem("token") ?? "";
                 if (token) {
-                    const response = await checkTokenValidity(token);
+                    const response = await checkTokenValidity();
                     setIsAuthenticated(response.status === 200);
                 } else {
                     setIsAuthenticated(false);

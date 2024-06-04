@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 // helper
-import { shareBookingLink } from "../../helper/alerts";
+// import { shareBookingLink } from "../../helper/alerts";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
@@ -15,6 +15,7 @@ import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import ConfirmCard from "./ConfirmCard";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
+import ShareQR from "./ShareQR";
 
 interface IOptionsTypes {
     icon: any;
@@ -27,6 +28,7 @@ const BusinessProfileMoreOptions = () => {
     const navigate = useNavigate();
     const { businessId } = useParams();
     const { t } = useTranslation();
+    const [openShareQR, setOpenShareQR] = useState<boolean>(false);
 
     const { setDialogState, setShowDialog } = useContext(GlobalContext);
 
@@ -45,9 +47,10 @@ const BusinessProfileMoreOptions = () => {
         share: [
             {
                 icon: <LinkIcon />,
-                label: t("button:shareBookingLink"),
+                label: t("button:shareBookingWeb"),
                 url: undefined,
-                function: () => shareBookingLink(businessId),
+                // function: () => shareBookingLink(businessId),
+                function: () => setOpenShareQR(true),
             },
         ],
         setting: [
@@ -98,6 +101,11 @@ const BusinessProfileMoreOptions = () => {
                 handleClose={() => setShowConfirmation(false)}
                 handleConfirm={handleLogout}
             />
+            <ShareQR
+                open={openShareQR}
+                url={`${window.location.origin}/details/${businessId}`}
+                businessId={businessId ?? ""}
+                handleClose={() => setOpenShareQR(false)} />
             {Object.values(moreOptions).map((options, index: number) => (
                 <div key={index} className="rounded-lg bg-white">
                     {options.map((item: IOptionsTypes, index: number) => (

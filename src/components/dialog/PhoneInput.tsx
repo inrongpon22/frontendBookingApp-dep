@@ -13,7 +13,7 @@ const PhoneInput = () => {
   const handleLoginWithLine = async () => {
     console.log("login with line");
     await axios
-      .get(`${import.meta.env.VITE_APP_API}/line-request-code`)
+      .get(`${import.meta.env.VITE_APP_API}/line-request-code/business`)
       .then((res) => {
         window.location.replace(res.data.loginUrl);
       });

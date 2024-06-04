@@ -171,17 +171,16 @@ const BusinessProfile = () => {
                                                 <span>
                                                     {`${moment(
                                                         item.bookingDate
-                                                    ).format("D")} ${
-                                                        monthsOfYearFullName(
-                                                            language
-                                                        )?.find(
-                                                            (ii) =>
-                                                                ii.value ===
-                                                                moment(
-                                                                    item.bookingDate
-                                                                ).format("MMMM")
-                                                        )?.name ?? ""
-                                                    }`}
+                                                    ).format("D")} ${monthsOfYearFullName(
+                                                        language
+                                                    )?.find(
+                                                        (ii) =>
+                                                            ii.value ===
+                                                            moment(
+                                                                item.bookingDate
+                                                            ).format("MMMM")
+                                                    )?.name ?? ""
+                                                        }`}
                                                 </span>
                                                 <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                                 <span>{item.userName}</span>
@@ -208,19 +207,16 @@ const BusinessProfile = () => {
                 <div className="flex justify-between items-center">
                     <p className="font-bold text-zinc-400">
                         {`วันนี้ 
-                        วัน${
-                            dayOfWeekFullName(language)?.find(
-                                (ii) => ii.value === moment().format("dddd")
-                            )?.name ?? ""
-                        }, ${moment().format("D")} ${
-                            monthsOfYearFullName(language)?.find(
+                        วัน${dayOfWeekFullName(language)?.find(
+                            (ii) => ii.value === moment().format("dddd")
+                        )?.name ?? ""
+                            }, ${moment().format("D")} ${monthsOfYearFullName(language)?.find(
                                 (ii) => ii.value === moment().format("MMMM")
                             )?.name ?? ""
-                        } ${
-                            language === "th"
+                            } ${language === "th"
                                 ? Number(moment().format("YYYY")) + 543
                                 : moment().format("YYYY")
-                        }`}
+                            }`}
                     </p>
                     <p
                         className="font-bold text-[10px] text-deep-blue text-opacity-60 underline cursor-pointer"
@@ -246,28 +242,25 @@ const BusinessProfile = () => {
                                         className="flex justify-between">
                                         <div className="flex gap-2">
                                             <p
-                                                className={`${
-                                                    item.status === "approval"
+                                                className={`${item.status === "approval"
                                                         ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                         : "bg-zinc-200 text-zinc-400"
-                                                } px-1 rounded`}>
+                                                    } px-1 rounded`}>
                                                 {item.startTime.slice(0, -3)}
                                             </p>
                                             <p
-                                                className={`${
-                                                    item.status === "approval"
+                                                className={`${item.status === "approval"
                                                         ? ""
                                                         : "text-zinc-400"
-                                                } font-semibold`}>
+                                                    } font-semibold`}>
                                                 {item.title}
                                             </p>
                                         </div>
                                         <p
-                                            className={`flex ${
-                                                item.status === "approval"
+                                            className={`flex ${item.status === "approval"
                                                     ? ""
                                                     : "text-zinc-400"
-                                            }`}>
+                                                }`}>
                                             <span>
                                                 {item.status === "approval"
                                                     ? item.userName
