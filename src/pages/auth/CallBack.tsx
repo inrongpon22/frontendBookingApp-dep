@@ -1,10 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { getLineProfile } from "../../api/user";
 import Loading from "../../components/dialog/Loading";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { getBusinessByUserId } from "../../api/business";
-import { GlobalContext } from "../../contexts/BusinessContext";
 
 export default function CallBack() {
     const queryParams = new URLSearchParams(location.search);
@@ -13,8 +11,6 @@ export default function CallBack() {
     const businessId = localStorage.getItem("businessId");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-
-    const { setShowDialog, setDialogState } = useContext(GlobalContext);
 
     useEffect(() => {
         setIsLoading(true);
