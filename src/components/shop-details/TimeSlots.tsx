@@ -38,8 +38,9 @@ const TimeSlots = ({
     // find available time slots from daysOpen and availableFromDate
     const slotArrays = serviceById?.bookingSlots.find(
         (item: { daysOpen: string | any[]; availableFromDate: any }) =>
-            item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
-            selectedDate.date.isAfter(item.availableFromDate)
+            item.daysOpen?.includes(selectedDate.date.format("dddd")) 
+            // &&
+            // selectedDate.date.isAfter(item.availableFromDate)
     );
 
     const handleSelectTime = (item: { startTime: string }, index: number) => {
@@ -270,7 +271,7 @@ const TimeSlots = ({
                         setSelectedIndices(new Set());
                     }}
                 >
-                    ล้างข้อมูล
+                    {t('fragment:clear')}
                 </span>
             </p>
             <div

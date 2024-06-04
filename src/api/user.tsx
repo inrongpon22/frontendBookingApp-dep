@@ -7,7 +7,7 @@ const language = localStorage.getItem("i18nextLng");
 export const ReqOtp = async (phoneNumber: string) => {
     try {
         const reqotp = await axios.post(
-            `${app_api}/requestOTP/${phoneNumber}/${language ?? "th"}`
+            `${app_api}/requestOTP/${phoneNumber}/${language ?? "th-TH"}`
         );
         return reqotp;
     } catch (error) {

@@ -76,12 +76,6 @@ const BusinessProfile = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getReservationByBusinessIdLoading]);
 
-    // useEffect(() => {
-    //     if (!token) {
-    //         navigate("/");
-    //     }
-    // }, []);
-
     return (
         <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
             {/* headers */}
@@ -104,7 +98,8 @@ const BusinessProfile = () => {
                         onClick={() => {
                             setDialogState("business-more-options");
                             setShowDialog(true);
-                        }}>
+                        }}
+                    >
                         <SettingsOutlinedIcon fontSize="small" />
                     </Badge>
                 </div>
@@ -140,7 +135,8 @@ const BusinessProfile = () => {
                                                     state: item,
                                                 }
                                             )
-                                        }>
+                                        }
+                                    >
                                         <div className="flex flex-col">
                                             <p className="flex items-center gap-1">
                                                 <span className="text-[14px] font-semibold">
@@ -179,6 +175,17 @@ const BusinessProfile = () => {
                                                                 ).format("MMMM")
                                                         )?.name ?? ""
                                                     }`}
+                                                    ).format("D")} ${
+                                                        monthsOfYearFullName(
+                                                            language
+                                                        )?.find(
+                                                            (ii) =>
+                                                                ii.value ===
+                                                                moment(
+                                                                    item.bookingDate
+                                                                ).format("MMMM")
+                                                        )?.name ?? ""
+                                                    }`}
                                                 </span>
                                                 <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                                 <span>{item.userName}</span>
@@ -193,7 +200,7 @@ const BusinessProfile = () => {
                         )
                     ) : (
                         <span className="flex justify-center text-[#A1A1A1] text-[12px] font-normal py-3">
-                            คุณยังไม่มีรายการจองที่รออนุมัติ
+                            {t("error:noPendingBooking")}
                         </span>
                     )}
                 </div>
@@ -203,8 +210,8 @@ const BusinessProfile = () => {
             <div className="text-[14px] bg-white p-5 mt-2">
                 <div className="flex justify-between items-center">
                     <p className="font-bold text-zinc-400">
-                        {`วันนี้ 
-                        วัน${
+                        {`${t("fragment:today")} 
+                        ${
                             dayOfWeekFullName(language)?.find(
                                 (ii) => ii.value === moment().format("dddd")
                             )?.name ?? ""
@@ -222,8 +229,9 @@ const BusinessProfile = () => {
                         className="font-bold text-[10px] text-deep-blue text-opacity-60 underline cursor-pointer"
                         onClick={() =>
                             navigate(`/booking-approval/${businessId}`)
-                        }>
-                        ดูทั้งหมด
+                        }
+                    >
+                        {t("fragment:viewAll")}
                     </p>
                 </div>
 
@@ -239,22 +247,29 @@ const BusinessProfile = () => {
                                 return (
                                     <div
                                         key={index}
-                                        className="flex justify-between">
+                                        className="flex justify-between"
+                                    >
                                         <div className="flex gap-2">
                                             <p
                                                 className={`${
                                                     item.status === "approval"
+                                                className={`${
+                                                    item.status === "approval"
                                                         ? "bg-deep-blue bg-opacity-10 text-deep-blue"
                                                         : "bg-zinc-200 text-zinc-400"
-                                                } px-1 rounded`}>
+                                                } px-1 rounded`}
+                                            >
                                                 {item.startTime.slice(0, -3)}
                                             </p>
                                             <p
                                                 className={`${
                                                     item.status === "approval"
+                                                className={`${
+                                                    item.status === "approval"
                                                         ? ""
                                                         : "text-zinc-400"
-                                                } font-semibold`}>
+                                                } font-semibold`}
+                                            >
                                                 {item.title}
                                             </p>
                                         </div>
@@ -263,7 +278,8 @@ const BusinessProfile = () => {
                                                 item.status === "approval"
                                                     ? ""
                                                     : "text-zinc-400"
-                                            }`}>
+                                            }`}
+                                        >
                                             <span>
                                                 {item.status === "approval"
                                                     ? item.userName
