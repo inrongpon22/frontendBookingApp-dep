@@ -60,6 +60,7 @@ function App() {
                 <Route path="/business-profile/:businessId" element={<BusinessProfile />} />
                 <Route path="/booking-approval/:businessId" element={<BookingApproval />} />
                 <Route path="/my-bookings" element={<MyBookingWrapper />} />
+                <Route path="/booking/:bookingId" element={<BookingSummaryWrapper />} />
                 <Route path="/business-overview" element={<BusinessOverview />} />
                 <Route path="/create-business" element={<BusinessSetting />} />
                 <Route path="/business-setting" element={<BusinessSetting />} />

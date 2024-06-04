@@ -44,7 +44,8 @@ const ShopDetailsPageWrapper = () => {
     const { t } = useTranslation();
 
     const token = localStorage.getItem("token");
-    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
+    const businessIdFromLocal = localStorage.getItem("businessId");
 
     const { setShowDialog, setDialogState, setIsGlobalLoading } =
         useContext(GlobalContext);
@@ -85,7 +86,7 @@ const ShopDetailsPageWrapper = () => {
     const [isTokenValid, setIsTokenValid] = useState<boolean>(false);
 
     const slotArrays = serviceById?.bookingSlots.find(
-        (item: { daysOpen: string | any[]; availableFromDate: any; }) =>
+        (item: { daysOpen: string | any[]; availableFromDate: any }) =>
             item.daysOpen?.includes(selectedDate.date.format("dddd")) &&
             selectedDate.date.isSameOrAfter(item.availableFromDate)
     );
@@ -129,8 +130,10 @@ const ShopDetailsPageWrapper = () => {
     const { isLoading: servByIdLoading, error: serviceByIdError } = useSWR(
         () =>
             services.find((item) => item.isSelected) &&
-            `${app_api}/service/${services.find((item: serviceTypes) => item.isSelected)?.id
-            }/${selectedDate.date.format("YYYY-MM-DD")}?${selectedDate.uniqueKey
+            `${app_api}/service/${
+                services.find((item: serviceTypes) => item.isSelected)?.id
+            }/${selectedDate.date.format("YYYY-MM-DD")}?${
+                selectedDate.uniqueKey
             }`,
         (url: string) =>
             axios.get(url).then((res) => {
@@ -185,7 +188,11 @@ const ShopDetailsPageWrapper = () => {
     // browser tab title
     useEffect(() => {
         document.title = shopDetail?.title || "Shop Detail";
-        localStorage.removeItem("bookingDetail");
+        // localStorage.removeItem("bookingDetail");
+        if (token && accessToken && businessIdFromLocal) {
+            setShowDialog(true);
+            setDialogState("booking-detail-preview");
+        }
     }, [shopDetail]);
 
     // catch errors api
@@ -247,12 +254,13 @@ const ShopDetailsPageWrapper = () => {
                                 (item) => item.isSelected
                             )
                         }
-                        className={`${!slotArrays?.slotsTime.find(
-                            (item) => item.isSelected
-                        )
-                            ? "bg-gray-300"
-                            : "bg-[#020873]"
-                            }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
+                        className={`${
+                            !slotArrays?.slotsTime.find(
+                                (item) => item.isSelected
+                            )
+                                ? "bg-gray-300"
+                                : "bg-[#020873]"
+                        }  text-white text-[14px] font-semibold w-full rounded-md py-3`}
                         onClick={async () => {
                             localStorage.setItem(
                                 "bookingDetail",

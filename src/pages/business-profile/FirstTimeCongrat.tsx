@@ -18,30 +18,29 @@ const FirstTimeCongrat = ({ handleClose }: FirstTimeCongratProps) => {
                 open={openShareQR}
                 url={`${window.location.origin}/details/${businessId}`}
                 businessId={businessId ?? ""}
-                handleClose={() => setOpenShareQR(false)} />
+                handleClose={() => setOpenShareQR(false)}
+            />
             <div className="bg-[#2E7CF6] bg-opacity-10 p-5 mb-2">
                 <p className="flex justify-between items-center">
-                    <span className="text-[17px] font-bold">ยินดีด้วย! 🎉</span>
+                    <span className="text-[17px] font-bold">
+                        {t("title:firstCongrat")} 🎉
+                    </span>
                     <CloseRoundedIcon
                         fontSize="small"
                         color="disabled"
                         onClick={() => handleClose()}
                     />
                 </p>
-                <p className="py-2">
-                    คุณได้เปิดร้านของคุณเรียบร้อยแล้ว!
-                    แชร์ลิ้งการจองร้านของคุณเพื่อต้อนรับลูกค้า.
-                </p>
+                <p className="py-2">{t("desc:firstCongrat")}</p>
                 <button
                     type="button"
                     className="w-full bg-deep-blue bg-opacity-80 p-3 mt-3 text-[14px] font-semibold text-white rounded-lg"
-                    onClick={() => setOpenShareQR(true)}
+                    onClick={() => shareBookingLink(businessId)}
                 >
                     {t("button:shareBookingWeb")}
                 </button>
             </div>
         </>
-
     );
 };
 

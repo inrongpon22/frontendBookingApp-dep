@@ -72,7 +72,6 @@ const DialogWrapper = ({ userSide }: DialogTypes) => {
                     setIsGlobalLoading(true);
                     await ReqOtp(values.phoneNumbers)
                         .then((res) => {
-                            console.log(res);
                             if (res.status === 200) {
                                 setIsGlobalLoading(false);
                                 setDialogState("otp-verify");
