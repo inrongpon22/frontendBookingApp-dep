@@ -120,7 +120,7 @@ const BookingDetailsPreview = () => {
                                 Authorization: `${token}`,
                             },
                         })
-                        .then((res:any) => {
+                        .then((res: any) => {
                             console.log(res.data);
                             formik.setValues({
                                 userId: Number(res.data.id),
@@ -254,8 +254,7 @@ const BookingDetailsPreview = () => {
             <div
                 className={`${
                     pathname.includes("business") ? "" : "hidden"
-                } flex justify-between items-center border rounded-lg p-3`}
-            >
+                } flex justify-between items-center border rounded-lg p-3`}>
                 <p className="flex flex-col pe-10">
                     <span className="text-[14px] font-bold">
                         จองไว้สำหรับร้านค้าเท่านั้น
@@ -276,8 +275,7 @@ const BookingDetailsPreview = () => {
                     formik.values.isBusinessOnly
                         ? "hidden"
                         : "mt-0 flex flex-col gap-3"
-                }
-            >
+                }>
                 <div>
                     <p className="flex justify-between items-center text-[14px] font-semibold">
                         <span>{t("bookingName")}</span>
@@ -322,8 +320,7 @@ const BookingDetailsPreview = () => {
                     <div
                         className={`${
                             pathname.includes("business") ? "" : "hidden"
-                        } flex justify-between items-center border rounded-lg p-3 mt-2`}
-                    >
+                        } flex justify-between items-center border rounded-lg p-3 mt-2`}>
                         <p className="flex flex-col pe-10">
                             <span className="text-[14px] font-bold">
                                 ส่งข้อความ SMS
@@ -370,8 +367,7 @@ const BookingDetailsPreview = () => {
                 disabled={
                     formik.errors?.username || formik.errors?.phoneNumbers
                 }
-                onClick={createReservation}
-            >
+                onClick={createReservation}>
                 {t("button:confirmBookingButton")}
             </button>
         </div>
