@@ -29,6 +29,7 @@ import Noti from "./pages/notification/Noti.tsx";
 import { useEffect, useState } from "react";
 import Loading from "./components/dialog/Loading.tsx";
 import { checkTokenValidity } from "./api/user.tsx";
+import SocialMedia from "./pages/social-media/SocialMedia.tsx";
 
 function App() {
     const [isLoadding, setIsLoading] = useState<boolean>(false);
@@ -92,6 +93,10 @@ function App() {
                 <Route
                     path="/dayoff-setting/:businessId/add-new"
                     element={<AddNewDayOff />}
+                />
+                <Route
+                    path="/social-media-accounts/:businessId"
+                    element={<SocialMedia />}
                 />
                 <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>

@@ -36,7 +36,7 @@ _axiosInstance.interceptors.response.use(
             window.location.href = "/";
         } else if (error.response.status === 403) {
             setTimeout(() => {
-                toast.error("403 Forbidden");
+                toast.error("403 Forbidden - Access Denied");
             });
         }
         // else if (error.response.status === 404) {

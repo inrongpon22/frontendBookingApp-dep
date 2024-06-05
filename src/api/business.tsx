@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { app_api } from "../helper/url";
 import { IaddBusiness } from "../interfaces/business";
 import { axiosInstance } from "../helper/apiProtecter";
-// import { getUserIdByAccessToken } from "./user";
+import { getUserIdByAccessToken } from "./user";
 
 export const insertBusiness = async (
     businessData: IaddBusiness,
@@ -70,33 +70,22 @@ export const getBusinessId = (businessId: number) => {
     };
 };
 
-// export const getBusinessIdByBusinessSide = async (businessId: number) => {
-//     const token = localStorage.getItem("token");
-//     const accessToken = localStorage.getItem("accessToken");
-//     let userId;
-//     await getUserIdByAccessToken(accessToken ?? "", token ?? "").then((res) => {
-//         userId = res;
-//     });
+export const getBusinessIdByBusinessSide = async (businessId: number) => {
+    const token = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = await getUserIdByAccessToken(accessToken ?? "", token ?? "");
 
-//     // eslint-disable-next-line react-hooks/rules-of-hooks
-//     const { data, error, isLoading } = useSWR(
-//         `${app_api}/businessByBusiness/${businessId}/${userId}`,
-//         (url: string) =>
-//             axios
-//                 .get(url, {
-//                     headers: {
-//                         authorization: localStorage.getItem("token"),
-//                     },
-//                 })
-//                 .then((res) => res.data)
-//     );
-
-//     return {
-//         businessData: data,
-//         businessError: error,
-//         businessLoading: isLoading,
-//     };
-// };
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    try {
+        const business = await axiosInstance.get(
+            `/businessByBusiness/${businessId}/${userId}`
+        );
+        return business.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 
 export const getBusinessByUserId = async (userId: string) => {
     try {

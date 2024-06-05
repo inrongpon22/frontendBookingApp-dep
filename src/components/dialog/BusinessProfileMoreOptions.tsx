@@ -14,9 +14,11 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 // import RepeatIcon from "@mui/icons-material/Repeat";
 // import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ConfirmCard from "./ConfirmCard";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import ShareQR from "./ShareQR";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import { getUserIdByAccessToken, getUserPhoneLine } from "../../api/user";
 
 interface IOptionsTypes {
     icon: any;
@@ -36,6 +38,25 @@ const BusinessProfileMoreOptions = () => {
 
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
+    const [userPhoneLine, setUserPhoneLine] = useState<{
+        phoneNumber: string;
+        line_userId: string;
+    }>();
+
+    useEffect(() => {
+        const fetch = async () => {
+            const token = localStorage.getItem("token");
+            const accessToken = localStorage.getItem("accessToken");
+            const userId = await getUserIdByAccessToken(
+                accessToken ?? "",
+                token ?? ""
+            );
+            const userPhoneLine = await getUserPhoneLine(userId);
+            setUserPhoneLine(userPhoneLine);
+        };
+        fetch();
+    }, []);
+
     const handleLogout = async () => {
         // reset dialog state
         setShowDialog(false);
@@ -48,7 +69,7 @@ const BusinessProfileMoreOptions = () => {
     const moreOptions = {
         share: [
             {
-                icon: <LinkIcon />,
+                icon: <IosShareIcon />,
                 label: t("button:shareBookingWeb"),
                 url: undefined,
                 // function: () => shareBookingLink(businessId),
@@ -81,6 +102,21 @@ const BusinessProfileMoreOptions = () => {
                 label: t("button:serviceSetting"),
                 url: `/add-to-home-screen`,
                 style: `${businessId ? "hidden" : ""}`
+            },
+            {
+                icon: <LinkIcon />,
+                label: t("button:linkaccounts"),
+                url: `/social-media-accounts/${businessId}?connectTo=${
+                    userPhoneLine &&
+                    (userPhoneLine?.phoneNumber == "" ||
+                        userPhoneLine?.phoneNumber == null)
+                        ? "phone"
+                        : userPhoneLine &&
+                          (userPhoneLine?.line_userId == "" ||
+                              userPhoneLine?.line_userId == null)
+                        ? "line"
+                        : "both"
+                }`,
             },
         ],
         account: [
@@ -122,6 +158,13 @@ const BusinessProfileMoreOptions = () => {
                             onClick={() => {
                                 if (item.url) {
                                     navigate(item.url);
+                                    if (
+                                        item.url.includes(
+                                            "social-media-accounts"
+                                        )
+                                    ) {
+                                        setShowDialog(false);
+                                    }
                                 } else if (item.function) {
                                     item.function();
                                 } else {
@@ -129,8 +172,7 @@ const BusinessProfileMoreOptions = () => {
                                         icon: <PriorityHighIcon />,
                                     });
                                 }
-                            }}
-                        >
+                            }}>
                             {item.icon}
                             <span className="mx-2">{item.label}</span>
                         </button>

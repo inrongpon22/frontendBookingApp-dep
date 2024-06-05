@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getLineProfile } from "../../api/user";
 import Loading from "../../components/dialog/Loading";
 import { useNavigate } from "react-router-dom";
@@ -27,14 +27,11 @@ export default function CallBack() {
                 });
 
             if (requestBy == "business") {
-                console.log("business", requestBy);
                 const business = await getBusinessByUserId(userId);
                 if (business) {
                     setTimeout(() => {
                         setIsLoading(false);
-                        navigate(
-                            `/business-profile/${business.businessData?.id}`
-                        );
+                        navigate(`/business-profile/${business[0].id}`);
                     }, 5000);
                 } else {
                     setTimeout(() => {
