@@ -323,7 +323,7 @@ export default function ServiceDetail(props: IParams) {
                             description={
                                 modifyServiceInfo?.serviceDescription ?? ""
                             }
-                            price={modifyServiceInfo?.price ?? 0}
+                            price={modifyServiceInfo?.price ?? ""}
                             isAutoApprove={isAutoApprove}
                             currency={modifyServiceInfo?.currency ?? ""}
                             bookingSlots={modifyServiceTime ?? []}

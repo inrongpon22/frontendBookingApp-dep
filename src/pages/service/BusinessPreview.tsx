@@ -27,7 +27,7 @@ interface BusinessPreviewProps {
     businessId: number;
     title: string;
     description: string;
-    price: number;
+    price: string;
     isAutoApprove: boolean;
     currency: string;
     bookingSlots: {
@@ -72,7 +72,7 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
     );
 
     useEffect(() => {
-        let newArr = [];
+        const newArr = [];
         for (let i = 0; i < calendar.end.diff(calendar.start, "day"); i++) {
             const element = calendar.start.clone().add(i, "day");
             newArr.push(element);
@@ -89,8 +89,7 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                     <button
                         type="button"
                         className="text-[14px] text-deep-blue bg-white rounded py-1 px-2"
-                        onClick={props.handleClose}
-                    >
+                        onClick={props.handleClose}>
                         {t("button:leavePreview")}
                     </button>
                 </div>
@@ -131,11 +130,11 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                         <div
                             // key={index}
                             className={`border-2 rounded-lg p-5 border-[#003B95] bg-[#006CE31A] text-[#003B95]`}
-                        // ${
-                        //   item.isSelected
-                        //     ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
-                        //     : ""
-                        // }
+                            // ${
+                            //   item.isSelected
+                            //     ? "border-[#003B95] bg-[#006CE31A] text-[#003B95]"
+                            //     : ""
+                            // }
                         >
                             <div className="">
                                 <p className="flex justify-between">
@@ -168,8 +167,7 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                 {/* quantities */}
                 <div
                     id="quantity"
-                    className="flex justify-between items-center px-5"
-                >
+                    className="flex justify-between items-center px-5">
                     <h2 className="text-[17px] font-semibold">
                         {t("numberOfGuests")}
                     </h2>
@@ -222,13 +220,14 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                                 <div
                                     key={index}
                                     className={`h-[72px] flex flex-col justify-center items-center border rounded-lg cursor-pointer
-                  ${moment().isSame(item, "day")
-                                            ? "border-2 border-[#003B95] bg-[#006CE31A] text-[#003B95]"
-                                            : ""
-                                        }`}
-                                // ${
-                                //   isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
-                                // }
+                  ${
+                      moment().isSame(item, "day")
+                          ? "border-2 border-[#003B95] bg-[#006CE31A] text-[#003B95]"
+                          : ""
+                  }`}
+                                    // ${
+                                    //   isOpen ? "" : "text-[#8B8B8B] bg-[#8B8B8B] bg-opacity-20"
+                                    // }
                                 >
                                     <p className="text-[14px] font-thin">
                                         {item.format("dd")}
@@ -250,42 +249,43 @@ const BusinessPreview = (props: BusinessPreviewProps) => {
                         <p>{t("time")}</p>
                     </h2>
                     <div
-                        className={`grid gap-4 mt-2 ${slotArrays
-                            ? slotArrays?.slotsTime.length === 1
-                                ? "grid-cols-1"
-                                : "grid-cols-2"
-                            : ""
-                            }`}
-                    >
+                        className={`grid gap-4 mt-2 ${
+                            slotArrays
+                                ? slotArrays?.slotsTime.length === 1
+                                    ? "grid-cols-1"
+                                    : "grid-cols-2"
+                                : ""
+                        }`}>
                         {slotArrays && slotArrays.slotsTime.length > 0 ? (
                             slotArrays?.slotsTime.map((ii: any, jj: number) => {
                                 return (
                                     <div
                                         key={jj}
-                                        className={`flex flex-col border-2 rounded-lg text-center p-3 ${ii?.capacity >= 1
-                                            ? " cursor-pointer"
-                                            : "text-[#8C8C8C] bg-[#8B8B8B33]"
-                                            } ${ii.isSelected
+                                        className={`flex flex-col border-2 rounded-lg text-center p-3 ${
+                                            ii?.capacity >= 1
+                                                ? " cursor-pointer"
+                                                : "text-[#8C8C8C] bg-[#8B8B8B33]"
+                                        } ${
+                                            ii.isSelected
                                                 ? "bg-[#006CE31A] border-[#003B95] text-[#003B95]"
                                                 : ""
-                                            }`}
-                                    >
+                                        }`}>
                                         <span>
                                             {ii.startTime} - {ii.endTime}
                                         </span>
                                         <span className="flex justify-center items-center text-[12px]">
                                             <div
-                                                className={`h-[9px] w-[9px] mx-1 rounded ${ii?.capacity < 5
-                                                    ? ii?.capacity === 0
-                                                        ? "bg-[#9C9C9C]"
-                                                        : "bg-[#FEC84B]"
-                                                    : "bg-[#12B76A]"
-                                                    }`}
-                                            ></div>
+                                                className={`h-[9px] w-[9px] mx-1 rounded ${
+                                                    ii?.capacity < 5
+                                                        ? ii?.capacity === 0
+                                                            ? "bg-[#9C9C9C]"
+                                                            : "bg-[#FEC84B]"
+                                                        : "bg-[#12B76A]"
+                                                }`}></div>
                                             {ii?.capacity !== 0
                                                 ? `${ii?.capacity} ${t(
-                                                    "available"
-                                                )}`
+                                                      "available"
+                                                  )}`
                                                 : t("full")}
                                         </span>
                                     </div>

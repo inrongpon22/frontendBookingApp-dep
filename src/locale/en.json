@@ -63,7 +63,8 @@
         "ัyourPhoneNumber": "Your phone number",
         "continueWithLINEAccount": "Continue with LINE account",
         "phone": "PHONE",
-        "line": "LINE"
+        "line": "LINE",
+        "fillPrice": "Fill the amount"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -96,7 +97,8 @@
         "limitGuest": "Limit Guest",
         "addMoreService": "Add More Service",
         "firstCongrat": "Congratulations!",
-        "socialmediaaccounts": "Social Media Accounts"
+        "socialmediaaccounts": "Social Media Accounts",
+        "setAPrice": "Set a Price"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -121,7 +123,8 @@
         "firstCongrat": "You've successfully created your business. Let's share your business.",
         "unconnected": "Unconnected",
         "connected": "Connected",
-        "coneectLine": "Connect your account to integrate and sync all your data."
+        "coneectLine": "Connect your account to integrate and sync all your data.",
+        "desSetAPrice": "Specify the pricing of this service."
     },
     "button": {
         "cancel": "Cancel",
