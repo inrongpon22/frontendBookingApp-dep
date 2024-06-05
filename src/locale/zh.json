@@ -1,0 +1,352 @@
+{
+    "translation": {
+        "loading": "加载中",
+        "numberOfGuests": "客人人数",
+        "serviceOptions": "服务选项",
+        "store": "商家",
+        "time": "时间",
+        "status": "预订状态",
+        "available": "可用",
+        "full": "已满",
+        "reviewDetails": "请仔细检查详情",
+        "verifyPhoneNumber": "验证电话号码",
+        "verifyPhoneNumberDesc": "我们将向您发送一个验证码。",
+        "otpVerification": "输入我们发送给您的 6 位验证码",
+        "dontReceiveCode": "我没有收到验证码",
+        "bookingDetails": "预订详情",
+        "services": "服务",
+        "date": "日期",
+        "guests": "人数",
+        "price": "价格",
+        "what": "什么",
+        "where": "哪里",
+        "when": "什么时候",
+        "who": "姓名",
+        "from": "从",
+        "to": "至",
+        "duration": "时段",
+        "present": "当前",
+        "bookingName": "姓名",
+        "serviceName": "服务名称",
+        "serviceDesc": "服务描述",
+        "serviceSetting": "服务设置",
+        "isAutoApprove": "自动确认预订",
+        "isHideServPrice": "隐藏服务价格",
+        "isHideEndDate": "隐藏时间段的结束时间",
+        "phoneNumbers": "电话号码",
+        "numberOfGuest": "客人人数",
+        "bookingNumbers": "电话号码",
+        "note": "备注",
+        "notes": "备注（可选）",
+        "availableDate": "可用日期",
+        "activeDays": "活跃天数",
+        "availableTime": "可用时间",
+        "openSlot": "开放时段",
+        "termsAndprivacy": "点击“确认预订”即表示您同意我们的服务条款和隐私政策，并允许我们根据我们的政策使用您的个人信息。",
+        "reset": "重置",
+        "totalPending": "总待处理",
+        "pending": "待处理",
+        "approved": "已确认",
+        "cancelled": "已取消",
+        "hr": "小时",
+        "Availableguests": "可预约人数",
+        "edit": "编辑",
+        "delete": "删除",
+        "previewTitle": "以客人身份预览",
+        "person": "人",
+        "askForDelete": "您确定要删除此服务时间吗？",
+        "addService": "添加服务",
+        "addBusiness": "添加商铺",
+        "editSuccess": "编辑成功",
+        "deleteSuccess": "删除成功",
+        "sendMessageOption": "选择发送通知的方式",
+        "maximumallowed": "最大允许",
+        "ัyourPhoneNumber": "您的电话号码",
+        "continueWithLINEAccount": "继续使用 LINE 账户"
+    },
+    "title": {
+        "bookingIsconfirmed": "预订已确认",
+        "confirmBookingDialogHeader": "确认预订",
+        "myBookings": "我的预订",
+        "bookingSuccess": "预订成功",
+        "bussRootTitle": "好用的预订管理系统。",
+        "bookingRequests": "预订请求",
+        "bookingApproved": "预订已确认",
+        "bookingCancelled": "预订已取消",
+        "bookingAll": "所有预订",
+        "bookingApproval": "预订确认",
+        "bookingReject": "预订拒绝",
+        "serviceInformation": "服务信息",
+        "createBusiness": "创建业务",
+        "bookingHasApproved": "预订已确认",
+        "bookingHasCancelled": "预订已取消",
+        "bookingHasDeclined": "预订已拒绝",
+        "bookingHasExpired": "预订已过期",
+        "waitingForApproval": "等待确认",
+        "businessSetting": "业务设置",
+        "busineessApprovedSuccessful": "确认成功",
+        "busineessRejectedSuccessful": "已拒绝",
+        "dayOff": "休息日",
+        "addDayOff": "添加休息日",
+        "discardChanges": "放弃更改？",
+        "conceptWord": "让预订变得简单",
+        "UpdateSuccessful": "更新成功",
+        "alldone": "全部完成",
+        "limitGuest": "限制客人",
+        "addMoreService": "添加更多服务",
+        "firstCongrat": "恭喜！",
+        "isConnectLine": "链接 LINE",
+        "isSaveToHomeScreen": "保存到主屏幕"
+    },
+    "desc": {
+        "weSendSms": "我们已发送短信以确认您的预订，您可以在短信中查看您的预订详情。",
+        "bussRootDesc": "快速便捷地提升您的预订体验。",
+        "viewMoreDetails": "查看更多详情",
+        "bookingRejectDesc": "告诉客户他们被拒绝的原因。",
+        "bookingHasApproved": "您的预订已确认。我们将通过短信发送详情给您。",
+        "bookingHasCancelled": "此预约已取消。您可以重新预约。",
+        "bookingHasDeclined": "抱歉给您带来不便。您的预订已被拒绝。",
+        "bookingHasExpired": "可用时间已过。此预约已过期。",
+        "waitingForApproval": "商家确认您的预订后，我们将通过短信将详情发送给您。",
+        "busineessApprovedSuccessful": "系统将向客户发送短信以通知他们此确认。",
+        "busineessRejectedSuccessful": "系统将向客户发送短信以通知他们此拒绝。",
+        "discardChanges": "您确定要放弃更改吗？",
+        "desDeleteServiceF": "删除后，服务时间将从系统中移除。",
+        "desConceptWord": "快速友好，随时随地。",
+        "autoApprove": "客户的预订不需要您的确认。",
+        "desUpdate": "您的更新已成功完成！",
+        "desAllDone": "您已成功创建您的业务。",
+        "desLimitGuest": "限制一次预订中可以预订的时间段数量。",
+        "desScanMe": "扫描此二维码开始预订！",
+        "firstCongrat": "您已成功创建项目，请将预约页面分享给您的客户。",
+        "isConnectLine": "链接您的 Line 以登录并接收通知。",
+        "isSaveToHomeScreen": "通过将此应用程序添加到主屏幕来快速查看预订。"
+    },
+    "button": {
+        "cancel": "取消",
+        "confirm": "确定",
+        "approve": "确认预定",
+        "reject": "拒绝",
+        "next": "下一步",
+        "backToMyBooking": "返回我的预订",
+        "rebook": "重新预订",
+        "goToMyBookingButton": "前往我的预订",
+        "bookingButton": "预订",
+        "confirmBookingButton": "确认预订",
+        "continueButton": "继续",
+        "cancelBookingButton": "取消预订",
+        "bookingFailedBackButton": "返回主页",
+        "bookingFailedTryAgainButton": "再试一次",
+        "bookingFailedCloseButton": "关闭",
+        "getStartedButton": "开始",
+        "overview": "概述",
+        "manualBooking": "手动预订",
+        "setDayoff": "设置休息日",
+        "shareBookingLink": "分享预订链接",
+        "businessSetting": "业务设置",
+        "serviceSetting": "服务设置",
+        "logout": "登出",
+        "addMoreTime": "添加更多时间",
+        "createNewService": "创建新服务",
+        "switchBusiness": "切换到另一个业务",
+        "backToMain": "返回主页",
+        "addNewDayOff": "添加新休息日",
+        "leavePreview": "离开预览",
+        "preview": "预览",
+        "back": "返回",
+        "discard": "放弃",
+        "addServiceTime": "添加服务时间",
+        "done": "完成",
+        "btnSMS": "短信通知",
+        "btnLINE": "LINE 通知",
+        "shareBookingWeb": "分享预订网站",
+        "saveQRcode": "保存二维码",
+        "isConnectLine": "链接 Line 账户",
+        "learnMore": "了解更多"
+    },
+    "noti": {
+        "business": {
+            "logout": {
+                "confirmation": "您确定要登出吗",
+                "confirmationDesc": "您将被重定向到登录页面。"
+            }
+        },
+        "booking": {
+            "create": {
+                "success": "预订创建成功",
+                "fail": "预订创建失败"
+            },
+            "cancel": {
+                "success": "预订取消成功",
+                "fail": "预订取消失败",
+                "confirmation": "您确定要取消预订吗",
+                "confirmationDesc": "预订时段将对其他人开放。"
+            },
+            "approve": {
+                "success": "预订确认成功",
+                "fail": "预订确认失败",
+                "confirmation": "您确定要确认此预订吗",
+                "confirmationDesc": "一旦确认，客户将被通知，预订将被最终确定。"
+            },
+            "reject": {
+                "success": "预订已成功拒绝",
+                "fail": "预订拒绝失败",
+                "confirmation": "您确定要拒绝此预订吗",
+                "confirmationDesc": "一旦拒绝，客户将被通知，预订将被最终确定。"
+            }
+        },
+        "service": {
+            "delete": {
+                "confirmation": "您确定要删除此服务吗",
+                "confirmationDesc": "删除后，服务将从系统中移除。"
+            }
+        }
+    },
+    "form": {
+        "business": {
+            "auth": {
+                "login": "登录以继续"
+            },
+            "create": {
+                "shopName": "商店名称",
+                "location": "位置",
+                "openTime": "开放时间",
+                "businessNumber": "业务号码",
+                "shortDescribe": "简短描述",
+                "images": "图片"
+            }
+        },
+        "booking": {
+            "create": {
+                "isBusinessOnly": {
+                    "label": "仅限业务",
+                    "desc": "此预订仅限业务"
+                },
+                "isSendSMS": {
+                    "label": "发送短信",
+                    "desc": "我们将向客户发送预订详情短信"
+                }
+            }
+        }
+    },
+    "formValidation": {
+        "business": {
+            "create": {
+                "shopName": {
+                    "shopNameReq": "商店名称是必需的",
+                    "shopNameMin": "商店名称至少需要 3 个字符",
+                    "shopNameMax": "商店名称必须少于 50 个字符"
+                },
+                "phoneNumber": {
+                    "phoneNumberReq": "业务电话号码是必需的",
+                    "phoneNumberMatch": "电话号码必须只包含数字",
+                    "phoneNumberMin": "业务电话号码至少需要 9 位数字",
+                    "phoneNumberMax": "业务电话号码必须少于 15 位数字"
+                },
+                "location": {
+                    "locationReq": "位置是必需的"
+                },
+                "daysOpen": {
+                    "req": "营业日是必需的"
+                },
+                "openTime": {
+                    "req": "开放时间是必需的"
+                },
+                "closeTime": {
+                    "req": "关闭时间是必需的",
+                    "moreThanOpenTime": "关闭时间必须晚于开放时间"
+                },
+                "description": {
+                    "descriptionMax": "描述必须少于 500 个字符"
+                }
+            },
+            "auth": {
+                "phoneNumber": {
+                    "phoneNumberReq": "电话号码是必需的",
+                    "phoneNumberMatch": "电话号码必须只包含数字",
+                    "phoneNumberMin": "电话号码至少需要 10 位数字",
+                    "phoneNumberMax": "电话号码必须少于 10 位数字"
+                },
+                "otp": {
+                    "otpReq": "验证码是必需的",
+                    "otpMatch": "验证码必须只包含数字",
+                    "otpMin": "验证码必须是 6 位数字",
+                    "otpLength": "验证码必须是 6 位数字"
+                }
+            }
+        },
+        "service": {
+            "create": {
+                "serviceName": {
+                    "serviceNameReq": "服务名称是必需的",
+                    "serviceNameMin": "服务名称至少需要 2 个字符",
+                    "serviceNameMax": "服务名称必须少于 50 个字符",
+                    "serviceNameFill": "填写服务名称"
+                },
+                "serviceDesc": {
+                    "serviceDescReq": "服务描述是必需的",
+                    "serviceDescMin": "服务描述至少需要 10 个字符",
+                    "serviceDescMax": "服务描述必须少于 500 个字符",
+                    "serviceDescFill": "向客户介绍此服务"
+                },
+                "price": {
+                    "priceReq": "价格是必需的",
+                    "priceMin": "价格至少需要 1"
+                }
+            }
+        },
+        "booking": {
+            "create": {
+                "username": {
+                    "usernameReq": "名称是必需的",
+                    "usernamesMin": "名称至少需要 2 个字符",
+                    "usernameMax": "名称必须少于 50 个字符",
+                    "placeholder": "输入您的姓名"
+                },
+                "phoneNumbers": {
+                    "phoneNumberMin": "电话号码至少需要 10 位数字",
+                    "phoneNumberMax": "电话号码必须少于 10 位数字",
+                    "placeholder": "输入您的电话号码"
+                },
+                "notes": {
+                    "placeholder": "添加备注"
+                }
+            }
+        }
+    },
+    "error": {
+        "required": "必需的",
+        "invalidPhoneNumber": "无效的电话号码",
+        "invalidOTP": "无效的验证码",
+        "bookingFailed": "预订失败",
+        "bookingFailedMessage": "预订",
+        "noBookingReq": "没有预订请求",
+        "noTimeSlots": "没有可用的时间段",
+        "noServicesYet": "您的业务还没有任何服务，请先创建服务",
+        "tooManyRequest": "请求过多。请在 60 秒后再试。",
+        "noPendingBooking": "没有待处理的预订",
+        "noComingBookingToday": "今天没有即将到来的预订"
+    },
+    "fragment": {
+        "needTo": "需要",
+        "cancel": "取消预订",
+        "aBooking": "吗",
+        "avaiGuest": "每个时段可预约人数",
+        "manualAdjust": "手动调整",
+        "optional": "可选",
+        "amount": "数量",
+        "people": "人",
+        "today": "今天",
+        "viewAll": "查看全部",
+        "clear": "清除"
+    },
+    "placeholder": {
+        "bookingReject": "例如：所请求时间的服务不可用。",
+        "shopName": "输入您的商店名称",
+        "location": "输入您的位置",
+        "businessNumber": "输入您的业务电话号码",
+        "shortDescribe": "输入简短描述",
+        "serviceName": "输入您的服务名称",
+        "serviceDesc": "输入您的服务描述"
+    }
+}

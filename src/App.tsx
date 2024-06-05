@@ -67,7 +67,6 @@ function App() {
                     path="/business-profile/:businessId"
                     element={<BusinessProfile />}
                 />
-                <Route path="/my-bookings" element={<MyBookingWrapper />} />
                 <Route
                     path="/business-overview"
                     element={<BusinessOverview />}
@@ -119,6 +118,7 @@ function App() {
                         path="/booking-approval/:businessId"
                         element={<BookingApproval />}
                     />
+                    <Route path="/my-bookings" element={<MyBookingWrapper />} />
                     <Route
                         path="/booking/:bookingId"
                         element={<BookingSummaryWrapper />}

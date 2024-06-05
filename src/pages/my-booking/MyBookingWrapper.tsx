@@ -1,6 +1,5 @@
 /** @format */
-
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { GlobalContext } from "../../contexts/BusinessContext";
@@ -11,12 +10,16 @@ import moment from "moment";
 import useSWR from "swr";
 import { app_api } from "../../helper/url";
 // icons
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 // components
 import DialogWrapper from "../../components/dialog/DialogWrapper";
+import { Badge } from "@mui/material";
+import IsConnectLine from "./IsConnectLine";
+import IsHomeScreenApp from "./IsHomeScreenApp";
 
 const MyBookingWrapper = () => {
     const location = useLocation();
@@ -27,8 +30,16 @@ const MyBookingWrapper = () => {
 
     const { t } = useTranslation();
 
-    const { setIsGlobalLoading } = useContext(GlobalContext);
+    const { setIsGlobalLoading, setShowDialog, setDialogState } =
+        useContext(GlobalContext);
 
+    // const [upComingBooking, setUpComingBooking] = useState([]);
+    // const [pastBooking, setPastBooking] = useState([]);
+
+    // handle alert state
+    const [isShowLine, setIsShowLine] = useState<boolean>(true);
+    const [isShowSaveToHomeScreen, setIsShowSaveToHomeScreen] =
+        useState<boolean>(true);
 
     const { data: myReservDatas, isLoading } = useSWR(
         token &&
@@ -51,6 +62,9 @@ const MyBookingWrapper = () => {
 
     useEffect(() => {
         document.title = t("title:myBookings");
+        if (!token) {
+            setShowDialog(true);
+        }
     }, []);
 
     useEffect(() => {
@@ -60,24 +74,48 @@ const MyBookingWrapper = () => {
     return (
         <>
             <div className="flex flex-col h-dvh gap-4 bg-[#F7F7F7]">
-                <span className="flex justify-between items-center text-[17px] font-semibold bg-white p-5">
-                    {t("title:myBookings")}
-                    {/* <SearchRoundedIcon /> */}
-                </span>
-                <div className="flex flex-col gap-4 px-3">
-                    {myReservDatas ? (
-                        myReservDatas.map((item: any, index: number) => {
-                            // const start: string = `${moment(
-                            //     item.bookingDate
-                            // ).format("YYYY-MM-DD")}T${item.startTime}Z`;
-                            // const end: string = `${moment(
-                            //     item.bookingDate
-                            // ).format("YYYY-MM-DD")}T${item.endTime}Z`;
+                <div>
+                    <span className="flex justify-between items-center text-[17px] font-semibold bg-white p-5">
+                        {t("title:myBookings")}
+                        {/* <SearchRoundedIcon /> */}
+                        <Badge
+                            color="secondary"
+                            variant="standard"
+                            className="cursor-pointer"
+                            onClick={() => {
+                                setDialogState("business-more-options");
+                                setShowDialog(true);
+                            }}
+                        >
+                            <SettingsOutlinedIcon fontSize="small" />
+                        </Badge>
+                    </span>
 
+                    {isShowLine && (
+                        <IsConnectLine
+                            handleConnectLine={() => navigate("/connect-line")}
+                            handleClose={() => setIsShowLine(false)}
+                        />
+                    )}
+
+                    {isShowSaveToHomeScreen && (
+                        <IsHomeScreenApp
+                            handleLearnMore={() => console.log("first")}
+                            handleClose={() => setIsShowSaveToHomeScreen(false)}
+                        />
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-4 px-3">
+                    {myReservDatas && myReservDatas.length > 0 ? (
+                        myReservDatas.map((item: any, index: number) => {
                             return (
                                 <div
                                     key={index}
-                                    className="border rounded-lg p-5 bg-white"
+                                    className="border rounded-lg p-5 bg-white cursor-pointer"
+                                    onClick={() =>
+                                        navigate(`/booking/${item.id}`)
+                                    }
                                 >
                                     <div className="flex justify-between">
                                         <span className="text-[14px] font-bold">
@@ -100,28 +138,28 @@ const MyBookingWrapper = () => {
                                                     ? t("approved")
                                                     : t("cancelled")}
                                             </span>
-                                            <div className="flex items-center text-[12px] font-normal gap-1">
-                                                <span className="flex items-center">
-                                                    <PersonOutlineRoundedIcon fontSize="small" />
-                                                    {item.guestNumber}
-                                                </span>
-                                                <span className="w-[4px] h-[4px] bg-[#A1A1A1] rounded"></span>
-                                                <span>฿{item.price}</span>
-                                            </div>
                                         </div>
                                     </div>
-                                    <p className="flex gap-1 text-[12px] font-normal">
-                                        <AccessTimeRoundedIcon fontSize="small" />
-                                        <span>
-                                            {item.startTime.slice(0,-3)} - {item.endTime.slice(0,-3)}
-                                            {/* {moment(start).format("HH:mm")} -{" "}
-                                            {moment(end).format("HH:mm")} */}
-                                            ,{" "}
-                                            {moment(item.bookingDate).format(
-                                                "D MMM"
-                                            )}
-                                        </span>
-                                    </p>
+                                    <div className="flex justify-between">
+                                        <p className="flex gap-1 text-[12px] font-normal">
+                                            <AccessTimeRoundedIcon fontSize="small" />
+                                            <span>
+                                                {item.startTime.slice(0, -3)} -{" "}
+                                                {item.endTime.slice(0, -3)},{" "}
+                                                {moment(
+                                                    item.bookingDate
+                                                ).format("D MMM")}
+                                            </span>
+                                        </p>
+                                        <div className="flex items-center text-[12px] font-normal gap-1">
+                                            <span className="flex items-center">
+                                                <PersonOutlineRoundedIcon fontSize="small" />
+                                                {item.guestNumber}
+                                            </span>
+                                            <span className="w-[4px] h-[4px] bg-[#A1A1A1] rounded"></span>
+                                            <span>฿{item.price}</span>
+                                        </div>
+                                    </div>
                                     <p className="flex gap-1 text-[12px] font-normal mt-2">
                                         <LocationOnOutlinedIcon fontSize="small" />
                                         <span>{item.address}</span>
@@ -133,13 +171,8 @@ const MyBookingWrapper = () => {
                                                 <NavigateNextRoundedIcon fontSize="small" />
                                             </span>
                                         )}
-                                        <span
-                                            className="flex items-center cursor-pointer hover:text-deep-blue"
-                                            onClick={() =>
-                                                navigate(`/booking/${item.id}`)
-                                            }
-                                        >
-                                            ดูรายละเอียด
+                                        <span className="flex items-center hover:text-deep-blue">
+                                            {t("desc:viewMoreDetails")}
                                             <NavigateNextRoundedIcon fontSize="small" />
                                         </span>
                                     </p>
