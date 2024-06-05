@@ -118,7 +118,7 @@ export default function SettingServiceBtn(props: IParams) {
                 className={`w-full flex justify-center bottom-0 inset-x-0 gap-2 mb-3 fixed`}>
                 <button
                     onClick={props.handleOpenPreview}
-                    className="w-[45vw] p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold">
+                    className="w-[45vw] p-3 border text-deep-blue border-deep-blue rounded-lg font-semibold bg-white">
                     {t("button:preview")}
                 </button>
                 <button

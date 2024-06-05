@@ -61,7 +61,9 @@
         "sendMessageOption": "Choose how to send your notice",
         "maximumallowed": "Maximum allowed",
         "ัyourPhoneNumber": "Your phone number",
-        "continueWithLINEAccount": "Continue with LINE account"
+        "continueWithLINEAccount": "Continue with LINE account",
+        "phone": "PHONE",
+        "line": "LINE"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -93,7 +95,8 @@
         "alldone": "All done",
         "limitGuest": "Limit Guest",
         "addMoreService": "Add More Service",
-        "firstCongrat": "Congratulations!"
+        "firstCongrat": "Congratulations!",
+        "socialmediaaccounts": "Social Media Accounts"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -115,7 +118,10 @@
         "desAllDone": "You've successfully created your business.",
         "desLimitGuest": "Limits number of time slot that can book in one booking.",
         "desScanMe": "Scan this QR code and start booking!",
-        "firstCongrat": "You've successfully created your business. Let's share your business."
+        "firstCongrat": "You've successfully created your business. Let's share your business.",
+        "unconnected": "Unconnected",
+        "connected": "Connected",
+        "coneectLine": "Connect your account to integrate and sync all your data."
     },
     "button": {
         "cancel": "Cancel",
@@ -155,7 +161,12 @@
         "btnSMS": "Message SMS",
         "btnLINE": "Message LINE",
         "shareBookingWeb": "Share Booking Website",
-        "saveQRcode": "Save QR code"
+        "saveQRcode": "Save QR code",
+        "socialmediaaccounts": "Social media accounts",
+        "connectToPhone": "Connect to phone number",
+        "connect": "Connect",
+        "disconnect": "Disconnect",
+        "linkaccounts": "Link accounts"
     },
     "noti": {
         "business": {

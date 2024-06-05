@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // interface
 import { Ireservation } from "../../interfaces/reservation";
 // api
-import { getBusinessId } from "../../api/business";
+import { getBusinessIdByBusinessSide } from "../../api/business";
 import { getReservationByBusinessId } from "../../api/booking";
 // icons
 // import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
@@ -37,8 +37,7 @@ const BusinessProfile = () => {
 
     const [congAlert, setCongAlert] = useState<boolean>(true);
     const [addMoreService, setAddMoreService] = useState<boolean>(true);
-
-    const { businessData } = getBusinessId(Number(businessId));
+    const [businessData, setBusinessData] = useState<any>(null);
 
     const {
         getReservationByBusinessIdData,
@@ -75,6 +74,21 @@ const BusinessProfile = () => {
         setIsGlobalLoading(getReservationByBusinessIdLoading);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getReservationByBusinessIdLoading]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getBusinessIdByBusinessSide(Number(businessId));
+                setBusinessData(data);
+                console.log("403 Forbidden - Access Denied");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (businessId) fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="flex flex-col h-dvh bg-[#F7F7F7] overflow-x-hidden">
@@ -164,17 +178,16 @@ const BusinessProfile = () => {
                                                 <span>
                                                     {`${moment(
                                                         item.bookingDate
-                                                    ).format("D")} ${
-                                                        monthsOfYearFullName(
-                                                            language
-                                                        )?.find(
-                                                            (ii) =>
-                                                                ii.value ===
-                                                                moment(
-                                                                    item.bookingDate
-                                                                ).format("MMMM")
-                                                        )?.name ?? ""
-                                                    }`}
+                                                    ).format("D")} ${monthsOfYearFullName(
+                                                        language
+                                                    )?.find(
+                                                        (ii) =>
+                                                            ii.value ===
+                                                            moment(
+                                                                item.bookingDate
+                                                            ).format("MMMM")
+                                                    )?.name ?? ""
+                                                        }`}
                                                 </span>
                                                 <span className="w-[3px] h-[3px] bg-black rounded-full self-center" />
                                                 <span>{item.userName}</span>
@@ -200,19 +213,16 @@ const BusinessProfile = () => {
                 <div className="flex justify-between items-center">
                     <p className="font-bold text-zinc-400">
                         {`${t("fragment:today")} 
-                        ${
-                            dayOfWeekFullName(language)?.find(
-                                (ii) => ii.value === moment().format("dddd")
-                            )?.name ?? ""
-                        }, ${moment().format("D")} ${
-                            monthsOfYearFullName(language)?.find(
+                        ${dayOfWeekFullName(language)?.find(
+                            (ii) => ii.value === moment().format("dddd")
+                        )?.name ?? ""
+                            }, ${moment().format("D")} ${monthsOfYearFullName(language)?.find(
                                 (ii) => ii.value === moment().format("MMMM")
                             )?.name ?? ""
-                        } ${
-                            language === "th"
+                            } ${language === "th"
                                 ? Number(moment().format("YYYY")) + 543
                                 : moment().format("YYYY")
-                        }`}
+                            }`}
                     </p>
                     <p
                         className="font-bold text-[10px] text-deep-blue text-opacity-60 underline cursor-pointer"
@@ -240,30 +250,27 @@ const BusinessProfile = () => {
                                     >
                                         <div className="flex gap-2">
                                             <p
-                                                className={`${
-                                                    item.status === "approval"
-                                                        ? "bg-deep-blue bg-opacity-10 text-deep-blue"
-                                                        : "bg-zinc-200 text-zinc-400"
-                                                } px-1 rounded`}
+                                                className={`${item.status === "approval"
+                                                    ? "bg-deep-blue bg-opacity-10 text-deep-blue"
+                                                    : "bg-zinc-200 text-zinc-400"
+                                                    } px-1 rounded`}
                                             >
                                                 {item.startTime.slice(0, -3)}
                                             </p>
                                             <p
-                                                className={`${
-                                                    item.status === "approval"
-                                                        ? ""
-                                                        : "text-zinc-400"
-                                                } font-semibold`}
+                                                className={`${item.status === "approval"
+                                                    ? ""
+                                                    : "text-zinc-400"
+                                                    } font-semibold`}
                                             >
                                                 {item.title}
                                             </p>
                                         </div>
                                         <p
-                                            className={`flex ${
-                                                item.status === "approval"
-                                                    ? ""
-                                                    : "text-zinc-400"
-                                            }`}
+                                            className={`flex ${item.status === "approval"
+                                                ? ""
+                                                : "text-zinc-400"
+                                                }`}
                                         >
                                             <span>
                                                 {item.status === "approval"

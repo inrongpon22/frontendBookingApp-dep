@@ -218,16 +218,16 @@ export default function BusinessInfo() {
             }
 
             if (businessId) {
+                // Check if businessId is truthy (not null, undefined, or empty string)
                 const imagesURL: string[] = [];
                 const uniqueRandomNumber = generateUniqueRandomNumber();
+
                 if (files.length > 0) {
                     for (const element of files) {
                         const { data, error } = await supabase.storage
                             .from("BookingSystem/images")
                             .upload(
-                                files !== null
-                                    ? element.name + `${uniqueRandomNumber}`
-                                    : "",
+                                element.name + `${uniqueRandomNumber}`, // No need to check for null here
                                 element
                             );
                         if (error) {
