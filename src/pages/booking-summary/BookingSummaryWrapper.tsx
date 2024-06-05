@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { app_api, useQuery } from "../../helper/url";
+import { app_api, getGoogleMapUrl, useQuery } from "../../helper/url";
 import useSWR from "swr";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,6 @@ import { CircularProgress } from "@mui/material";
 import { cancelBooking } from "../../api/booking";
 import { GlobalContext } from "../../contexts/BusinessContext";
 import SendMessageOption from "../../components/dialog/SendMessageOption";
-
 
 const BookingSummaryWrapper = () => {
     const navigate = useNavigate();
@@ -98,10 +97,27 @@ const BookingSummaryWrapper = () => {
         }
     };
 
+    const getStatusEachLang = (status: string): string => {
+        switch (status) {
+            case "pending":
+                return t("pending");
+
+            case "approval":
+                return t("approved");
+
+            case "cancel":
+                return t("cancelled");
+
+            default:
+                return "";
+        }
+    };
+
     const [lists, setLists] = useState<
         {
             label: string;
             text: string;
+            function?: () => void;
         }[]
     >([]);
 
@@ -137,11 +153,16 @@ const BookingSummaryWrapper = () => {
     const bookingDatas = bookingFromAccessCode
         ? bookingFromAccessCode
         : bookingById;
-    const [noticeType, setNoticeType] = useState("")
-    
+    const [noticeType, setNoticeType] = useState("");
 
     const handleCancelBooking = async () => {
-        await cancelBooking(token, bookingId, bookingById.serviceId, language, noticeType)
+        await cancelBooking(
+            token,
+            bookingId,
+            bookingById.serviceId,
+            language,
+            noticeType
+        )
             .then(() => {
                 setShowDialog(false);
                 setDialogState("phone-input");
@@ -163,6 +184,11 @@ const BookingSummaryWrapper = () => {
                 text: bookingDatas?.businessName,
             },
             {
+                label: t("form:business:create:location"),
+                text: bookingDatas?.address,
+                function: () => getGoogleMapUrl(bookingDatas?.address),
+            },
+            {
                 label: t("services"),
                 text: bookingDatas?.title,
             },
@@ -178,6 +204,10 @@ const BookingSummaryWrapper = () => {
                     0,
                     -3
                 )} - ${bookingDatas?.endTime.slice(0, -3)}`,
+            },
+            {
+                label: t("status"),
+                text: getStatusEachLang(bookingDatas?.status) ?? "",
             },
             {
                 label: t("guests"),
@@ -200,50 +230,44 @@ const BookingSummaryWrapper = () => {
         ]);
     }, [bookingById, bookingFromAccessCode]);
 
-    // const handleConfirm = () => {};
-
     return (
         <>
-            {/* <ConfirmCard
+            <SendMessageOption
                 open={showConfirmation}
                 title={t("noti:booking:cancel:confirmation")}
                 description={t("noti:booking:cancel:confirmationDesc")}
+                sendMessageOption={t("sendMessageOption")}
+                btnSMS={t("button:btnSMS")}
+                btnLINE={t("button:btnLINE")}
                 bntConfirm={t("button:confirm")}
                 bntBack={t("button:cancel")}
                 handleClose={() => setShowConfirmation(false)}
-                handleConfirm={handleCancelBooking}
-            /> */}
-
-        <SendMessageOption 
-            open={showConfirmation}
-            title={t("noti:booking:cancel:confirmation")}
-            description={t("noti:booking:cancel:confirmationDesc")}
-            sendMessageOption={t("sendMessageOption")}
-            btnSMS={t("button:btnSMS")}
-            btnLINE={t("button:btnLINE")}
-            bntConfirm={t("button:confirm")}
-            bntBack={t("button:cancel")}
-            handleClose={() => setShowConfirmation(false)}
-            imageSrc="../Cancelicon.png"
-            handleCancelBooking={handleCancelBooking} 
-            handleNoticeType={(e:string) => setNoticeType(e)}
-            noticeType={noticeType}
+                imageSrc="../Cancelicon.png"
+                handleCancelBooking={handleCancelBooking}
+                handleNoticeType={(e: string) => setNoticeType(e)}
+                noticeType={noticeType}
             />
-            
+
             <div className="flex flex-col h-dvh p-5">
-                <p className="flex flex-col justify-center items-center text-[25px] font-semibold mb-3">
-                    <span className="my-6">
-                        {bookingDatas ? (
-                            switchStatus(bookingDatas?.status)?.icon
-                        ) : (
-                            <CircularProgress />
-                        )}
-                    </span>
-                    <span>{switchStatus(bookingDatas?.status)?.title}</span>
-                </p>
-                <p className="text-[14px] text-center font-normal mb-10">
-                    {switchStatus(bookingDatas?.status)?.desc}
-                </p>
+                {!query.get("accessCode") && (
+                    <>
+                        <p className="flex flex-col justify-center items-center text-[25px] font-semibold mb-3">
+                            <span className="my-6">
+                                {bookingDatas ? (
+                                    switchStatus(bookingDatas?.status)?.icon
+                                ) : (
+                                    <CircularProgress />
+                                )}
+                            </span>
+                            <span>
+                                {switchStatus(bookingDatas?.status)?.title}
+                            </span>
+                        </p>
+                        <p className="text-[14px] text-center font-normal mb-10">
+                            {switchStatus(bookingDatas?.status)?.desc}
+                        </p>
+                    </>
+                )}
 
                 <div className="flex flex-col gap-3 border rounded-lg p-5">
                     {lists?.map((item: any, index: number) => {
@@ -260,7 +284,16 @@ const BookingSummaryWrapper = () => {
                                 <div className="col-span-5 font-normal">
                                     {item.label}:
                                 </div>
-                                <span className="col-span-7 font-medium text-end">
+                                <span
+                                    className={`col-span-7 font-medium text-end ${
+                                        item.function
+                                            ? "underline hover:text-deep-blue cursor-pointer"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        if (item.function) item.function();
+                                    }}
+                                >
                                     {item.text}
                                 </span>
                             </div>

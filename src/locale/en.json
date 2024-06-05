@@ -5,6 +5,7 @@
         "serviceOptions": "Service Options",
         "store": "Store",
         "time": "Time",
+        "status": "Status",
         "available": "Available",
         "full": "Full",
         "reviewDetails": "Please review details carefully",
@@ -96,6 +97,8 @@
         "limitGuest": "Limit Guest",
         "addMoreService": "Add More Service",
         "firstCongrat": "Congratulations!",
+        "isConnectLine": "Connect with LINE",
+        "isSaveToHomeScreen": "Save to home screen",
         "socialmediaaccounts": "Social Media Accounts"
     },
     "desc": {
@@ -119,6 +122,8 @@
         "desLimitGuest": "Limits number of time slot that can book in one booking.",
         "desScanMe": "Scan this QR code and start booking!",
         "firstCongrat": "You've successfully created your business. Let's share your business.",
+        "isConnectLine": "Link your Line to log in and get notifications, all in one place!",
+        "isSaveToHomeScreen": "Quickly review bookings by adding web app to your home screen.",
         "unconnected": "Unconnected",
         "connected": "Connected",
         "coneectLine": "Connect your account to integrate and sync all your data."
@@ -162,6 +167,8 @@
         "btnLINE": "Message LINE",
         "shareBookingWeb": "Share Booking Website",
         "saveQRcode": "Save QR code",
+        "isConnectLine": "Link line account",
+        "learnMore": "Learn More",
         "socialmediaaccounts": "Social media accounts",
         "connectToPhone": "Connect to phone number",
         "connect": "Connect",

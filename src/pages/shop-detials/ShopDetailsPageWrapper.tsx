@@ -178,8 +178,6 @@ const ShopDetailsPageWrapper = () => {
     );
 
     useEffect(() => {
-        // console.log(selectedDate.date.format("YYYY-MM-DD"));
-        // console.log(serviceById);
         setIsGlobalLoading(servByIdLoading);
         const checkToken = async () => {
             try {

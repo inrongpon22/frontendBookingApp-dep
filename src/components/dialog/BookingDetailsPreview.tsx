@@ -91,7 +91,7 @@ const BookingDetailsPreview = () => {
         i18n: { language },
     } = useTranslation();
 
-    const slotArrays = JSON.parse(bookingDetail)?.serviceById.bookingSlots.find(
+    const slotArrays = JSON?.parse(bookingDetail)?.serviceById.bookingSlots.find(
         (item: {
             daysOpen: string | string[];
             availableFromDate: moment.MomentInput;
