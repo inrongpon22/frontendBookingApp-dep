@@ -63,7 +63,8 @@
         "or": "หรือ",
         "continueWithLINEAccount": "ดำเนินการต่อด้วยบัญชีไลน์",
         "sendMessageOption": "เลือกวิธีส่งการแจ้งเตือน",
-        "ัyourPhoneNumber": "หมายเลขโทรศัพท์ของคุณ"
+        "ัyourPhoneNumber": "หมายเลขโทรศัพท์ของคุณ",
+        "fillPrice": "กรุณากรอกราคา"
     },
     "title": {
         "bookingIsconfirmed": "การจองได้รับการยืนยัน",
@@ -97,9 +98,10 @@
         "limitGuest": "จำกัดจำนวนผู้ใช้บริการ",
         "addMoreService": "เพิ่มบริการของคุณ",
         "firstCongrat": "ยินดีด้วย!",
+        "socialmediaaccounts": "บัญชีโซเชียลมีเดียของคุณ",
+        "setAPrice": "ตั้งราคาบริการของคุณ",
         "isConnectLine": "เชื่อมต่อด้วย LINE",
-        "isSaveToHomeScreen": "บันทึกลงหน้าจอหลัก",
-        "socialmediaaccounts": "บัญชีโซเชียลมีเดียของคุณ"
+        "isSaveToHomeScreen": "บันทึกลงหน้าจอหลัก"
     },
     "desc": {
         "weSendSms": "เราได้ส่ง SMS เพื่อยืนยันการจองของคุณ คุณสามารถตรวจสอบรายละเอียดการจองของคุณได้ที่นั่น",
@@ -127,7 +129,8 @@
         "isSaveToHomeScreen": "เข้าหน้าจอเว็บแอปพลิเคชั่นง่าย ๆ จากหน้าจอหลัก",
         "unconnected": "ไม่ได้เชื่อมต่อ",
         "connected": "เชื่อมต่อแล้ว",
-        "coneectLine": "เชื่อมต่อกับ LINE เพื่อรับการแจ้งเตือนการจอง"
+        "coneectLine": "เชื่อมต่อกับ LINE เพื่อรับการแจ้งเตือนการจอง",
+        "desSetAPrice": "ระบุราคาของบริการนี้."
     },
     "button": {
         "cancel": "ไม่ใช่ตอนนี้",

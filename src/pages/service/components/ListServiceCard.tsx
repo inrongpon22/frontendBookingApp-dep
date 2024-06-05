@@ -10,7 +10,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 interface IProps {
     serviceId: number;
     serviceName: string;
-    price: number;
+    price: string;
     description: string;
     currency: string;
     openTime: string;

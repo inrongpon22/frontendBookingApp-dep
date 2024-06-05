@@ -17,7 +17,7 @@ export interface InsertService {
     title: string;
     // duration: number;
     description: string;
-    price: number;
+    price: string;
     isAutoApprove: boolean;
     currency: string;
     openTime: string;
@@ -42,7 +42,7 @@ export interface IService {
     daysOpen: string[]; // You might want to change the type to match the actual data type
     phoneNumber: string;
     title: string;
-    price: number; // Assuming it's a number
+    price: string; // Assuming it's a number
     description: string;
     currency: string;
     openTime: string; // Assuming it's a string representing time
@@ -74,14 +74,14 @@ export interface IServiceTime {
 export interface IServiceInfo {
     serviceName: string;
     serviceDescription: string;
-    price: number;
+    price: string;
     currency: string;
 }
 
 export interface IEditServiceInfo {
     title: string;
     description: string;
-    price: number;
+    price: string;
     currency: string;
 }
 
@@ -98,7 +98,7 @@ export interface IServiceByServiceId {
     businessId: number;
     title: string;
     description: string;
-    price: number;
+    price: string;
     currency: string;
     isAutoApprove: boolean;
     isHidePrice: boolean;
@@ -135,7 +135,7 @@ export interface IUpdateService {
     businessId: number;
     title: string;
     description: string;
-    price: number;
+    price: string;
     currency: string;
     isAutoApprove: boolean;
     isHidePrice: boolean;

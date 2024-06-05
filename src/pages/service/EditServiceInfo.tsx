@@ -2,17 +2,19 @@ import { Divider } from "@mui/material";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
-import { currencyList } from "../../helper/currency";
-import CloseIcon from "@mui/icons-material/Close";
+import { currencyList, numbers } from "../../helper/currency";
 import { t } from "i18next";
 import { IServiceInfo } from "../../interfaces/services/Iservice";
 import { useState } from "react";
 import ConfirmCard from "../../components/dialog/ConfirmCard";
+import { ToggleButton as MuiToggleButton } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface IParams {
     serviceName: string;
     serviceDescription: string;
-    price: number;
+    price: string;
     currency: string;
     handleSetEditInfo: () => void;
     serviceMutate: () => void;
@@ -26,14 +28,15 @@ const validationSchema = Yup.object().shape({
     serviceDescription: Yup.string().required(
         t("formValidation:service:create:serviceDesc:serviceDescReq")
     ),
-    price: Yup.number()
-        .required(t("formValidation:service:create:price:priceReq"))
-        .min(0, t("formValidation:service:create:price:priceMin")),
+    price: Yup.string().required(
+        t("formValidation:service:create:price:priceReq")
+    ),
 });
 
 export default function EditServiceInfo(props: IParams) {
     const { t } = useTranslation();
     const [openConfirm, setOpenConfirm] = useState(false);
+    const [isTypePrice, setIsTypePrice] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -127,7 +130,7 @@ export default function EditServiceInfo(props: IParams) {
                             className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none`}
                         />
                         {formik.touched.serviceName &&
-                            formik.errors.serviceName ? (
+                        formik.errors.serviceName ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceName}
                             </div>
@@ -145,17 +148,18 @@ export default function EditServiceInfo(props: IParams) {
                             placeholder={t(
                                 "formValidation:service:create:serviceDesc:serviceDescFill"
                             )}
-                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${formik.touched.serviceDescription &&
+                            className={`mt-1 w-full p-4 border-black-50 text-sm border rounded-lg focus:outline-none ${
+                                formik.touched.serviceDescription &&
                                 formik.errors.serviceDescription
-                                ? "border-red-500"
-                                : ""
-                                }`}
+                                    ? "border-red-500"
+                                    : ""
+                            }`}
                             value={formik.values.serviceDescription}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.serviceDescription &&
-                            formik.errors.serviceDescription ? (
+                        formik.errors.serviceDescription ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.serviceDescription}
                             </div>
@@ -167,31 +171,109 @@ export default function EditServiceInfo(props: IParams) {
                             {t("price")}
                         </p>
                         <div className="flex items-center">
-                            <select
-                                name="currency"
-                                className="border-r-0 h-12 border border-gray-300 rounded-l-lg px-2 focus:outline-none"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.currency}>
-                                {currencyList.map((item, index) => (
-                                    <option key={index} value={item.code}>
-                                        {item.code}
-                                    </option>
-                                ))}
-                            </select>
-                            <input
-                                style={{ textAlign: "right" }}
-                                name="price"
-                                type="number"
-                                className={`h-12 w-full px-4 border border-gray-300 rounded-r-lg focus:outline-none ${formik.touched.price && formik.errors.price
-                                    ? "border-red-500"
-                                    : ""
-                                    }`}
-                                value={formik.values.price}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
+                            <div className="w-full flex justify-between p-3 text-sm border rounded-lg focus:outline-none items-center">
+                                <div>
+                                    <div className="text-[14px]">
+                                        {t("title:setAPrice")}
+                                    </div>
+                                    <p className="text-[#6A6A6A] font-[12px]">
+                                        {t("desc:desSetAPrice")}
+                                    </p>
+                                </div>
+                                <MuiToggleButton
+                                    value={isTypePrice}
+                                    aria-label="Toggle switch"
+                                    onClick={() => setIsTypePrice(!isTypePrice)}
+                                    sx={{
+                                        width: 49,
+                                        height: 28,
+                                        borderRadius: 16,
+                                        backgroundColor: isTypePrice
+                                            ? "#020873"
+                                            : "#ffffff",
+                                        border: isTypePrice
+                                            ? "1px solid #020873"
+                                            : "1px solid  #9E9E9E",
+                                        ":focus": { outline: "none" },
+                                        ":hover": {
+                                            backgroundColor: isTypePrice
+                                                ? "#020873"
+                                                : "#ffffff",
+                                        },
+                                    }}>
+                                    <span
+                                        style={{
+                                            width: 23,
+                                            height: 23,
+                                            marginLeft: isTypePrice
+                                                ? ""
+                                                : "1px",
+                                            marginRight: isTypePrice
+                                                ? "100px"
+                                                : " ",
+                                            backgroundColor: isTypePrice
+                                                ? "#ffffff"
+                                                : "#9E9E9E",
+                                            color: isTypePrice
+                                                ? "#020873"
+                                                : "#ffffff",
+                                            borderRadius: "50%",
+                                        }}
+                                        className={`absolute left-0 rounded-full 
+                                            shadow-md flex items-center justify-center transition-transform duration-300 ${
+                                                isTypePrice
+                                                    ? "transform translate-x-full"
+                                                    : ""
+                                            }`}>
+                                        {isTypePrice ? (
+                                            <CheckIcon
+                                                sx={{ fontSize: "14px" }}
+                                            />
+                                        ) : (
+                                            <CloseIcon
+                                                sx={{ fontSize: "14px" }}
+                                            />
+                                        )}
+                                    </span>
+                                </MuiToggleButton>
+                            </div>
                         </div>
+                        {isTypePrice && (
+                            <div className="flex mt-3">
+                                <input
+                                    name="price"
+                                    type="text"
+                                    className={`h-12 w-full px-4 border border-gray-300 rounded-lg rounded-r-none focus:outline-none ${
+                                        formik.touched.price &&
+                                        formik.errors.price
+                                            ? "border-red-500"
+                                            : ""
+                                    }`}
+                                    value={formik.values.price}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    placeholder={t("fillPrice")}
+                                />
+                                {formik.values.price
+                                    .split("")
+                                    .some((char) => numbers.includes(char)) && (
+                                    <select
+                                        name="currency"
+                                        className="border-l-0 h-12 border border-gray-300 rounded-r-lg px-2 focus:outline-none"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.currency}>
+                                        {currencyList.map((item, index) => (
+                                            <option
+                                                key={index}
+                                                value={item.code}>
+                                                {item.code}
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+                            </div>
+                        )}
                         {formik.touched.price && formik.errors.price ? (
                             <div className="text-red-500 text-sm mt-1">
                                 {formik.errors.price}
