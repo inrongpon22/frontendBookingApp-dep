@@ -15,7 +15,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 interface IParams {
     serviceName: string;
     serviceDescription: string;
-    price: number;
+    price: string;
     currency: string;
     serviceId?: number;
     handleSetEditInfo: () => void;
