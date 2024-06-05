@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import enJSON from './locale/en.json'
 import thJSON from './locale/th.json'
+import zhJSON from './locale/zh.json'
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
@@ -10,6 +11,7 @@ i18n
  resources: {
   en:{...enJSON},
   th:{...thJSON},
+  zh:{...zhJSON},
  }, // Where we're gonna put translations' files
  detection: {
     order: ['querystring', 'cookie', 'localStorage', 'navigator'], // Order of language detection

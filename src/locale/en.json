@@ -5,6 +5,7 @@
         "serviceOptions": "Service Options",
         "store": "Store",
         "time": "Time",
+        "status": "Status",
         "available": "Available",
         "full": "Full",
         "reviewDetails": "Please review details carefully",
@@ -93,7 +94,9 @@
         "alldone": "All done",
         "limitGuest": "Limit Guest",
         "addMoreService": "Add More Service",
-        "firstCongrat": "Congratulations!"
+        "firstCongrat": "Congratulations!",
+        "isConnectLine": "Connect with LINE",
+        "isSaveToHomeScreen": "Save to home screen"
     },
     "desc": {
         "weSendSms": "We've sent an SMS to confirm your booking, You can review your booking details there.",
@@ -115,7 +118,10 @@
         "desAllDone": "You've successfully created your business.",
         "desLimitGuest": "Limits number of time slot that can book in one booking.",
         "desScanMe": "Scan this QR code and start booking!",
-        "firstCongrat": "You've successfully created your business. Let's share your business."
+        "firstCongrat": "You've successfully created your business. Let's share your business.",
+        "isConnectLine": "Link your Line to log in and get notifications, all in one place!",
+        "isSaveToHomeScreen": "Quickly review bookings by adding web app to your home screen."
+
     },
     "button": {
         "cancel": "Cancel",
@@ -155,7 +161,9 @@
         "btnSMS": "Message SMS",
         "btnLINE": "Message LINE",
         "shareBookingWeb": "Share Booking Website",
-        "saveQRcode": "Save QR code"
+        "saveQRcode": "Save QR code",
+        "isConnectLine": "Link line account",
+        "learnMore": "Learn More"
     },
     "noti": {
         "business": {

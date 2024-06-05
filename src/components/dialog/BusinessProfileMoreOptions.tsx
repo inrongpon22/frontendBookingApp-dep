@@ -6,10 +6,11 @@ import toast from "react-hot-toast";
 // icons
 import LinkIcon from "@mui/icons-material/Link";
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
-import StoreIcon from "@mui/icons-material/Store";
-import SettingsIcon from "@mui/icons-material/Settings";
+import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 // import RepeatIcon from "@mui/icons-material/Repeat";
 // import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ConfirmCard from "./ConfirmCard";
@@ -22,6 +23,7 @@ interface IOptionsTypes {
     label: string;
     url?: string | undefined;
     function?: Function | undefined;
+    style?: string | undefined;
 }
 
 const BusinessProfileMoreOptions = () => {
@@ -51,6 +53,7 @@ const BusinessProfileMoreOptions = () => {
                 url: undefined,
                 // function: () => shareBookingLink(businessId),
                 function: () => setOpenShareQR(true),
+                style: `flex flex-row-reverse justify-center items-center bg-deep-blue bg-opacity-10 text-deep-blue  text-opacity-80 font-semibold`,
             },
         ],
         setting: [
@@ -59,29 +62,28 @@ const BusinessProfileMoreOptions = () => {
                 label: t("button:manualBooking"),
                 url: undefined,
                 function: () => setDialogState("manual-booking"),
+                style: `${businessId ? "" : "hidden"}`
             },
-            // {
-            //     icon: <EventBusyIcon />,
-            //     label: t("button:setDayoff"),
-            //     url: `/dayoff-setting/${businessId}`,
-            // },
             {
-                icon: <StoreIcon />,
+                icon: <StoreOutlinedIcon />,
                 label: t("button:businessSetting"),
                 url: `/business-setting?businessId=${businessId}&action=edit`,
+                style: `${businessId ? "" : "hidden"}`
             },
             {
-                icon: <SettingsIcon />,
+                icon: <TuneOutlinedIcon />,
                 label: t("button:serviceSetting"),
                 url: `/service-setting/${businessId}`,
+                style: `${businessId ? "" : "hidden"}`
+            },
+            {
+                icon: <AddBoxOutlinedIcon />,
+                label: t("button:serviceSetting"),
+                url: `/add-to-home-screen`,
+                style: `${businessId ? "hidden" : ""}`
             },
         ],
         account: [
-            // {
-            //     icon: <RepeatIcon />,
-            //     label: t("button:switchBusiness"),
-            //     url: undefined,
-            // },
             {
                 icon: <LogoutIcon />,
                 label: t("button:logout"),
@@ -105,14 +107,18 @@ const BusinessProfileMoreOptions = () => {
                 open={openShareQR}
                 url={`${window.location.origin}/details/${businessId}`}
                 businessId={businessId ?? ""}
-                handleClose={() => setOpenShareQR(false)} />
+                handleClose={() => setOpenShareQR(false)}
+            />
             {Object.values(moreOptions).map((options, index: number) => (
-                <div key={index} className="rounded-lg bg-white">
+                <div
+                    key={index}
+                    className={`overflow-hidden rounded-lg bg-white border ${!businessId && index === 0 ? "hidden" : ""}`}
+                >
                     {options.map((item: IOptionsTypes, index: number) => (
                         <button
                             key={index}
                             type="button"
-                            className="text-start p-3 w-full"
+                            className={`text-start p-3 w-full text-[14px] ${item.style}`}
                             onClick={() => {
                                 if (item.url) {
                                     navigate(item.url);
