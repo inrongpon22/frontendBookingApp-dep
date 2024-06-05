@@ -31,8 +31,8 @@ const BusinessAuth = () => {
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen overflow-hidden">
-            <div className="flex flex-col justify-between items-center h-full w-5/6">
+        <div className="flex flex-col justify-center items-center h-screen overflow-y-hidden">
+            <div className="flex flex-col justify-between items-center h-[100vh] w-5/6">
                 <div className="flex flex-col flex-grow justify-center">
                     <div className="flex justify-center my-auto">
                         <img
@@ -42,7 +42,7 @@ const BusinessAuth = () => {
                         />
                     </div>
                 </div>
-                <div className=" flex flex-col items-center mb-[10vw]">
+                <div className="flex flex-col items-center mb-[10vw]">
                     <div className="text-[32px] font-bold text-center">
                         {t("title:conceptWord")}
                     </div>
@@ -55,7 +55,8 @@ const BusinessAuth = () => {
                 type="button"
                 style={{ marginBottom: "10%" }}
                 className="py-4 px-12 bg-[#35398F] text-white text-[14px] rounded-lg w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[40vw]"
-                onClick={() => setShowDialog(true)}>
+                onClick={() => setShowDialog(true)}
+            >
                 {t("button:getStartedButton")}
             </button>
 
