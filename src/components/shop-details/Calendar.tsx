@@ -111,10 +111,10 @@ const Calendar = ({
 
             <div className="mt-5 grid grid-cols-5 gap-2">
                 {dateArr.map((item: any, index: number) => {
-                    const isOpen: boolean =
-                        serviceById?.bookingSlots[0]?.daysOpen.includes(
-                            item.format("dddd")
-                        );
+                    const isOpen: boolean = serviceById?.bookingSlots.some(
+                        (slot: any) =>
+                            slot.daysOpen.includes(item.format("dddd"))
+                    );
                     return (
                         <div
                             key={index}

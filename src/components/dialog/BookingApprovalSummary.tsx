@@ -100,27 +100,10 @@ const BookingApprovalSummary = () => {
         },
     ];
 
-    // const handleConfirmBooking = () => {
-    //       approveRequested(bookingDatas?.id, bookingDatas?.serviceId);  // Call your existing logic
-    //     };
-
-    // const handleCancelBooking = () => {};
-
     const [noticeType, setNoticeType] = useState("");
 
     return (
         <div className="flex flex-col h-full">
-            {/* <ConfirmCard
-                open={showConfirmation}
-                title={t("noti:booking:approve:confirmation")}
-                description={t("noti:booking:approve:confirmationDesc")}
-                bntConfirm={t("button:confirm")}
-                bntBack={t("button:cancel")}
-                handleClose={() => setShowConfirmation(false)}
-                handleConfirm={() =>
-                    approveRequested(bookingDatas?.id, bookingDatas?.serviceId)
-                }
-            /> */}
             <SendMessageOption 
             open={showConfirmation}
             title={t("noti:booking:approve:confirmation")}
