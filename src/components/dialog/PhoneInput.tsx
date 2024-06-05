@@ -1,20 +1,19 @@
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DialogContext } from "./DialogWrapper";
-import { useQuery } from "../../helper/url";
 import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useQuery } from "../../helper/url";
 
 const PhoneInput = () => {
     const { businessId } = useParams();
     const { t } = useTranslation();
     const query = useQuery();
-    const location = useLocation();
+    const connectTo = query.get("connectTo");
 
     const { formik, isLoading } = useContext(DialogContext);
 
     const handleLoginWithLine = async () => {
-        console.log("login with line", location.pathname);
         await axios
             .get(
                 `${import.meta.env.VITE_APP_API}/line-request-code/${
@@ -65,8 +64,7 @@ const PhoneInput = () => {
                 type="button"
                 disabled={isLoading}
                 className="w-full items-center justify-center bg-[#35398F] text-white text-[14px] p-4 rounded-lg font-bold"
-                onClick={() => formik.handleSubmit()}
-            >
+                onClick={() => formik.handleSubmit()}>
                 <span className={isLoading ? "text-gray-400" : ""}>
                     {t("button:continueButton")}
                 </span>
@@ -75,19 +73,17 @@ const PhoneInput = () => {
                         isLoading
                             ? "flex items-center justify-center"
                             : "hidden"
-                    } ms-3`}
-                ></span>
+                    } ms-3`}></span>
             </button>
 
-            {false && (
+            {!connectTo && (
                 <>
                     <div className=" my-3 text-center ">
                         <span className="text-[14px]">{t("or")}</span>
                     </div>
                     <button
                         onClick={handleLoginWithLine}
-                        className="w-full  bg-[#06C755] text-center mb-5 hover:bg-[#06C755]-500 hover-opacity p-0.5 rounded-lg text-[#FFFFFF]"
-                    >
+                        className="w-full  bg-[#06C755] text-center mb-5 hover:bg-[#06C755]-500 hover-opacity p-0.5 rounded-lg text-[#FFFFFF]">
                         <div className="flex items-center gap-2 justify-center text-[14px]">
                             <img src="/LINE_logo.png" className="w-12 h-12 " />
                             <div className=" font-bold text-center">

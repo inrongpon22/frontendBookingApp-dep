@@ -26,6 +26,7 @@ import BookingApprovalReject from "./BookingApprovalReject";
 import BusinessProfileMoreOptions from "./BusinessProfileMoreOptions";
 import BookingApproveResult from "./BookingApproveResult";
 import ManualBooking from "../../pages/manual-booking/ManualBooking";
+import { verifyOtp } from "../../api/otp";
 // import { useAuth } from "../../contexts/AuthContext";
 
 const Transition = React.forwardRef(function Transition(
@@ -41,6 +42,7 @@ const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
     const navigate = useNavigate();
     const query = useQuery();
     const { t } = useTranslation();
+    const connectTo = query.get("connectTo");
 
     // const { login } = useAuth();
 
@@ -90,87 +92,115 @@ const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
 
                 case "otp-verify":
                     setIsGlobalLoading(true);
-                    await CheckOTP(values.phoneNumbers, values.otp)
-                        .then(async (res) => {
-                            if (res.status === 200) {
-                                localStorage.setItem("token", res.data.token);
-                                localStorage.setItem("userId", res.data.userId);
-                                localStorage.setItem(
-                                    "accessToken",
-                                    res.data.sessionToken
-                                );
-                                formik.setFieldValue("userId", res.data.userId);
-                                formik.setFieldValue(
-                                    "username",
-                                    res.data.userName
+                    if (
+                        connectTo !== "" &&
+                        connectTo !== null &&
+                        connectTo !== undefined
+                    ) {
+                        await verifyOtp(values.phoneNumbers, values.otp);
+                        setIsGlobalLoading(false);
+                        setShowDialog(false);
+                        window.location.reload();
+                    } else {
+                        await CheckOTP(values.phoneNumbers, values.otp)
+                            .then(async (res) => {
+                                if (res.status === 200) {
+                                    localStorage.setItem(
+                                        "token",
+                                        res.data.token
+                                    );
+                                    localStorage.setItem(
+                                        "userId",
+                                        res.data.userId
+                                    );
+                                    localStorage.setItem(
+                                        "accessToken",
+                                        res.data.sessionToken
+                                    );
+                                    formik.setFieldValue(
+                                        "userId",
+                                        res.data.userId
+                                    );
+                                    formik.setFieldValue(
+                                        "username",
+                                        res.data.userName
+                                    );
+                                    setIsGlobalLoading(false);
+
+                                    switch (userSide) {
+                                        case "user":
+                                            query.get("accessCode")
+                                                ? setShowDialog(false)
+                                                : setDialogState(
+                                                      "booking-detail-preview"
+                                                  );
+                                            break;
+
+                                        case "business":
+                                            if (query.get("accessCode")) {
+                                                setDialogState(
+                                                    "booking-approval-summary"
+                                                ).then(() => {
+                                                    setShowDialog(false);
+                                                });
+                                            } else {
+                                                axios
+                                                    .get(
+                                                        `${app_api}/getBusinessByUserId/${res.data.userId}`,
+                                                        {
+                                                            headers: {
+                                                                Authorization:
+                                                                    res.data
+                                                                        .token,
+                                                            },
+                                                        }
+                                                    )
+                                                    .then((resp) => {
+                                                        if (
+                                                            resp.status === 200
+                                                        ) {
+                                                            setShowDialog(
+                                                                false
+                                                            );
+                                                            navigate(
+                                                                `/business-profile/${resp.data[0].id}`
+                                                            );
+                                                        }
+                                                    })
+                                                    .catch((err) => {
+                                                        if (
+                                                            err.response
+                                                                .status === 404
+                                                        ) {
+                                                            navigate(
+                                                                "/create-business"
+                                                            );
+                                                        } else {
+                                                            console.log(
+                                                                err.message
+                                                            );
+                                                            toast.error(
+                                                                "มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง"
+                                                            );
+                                                        }
+                                                    });
+                                            }
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                }
+                            })
+                            .catch((err) => {
+                                formik.setFieldError(
+                                    "otp",
+                                    `${err.response.data.message} ${err.message}`
                                 );
                                 setIsGlobalLoading(false);
+                            });
+                    }
 
-                                switch (userSide) {
-                                    case "user":
-                                        query.get("accessCode")
-                                            ? setShowDialog(false)
-                                            : setDialogState(
-                                                  "booking-detail-preview"
-                                              );
-                                        break;
-
-                                    case "business":
-                                        if (query.get("accessCode")) {
-                                            setDialogState(
-                                                "booking-approval-summary"
-                                            );
-                                        } else {
-                                            axios
-                                                .get(
-                                                    `${app_api}/getBusinessByUserId/${res.data.userId}`,
-                                                    {
-                                                        headers: {
-                                                            Authorization:
-                                                                res.data.token,
-                                                        },
-                                                    }
-                                                )
-                                                .then((resp) => {
-                                                    if (resp.status === 200) {
-                                                        setShowDialog(false);
-                                                        navigate(
-                                                            `/business-profile/${resp.data[0].id}`
-                                                        );
-                                                    }
-                                                })
-                                                .catch((err) => {
-                                                    if (
-                                                        err.response.status ===
-                                                        404
-                                                    ) {
-                                                        navigate(
-                                                            "/create-business"
-                                                        );
-                                                    } else {
-                                                        console.log(
-                                                            err.message
-                                                        );
-                                                        toast.error(
-                                                            "มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง"
-                                                        );
-                                                    }
-                                                });
-                                        }
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            }
-                        })
-                        .catch((err) => {
-                            formik.setFieldError(
-                                "otp",
-                                `${err.response.data.message} ${err.message}`
-                            );
-                            setIsGlobalLoading(false);
-                        });
                     break;
 
                 default:
@@ -277,8 +307,7 @@ const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
         <DialogContext.Provider
             value={{
                 formik,
-            }}
-        >
+            }}>
             <Dialog
                 maxWidth="xl"
                 fullWidth
@@ -292,8 +321,7 @@ const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
                             : "",
                 }}
                 TransitionComponent={Transition}
-                onClose={() => setShowDialog(false)}
-            >
+                onClose={() => setShowDialog(false)}>
                 {dialogState !== "business-more-options" && (
                     <Toolbar className="grid grid-cols-4">
                         <span
@@ -303,8 +331,7 @@ const DialogWrapper = ({ userSide, headerTitle }: DialogTypes) => {
                                     ? "hidden"
                                     : ""
                             }`}
-                            onClick={handleBackButton}
-                        >
+                            onClick={handleBackButton}>
                             {[
                                 "phone-input",
                                 "booking-approval-summary",

@@ -61,7 +61,9 @@
         "sendMessageOption": "Choose how to send your notice",
         "maximumallowed": "Maximum allowed",
         "ัyourPhoneNumber": "Your phone number",
-        "continueWithLINEAccount": "Continue with LINE account"
+        "continueWithLINEAccount": "Continue with LINE account",
+        "phone": "PHONE",
+        "line": "LINE"
     },
     "title": {
         "bookingIsconfirmed": "The Booking is confirmed",
@@ -163,7 +165,8 @@
         "socialmediaaccounts": "Social media accounts",
         "connectToPhone": "Connect to phone number",
         "connect": "Connect",
-        "disconnect": "Disconnect"
+        "disconnect": "Disconnect",
+        "linkaccounts": "Link accounts"
     },
     "noti": {
         "business": {

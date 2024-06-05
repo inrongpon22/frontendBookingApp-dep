@@ -58,7 +58,8 @@ export const getUserIdByAccessToken = async (
 export const getLineProfile = async (accessToken: string) => {
     try {
         const lineProfile = await axios.get(
-            `${import.meta.env.VITE_APP_API
+            `${
+                import.meta.env.VITE_APP_API
             }/get-line-profile?accessToken=${accessToken}`
         );
         return lineProfile.data;
@@ -82,7 +83,21 @@ export const checkTokenValidity = async () => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const connectToLine = async (userId: number, businessId: string) => {
     try {
-        const response = await axiosInstance.get(`/line-connect-request-code?userId=${userId}&businessId=${businessId}`);
+        const response = await axiosInstance.get(
+            `/line-connect-request-code?userId=${userId}&businessId=${businessId}`
+        );
+        return response;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+// eslint-disable-next-line react-refresh/only-export-components
+export const disConnectToLine = async (userId: number) => {
+    try {
+        const response = await axiosInstance.post(
+            `/disconnect-line?userId=${userId}`
+        );
         return response;
     } catch (error) {
         console.error(error);
@@ -93,11 +108,9 @@ export const connectToLine = async (userId: number, businessId: string) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const connectToPhone = async (phoneNumber: string) => {
     try {
-        const response = await axiosInstance.get(`/connectToPhone`, {
-            params: {
-                phoneNumber,
-            },
-        });
+        const response = await axiosInstance.get(
+            `/connectToPhone/${phoneNumber}`
+        );
         return response;
     } catch (error) {
         console.error(error);
@@ -108,7 +121,9 @@ export const connectToPhone = async (phoneNumber: string) => {
 // eslint-disable-next-line react-refresh/only-export-components
 export const getUserPhoneLine = async (userId: number) => {
     try {
-        const response = await axiosInstance.get(`/retrivePhoneNumberAndLineUserId/${userId}`);
+        const response = await axiosInstance.get(
+            `/retrivePhoneNumberAndLineUserId/${userId}`
+        );
         return response.data;
     } catch (error) {
         console.error(error);
